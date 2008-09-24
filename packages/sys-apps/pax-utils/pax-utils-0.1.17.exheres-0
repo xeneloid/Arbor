@@ -1,0 +1,23 @@
+# Copyright 2008 Wulf C. Krueger
+# Distributed under the terms of the GNU General Public License v2
+
+require toolchain-funcs
+
+SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
+HOMEPAGE="http://hardened.gentoo.org/pax-utils.xml"
+DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="caps"
+
+DEPENDENCIES="
+    build+run:
+        caps? ( sys-libs/libcap )
+"
+
+src_compile() {
+    DEFAULT_SRC_COMPILE_PARAMS=( CC="$(tc-getCC)" USE_CAP=$(option caps && echo yes || echo no) )
+    default
+}
