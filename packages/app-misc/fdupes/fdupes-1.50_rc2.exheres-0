@@ -1,0 +1,25 @@
+# Copyright 2008 Ciaran McCreesh
+# Distributed under the terms of the GNU General Public License v2
+
+require common-metadata
+
+DOWNLOADS="http://premium.caribe.net/~adrian2/programs/${PN}/beta/${PNV/_rc/-PR}.tar.gz"
+
+SLOT="0"
+PLATFORMS="~x86"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+WORK="${WORKBASE}/${PNV/_rc/-PR}"
+
+src_prepare() {
+    sed -i \
+        -e 's,^PREFIX = /usr/local,PREFIX = /usr,' \
+        -e 's,\$(BIN_DIR),$(DESTDIR)$(BIN_DIR),g' \
+        -e 's,\$(MAN_DIR),$(DESTDIR)$(MAN_DIR),g' \
+        -e 's,-\$(MKDIR),install -d,g' \
+        -e "s!COMPILER_OPTIONS = .*!COMPILER_OPTIONS = ${CFLAGS}!" \
+        Makefile || die oops
+}
+

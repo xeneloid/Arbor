@@ -1,0 +1,15 @@
+SUMMARY="Finds duplicate files"
+DESCRIPTION="
+FDUPES is a program for identifying or deleting duplicate files residing within
+specified directories."
+
+HOMEPAGE="http://premium.caribe.net/~adrian2/fdupes.html"
+
+LICENCES="MIT"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+BUGS_TO="ciaran.mccreesh@googlemail.com"
+REMOTE_IDS="freshmeat:fdupes"
+
