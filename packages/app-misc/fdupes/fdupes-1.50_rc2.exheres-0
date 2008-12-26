@@ -6,7 +6,7 @@ require common-metadata
 DOWNLOADS="http://premium.caribe.net/~adrian2/programs/${PN}/beta/${PNV/_rc/-PR}.tar.gz"
 
 SLOT="0"
-PLATFORMS="~x86"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
