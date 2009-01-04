@@ -1,0 +1,46 @@
+# Copyright 2008 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+DEPENDENCIES="
+    build:
+        dev-java/apache-ant
+"
+
+export_exlib_phases src_prepare src_compile src_test src_install
+
+ANT_HOME=/usr/share/ant
+
+antargs=(
+    -Dnoget=true
+)
+
+ant_src_prepare() {
+    ANT_BUNDLED_LIBSDIR="${ANT_BUNDLED_LIBSDIR:-lib}"
+
+    # Kill those evil bundled libs...
+    if [[ -d "${WORK}/${ANT_BUNDLED_LIBSDIR}" ]]; then
+        rm -rf "${WORK}/${ANT_BUNDLED_LIBSDIR}"/*
+    fi
+
+    _ant_run -q prepare >/dev/null 2>&1
+}
+
+ant_src_compile() {
+    _ant_run -q clean >/dev/null 2>&1          
+    _ant_run "$@" ${EXTRA_ECONF} || die_unless_nonfatal "ant failed" || return 1
+}
+
+ant_src_test() {
+    _ant_run "$@" || die "test $@ failed"
+}
+
+ant_src_install() {
+    _ant_run "$@" || die "installation failed"
+}
+
+_ant_run() {
+    ANT_BUILD_DIR="${ANT_BUILD_DIR:-build}"
+    ANT_BUILD_XML="${ANT_BUILD_XML:-build.xml}"
+
+    "${ANT_HOME}"/bin/ant -f ${ANT_BUILD_XML} ${antargs[@]} "$@"
+}
