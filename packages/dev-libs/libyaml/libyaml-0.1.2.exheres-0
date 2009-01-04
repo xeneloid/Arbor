@@ -1,0 +1,30 @@
+# Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PNV=${PNV/lib}
+
+SUMMARY="YAML 1.1 parser and emitter written in C"
+HOMEPAGE="http://pyyaml.org/wiki/LibYAML"
+DOWNLOADS="http://pyyaml.org/download/${PN}/${MY_PNV}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="doc examples"
+
+WORK=${WORKBASE}/${MY_PNV}
+
+src_install() {
+    emake DESTDIR="${IMAGE}" install
+
+    dodoc README
+    if option doc; then
+        insinto /usr/share/doc/${PNVR}
+        doins -r doc/html
+    fi
+    if option examples; then
+        insinto /usr/share/doc/${PNVR}/examples
+        doins tests/example-*.c
+    fi
+}
+
