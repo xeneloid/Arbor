@@ -4,7 +4,7 @@
 require toolchain-funcs
 
 SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
-HOMEPAGE="http://hardened.gentoo.org/pax-utils.xml"
+HOMEPAGE="http://hardened.gentoo.org/${PN}.xml"
 DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2"
 
 LICENCES="GPL-2"
@@ -21,3 +21,9 @@ src_compile() {
     DEFAULT_SRC_COMPILE_PARAMS=( CC="$(tc-getCC)" USE_CAP=$(option caps && echo yes || echo no) )
     default
 }
+
+src_install() {
+    default
+    rm -r "${IMAGE}"/usr/share/doc/${PN} || die "Failed to remove docs"
+}
+
