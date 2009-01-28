@@ -1,0 +1,43 @@
+# Copyright 2009 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'libutempter-1.1.5.ebuild' which is:
+#    Copyright 1999-2007 Gentoo Foundation
+
+require multilib
+
+SUMMARY="A library interface for teminal emulators to record user sessions to utmp and wtmp"
+HOMEPAGE=""
+DOWNLOADS="ftp://ftp.altlinux.org/pub/people/ldv/${PN}/${PNV}.tar.bz2"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        group/utmp
+"
+
+DEFAULT_SRC_COMPILE_PARAMS=( libdir="/usr/$(get_libdir)" libexecdir="/usr/libexec" RPM_OPT_FLAGS="${CFLAGS}" )
+DEFAULT_SRC_INSTALL_PARAMS=( libdir="/usr/$(get_libdir)" libexecdir="/usr/libexec" )
+
+src_install() {
+    default
+
+    fowners root:utmp /usr/libexec/utempter/utempter
+    fperms 2755 /usr/libexec/utempter/utempter
+}
+
+pkg_postinst() {
+    if [[ -f "${ROOT}var/log/wtmp" ]] ; then
+        chown root:utmp "${ROOT}var/log/wtmp"
+        chmod 644 "${ROOT}var/log/wtmp"
+    fi
+
+    if [[ -f "${ROOT}var/log/utmp" ]] ; then
+        chown root:utmp "${ROOT}var/log/utmp"
+        chmod 644 "${ROOT}var/log/utmp"
+    fi
+}
+
