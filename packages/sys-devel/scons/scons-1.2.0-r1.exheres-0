@@ -19,9 +19,12 @@ DEPENDENCIES=""
 src_install() {
     distutils_src_install
 
-    rmdir "${IMAGE}${pylibdir}"              \
-          "${IMAGE}$(dirname "${pylibdir}")" \
-    || die "failed to remove empty directories"
+    dodir /usr/share
+    mv "${IMAGE}/usr/man" "${IMAGE}/usr/share/man"  \
+        || die "failed to fix doc install"
 
+    rmdir "${IMAGE}${pylibdir}"                     \
+          "${IMAGE}$(dirname "${pylibdir}")"        \
+        || die "failed to remove empty directories"
 }
 
