@@ -11,14 +11,17 @@ export_exlib_phases src_prepare src_compile src_test src_install
 ANT_HOME=/usr/share/ant
 
 ant_src_prepare() {
-    ANT_BUNDLED_LIBSDIR="${ANT_BUNDLED_LIBSDIR:-lib}"
+    [[ -z ${ANT_BUNDLED_LIBSDIR[@]} ]] && ANT_BUNDLED_LIBSDIR=( lib )
 
     # Kill those evil bundled libs...
-    if [[ -d "${WORK}/${ANT_BUNDLED_LIBSDIR}" ]]; then
-        rm -rf "${WORK}/${ANT_BUNDLED_LIBSDIR}"/*
-    fi
+    for libdirs in "${ANT_BUNDLED_LIBSDIR[@]}"; do
+        eerror $libdirs
+        if [[ -d "${WORK}/${libdirs}" ]]; then
+            rm -rf "${WORK}/${libdirs}"/*
+        fi
+    done
 
-    _ant_run prepare "${ANT_SRC_PREPARE_PARAMS[@]}"
+    _ant_run "${ANT_SRC_PREPARE_PARAMS[@]}"
 }
 
 ant_src_compile() {
