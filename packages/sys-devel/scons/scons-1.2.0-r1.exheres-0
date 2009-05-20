@@ -1,9 +1,7 @@
 # Copyright 2009 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-NEED_PYTHON=2.4:*
-
-require distutils
+require distutils [ python_dep=2.4 has_bin=yes ]
 
 SUMMARY="Open Source software construction tool"
 HOMEPAGE="http://www.scons.org/"
