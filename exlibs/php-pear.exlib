@@ -1,0 +1,54 @@
+# Copyright 2009 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'php-pear-r1.eclass' from Gentoo, which is:
+#     Copyright 1999-2007 Gentoo Foundation
+
+export_exlib_phases src_install
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/php[pear]
+        dev-pear/PEAR[>=1.7.1]
+"
+
+fix_PEAR_PV() {
+    tmp="${PV}"
+    tmp="${tmp/_/}"
+    tmp="${tmp/rc/RC}"
+    tmp="${tmp/beta/b}"
+    tmp="${tmp/alpha/a}"
+    PEAR_PV="${tmp}"
+}
+
+# Unless it's set in the exheres, use the above function to get PEAR_PV for DOWNLOADS.
+[[ -z "${PEAR_PV}" ]] && fix_PEAR_PV
+
+# Set DOWNLOADS and HOMEPAGE
+[[ -z "${DOWNLOADS}" ]] && DOWNLOADS="http://pear.php.net/get/${PN}-${PEAR_PV}.tgz"
+[[ -z "${HOMEPAGE}" ]] && HOMEPAGE="http://pear.php.net/${PN}"
+
+WORK="${WORKBASE}"/${PN}-${PEAR_PV}
+
+php-pear_src_install() {
+    local PKG_FILE=""
+    local PHP_BIN="/usr/bin/php"
+    local PEAR_BIN="/usr/bin/pear"
+    local PEAR_PATH="/usr/share/pear"
+
+    if [[ -f "${WORKBASE}"/package2.xml ]] ; then
+        PKG_FILE="package2.xml"
+    else
+        PKG_FILE="package.xml"
+    fi
+
+    mv -f "${WORKBASE}/${PKG_FILE}" "${WORK}" || die "Failed to move ${WORKBASE}/${PKG_FILE}"
+    "${PEAR_BIN}" -d php_bin="${PHP_BIN}" install --force --loose --nodeps --offline --packagingroot="${IMAGE}" "${WORK}/${PKG_FILE}" || die "Unable to install PEAR package"
+
+    rm -rf \
+        "${IMAGE}/${PEAR_PATH}/.channels" \
+        "${IMAGE}/${PEAR_PATH}/.depdblock" \
+        "${IMAGE}/${PEAR_PATH}/.depdb" \
+        "${IMAGE}/${PEAR_PATH}/.filemap" \
+        "${IMAGE}/${PEAR_PATH}/.lock" \
+        "${IMAGE}/${PEAR_PATH}/.registry"
+}
