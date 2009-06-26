@@ -21,21 +21,14 @@ MYOPTIONS="debug"
 
 UPSTREAM_NEWS="http://svn.xapian.org/*checkout*/tags/${PV}/${PN}/NEWS"
 
-#DEPENDENCIES="
-#    build:
-#        doc? (
-#            app-doc/doxygen
-#            app-doc/makeindex
-#            app-doc/rst2html
-#            media-gfx/graphviz
-#            sys-apps/help2man
-#        )
-#"
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    # Don't run tests under valgrind if present, takes ages
+    VALGRIND=
     --docdir=/usr/share/doc/${PNVR}
     --disable-documentation
     --with-stlport=no
 )
-DEFAULT_SRC_CONFIGURE_OPTIONS_ENABLES=( 'debug assertions' ) #'doc documentation'
+# This regenerates the documentation
+# 'doc documentation'
+DEFAULT_SRC_CONFIGURE_OPTIONS_ENABLES=( 'debug assertions' )
 
