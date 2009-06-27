@@ -12,7 +12,7 @@ the Probabilistic Information Retrieval model and also supports a rich set of
 boolean query operators.
 "
 HOMEPAGE="http://www.xapian.org/"
-DOWNLOADS="http://oligarchy.co.uk/${PN}/${PV}/${PNV}.tar.gz"
+DOWNLOADS="http://oligarchy.co.uk/xapian/${PV}/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
