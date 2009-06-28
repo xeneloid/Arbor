@@ -30,5 +30,5 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 # This regenerates the documentation
 # 'doc documentation'
-DEFAULT_SRC_CONFIGURE_OPTIONS_ENABLES=( 'debug assertions' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'debug assertions' )
 
