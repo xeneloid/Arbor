@@ -1,0 +1,40 @@
+# Copyright 2009 Mike Kelly
+# Distributed under the terms of the GNU General Public License v2
+
+
+SUMMARY="Ragel State Machine Compiler"
+DESCRIPTION="
+Ragel compiles executable finite state machines from regular languages.
+Ragel targets C, C++, Objective-C, D, Java and Ruby. Ragel state
+machines can not only recognize byte sequences as regular expression
+machines do, but can also execute code at arbitrary points in the
+recognition of a regular language. Code embedding is done using inline
+operators that do not disrupt the regular language syntax.
+"
+HOMEPAGE="http://www.complang.org/ragel/"
+DOWNLOADS="${HOMEPAGE}/ragel-6.5.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="java mono objc ruby"
+
+DEPENDENCIES="
+    build+run:
+        java? ( sys-devel/gcc[>=4.3][java] )
+        mono? ( dev-lang/mono )
+        objc? ( sys-devel/gcc[objc] )
+        ruby? ( dev-lang/ruby )
+"
+
+BUGS_TO="pioto@exherbo.org"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/${PNV}-gcc-4.4.patch"
+)
+
+src_install() {
+    default
+    mv "${IMAGE}"/usr/share/doc/${PN}/${PN}-guide.pdf "${IMAGE}"/usr/share/${PNVR}/
+    rm -rf "${IMAGE}"/usr/share/doc/${PN}
+}
