@@ -5,7 +5,7 @@
 
 require multilib
 
-SUMMARY="A library interface for teminal emulators to record user sessions to utmp and wtmp"
+SUMMARY="A library interface for terminal emulators to record user sessions to utmp and wtmp"
 HOMEPAGE=""
 DOWNLOADS="ftp://ftp.altlinux.org/pub/people/ldv/${PN}/${PNV}.tar.bz2"
 
