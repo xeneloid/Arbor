@@ -21,6 +21,7 @@ MYOPTIONS="debug"
 
 UPSTREAM_NEWS="http://svn.xapian.org/*checkout*/tags/${PV}/${PN}/NEWS"
 
+DEFAULT_SRC_PREPARE_PARAMS=( -p2 "${FILES}/${PNV}-flush.patch" )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     # Don't run tests under valgrind if present, takes ages
     VALGRIND=

@@ -1,0 +1,67 @@
+From fdb454e5a1bf72cdda637106a71397f8631a75ad Mon Sep 17 00:00:00 2001
+From: olly <olly@6b2f1b92-a4f3-0310-943f-de3cbe41748b>
+Date: Fri, 31 Jul 2009 13:18:44 +0000
+Subject: [PATCH] Backport change from trunk:
+ backends/flint/flint_modifiedpostlist.cc: Fix FlintModifiedPostList
+ to skip added-but-then-deleted-before-flush documents.  (ticket#392)
+ tests/api_backend.cc: Add regression test modifiedpostlist1.
+
+git-svn-id: svn://svn.xapian.org/xapian/branches/1.0@13219 6b2f1b92-a4f3-0310-943f-de3cbe41748b
+---
+ xapian-core/ChangeLog                              |    7 +++++++
+ .../backends/flint/flint_modifiedpostlist.cc       |    4 ++++
+ xapian-core/tests/api_backend.cc                   |   19 +++++++++++++++++++
+ 3 files changed, 30 insertions(+), 0 deletions(-)
+
+diff --git a/xapian-core/backends/flint/flint_modifiedpostlist.cc b/xapian-core/backends/flint/flint_modifiedpostlist.cc
+index eeec01d..988267c 100644
+--- a/xapian-core/backends/flint/flint_modifiedpostlist.cc
++++ b/xapian-core/backends/flint/flint_modifiedpostlist.cc
+@@ -32,6 +32,9 @@ void
+ FlintModifiedPostList::skip_deletes(Xapian::weight w_min)
+ {
+     while (!FlintPostList::at_end()) {
++	while (it != mods.end() && it->second.first == 'D' &&
++	       it->first < FlintPostList::get_docid())
++	    ++it;
+ 	if (it == mods.end()) return;
+ 	if (it->first != FlintPostList::get_docid()) return;
+ 	if (it->second.first != 'D') return;
+@@ -52,6 +55,7 @@ FlintModifiedPostList::get_docid() const
+ {
+     if (it == mods.end()) return FlintPostList::get_docid();
+     if (FlintPostList::at_end()) return it->first;
++    Assert(it->second.first != 'D');
+     return min(it->first, FlintPostList::get_docid());
+ }
+ 
+diff --git a/xapian-core/tests/api_backend.cc b/xapian-core/tests/api_backend.cc
+index 0a4b6d7..a9354a3 100644
+--- a/xapian-core/tests/api_backend.cc
++++ b/xapian-core/tests/api_backend.cc
+@@ -93,3 +93,22 @@ DEFINE_TESTCASE(alldocspl3, backend) {
+ 
+     return true;
+ }
++
++/// Regression test for bug#392 in ModifiedPostList iteration, fixed in 1.0.15.
++DEFINE_TESTCASE(modifiedpostlist1, writable) {
++    Xapian::WritableDatabase db = get_writable_database();
++    Xapian::Document a, b;
++    Xapian::Enquire enq(db);
++   
++    a.add_term("T");
++    enq.set_query(Xapian::Query("T"));
++   
++    db.replace_document(2, a);
++    db.flush();
++    db.replace_document(1, a);
++    db.replace_document(1, b);
++   
++    mset_expect_order(enq.get_mset(0, 2), 2);
++   
++    return true;
++}
+-- 
+1.6.4
+
