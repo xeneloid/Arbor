@@ -15,7 +15,6 @@ ant_src_prepare() {
 
     # Kill those evil bundled libs...
     for libdirs in "${ANT_BUNDLED_LIBSDIR[@]}"; do
-        eerror $libdirs
         if [[ -d "${WORK}/${libdirs}" ]]; then
             rm -rf "${WORK}/${libdirs}"/*
         fi
