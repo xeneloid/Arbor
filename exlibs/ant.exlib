@@ -16,7 +16,7 @@ ant_src_prepare() {
     # Kill those evil bundled libs...
     for libdirs in "${ANT_BUNDLED_LIBSDIR[@]}"; do
         if [[ -d "${WORK}/${libdirs}" ]]; then
-            rm -rf "${WORK}/${libdirs}"/*
+            edo rm -rf "${WORK}/${libdirs}"/*
         fi
     done
 
