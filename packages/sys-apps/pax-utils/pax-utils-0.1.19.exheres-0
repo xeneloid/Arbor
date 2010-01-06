@@ -1,8 +1,6 @@
 # Copyright 2008 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 
-require toolchain-funcs
-
 SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
 HOMEPAGE="http://hardened.gentoo.org/${PN}.xml"
 DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2"
@@ -18,7 +16,7 @@ DEPENDENCIES="
 "
 
 src_compile() {
-    emake CC="$(tc-getCC)" USE_CAP=$(option caps && echo yes || echo no)
+    emake CC="${CC}" USE_CAP=$(option caps && echo yes || echo no)
 }
 
 src_install() {
