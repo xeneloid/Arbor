@@ -1,33 +1,7 @@
-# Copyright 2009 Ingmar Vanhassel
+# Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-SUMMARY="A search engine library"
-DESCRIPTION="
-Xapian is an Open Source Search Engine Library, released under the GPL. It's
-written in C++, with bindings to allow use from Perl, Python, PHP, Java, Tcl,
-C# and Ruby (so far!)
-Xapian is a highly adaptable toolkit which allows developers to easily add
-advanced indexing and search facilities to their own applications. It supports
-the Probabilistic Information Retrieval model and also supports a rich set of
-boolean query operators.
-"
-HOMEPAGE="http://www.xapian.org/"
-DOWNLOADS="http://oligarchy.co.uk/xapian/${PV}/${PNV}.tar.gz"
+require xapian-core
 
-LICENCES="GPL-2"
-SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="debug"
-
-UPSTREAM_RELEASE_NOTES="http://svn.xapian.org/*checkout*/tags/${PV}/${PN}/NEWS"
-
-DEFAULT_SRC_CONFIGURE_PARAMS=(
-    # Don't run tests under valgrind if present, takes ages
-    VALGRIND=
-    --disable-documentation
-    --with-stlport=no
-)
-# This regenerates the documentation
-# 'doc documentation'
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'debug assertions' )
 
