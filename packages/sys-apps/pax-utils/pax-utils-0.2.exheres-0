@@ -1,4 +1,4 @@
-# Copyright 2008 Wulf C. Krueger
+# Copyright 2010 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
@@ -23,4 +23,3 @@ src_install() {
     default
     rm -r "${IMAGE}"/usr/share/doc/${PN} || die "Failed to remove docs"
 }
-
