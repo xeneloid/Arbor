@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A library for applications dealing with netlink sockets"
-HOMEPAGE="http://people.suug.ch/~tgr/libnl/"
-DOWNLOADS="http://people.suug.ch/~tgr/libnl/files/${PNV}.tar.gz"
+HOMEPAGE="http://www.infradead.org/~tgr/libnl/"
+DOWNLOADS="${FILES}/files/${PNV}.tar.gz"
 
 LICENCES="LGPL-2.1"
 SLOT="1"
