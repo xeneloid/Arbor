@@ -3,7 +3,7 @@
 
 SUMMARY="A library for applications dealing with netlink sockets"
 HOMEPAGE="http://www.infradead.org/~tgr/libnl/"
-DOWNLOADS="${FILES}/files/${PNV}.tar.gz"
+DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.gz"
 
 LICENCES="LGPL-2.1"
 SLOT="1"
