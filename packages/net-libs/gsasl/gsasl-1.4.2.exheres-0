@@ -19,6 +19,11 @@ DEPENDENCIES="
 
 WORK="${WORKBASE}/lib${PNV}"
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-gssapi --disable-kerberos_v5 --disable-ntlm )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-gssapi
+    --disable-kerberos_v5
+    --disable-ntlm
+    --disable-valgrind-tests
+)
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'idn stringprep' )
 
