@@ -16,7 +16,8 @@ MYOPTIONS=""
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
-    --without-builtin-regex
+    # FIXME: --without-builtin-regex breaks on regular expressions that contain "{"
+    --with-builtin-regex
 )
 
 src_install() {
