@@ -27,6 +27,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 src_install() {
     default
 
+    insinto /usr/share/doc/${PNVR}/examples
+    doins -r examples/.
+
     alternatives_for awk ${PN} 10 \
         /usr/bin/awk ${PN} \
         /usr/share/man/man1/awk.1 ${PN}.1
