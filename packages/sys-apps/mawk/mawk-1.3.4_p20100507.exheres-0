@@ -3,9 +3,11 @@
 
 require alternatives
 
+MY_PNV=${PN}-${PV%_p*}-${PV#*_p}
+
 SUMMARY="An interpreter for the AWK Programming Language"
 HOMEPAGE="http://invisible-island.net/mawk/mawk.html"
-DOWNLOADS="ftp://invisible-island.net/${PN}/${PNV}.tgz"
+DOWNLOADS="ftp://invisible-island.net/${PN}/${MY_PNV}.tgz"
 
 UPSTREAM_CHANGELOG="http://invisible-island.net/mawk/CHANGES"
 
@@ -13,6 +15,8 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
+
+WORK="${WORKBASE}/${MY_PNV}"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
