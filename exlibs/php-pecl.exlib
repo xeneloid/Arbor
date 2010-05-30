@@ -1,0 +1,63 @@
+# Copyright 2010 Anders Ladegaard Marchsteiner <alm.anma@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'php-pear.exlib', which is:
+#     Copyright 2009 Wulf C. Krueger <philantrop@exherbo.org>
+
+export_exlib_phases src_install src_configure
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/php[pear]
+        dev-pear/PEAR[>=1.7.1]
+"
+
+fix_PECL_PV() {
+    tmp="${PV}"
+    tmp="${tmp/_/}"
+    tmp="${tmp/rc/RC}"
+    tmp="${tmp/beta/b}"
+    tmp="${tmp/alpha/a}"
+    PECL_PV="${tmp}"
+}
+
+# Unless it's set in the exheres, use the above function to get PECL_PV for DOWNLOADS.
+[[ -z "${PECL_PV}" ]] && fix_PECL_PV
+
+# Set DOWNLOADS and HOMEPAGE
+[[ -z "${DOWNLOADS}" ]] && DOWNLOADS="http://pecl.php.net/get/${PN}-${PECL_PV}.tgz"
+[[ -z "${HOMEPAGE}" ]] && HOMEPAGE="http://pecl.php.net/package/${PN}"
+
+UPSTREAM_CHANGELOG="http://pecl.php.net/package-changelog.php?package=${PN}&release=${PECL_PV}"
+
+WORK="${WORKBASE}"/${PN}-${PECL_PV}
+
+php-pecl_src_configure() {
+    phpize
+
+    default
+}
+
+php-pecl_src_install() {
+    # Let install write to PHP exstension directory.
+    sydboxcmd write $(php-config --extension-dir)
+
+    # Provide a updated php.ini which loads the new extension - based on the current php.ini.
+    edo mkdir -p ${IMAGE}/etc/php
+    edo cp /etc/php/php.ini ${IMAGE}/etc/php/php.ini
+    hasLines=`grep -c "extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini`
+    if [[ $hasLines -eq 0 ]] ; then
+        # Find linenumber extension_dir and use the next line.
+        linenum=`edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}'`
+        linenum=$((linenum+1))
+        # Insert extension in php.ini.
+        edo sed -i "${linenum}i\extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini
+    fi
+
+    default
+}
+
+php-pecl_pkg_postinst() {
+    # Make sure the extension is executable.
+    chmod +x $(php-config --extension-dir)/${PN}.so
+}
+
