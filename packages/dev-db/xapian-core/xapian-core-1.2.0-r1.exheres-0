@@ -1,0 +1,14 @@
+# Copyright 2009, 2010 Ingmar Vanhassel
+# Distributed under the terms of the GNU General Public License v2
+
+require xapian-core autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 ] ]
+
+PLATFORMS="~amd64 ~x86"
+
+AT_M4DIR=( "${WORK}/m4/" )
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p2 "${FILES}/0001-backends-brass-brass_cursor.cc-backends-chert-chert_.patch"
+    "${FILES}/0001-configure.ac-Install-headers-under-PREFIX-include-no.patch"
+)
+

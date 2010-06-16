@@ -1,0 +1,73 @@
+From fdbe344d1b543a7b6e3c1dc65bdaa0c5d368a607 Mon Sep 17 00:00:00 2001
+From: Olly Betts <olly@survex.com>
+Date: Wed, 5 May 2010 05:45:55 +0000
+Subject: [PATCH] backends/brass/brass_cursor.cc,backends/chert/chert_cursor.cc,
+ backends/flint/flint_cursor.cc: If we have to rebuild the cursor
+ on next() because the table changed underneath us, we need to
+ advance it because find_entry() will put the cursor on the entry
+ we were already on, or the one before if the entry we were on
+ has been removed.  Bug uncovered by notmuch testsuite, but I'm
+ unable to reduce it to a sane testcase for our testsuite.
+ (Debian#579951)
+
+git-svn-id: file:///home/xapian-svn/xapian/trunk@14488 6b2f1b92-a4f3-0310-943f-de3cbe41748b
+---
+ xapian-core/backends/brass/brass_cursor.cc |    6 +++++-
+ xapian-core/backends/chert/chert_cursor.cc |    6 +++++-
+ xapian-core/backends/flint/flint_cursor.cc |    6 +++++-
+ 4 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/xapian-core/backends/brass/brass_cursor.cc b/xapian-core/backends/brass/brass_cursor.cc
+index a272716..141b1dc 100644
+--- a/xapian-core/backends/brass/brass_cursor.cc
++++ b/xapian-core/backends/brass/brass_cursor.cc
+@@ -163,7 +163,11 @@ BrassCursor::next()
+     if (B->cursor_version != version) {
+ 	// find_entry() will call rebuild().
+ 	(void)find_entry(current_key);
+-    } else if (tag_status == UNREAD) {
++	// If the key was found, we're now pointing to it, otherwise we're
++	// pointing to the entry before.  Either way, we now want to move to
++	// the next key.
++    }
++    if (tag_status == UNREAD) {
+ 	while (true) {
+ 	    if (! B->next(C, 0)) {
+ 		is_positioned = false;
+diff --git a/xapian-core/backends/chert/chert_cursor.cc b/xapian-core/backends/chert/chert_cursor.cc
+index 4b78e37..7efc3d6 100644
+--- a/xapian-core/backends/chert/chert_cursor.cc
++++ b/xapian-core/backends/chert/chert_cursor.cc
+@@ -161,7 +161,11 @@ ChertCursor::next()
+     if (B->cursor_version != version) {
+ 	// find_entry() will call rebuild().
+ 	(void)find_entry(current_key);
+-    } else if (tag_status == UNREAD) {
++	// If the key was found, we're now pointing to it, otherwise we're
++	// pointing to the entry before.  Either way, we now want to move to
++	// the next key.
++    }
++    if (tag_status == UNREAD) {
+ 	while (true) {
+ 	    if (! B->next(C, 0)) {
+ 		is_positioned = false;
+diff --git a/xapian-core/backends/flint/flint_cursor.cc b/xapian-core/backends/flint/flint_cursor.cc
+index a07790a..a705152 100644
+--- a/xapian-core/backends/flint/flint_cursor.cc
++++ b/xapian-core/backends/flint/flint_cursor.cc
+@@ -161,7 +161,11 @@ FlintCursor::next()
+     if (B->cursor_version != version) {
+ 	// find_entry() will call rebuild().
+ 	(void)find_entry(current_key);
+-    } else if (tag_status == UNREAD) {
++	// If the key was found, we're now pointing to it, otherwise we're
++	// pointing to the entry before.  Either way, we now want to move to
++	// the next key.
++    }
++    if (tag_status == UNREAD) {
+ 	while (true) {
+ 	    if (! B->next(C, 0)) {
+ 		is_positioned = false;
+-- 
+1.7.1
+
