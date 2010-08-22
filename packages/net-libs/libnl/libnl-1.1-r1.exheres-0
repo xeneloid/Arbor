@@ -1,0 +1,30 @@
+# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 2010 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="libnl is a library for applications dealing with netlink sockets"
+DESCRIPTION="
+This library provides an interface for raw netlink messaging and various netlink
+family specific interfaces.
+"
+HOMEPAGE="http://www.infradead.org/~tgr/${PN}"
+DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.gz"
+
+BUGS_TO="philantrop@exherbo.org"
+REMOTE_IDS=""
+
+UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/index.html [[ lang = en ]]"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+DEPENDENCIES=""
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}"/${PNV}-flags.patch
+    -p0 "${FILES}"/${PNV}-glibc-2.8-ULONG_MAX.patch
+    -p1 "${FILES}"/${PNV}-minor-leaks.patch
+    -p1 "${FILES}"/${PNV}-vlan-header.patch
+)
+
