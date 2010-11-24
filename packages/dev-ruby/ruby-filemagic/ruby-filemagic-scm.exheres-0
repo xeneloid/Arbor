@@ -1,0 +1,28 @@
+# Copyright 2010 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="git://github.com/ricardochimal/ruby-filemagic.git"
+
+require scm-git
+
+SUMMARY="Ruby FileMagic Library Bindings"
+HOMEPAGE="https://github.com/ricardochimal/${PN}"
+
+LICENCES="as-is"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-lang/ruby:=
+"
+
+src_configure() {
+    edo ruby extconf.rb
+}
+
+src_test() {
+    edo ruby test/regress.rb
+}
+
