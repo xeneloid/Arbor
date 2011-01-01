@@ -26,13 +26,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-update-mimedb )
-
-src_compile() {
-
-    # For some users parallel build results in the error:
-    #
-    # update_mime_database-update-mime-database.o: file not recognized: File
-    # truncated
-    emake -j1
-}
+# "update_mime_database-update-mime-database.o: file not recognized: File truncated"
+DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
