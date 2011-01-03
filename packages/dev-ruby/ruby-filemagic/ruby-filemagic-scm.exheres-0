@@ -23,6 +23,6 @@ src_configure() {
 }
 
 src_test() {
-    edo ruby test/regress.rb
+    edo ruby -I . test/regress.rb
 }
 
