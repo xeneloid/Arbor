@@ -1,5 +1,5 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
-# Copyright 2010 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2011 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="libnl is a library for applications dealing with netlink sockets"
@@ -10,7 +10,7 @@ family specific interfaces.
 HOMEPAGE="http://www.infradead.org/~tgr/${PN}"
 DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.gz"
 
-BUGS_TO="philantrop@exherbo.org"
+BUGS_TO=""
 REMOTE_IDS=""
 
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/index.html [[ lang = en ]]"
