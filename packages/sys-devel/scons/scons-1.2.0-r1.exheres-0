@@ -18,11 +18,8 @@ src_install() {
     distutils_src_install
 
     dodir /usr/share
-    mv "${IMAGE}/usr/man" "${IMAGE}/usr/share/man"  \
-        || die "failed to fix doc install"
-
-    rmdir "${IMAGE}${pylibdir}"                     \
-          "${IMAGE}$(dirname "${pylibdir}")"        \
-        || die "failed to remove empty directories"
+    edo mv "${IMAGE}/usr/man" "${IMAGE}/usr/share/man"
+    edo rmdir "${IMAGE}${pylibdir}" \
+              "${IMAGE}$(dirname "${pylibdir}")"
 }
 
