@@ -1,9 +1,9 @@
-# Copyright 2010 Wulf C. Krueger
+# Copyright 2008-2011 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
 HOMEPAGE="http://hardened.gentoo.org/${PN}.xml"
-DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2"
+DOWNLOADS="mirror://gentoo/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -11,6 +11,8 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="caps"
 
 DEPENDENCIES="
+    build:
+        app-arch/xz
     build+run:
         caps? ( sys-libs/libcap )
 "
@@ -21,5 +23,7 @@ src_compile() {
 
 src_install() {
     default
-    rm -r "${IMAGE}"/usr/share/doc/${PN} || die "Failed to remove docs"
+
+    edo rm -r "${IMAGE}"/usr/share/doc/${PN}
 }
+
