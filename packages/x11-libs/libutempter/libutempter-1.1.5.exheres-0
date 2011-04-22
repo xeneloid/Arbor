@@ -19,8 +19,8 @@ DEPENDENCIES="
         group/utmp
 "
 
-DEFAULT_SRC_COMPILE_PARAMS=( libdir="/usr/$(get_libdir)" libexecdir="/usr/libexec" RPM_OPT_FLAGS="${CFLAGS}" )
-DEFAULT_SRC_INSTALL_PARAMS=( libdir="/usr/$(get_libdir)" libexecdir="/usr/libexec" )
+DEFAULT_SRC_COMPILE_PARAMS=( libdir="/usr/${LIBDIR}" libexecdir="/usr/libexec" RPM_OPT_FLAGS="${CFLAGS}" )
+DEFAULT_SRC_INSTALL_PARAMS=( libdir="/usr/${LIBDIR}" libexecdir="/usr/libexec" )
 
 src_install() {
     default
