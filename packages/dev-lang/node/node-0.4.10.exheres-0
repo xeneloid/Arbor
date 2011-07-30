@@ -1,0 +1,7 @@
+# Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
+# Distributed under the terms of the GNU General Public Licesnse v2
+
+require node
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"

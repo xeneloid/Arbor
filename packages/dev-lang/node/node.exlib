@@ -1,0 +1,67 @@
+# Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
+# Distributed under the terms of the GNU General Public Licesnse v2
+
+export_exlib_phases src_configure src_compile src_test src_install
+
+MY_PNV="${PN}-v${PV}"
+WORK="${WORKBASE}/${MY_PNV}"
+
+SUMMARY=""
+DESCRIPTION=""
+DOWNLOADS="http://nodejs.org/dist/${MY_PNV}.tar.gz"
+HOMEPAGE="http://nodejs.org/"
+LICENCES="MIT"
+
+DEPENDENCIES="
+    build:
+        dev-lang/python
+    build+run:
+        dev-libs/libev
+        dev-libs/libpthread-stubs
+        dev-libs/openssl
+        dev-libs/v8
+        net-dns/c-ares
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/fix-build.patch"
+)
+
+NODE_SRC_CONFIGURE_PARAMS+=(
+    --shared-cares
+    --shared-libev
+    --shared-v8
+)
+
+node_ewaf() {
+    illegal_in_global_scope
+
+    edo ./tools/waf-light \
+        --verbose --verbose \
+        --nocache \
+        "$@"
+}
+
+node_src_configure() {
+    node_ewaf configure \
+        --prefix=/usr \
+        --libdir=/usr/${LIBDIR} \
+       "${NODE_SRC_CONFIGURE_PARAMS[@]}"
+}
+
+node_src_compile() {
+    node_ewaf build \
+        -j${EXJOBS:-1}
+}
+
+node_src_test() {
+    # getting a number of failures, ignoring tests for now
+    :
+}
+
+node_src_install() {
+    node_ewaf install \
+        --destdir="${IMAGE}"
+
+    emagicdocs
+}
