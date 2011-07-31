@@ -1,20 +1,20 @@
 # Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
 # Distributed under the terms of the GNU General Public Licesnse v2
 
-export_exlib_phases src_configure src_compile src_test src_install
+require cmake
+
+export_exlib_phases src_configure src_test
 
 MY_PNV="${PN}-v${PV}"
 WORK="${WORKBASE}/${MY_PNV}"
 
-SUMMARY=""
-DESCRIPTION=""
+SUMMARY="Evented I/O for V8 Javascript"
+DESCRIPTION="Desgined to provide an easy way to build scalable network applications, similar to Event Machine or Twisted"
 DOWNLOADS="http://nodejs.org/dist/${MY_PNV}.tar.gz"
 HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
 
 DEPENDENCIES="
-    build:
-        dev-lang/python
     build+run:
         dev-libs/libev
         dev-libs/libpthread-stubs
@@ -27,41 +27,21 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/fix-build.patch"
 )
 
-NODE_SRC_CONFIGURE_PARAMS+=(
-    --shared-cares
-    --shared-libev
-    --shared-v8
+CMAKE_SRC_CONFIGURE_PARAMS+=(
+    -DSHARED_CARES:BOOL=True
+    -DSHARED_LIBEV:BOOL=True
+    -DSHARED_V8:BOOL=True
 )
 
-node_ewaf() {
-    illegal_in_global_scope
-
-    edo ./tools/waf-light \
-        --verbose --verbose \
-        --nocache \
-        "$@"
-}
-
 node_src_configure() {
-    node_ewaf configure \
-        --prefix=/usr \
-        --libdir=/usr/${LIBDIR} \
-       "${NODE_SRC_CONFIGURE_PARAMS[@]}"
-}
+    cmake_src_configure
 
-node_src_compile() {
-    node_ewaf build \
-        -j${EXJOBS:-1}
+    # tools/js2cs.py assumes that jsmin is in ../deps/v8/tools
+    edo mkdir -p "${WORKBASE}/build/deps/v8/tools"
+    edo ln -s "${WORK}/deps/v8/tools/jsmin.py" "${WORKBASE}/build/deps/v8/tools"
 }
 
 node_src_test() {
-    # getting a number of failures, ignoring tests for now
+    # TODO: ctest test-suite makes invalid assumptions about directory layout
     :
-}
-
-node_src_install() {
-    node_ewaf install \
-        --destdir="${IMAGE}"
-
-    emagicdocs
 }

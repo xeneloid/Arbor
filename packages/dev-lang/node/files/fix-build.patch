@@ -1,16 +1,16 @@
 Source: http://comments.gmane.org/gmane.comp.lang.javascript.nodejs/18924
 Upstream: Unknown
-Reason: Fix build with --shared-libev
+Reason: Fix build with -DSHARED_LIBEV=True
 
-diff --git a/wscript b/wscript
-index eab6990..5919ae9 100644
---- a/wscript
-+++ b/wscript
-@@ -463,7 +463,6 @@ def configure(conf):
-   # LFS
-   conf.env.append_value('CPPFLAGS',  '-D_LARGEFILE_SOURCE')
-   conf.env.append_value('CPPFLAGS',  '-D_FILE_OFFSET_BITS=64')
--  conf.env.append_value('CPPFLAGS',  '-DEV_MULTIPLICITY=0')
+diff --git a/cmake/configure.cmake b/cmake/configure.cmake
+index c055753..cd058a6 100644
+--- a/cmake/configure.cmake
++++ b/cmake/configure.cmake
+@@ -90,7 +90,6 @@ add_definitions(
+   -DX_STACKSIZE=65536
+   -D_LARGEFILE_SOURCE
+   -D_FILE_OFFSET_BITS=64
+-  -DEV_MULTIPLICITY=0
+   -D_FORTIFY_SOURCE=2
+   )
  
-   # Makes select on windows support more than 64 FDs
-   if sys.platform.startswith("win32"):
