@@ -25,7 +25,7 @@ ant_src_prepare() {
 
 ant_src_compile() {
 #    _ant_run clean
-    _ant_run "${ANT_SRC_COMPILE_PARAMS[@]}" "${@}" ${EXTRA_ECONF}
+    _ant_run "${ANT_SRC_COMPILE_PARAMS[@]}" "${@}"
 }
 
 ant_src_test() {
