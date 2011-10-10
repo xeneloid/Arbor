@@ -2,20 +2,8 @@
 # Copyright 2011 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SUMMARY="libnl is a library for applications dealing with netlink sockets"
-DESCRIPTION="
-This library provides an interface for raw netlink messaging and various netlink
-family specific interfaces.
-"
-HOMEPAGE="http://www.infradead.org/~tgr/${PN}"
-DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.gz"
+require libnl
 
-BUGS_TO=""
-REMOTE_IDS=""
-
-UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/index.html [[ lang = en ]]"
-
-LICENCES="LGPL-2.1"
 SLOT="1"
 PLATFORMS="~amd64 ~ppc64 ~x86"
 MYOPTIONS=""
