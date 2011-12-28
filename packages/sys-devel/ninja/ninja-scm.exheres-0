@@ -3,7 +3,7 @@
 
 SCM_REPOSITORY="git://github.com/martine/ninja.git"
 
-require scm-git
+require scm-git elisp-optional [ source_directory=misc ]
 
 SUMMARY="A small build system with a focus on speed"
 HOMEPAGE="https://github.com/martine/ninja"
@@ -24,6 +24,7 @@ DEPENDENCIES="
 src_compile() {
     edo ./bootstrap.py
     edo asciidoc doc/manual.asciidoc
+    elisp-optional_src_compile
 }
 
 src_test() {
@@ -31,9 +32,9 @@ src_test() {
 }
 
 src_install() {
-    # TODO: install emacs mode
     dobin ninja
     dodoc doc/manual.html
     dodoc COPYING HACKING README
+    elisp-optional_src_install
 }
 
