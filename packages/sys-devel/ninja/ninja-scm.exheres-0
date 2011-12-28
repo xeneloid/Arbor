@@ -1,0 +1,39 @@
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="git://github.com/martine/ninja.git"
+
+require scm-git
+
+SUMMARY="A small build system with a focus on speed"
+HOMEPAGE="https://github.com/martine/ninja"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        app-doc/asciidoc
+        dev-lang/python:*
+    test:
+        dev-lang/python:*
+"
+
+src_compile() {
+    edo ./bootstrap.py
+    edo asciidoc doc/manual.asciidoc
+}
+
+src_test() {
+    edo ./misc/ninja_test.py
+}
+
+src_install() {
+    # TODO: install emacs mode
+    dobin ninja
+    dodoc doc/manual.html
+    dodoc COPYING HACKING README
+}
+
