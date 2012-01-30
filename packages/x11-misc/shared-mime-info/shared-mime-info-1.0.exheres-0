@@ -26,6 +26,6 @@ DEPENDENCIES="
         dev-libs/libxml2[>=2.4]
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-update-mimedb )
+DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 # "update_mime_database-update-mime-database.o: file not recognized: File truncated"
 
