@@ -1,18 +1,19 @@
 # Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
 # Distributed under the terms of the GNU General Public Licesnse v2
 
-require cmake
+export_exlib_phases src_test src_install
 
-export_exlib_phases src_configure src_test
-
-MY_PNV="${PN}-v${PV}"
+MY_PV="v${PV}"
+MY_PNV="${PN}-${MY_PV}"
 WORK="${WORKBASE}/${MY_PNV}"
 
 SUMMARY="Evented I/O for V8 Javascript"
 DESCRIPTION="Desgined to provide an easy way to build scalable network applications, similar to Event Machine or Twisted"
-DOWNLOADS="http://nodejs.org/dist/${MY_PNV}.tar.gz"
+DOWNLOADS="http://nodejs.org/dist/${MY_PV}/${MY_PNV}.tar.gz"
 HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
+
+require waf
 
 DEPENDENCIES="
     build+run:
@@ -23,25 +24,19 @@ DEPENDENCIES="
         net-dns/c-ares
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}/fix-build.patch"
+WAF_SRC_CONFIGURE_PARAMS=(
+    --shared-cares
+    --shared-v8
 )
 
-CMAKE_SRC_CONFIGURE_PARAMS+=(
-    -DSHARED_CARES:BOOL=True
-    -DSHARED_LIBEV:BOOL=True
-    -DSHARED_V8:BOOL=True
-)
+node_src_install() {
+    default
 
-node_src_configure() {
-    cmake_src_configure
-
-    # tools/js2cs.py assumes that jsmin is in ../deps/v8/tools
-    edo mkdir -p "${WORKBASE}/build/deps/v8/tools"
-    edo ln -s "${WORK}/deps/v8/tools/jsmin.py" "${WORKBASE}/build/deps/v8/tools"
+    edo rmdir "${IMAGE}/usr/include/node/ev"
 }
 
 node_src_test() {
-    # TODO: ctest test-suite makes invalid assumptions about directory layout
-    :
+    esandbox disable_net
+    emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
+    esandbox enable_net
 }
