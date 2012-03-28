@@ -3,8 +3,6 @@
 # Based in part upon 'waf.exlib', which is:
 #     Copyright 2009 Ingmar Vanhassel
 
-require multilib
-
 export_exlib_phases src_configure
 
 DEPENDENCIES="
@@ -24,7 +22,7 @@ ewaf() {
 waf_src_configure() {
     ewaf configure \
         --prefix=/usr/ \
-        --libdir=/usr/$(get_libdir)/ \
+        --libdir=/usr/${LIBDIR}/ \
         "${WAF_SRC_CONFIGURE_PARAMS[@]}" \
         $(for s in "${WAF_SRC_CONFIGURE_OPTION_ENABLES[@]}" ; do option_enable ${s} ; done)
 }
