@@ -15,6 +15,11 @@ LICENCES="MIT"
 
 require waf
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}/ef046bf4f64161c6d0f4c4920ab62895789d576c.patch"
+    -p1 "${FILES}/allow-rebuilding-keys-without-interaction.patch"
+)
+
 DEPENDENCIES="
     build+run:
         dev-libs/libev
@@ -36,6 +41,10 @@ node_src_install() {
 }
 
 node_src_test() {
+    # rebuild certificates, using updated paramters from ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
+    emake -j1 -C test/fixtures/keys clean
+    emake -j1 -C test/fixtures/keys
+
     esandbox disable_net
     emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
     esandbox enable_net
