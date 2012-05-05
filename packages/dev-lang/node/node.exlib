@@ -46,6 +46,6 @@ node_src_test() {
     emake -j1 -C test/fixtures/keys
 
     esandbox disable_net
-    emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
+    PATH="${WORK}:${PATH}" emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
     esandbox enable_net
 }
