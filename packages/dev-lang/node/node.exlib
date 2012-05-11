@@ -38,6 +38,8 @@ node_src_install() {
     default
 
     edo rmdir "${IMAGE}/usr/include/node/ev"
+
+    edo mv "${IMAGE}/usr/${LIBDIR}/node_modules/npm/man" "${IMAGE}/usr/share/man"
 }
 
 node_src_test() {
