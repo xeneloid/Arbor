@@ -8,7 +8,7 @@ MY_PNV="${PN}-${MY_PV}"
 WORK="${WORKBASE}/${MY_PNV}"
 
 SUMMARY="Evented I/O for V8 Javascript"
-DESCRIPTION="Desgined to provide an easy way to build scalable network applications, similar to Event Machine or Twisted"
+DESCRIPTION="Designed to provide an easy way to build scalable network applications, similar to Event Machine or Twisted"
 DOWNLOADS="http://nodejs.org/dist/${MY_PV}/${MY_PNV}.tar.gz"
 HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
@@ -43,7 +43,7 @@ node_src_install() {
 }
 
 node_src_test() {
-    # rebuild certificates, using updated paramters from ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
+    # rebuild certificates, using updated parameters from ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
     emake -j1 -C test/fixtures/keys clean
     emake -j1 -C test/fixtures/keys
 
