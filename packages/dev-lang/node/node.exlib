@@ -22,15 +22,12 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 DEPENDENCIES="
     build+run:
-        dev-libs/libev
         dev-libs/libpthread-stubs
         dev-libs/openssl
         dev-libs/v8
-        net-dns/c-ares
 "
 
 WAF_SRC_CONFIGURE_PARAMS=(
-    --shared-cares
     --shared-v8
 )
 
