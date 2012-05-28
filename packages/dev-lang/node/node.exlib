@@ -1,8 +1,6 @@
 # Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
 # Distributed under the terms of the GNU General Public Licesnse v2
 
-export_exlib_phases src_test src_install
-
 MY_PV="v${PV}"
 MY_PNV="${PN}-${MY_PV}"
 WORK="${WORKBASE}/${MY_PNV}"
@@ -13,7 +11,9 @@ DOWNLOADS="http://nodejs.org/dist/${MY_PV}/${MY_PNV}.tar.gz"
 HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
 
-require waf
+require waf [ waf_executable="./tools/waf-light" ]
+
+export_exlib_phases src_test src_install
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p1 "${FILES}/ef046bf4f64161c6d0f4c4920ab62895789d576c.patch"
@@ -29,10 +29,13 @@ DEPENDENCIES="
 
 WAF_SRC_CONFIGURE_PARAMS=(
     --shared-v8
+    --hates=bindir
+    --hates=htmldir
+    --hates=datadir
 )
 
 node_src_install() {
-    default
+    waf_src_install
 
     edo rmdir "${IMAGE}/usr/include/node/ev"
 
