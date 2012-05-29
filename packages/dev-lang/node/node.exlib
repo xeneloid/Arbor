@@ -47,7 +47,17 @@ node_src_test() {
     emake -j1 -C test/fixtures/keys clean
     emake -j1 -C test/fixtures/keys
 
-    esandbox disable_net
+    # these test call out to google.com, disable them, might not have internet access
+    edo mv test/simple/test-net-connect-timeout.js test/simple/test-regress-GH-819.js test/disabled
+
+    esandbox allow_net "inet:0.0.0.0@0"
+    esandbox allow_net "inet:0.0.0.0@12346-12348"
+    esandbox allow_net "inet:0.0.0.0@12351"
+    esandbox allow_net "inet:0.0.0.0@20988-20989"
+    esandbox allow_net --connect "LOCAL@12346-12348"
+    esandbox allow_net --connect "LOCAL@12351"
+    esandbox allow_net --connect "LOCAL@20988-20989"
+    esandbox allow_net "unix:${WORK}/test/tmp/test.sock"
+
     PATH="${WORK}:${PATH}" emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
-    esandbox enable_net
 }
