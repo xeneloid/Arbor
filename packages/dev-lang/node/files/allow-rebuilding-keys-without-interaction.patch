@@ -1,5 +1,5 @@
 Source: Michael Thomas <aelmalinka@gmail.com>
-Upstream: https://github.com/joyent/node/pull/3193
+Upstream: yes, https://github.com/joyent/node/commit/4e48605
 Reason: rebuilding keys requires interactive elements w/o this, see ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
 
 diff --git a/test/fixtures/keys/Makefile b/test/fixtures/keys/Makefile
