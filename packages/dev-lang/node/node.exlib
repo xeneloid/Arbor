@@ -59,5 +59,5 @@ node_src_test() {
     esandbox allow_net --connect "LOCAL@20988-20989"
     esandbox allow_net "unix:${WORK}/test/tmp/test.sock"
 
-    PATH="${WORK}:${PATH}" emake "${DEFAULT_SRC_TEST_PARAMS[@]}" test
+    PATH="${WORK}:${PATH}" emake -j1 test
 }
