@@ -13,12 +13,7 @@ LICENCES="MIT"
 
 require waf [ waf_executable="./tools/waf-light" ]
 
-export_exlib_phases src_test src_install
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p1 "${FILES}/ef046bf4f64161c6d0f4c4920ab62895789d576c.patch"
-    -p1 "${FILES}/allow-rebuilding-keys-without-interaction.patch"
-)
+export_exlib_phases src_prepare src_test src_install
 
 DEPENDENCIES="
     build+run:
@@ -34,6 +29,18 @@ WAF_SRC_CONFIGURE_PARAMS=(
     --hates=datadir
 )
 
+node_src_prepare() {
+    if ! ever at_least 0.7.7 ; then
+        expatch -p1 "${FILES}/ef046bf4f64161c6d0f4c4920ab62895789d576c.patch"
+        expatch -p1 "${FILES}/allow-rebuilding-keys-without-interaction.patch"
+    fi
+
+    # these tests call out to google.com
+    edo mv test/simple/test-net-connect-timeout.js test/simple/test-regress-GH-819.js test/disabled
+
+    default
+}
+
 node_src_install() {
     waf_src_install
 
@@ -46,9 +53,6 @@ node_src_test() {
     # rebuild certificates, using updated parameters from ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
     emake -j1 -C test/fixtures/keys clean
     emake -j1 -C test/fixtures/keys
-
-    # these test call out to google.com, disable them, might not have internet access
-    edo mv test/simple/test-net-connect-timeout.js test/simple/test-regress-GH-819.js test/disabled
 
     esandbox allow_net "inet:0.0.0.0@0"
     esandbox allow_net "inet:0.0.0.0@12346-12348"
