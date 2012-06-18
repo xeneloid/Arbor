@@ -22,6 +22,11 @@ DEPENDENCIES="
         dev-libs/v8
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}/test-avoid-binding-to-0.0.0.0.patch"
+    -p1 "${FILES}/test-pingpong-avoid-binding-to-0.0.0.0.patch"
+)
+
 WAF_SRC_CONFIGURE_PARAMS=(
     --shared-v8
     --hates=bindir
@@ -30,15 +35,19 @@ WAF_SRC_CONFIGURE_PARAMS=(
 )
 
 node_src_prepare() {
+    default
+
     if ! ever at_least 0.7.7 ; then
         expatch -p1 "${FILES}/ef046bf4f64161c6d0f4c4920ab62895789d576c.patch"
         expatch -p1 "${FILES}/allow-rebuilding-keys-without-interaction.patch"
     fi
 
+    # these tests fail on localhost
+    edo mv test/simple/test-dgram-{broad,multi}cast-multi-process.js test/disabled
+    # these tests call out to openssl which will only bind on 0.0.0.0
+    edo mv test/simple/test-tls-securepair-{client,server}.js test/simple/test-tls-ext-key-usage.js test/disabled
     # these tests call out to google.com
     edo mv test/simple/test-net-connect-timeout.js test/simple/test-regress-GH-819.js test/disabled
-
-    default
 }
 
 node_src_install() {
@@ -55,12 +64,6 @@ node_src_test() {
     emake -j1 -C test/fixtures/keys
 
     esandbox allow_net "inet:0.0.0.0@0"
-    esandbox allow_net "inet:0.0.0.0@12346-12348"
-    esandbox allow_net "inet:0.0.0.0@12351"
-    esandbox allow_net "inet:0.0.0.0@20988-20989"
-    esandbox allow_net --connect "LOCAL@12346-12348"
-    esandbox allow_net --connect "LOCAL@12351"
-    esandbox allow_net --connect "LOCAL@20988-20989"
     esandbox allow_net "unix:${WORK}/test/tmp/test.sock"
 
     PATH="${WORK}:${PATH}" emake -j1 test
