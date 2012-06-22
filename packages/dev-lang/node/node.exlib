@@ -54,8 +54,9 @@ node_src_install() {
     waf_src_install
 
     edo rmdir "${IMAGE}/usr/include/node/ev"
+    edo rm -r "${IMAGE}/usr/${LIBDIR}/node_modules/npm/man"
 
-    edo mv "${IMAGE}/usr/${LIBDIR}/node_modules/npm/man" "${IMAGE}/usr/share/man"
+    doman $(find "${WORK}/deps/npm/man" -type f)
 }
 
 node_src_test() {
