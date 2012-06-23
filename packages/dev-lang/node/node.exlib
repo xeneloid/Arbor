@@ -56,7 +56,7 @@ node_src_install() {
     edo rmdir "${IMAGE}/usr/include/node/ev"
     edo rm -r "${IMAGE}/usr/${LIBDIR}/node_modules/npm/man"
 
-    doman $(find "${WORK}/deps/npm/man" -type f)
+    doman $(find deps/npm/man -type f)
 }
 
 node_src_test() {
