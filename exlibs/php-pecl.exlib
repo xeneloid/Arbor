@@ -8,7 +8,6 @@ export_exlib_phases src_install src_configure
 DEPENDENCIES="
     build+run:
         dev-lang/php[pear]
-        dev-pear/PEAR[>=1.7.1]
 "
 
 fix_PECL_PV() {
