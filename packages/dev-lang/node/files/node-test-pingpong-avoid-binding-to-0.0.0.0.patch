@@ -1,12 +1,6 @@
-From fff5fdd6ef544b694da053d44972febe609a9ad3 Mon Sep 17 00:00:00 2001
-From: Michael Thomas <aelmalinka@gmail.com>
-Date: Sun, 17 Jun 2012 21:48:47 -0400
-Subject: [PATCH 2/2] test, pingpong: avoid binding to 0.0.0.0
-
----
- test/simple/test-dgram-pingpong.js |    3 +--
- test/simple/test-net-pingpong.js   |    3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+Upstream: No, disables parts of test suite
+Source: Michael Thomas <aelmalinka@gmail.com>
+Reason: pingpong runs on all local interfaces, AND all interfaces
 
 diff --git a/test/simple/test-dgram-pingpong.js b/test/simple/test-dgram-pingpong.js
 index 18b39b5..2176216 100644
