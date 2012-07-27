@@ -1,6 +1,6 @@
 Upstream: https://github.com/joyent/node/pull/3725
 
-From 52bdb8205a2baae27f654e875b0f8e5057f01119 Mon Sep 17 00:00:00 2001
+From 9e860f92e994e28015e1569cef16b1d1b11822b4 Mon Sep 17 00:00:00 2001
 From: Michael Thomas <aelmalinka@gmail.com>
 Date: Fri, 20 Jul 2012 15:54:42 -0400
 Subject: [PATCH] test: prefer binding to local interface
@@ -1710,7 +1710,7 @@ index 5eca9d0..652ae4a 100644
        server2listening = true;
  
 diff --git a/test/simple/test-net-settimeout.js b/test/simple/test-net-settimeout.js
-index 5b14117..1c0ca31 100644
+index 5b14117..881907e 100644
 --- a/test/simple/test-net-settimeout.js
 +++ b/test/simple/test-net-settimeout.js
 @@ -31,7 +31,7 @@ var T = 100;
@@ -1718,7 +1718,7 @@ index 5b14117..1c0ca31 100644
    c.write('hello');
  });
 -server.listen(common.PORT);
-+server.listen(common.PORT, '127.0.0.1');
++server.listen(common.PORT, 'localhost');
  
  var socket = net.createConnection(common.PORT, 'localhost');
  
