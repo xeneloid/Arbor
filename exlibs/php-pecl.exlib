@@ -5,6 +5,8 @@
 
 export_exlib_phases src_install src_configure
 
+myexparam module=extension
+
 DEPENDENCIES="
     build+run:
         dev-lang/php[pear]
@@ -30,19 +32,7 @@ UPSTREAM_CHANGELOG="http://pecl.php.net/package-changelog.php?package=${PN}&rele
 
 WORK=${WORKBASE}/${PN}-${PECL_PV}
 
-php-pecl_src_configure() {
-    phpize
-
-    default
-}
-
-php-pecl_src_install() {
-    # Let install write to PHP exstension directory.
-    sydboxcmd write $(php-config --extension-dir)
-
-    # Provide a updated php.ini which loads the new extension - based on the current php.ini.
-    edo mkdir -p "${IMAGE}"/etc/php
-    edo cp /etc/php/php.ini "${IMAGE}"/etc/php/php.ini
+install_module_config() {
     hasLines=$(grep -c "extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini)
     if [[ $hasLines -eq 0 ]] ; then
         # Find linenumber extension_dir and use the next line.
@@ -50,6 +40,44 @@ php-pecl_src_install() {
         linenum=$((linenum+1))
         # Insert extension in php.ini.
         edo sed -i "${linenum}i\extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini
+    fi
+}
+
+install_zend_config() {
+    extensionDir=$(php-config --extension-dir)
+    extensionFileName="${extensionDir}/${PN}.so"
+    hasLines=$(grep -c "zend_extension = ${extensionFileName}" "${IMAGE}"/etc/php/php.ini)
+    if [[ $hasLines -eq 0 ]] ; then
+        # Find linenumber extension_dir and use the next line.
+        linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}')
+        linenum=$((linenum+1))
+        # Insert extension in php.ini.
+        edo sed -i "${linenum}i\zend_extension = ${extensionFileName}" "${IMAGE}"/etc/php/php.ini
+    fi
+}
+
+php-pecl_src_configure() {
+    phpize
+
+    default
+}
+
+php-pecl_src_install() {
+    exparam -v PHP_MODULE_TYPE module
+
+    # Let install write to PHP exstension directory.
+    sydboxcmd write $(php-config --extension-dir)
+
+    # Provide a updated php.ini which loads the new extension - based on the current php.ini.
+    edo mkdir -p "${IMAGE}"/etc/php
+    edo cp /etc/php/php.ini "${IMAGE}"/etc/php/php.ini
+
+    if [[ "$PHP_MODULE_TYPE" == "zend" ]] ; then
+        install_zend_config
+    elif [[ "$PHP_MODULE_TYPE" == "module" ]] ; then
+        install_module_config
+    else
+        die "Invalid module type"
     fi
 
     default
