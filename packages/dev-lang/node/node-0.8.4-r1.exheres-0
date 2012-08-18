@@ -59,9 +59,6 @@ src_install() {
     default
 
     edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
-    edo rm -r "${IMAGE}/usr/${LIBDIR}/node_modules/npm/man"
-
-    doman $(find deps/npm/man -type f)
 }
 
 src_test() {
