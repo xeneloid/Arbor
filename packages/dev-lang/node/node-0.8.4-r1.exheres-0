@@ -11,7 +11,7 @@ DOWNLOADS="http://nodejs.org/dist/${MY_PV}/${MY_PNV}.tar.gz"
 HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
     build+run:
@@ -58,7 +58,7 @@ src_configure() {
 src_install() {
     default
 
-    edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
+    [[ $LIBDIR != lib ]] && edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
 }
 
 src_test() {
