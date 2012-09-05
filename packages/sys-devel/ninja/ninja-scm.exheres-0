@@ -34,7 +34,7 @@ src_test() {
 src_install() {
     dobin ninja
     dodoc doc/manual.html
-    dodoc COPYING HACKING README
+    dodoc COPYING HACKING.md README
     elisp-optional_src_install
 }
 
