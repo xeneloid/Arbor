@@ -2,6 +2,6 @@ SUMMARY="a fast lightweight text and graphic web-browser"
 HOMEPAGE="http://links.twibright.com/"
 LICENCES="GPL-2"
 BUGS_TO="coldwind@exherbo.org"
-REMOTE_IDS="freshmeat:links"
+REMOTE_IDS="freecode:links"
 # upstream ChangeLog: http://links.twibright.com/download/ChangeLog
 
