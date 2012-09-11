@@ -11,5 +11,5 @@ MYOPTIONS=""
 DEPENDENCIES=""
 
 BUGS_TO="ciaran.mccreesh@googlemail.com"
-REMOTE_IDS="freshmeat:fdupes"
+REMOTE_IDS="freecode:fdupes"
 
