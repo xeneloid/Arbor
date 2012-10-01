@@ -7,6 +7,8 @@ SUMMARY="A library interface for terminal emulators to record user sessions to u
 HOMEPAGE=""
 DOWNLOADS="ftp://ftp.altlinux.org/pub/people/ldv/${PN}/${PNV}.tar.bz2"
 
+REMOTE_IDS="freecode:${PN}"
+
 LICENCES="LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64"
