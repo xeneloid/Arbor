@@ -1,0 +1,36 @@
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="martine" ] elisp-optional [ source_directory=misc ]
+
+SUMMARY="A small build system with a focus on speed"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        app-doc/asciidoc
+        dev-lang/python:*
+    test:
+        dev-lang/python:*
+"
+
+src_compile() {
+    edo ./bootstrap.py
+    edo asciidoc doc/manual.asciidoc
+    elisp-optional_src_compile
+}
+
+src_test() {
+    edo ./misc/ninja_test.py
+}
+
+src_install() {
+    dobin ninja
+    dodoc doc/manual.html
+    dodoc COPYING HACKING.md README
+    elisp-optional_src_install
+}
+
