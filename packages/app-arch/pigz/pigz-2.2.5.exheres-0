@@ -1,0 +1,18 @@
+# Copyright 2012 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Parallel implementation of gzip"
+HOMEPAGE="http://www.zlib.net/${PN}"
+DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+src_install() {
+    dobin ${PN}
+    doman ${PN}.1
+    dodoc README ${PN}.pdf
+}
+
