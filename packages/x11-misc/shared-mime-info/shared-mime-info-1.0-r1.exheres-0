@@ -19,8 +19,8 @@ DEPENDENCIES="
     build:
         app-arch/xz
         dev-util/intltool[>=0.35.0]
-        dev-util/pkg-config[>=0.20]
         sys-devel/gettext
+        virtual/pkg-config[>=0.20]
     build+run:
         dev-libs/glib:2[>=2.16]
         dev-libs/libxml2[>=2.4]
