@@ -6,3 +6,5 @@ require libnl
 SLOT="3.0"
 PLATFORMS="~amd64 ~ppc64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-cache.patch )
+

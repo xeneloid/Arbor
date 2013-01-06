@@ -1,0 +1,34 @@
+Source: Mihai Dontu
+Upstream: yes
+Reason: Without this patch, NetworkManager can crash
+
+From: mihai.dontu@gmail.com <mihai.dontu@gmail.com>
+Date: Sun, 6 Jan 2013 05:07:02 +0000 (+0200)
+Subject: cache: make sure the user has specified a callback
+X-Git-Url: http://git.infradead.org/users/tgr/libnl.git/commit/ba38f3919835c39d7bc1e939ef3ca89cfe31600d
+
+cache: make sure the user has specified a callback
+
+In cache_include(), the user callback is used even though one might not
+have been specified, leading to a crash. This happens, for example, when
+NetworkManager calls nl_cache_include() with the change_cb argument set
+to NULL. Fix it by making sure the callback points to a valid address.
+
+Signed-off-by: Mihai Dontu <mihai.dontu@gmail.com>
+Signed-off-by: Thomas Graf <tgraf@suug.ch>
+---
+
+diff --git a/lib/cache.c b/lib/cache.c
+index 883aa51..42c0b5e 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -752,7 +752,8 @@ static int cache_include(struct nl_cache *cache, struct nl_object *obj,
+ 			 * Handle them first.
+ 			 */
+ 			if (nl_object_update(old, obj) == 0) {
+-				cb(cache, old, NL_ACT_CHANGE, data);
++				if (cb)
++					cb(cache, old, NL_ACT_CHANGE, data);
+ 				nl_object_put(old);
+ 				return 0;
+ 			}
