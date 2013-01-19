@@ -9,7 +9,7 @@ DOWNLOADS="http://oss.metaparadigm.com/${PN}/${PNV}.tar.gz"
 
 LICENCES="MIT"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES=""
