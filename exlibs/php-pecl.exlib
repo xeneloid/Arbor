@@ -66,7 +66,7 @@ php-pecl_src_install() {
     exparam -v PHP_MODULE_TYPE module
 
     # Let install write to PHP exstension directory.
-    sydboxcmd write $(php-config --extension-dir)
+    esandbox allow $(php-config --extension-dir)
 
     # Provide a updated php.ini which loads the new extension - based on the current php.ini.
     edo mkdir -p "${IMAGE}"/etc/php
