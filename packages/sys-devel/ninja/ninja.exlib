@@ -7,7 +7,7 @@ SUMMARY="A small build system with a focus on speed"
 
 LICENCES="Apache-2.0"
 SLOT="0"
-MYOPTIONS=""
+MYOPTIONS="vim-syntax"
 
 DEPENDENCIES="
     build:
@@ -41,6 +41,12 @@ src_install() {
     dobin ninja
     dodoc doc/manual.html
     dodoc COPYING HACKING.md README
+
+    if option vim-syntax; then
+        insinto /usr/share/vim/vimfiles/syntax/
+        doins misc/ninja.vim
+    fi
+
     elisp-optional_src_install
 }
 
