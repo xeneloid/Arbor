@@ -13,18 +13,28 @@ DEPENDENCIES="
     build:
         app-doc/asciidoc
         dev-lang/python:*
+        dev-libs/libxslt
     test:
+        dev-cpp/gtest
         dev-lang/python:*
 "
 
 src_compile() {
-    edo ./bootstrap.py
-    edo asciidoc doc/manual.asciidoc
+    edo ./bootstrap.py --verbose
+    edo ./ninja manual
     elisp-optional_src_compile
 }
 
 src_test() {
     edo ./misc/ninja_test.py
+
+    # this just fails telling the user to set rlimit higher
+    edo sed \
+        -e 's/SetWithLots/DISABLED_SetWithLots/g' \
+        -i src/subprocess_test.cc
+
+    edo ./ninja ninja_test
+    edo ./ninja_test
 }
 
 src_install() {
