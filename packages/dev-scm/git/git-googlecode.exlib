@@ -122,8 +122,8 @@ git-googlecode_src_configure() {
 myemake() {
     emake \
         DESTDIR="${IMAGE}" \
-        prefix=/usr \
-        gitexecdir=/usr/libexec/${PN} \
+        prefix=/usr/$(exhost --target) \
+        gitexecdir=/usr/$(exhost --target)/libexec/${PN} \
         gitwebdir=/usr/share/gitweb \
         template_dir=/usr/share/${PN}/templates \
         INSTALLSITELIB=${VENDOR_LIB} \
@@ -131,6 +131,8 @@ myemake() {
         LDFLAGS="${LDFLAGS}" \
         CC="${CC}" \
         AR="${AR}" \
+        PERL_PATH=/usr/$(exhost --build)/bin/perl \
+        PYTHON_PATH="${PYTHON}" \
         ${myoptions} \
         "${@}"
 }
@@ -184,15 +186,15 @@ git-googlecode_src_install() {
         fi
     fi
 
-    exeinto /usr/libexec/${PN}
+    exeinto /usr/$(exhost --target)/libexec/${PN}
     newexe contrib/fast-import/import-tars.perl git-import-tars
 
     docinto /gitweb/
     dodoc gitweb/{INSTALL,README}
 
     fixlocalpod
-    edo find "${IMAGE}/usr/${LIBDIR}/perl5" -type f -name .packlist -delete
-    edo find "${IMAGE}/usr/${LIBDIR}/perl5" -type d -empty -delete
+    edo find "${IMAGE}/usr/$(exhost --target)/lib/perl5" -type f -name .packlist -delete
+    edo find "${IMAGE}/usr/$(exhost --target)/lib/perl5" -type d -empty -delete
 
     if option baselayout ; then
         newinitd "${FILES}"/git-daemon.initd git-daemon
