@@ -37,7 +37,7 @@ src_prepare() {
 pkg_preinst() {
     if has_version dev-libs/json-c ; then
         # Older versions installed to /usr/include/json, 0.11 installs a symlink
-        edo rm -r /usr/include/json
+        [[ -d "${ROOT}"/usr/include/json ]] && edo rm -r "${ROOT}"/usr/include/json
     fi
 }
 
