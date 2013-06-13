@@ -1,7 +1,7 @@
 # Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-GITHUB_REVISION="d0d199e99fe6648c3994ecbbe0c7927065b22d16"
+GITHUB_REVISION="045d00847b191da46faf1c1b91368a252412bb17"
 
 require ninja
 

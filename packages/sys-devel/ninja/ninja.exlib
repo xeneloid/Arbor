@@ -26,15 +26,9 @@ src_compile() {
 }
 
 src_test() {
-    edo ./misc/ninja_test.py
-
-    # this just fails telling the user to set rlimit higher
-    edo sed \
-        -e 's/SetWithLots/DISABLED_SetWithLots/g' \
-        -i src/subprocess_test.cc
-
     edo ./ninja ninja_test
-    edo ./ninja_test
+    # SetWithLots just fails telling the user to set rlimit higher
+    edo ./ninja_test --gtest_filter=-SubprocessTest.SetWithLots
 }
 
 src_install() {
