@@ -3,7 +3,7 @@
 # Based in part upon 'php-pear.exlib', which is:
 #     Copyright 2009 Wulf C. Krueger <philantrop@exherbo.org>
 
-export_exlib_phases src_install src_configure
+export_exlib_phases src_configure src_install
 
 myexparam module=extension
 
@@ -33,27 +33,13 @@ UPSTREAM_CHANGELOG="http://pecl.php.net/package-changelog.php?package=${PN}&rele
 WORK=${WORKBASE}/${PN}-${PECL_PV}
 
 install_module_config() {
-    hasLines=$(grep -c "extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini)
-    if [[ $hasLines -eq 0 ]] ; then
-        # Find linenumber extension_dir and use the next line.
-        linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}')
-        linenum=$((linenum+1))
-        # Insert extension in php.ini.
-        edo sed -i "${linenum}i\extension = ${PN}.so" "${IMAGE}"/etc/php/php.ini
-    fi
+    edo echo "extension = ${PN}.so" > "${IMAGE}"/etc/php/${PN}.ini
 }
 
 install_zend_config() {
     extensionDir=$(php-config --extension-dir)
     extensionFileName="${extensionDir}/${PN}.so"
-    hasLines=$(grep -c "zend_extension = ${extensionFileName}" "${IMAGE}"/etc/php/php.ini)
-    if [[ $hasLines -eq 0 ]] ; then
-        # Find linenumber extension_dir and use the next line.
-        linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}')
-        linenum=$((linenum+1))
-        # Insert extension in php.ini.
-        edo sed -i "${linenum}i\zend_extension = ${extensionFileName}" "${IMAGE}"/etc/php/php.ini
-    fi
+    edo echo "zend_extension = ${extensionFileName}" > "${IMAGE}"/etc/php/${PN}.ini
 }
 
 php-pecl_src_configure() {
@@ -65,12 +51,7 @@ php-pecl_src_configure() {
 php-pecl_src_install() {
     exparam -v PHP_MODULE_TYPE module
 
-    # Let install write to PHP exstension directory.
-    esandbox allow $(php-config --extension-dir)
-
-    # Provide a updated php.ini which loads the new extension - based on the current php.ini.
     edo mkdir -p "${IMAGE}"/etc/php
-    edo cp /etc/php/php.ini "${IMAGE}"/etc/php/php.ini
 
     if [[ "$PHP_MODULE_TYPE" == "zend" ]] ; then
         install_zend_config
@@ -80,11 +61,6 @@ php-pecl_src_install() {
         die "Invalid module type"
     fi
 
-    default
-}
-
-php-pecl_pkg_postinst() {
-    # Make sure the extension is executable.
-    edo chmod +x $(php-config --extension-dir)/${PN}.so
+    INSTALL_ROOT="${IMAGE}" default
 }
 
