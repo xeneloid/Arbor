@@ -1,17 +1,13 @@
 # Copyright 2008 Ciaran McCreesh
 # Distributed under the terms of the GNU General Public License v2
 
-require common-metadata
-
-DOWNLOADS="http://premium.caribe.net/~adrian2/programs/${PN}/beta/${PNV/_rc/-PR}.tar.gz"
+require googlecode [ project="fdupes" suffix="tar.gz" ] common-metadata
 
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
-
-WORK="${WORKBASE}/${PNV/_rc/-PR}"
 
 src_prepare() {
     sed -i \
