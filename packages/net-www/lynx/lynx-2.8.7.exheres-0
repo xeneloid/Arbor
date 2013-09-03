@@ -21,12 +21,11 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
-DEFAULT_SRC_CONFIGURE_PARAMS=( 
-                               --enable-cgi-links \
-                               --enable-file-upload \
-                               --enable-nls \
-                               --hates=docdir \
-                               --sysconfdir='/etc/lynx' \
-                               --with-screen=ncursesw \
+DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-cgi-links
+                               --enable-file-upload
+                               --enable-nls
+                               --hates=docdir
+                               --sysconfdir='/etc/lynx'
+                               --with-screen=ncursesw
                                --with-ssl='/usr' )
 
