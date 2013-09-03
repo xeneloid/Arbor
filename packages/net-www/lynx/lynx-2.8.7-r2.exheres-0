@@ -11,12 +11,11 @@ DOWNLOADS="${HOMEPAGE}/current/${MPNV}.tar.gz"
 LICENCES="GPL-1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="gpm ipv6"
+MYOPTIONS="ipv6"
 
 DEPENDENCIES="
     build+run:
         dev-libs/openssl
-        gpm? ( sys-libs/gpm )
         sys-libs/ncurses
 "
 
