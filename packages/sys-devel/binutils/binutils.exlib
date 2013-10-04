@@ -29,6 +29,8 @@ DEPENDENCIES="
 
 RESTRICT="test"
 
+ECONF_SOURCE="${WORK}"
+
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/76_all_use-new-ld-dtags.patch" )
 
 binutils_src_prepare() {
@@ -61,17 +63,9 @@ binutils_src_configure() {
 
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
-        edo "${WORKBASE}/${PNV}/configure"                  \
-                --build=${CHOST}                            \
-                --host=${host}                              \
+        econf                                               \
                 --target=${target}                          \
-                --prefix=/usr/${host}                       \
-                --datarootdir=/usr/share                    \
-                --localstatedir=/var                        \
-                --sysconfdir=/etc                           \
-                --disable-dependency-tracking               \
                 --disable-werror                            \
-                --enable-fast-install                       \
                 --enable-gold                               \
                 --enable-ld                                 \
                 --enable-lto                                \
@@ -81,8 +75,7 @@ binutils_src_configure() {
                 --with-lib-path=${libpath}                  \
                 $(if test x"${target}" = x"${host}" ; then
                     echo --program-prefix=${host}-
-                  fi)                                       \
-        || die
+                  fi)
     done
 }
 
