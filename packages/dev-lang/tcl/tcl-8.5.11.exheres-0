@@ -33,9 +33,8 @@ WORK="${WORKBASE}/${MY_PNV}/unix"
 RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p2 "${FILES}/${PN}-multilib.patch"
-        "${FILES}/${PN}-tclm4-soname.patch"
-        "${FILES}/${PN}-tclConfig-paths.patch"
+    -p2 "${FILES}/${PN}-tclm4-soname.patch"
+    -p2 "${FILES}/${PN}-tclConfig-paths.patch"
 )
 
 src_configure() {
