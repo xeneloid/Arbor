@@ -39,21 +39,13 @@ BUGS_TO="alip@exherbo.org"
 src_prepare() {
     default
 
-    # Install under / instead of /usr
-    edo sed -e '/^BINDIR/s,/usr,,' \
-            -e '/^SBINDIR/s,/usr,,' \
-            -i conf.mk
-
-    if option dietlibc; then
-        edo sed -e '/^CC = gcc/d' \
-                -e '/^#CC = diet/s/^#CC/CC/' \
-                -e 's/^#CFLAGS/CFLAGS/' \
-                -i conf.mk
-    fi
-}
-
-src_compile() {
-    emake BINDIR=/bin SBINDIR=/sbin
+    cat > conf.mk << EOF
+CC = $(option dietlibc diet) ${CC}
+CFLAGS = -Wall -Wextra -Wshadow ${CFLAGS}
+BINDIR = /bin
+SBINDIR = /sbin
+MANDIR = /usr/share/man
+EOF
 }
 
 src_install() {
