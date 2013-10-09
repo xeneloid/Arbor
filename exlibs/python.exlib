@@ -237,13 +237,9 @@ case ${PYTHON_EXLIB_API} in
 
                 python_run_phase() {
                     if exparam -b with_opt; then
-                        if [[ $(type -t "easy-multibuild_src_${EXHERES_PHASE}") == function ]]; then
-                            option "${OPTION_NAME}" && easy-multibuild_src_${EXHERES_PHASE}
-                        else
-                            default
-                        fi
+                        option "${OPTION_NAME}" && easy-multibuild_run_phase
                     else
-                        easy-multibuild_src_${EXHERES_PHASE}
+                        easy-multibuild_run_phase
                     fi
                 }
 
@@ -261,6 +257,7 @@ case ${PYTHON_EXLIB_API} in
 
                 python_src_install() {
                     python_run_phase
+                    emagicdocs
                 }
             else
                 export PYTHON="/usr/bin/python${PYTHON_ABIS}"
