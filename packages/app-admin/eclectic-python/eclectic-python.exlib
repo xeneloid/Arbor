@@ -1,0 +1,59 @@
+# Copyright 2013 Marc-Antoine Perennou <keruspe@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+myexparam importance=${PV}
+
+exparam -v IMPORTANCE importance
+
+require alternatives easy-multibuild
+
+export_exlib_phases src_install
+
+SUMMARY="Manages python symlinks"
+HOMEPAGE="http://www.exherbo.org"
+DOWNLOADS=""
+
+LICENCES="GPL-2"
+MYOPTIONS="multibuild_c: ( 32 64 )"
+
+SLOT="${PV}"
+
+DEPENDENCIES="
+    run:
+        dev-lang/python:*[=${SLOT}*][multibuild_c:*(-)?]
+"
+
+BUGS_TO="keruspe@exherbo.org"
+
+WORK="${WORKBASE}"
+
+install_one_multibuild() {
+    alternatives+=(
+        /usr/${LIBDIR}/pkgconfig/python.pc python${SLOT}.pc
+    )
+
+    if ! multibuild_default_target C; then
+        alternatives+=(
+            /usr/${CHOST}/bin/python python${SLOT}
+            /usr/${CHOST}/bin/python-config python${SLOT}-config
+        )
+    fi
+}
+
+eclectic-python_src_install() {
+    alternatives=(
+        python ${SLOT} ${IMPORTANCE}
+        /usr/bin/2to3 2to3-${SLOT}
+        /usr/bin/idle idle${SLOT}
+        /usr/bin/pydoc pydoc${SLOT}
+        /usr/bin/python python${SLOT}
+        /usr/bin/python-config python${SLOT}-config
+        /usr/share/man/man1/python.1 python${SLOT}.1
+    )
+
+    ever at_least 3 && alternatives+=( /usr/bin/pyvenv pyvenv-${SLOT} )
+
+    easy-multibuild_src_install
+
+    alternatives_for "${alternatives[@]}"
+}
