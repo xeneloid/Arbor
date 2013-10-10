@@ -27,9 +27,9 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/releases/${PV}/"
 LICENCES="PSF-2.2"
 SLOT="$(ever range 1-2)"
 MYOPTIONS="dbm examples ipv6 readline sqlite tk
-( berkdb gdbm ) [[ requires = dbm ]]
-dbm? ( ( berkdb gdbm ) [[ number-selected = exactly-one ]] )
-multibuild_c: ( 32 64 )
+    ( berkdb gdbm ) [[ requires = dbm ]]
+    dbm? ( ( berkdb gdbm ) [[ number-selected = exactly-one ]] )
+    multibuild_c: ( 32 64 )
 "
 
 # FIXME: Internal copy of dev-libs/expat
@@ -58,31 +58,52 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
 
 python-build_prepare_one_multibuild() {
-    # linux-3 support, applied upstream
-    ever at_least 2.7 && edo cp -r "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/Python-${PV}/Lib/plat-linux2" "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/Python-${PV}/Lib/plat-linux3"
+    if ! ever at_least 3.3; then
+        # linux-3 support, applied upstream
+        edo cp -r "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/Python-${PV}/Lib/plat-linux2" "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/Python-${PV}/Lib/plat-linux3"
+    fi
 
     [[ -d ${FILES}/${PV} ]] && expatch "${FILES}/${PV}/"
 
-    edo sed -i -e "s:@@EXHERBO_LIBDIR@@:${LIBDIR}:g" \
-        Lib/distutils/command/install.py \
-        Lib/distutils/sysconfig.py \
-        Lib/site.py \
-        Makefile.pre.in \
-        Modules/Setup.dist \
-        Modules/getpath.c \
-        setup.py
+    local needs_sed=(
+        Lib/distutils/command/install.py
+        Lib/distutils/sysconfig.py
+        Lib/site.py
+        Makefile.pre.in
+    )
 
-    edo cp "${FILES}"/"${PN}"-config.py .
-
-    edo sed -i -e "s:@@SLOT@@:${SLOT}:g" \
-               -e "s:@@PKG_CONFIG_PATH@@:${PKG_CONFIG_PATH%%:*}:g" \
-        "${PN}"-config.py
-
-    if ever at_least 2.7.0; then
-        local prefix='/usr'
-        multibuild_default_target C || prefix="/usr/${CHOST}"
-        edo sed -i -e "s:@prefix@:${prefix}:g" "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/Python-${PV}/Misc/${PN}".pc.in
+    if ever at_least 3.2; then
+        needs_sed+=(
+            Lib/sysconfig.py
+            Lib/test/test_site.py
+        )
+    else
+        needs_sed+=(
+            Modules/Setup.dist
+            Modules/getpath.c
+            setup.py
+        )
     fi
+
+    if [[ $(ever major) == 3 ]]; then
+        needs_sed+=(
+            Lib/distutils/tests/test_install.py
+        )
+    fi
+
+    edo sed -i -e "s:@@EXHERBO_LIBDIR@@:${LIBDIR}:g" ${needs_sed[@]}
+
+    if ! multibuild_default_target C; then
+        edo cp "${FILES}"/"${PN}"-config.py .
+
+        edo sed -i -e "s:@@SLOT@@:${SLOT}:g" \
+                   -e "s:@@PKG_CONFIG_PATH@@:${PKG_CONFIG_PATH%%:*}:g" \
+            "${PN}"-config.py
+    fi
+
+    local prefix='/usr'
+    multibuild_default_target C || prefix="/usr/${CHOST}"
+    edo sed -i -e "s:@prefix@:${prefix}:g" Misc/${PN}.pc.in
 
     eautoreconf
 }
@@ -163,42 +184,54 @@ python-build_install_one_multibuild() {
     fi
     popd
 
-    ! ever at_least 3.1 && edo rm "${IMAGE}"/usr/bin/smtpd.py
+    if [[ $(ever major) == 2 ]]; then
+        edo rm "${IMAGE}"/usr/bin/smtpd.py
+        edo rm "${IMAGE}"/usr/bin/python
+        edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python.pc
+        edo mv "${IMAGE}"/usr/bin/idle{,${SLOT}}
+        edo mv "${IMAGE}"/usr/bin/pydoc{,${SLOT}}
+    else
+        edo rm "${IMAGE}"/usr/bin/python$(ever major)
+    fi
 
-    [ "${SLOT}" == "3.1" ] && edo mv "${IMAGE}"/usr/bin/2to3 "${IMAGE}"/usr/bin/2to3-3
+    if ever at_least 2.7; then
+        edo rm "${IMAGE}"/usr/bin/python$(ever major)-config
+        edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python$(ever major).pc
+    fi
 
     if ever at_least 3.2; then
         edo mv "${IMAGE}"/usr/${LIBDIR}/{python${SLOT}/config-${SLOT}m,}/libpython${SLOT}m.a
-        edo rm "${IMAGE}"/usr/bin/{2to3,idle3,pydoc3,python3-config,python${SLOT}m}
+        edo rm "${IMAGE}"/usr/bin/{2to3,idle3,pydoc3,python${SLOT}m}
         edo rm "${IMAGE}"/usr/share/man/man1/python3.1
+        edo rm "${IMAGE}"/usr/bin/python${SLOT}-config
+        edo mv "${IMAGE}"/usr/bin/python${SLOT}{m,}-config
+        edo mv "${IMAGE}"/usr/${LIBDIR}/libpython$(ever major){,-${SLOT}}.so
+        alternatives+=( /usr/${LIBDIR}/libpython$(ever major).so libpython$(ever major)-${SLOT}.so )
     else
+        edo mv "${IMAGE}"/usr/bin/2to3{,-${SLOT}}
         edo mv "${IMAGE}"/usr/${LIBDIR}/{python${SLOT}/config,}/libpython${SLOT}.a
     fi
 
-    # alternatives handling
-    local PYTHON_MAJOR="$(ever at_least 3 && echo 3)"
-    [ "${SLOT}" == "2.6" ] && edo mv "${IMAGE}"/usr/share/man/man1/python.1 "${IMAGE}"/usr/share/man/man1/python${SLOT}.1
-
-    [ "${SLOT}" == "2.7" ] && edo rm "${IMAGE}"/usr/bin/python \
-                           && edo rm "${IMAGE}"/usr/bin/python$(ever major) \
-                           && edo rm "${IMAGE}"/usr/bin/python$(ever major)-config \
-                           && edo rm "${IMAGE}"/usr/share/man/man1/python.1 \
-                           && edo cp "${IMAGE}"/usr/bin/python${SLOT} "${IMAGE}"/usr/bin/python
-    # they switched from python3 being the executable and python3.x being the symlink to python3
-    # to python3.x being the executable and python3 being the symlink
-    ever at_least 3.3 && edo rm "${IMAGE}"/usr/bin/python${PYTHON_MAJOR} \
-                      && edo cp "${IMAGE}"/usr/bin/python{${SLOT},${PYTHON_MAJOR}}
-    edo rm "${IMAGE}"/usr/bin/python${SLOT}
-    edo rm "${IMAGE}"/usr/bin/python${SLOT}-config
-    edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python${PYTHON_MAJOR}.pc
-
-    if ever at_least 3.2; then
-        edo mv "${IMAGE}"/usr/bin/python{${SLOT}m,${PYTHON_MAJOR}}-config
-        edo mv "${IMAGE}"/usr/${LIBDIR}/libpython${PYTHON_MAJOR}{,-${SLOT}}.so
-        alternatives+=( /usr/${LIBDIR}/libpython${PYTHON_MAJOR}.so libpython${PYTHON_MAJOR}-${SLOT}.so )
-    else
-        newbin "${WORKBASE}"/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${MY_PNV}/python-config.py python${PYTHON_MAJOR}-config
+    if ever at_least 3.3; then
+        edo rm "${IMAGE}"/usr/bin/pyvenv
     fi
+
+    case ${SLOT} in
+        2.6)
+            edo mv "${IMAGE}"/usr/share/man/man1/python{,${SLOT}}.1
+            edo rm "${IMAGE}"/usr/bin/python-config
+            ;;
+        2.7)
+            edo rm "${IMAGE}"/usr/share/man/man1/python.1
+            edo rm "${IMAGE}"/usr/share/man/man1/python$(ever major).1
+            edo rm "${IMAGE}"/usr/bin/python-config
+            edo rm "${IMAGE}"/usr/bin/python$(ever major)
+            ;;
+        3.1)
+            edo mv "${IMAGE}"/usr/bin/idle{$(ever major),${SLOT}}
+            edo mv "${IMAGE}"/usr/bin/pydoc{$(ever major),${SLOT}}
+            ;;
+    esac
 
     # pyconfig.h contains PLATFORMS specific bits
     local prefix='/usr'
@@ -208,15 +241,16 @@ python-build_install_one_multibuild() {
 
         prefix="/usr/${CHOST}"
         dodir ${prefix}/{bin,include/python${SLOT}${m}}
-        edo mv "${IMAGE}"/usr/bin/python{${PYTHON_MAJOR}-config,${PYTHON_MAJOR}} \
-            "${IMAGE}"/${prefix}/bin
+        edo mv "${IMAGE}"/usr/bin/python${SLOT} "${IMAGE}"/${prefix}/bin
+
+        # Replace python-config by a multibuild-friendly one
+        edo rm "${IMAGE}"/usr/bin/python${SLOT}-config
+        into ${prefix}
+        newbin python-config.py python${SLOT}-config
+
         edo mv "${IMAGE}"/usr/include/python${SLOT}${m}/*.h \
             "${IMAGE}"/${prefix}/include/python${SLOT}${m}
-        [ "$(ever major)" == 2 ] && \
-            alternatives+=(
-                /usr/${CHOST}/bin/python python$(ever major)
-                /usr/${CHOST}/bin/python-config python$(ever major)-config
-            )
+
         alternatives+=(
             /usr/${CHOST}/bin/python$(ever major) python${SLOT}
             /usr/${CHOST}/bin/python$(ever major)-config python${SLOT}-config
@@ -230,7 +264,7 @@ python-build_install_one_multibuild() {
         fi
     fi
 
-    alternatives+=( /usr/${LIBDIR}/pkgconfig/python${PYTHON_MAJOR}.pc python-${SLOT}.pc )
+    alternatives+=( /usr/${LIBDIR}/pkgconfig/python$(ever major).pc python-${SLOT}.pc )
 }
 
 install_one_multibuild() {
@@ -239,26 +273,20 @@ install_one_multibuild() {
 
 python-build_src_install() {
     # alternatives handling
-    local PYTHON_MAJOR="$(ever at_least 3 && echo 3)"
     alternatives=("${PN}$(ever major)" "${SLOT}" "${SLOT}")
 
     easy-multibuild_src_install
 
-    if [[ $(ever major) == 2 ]]; then
-        alternatives+=(
-            /usr/bin/python python$(ever major)
-            /usr/bin/python-config python$(ever major)-config
-        )
-    fi
-
     alternatives+=(
-        /usr/bin/2to3$(ever at_least 3 && echo "-")${PYTHON_MAJOR} 2to3-${SLOT}
-        /usr/bin/idle${PYTHON_MAJOR} idle${SLOT}
-        /usr/bin/pydoc${PYTHON_MAJOR} pydoc${SLOT}
+        /usr/bin/2to3-$(ever major) 2to3-${SLOT}
+        /usr/bin/idle$(ever major) idle${SLOT}
+        /usr/bin/pydoc$(ever major) pydoc${SLOT}
         /usr/bin/python$(ever major) python${SLOT}
         /usr/bin/python$(ever major)-config python${SLOT}-config
-        /usr/share/man/man1/python${PYTHON_MAJOR}.1 python${SLOT}.1
+        /usr/share/man/man1/python$(ever major).1 python${SLOT}.1
     )
+
+    ever at_least 3.3 && alternatives+=( /usr/bin/pyvenv-$(ever major) pyvenv-${SLOT} )
 
     alternatives_for "${alternatives[@]}"
 

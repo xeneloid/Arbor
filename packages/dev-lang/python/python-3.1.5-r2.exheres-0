@@ -5,13 +5,6 @@ require python-build
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-prepare_one_multibuild() {
-    python-build_prepare_one_multibuild
-
-    edo sed -i -e "s:@@EXHERBO_LIBDIR@@:${LIBDIR}:g" \
-        Lib/distutils/tests/test_install.py
-}
-
 test_one_multibuild() {
     local DISABLE_TESTS
     # test_install_lib (test_distuils) has problems with path resolution
