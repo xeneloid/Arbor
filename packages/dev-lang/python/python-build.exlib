@@ -47,6 +47,8 @@ DEPENDENCIES="
         readline? ( sys-libs/readline[>=4.1][multibuild_c:*(-)?] )
         sqlite? ( dev-db/sqlite:3[>=3.0.8][multibuild_c:*(-)?] )
         tk? ( dev-lang/tk[>=8.0][multibuild_c:*(-)?] )
+    post:
+        app-admin/eclectic-python:$(ever major)[multibuild_c:*(-)?]
 "
 
 WORK="${WORKBASE}"
