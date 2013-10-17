@@ -25,6 +25,7 @@ LICENCES="perp"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
+debug
 dietlibc [[ description = [ build using dietlibc instead of glibc ] ]]
 examples
 "
@@ -41,7 +42,7 @@ src_prepare() {
 
     cat > conf.mk << EOF
 CC = $(option dietlibc diet) ${CC}
-CFLAGS = -Wall -Wextra -Wshadow ${CFLAGS}
+CFLAGS = -Wall -Wextra -Wshadow $(option !debug -DNDEBUG) ${CFLAGS}
 BINDIR = /bin
 SBINDIR = /sbin
 MANDIR = /usr/share/man
