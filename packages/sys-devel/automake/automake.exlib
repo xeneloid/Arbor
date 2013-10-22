@@ -27,7 +27,7 @@ else
 fi
 
 APIVERSION="$(ever range 1-2)"
-SUFFIX="-${SLOT}"
+SUFFIX="-${APIVERSION}"
 
 MYOPTIONS=""
 RESTRICT="test"
@@ -36,7 +36,7 @@ DEPENDENCIES="
     build:
         sys-devel/autoconf:2.5
     run:
-        sys-devel/automake-wrapper[>=0.2]"
+        sys-devel/automake-wrapper[>=1]"
 
 
 WORK="${WORKBASE}/${MY_PNV}"
@@ -47,13 +47,21 @@ automake_src_test_expensive() {
     emake check
 }
 
+AUTOMAKE_VERSIONED_TOOLS=(
+    automake
+    aclocal
+)
+
 automake_src_install() {
     default
 
-    local doublever=( "${IMAGE}"/usr/bin/*${SUFFIX}-${APIVERSION} )
-    if [[ -e ${doublever[0]} ]]; then
-        edo rm "${doublever[@]}"
-    fi
+    dodir /usr/libexec/automake-wrapper
+    local tool
+    for tool in "${AUTOMAKE_VERSIONED_TOOLS[@]}"; do
+        edo rm "${IMAGE}"/usr/bin/${tool}${SUFFIX}-${APIVERSION}
+        # Provide a SLOT-based symlink for automake-wrapper
+        dosym /usr/bin/${tool}${SUFFIX} /usr/libexec/automake-wrapper/${tool}-${SLOT}
+    done
 
     edo cd "${IMAGE}"/usr/share/info
     local alternatives=( info-${PN} ${PNV} ${SLOT} ) info sinfo
