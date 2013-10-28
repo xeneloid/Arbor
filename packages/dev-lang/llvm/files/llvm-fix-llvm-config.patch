@@ -1,0 +1,48 @@
+From 74b280de2152bb56ed04c451690f00aaf6a79f06 Mon Sep 17 00:00:00 2001
+From: Friedrich Kröner <friedrich@mailstation.de>
+Date: Mon, 28 Oct 2013 17:11:39 +0100
+Subject: [PATCH] Have -no-rtti appear in llvm-config --cxxflags when building
+ with cmake. Fixes build issues with mesa.
+
+Upstream: Not yet.
+See: http://lists.freedesktop.org/archives/mesa-dev/2013-October/046439.html
+and http://llvm.org/bugs/show_bug.cgi?id=14200
+Author: Johannes Obermayr <johannesobermayr@gmx.de>
+---
+ tools/llvm-config/CMakeLists.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/tools/llvm-config/CMakeLists.txt b/tools/llvm-config/CMakeLists.txt
+index c651833..9c97ef1 100644
+--- a/tools/llvm-config/CMakeLists.txt
++++ b/tools/llvm-config/CMakeLists.txt
+@@ -1,3 +1,5 @@
++include(LLVMProcessSources)
++
+ set(LLVM_LINK_COMPONENTS support)
+ 
+ set(BUILDVARIABLES_SRCPATH ${CMAKE_CURRENT_SOURCE_DIR}/BuildVariables.inc.in)
+@@ -20,6 +22,21 @@ set(LLVM_LDFLAGS ${CMAKE_SHARED_LINKER_FLAGS})
+ set(LLVM_BUILDMODE ${CMAKE_BUILD_TYPE})
+ set(LLVM_SYSTEM_LIBS ${SYSTEM_LIBS})
+ string(REPLACE ";" " " LLVM_TARGETS_BUILT "${LLVM_TARGETS_TO_BUILD}")
++
++# Set common compiler options:
++if( NOT LLVM_REQUIRES_EH )
++  if( MSVC )
++    llvm_replace_compiler_option(LLVM_CXXFLAGS "/EHsc" "/EHs-c-")
++  endif()
++endif()
++if( NOT LLVM_REQUIRES_RTTI )
++  if( LLVM_COMPILER_IS_GCC_COMPATIBLE )
++    llvm_replace_compiler_option(LLVM_CXXFLAGS "-frtti" "-fno-rtti")
++  elseif( MSVC )
++    llvm_replace_compiler_option(LLVM_CXXFLAGS "/GR" "/GR-")
++  endif()
++endif()
++
+ configure_file(${BUILDVARIABLES_SRCPATH} ${BUILDVARIABLES_OBJPATH} @ONLY)
+ 
+ # Add the llvm-config tool.
+-- 
+1.8.4.1

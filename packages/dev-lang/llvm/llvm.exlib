@@ -33,6 +33,7 @@ src_prepare() {
 
     if ever at_least scm; then
         expatch "${FILES}"/llvm-config-path-v2.patch
+        expatch "${FILES}"/${PN}-fix-llvm-config.patch
     else
         expatch "${FILES}"/llvm-config-path.patch
     fi
