@@ -84,7 +84,8 @@ multibuild_save_build_target() {
 
 # multibuild_switch_build_target $class $target
 multibuild_switch_build_target() {
-    multibuild_save_build_target "${@}"
+    local target=MULTIBUILD_${class}_CURRENT_TARGET
+    [[ -n ${!target} ]] && multibuild_save_build_target "${@}"
     multibuild_load_build_target "${@}"
 }
 
