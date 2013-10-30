@@ -1,6 +1,6 @@
 # Copyright 2008, 2009 Bo Ørsted Andresen
 # Copyright 2008, 2009 Mike Kelly
-# Copyright 2009 David Leverton
+# Copyright 2009, 2013 David Leverton
 # Distributed under the terms of the GNU General Public License v2
 
 # If your package provides pkg_postinst or pkg_prerm phases, you need to be
@@ -10,7 +10,7 @@ ALTERNATIVES_DIR="/etc/env.d/alternatives"
 
 DEPENDENCIES="
     build+run:
-        app-admin/eclectic[>=2.0.3]"
+        app-admin/eclectic[>=2.0.13]"
 
 # alternatives_for alternative provider importance source target [ source target [...]]
 alternatives_for() {
@@ -132,9 +132,9 @@ inherit alternatives
 EOF
         fi
 
-        echo eclectic "${alt}" update "${provider}"
-        eclectic "${alt}" update "${provider}" || {
-            eerror eclectic "${alt}" update "${provider}" returned $?
+        echo eclectic alternatives update "${alt}" "${provider}"
+        eclectic alternatives update "${alt}" "${provider}" || {
+            eerror eclectic alternatives update "${alt}" "${provider}" returned $?
             exlogfailure
         }
 
@@ -151,8 +151,8 @@ alternatives_pkg_prerm() {
         alt="${a%:*}"
         provider="${a#*:}"
         echo "Making sure ${alt} has a valid provider"
-        echo eclectic "${alt}" update${ignore} "${provider}"
-        eclectic "${alt}" update${ignore} "${provider}" && continue
+        echo eclectic alternatives update "${alt}"${ignore} "${provider}"
+        eclectic alternatives update "${alt}"${ignore} "${provider}" && continue
         case $? in
             0) : ;;
             2)
@@ -162,7 +162,7 @@ alternatives_pkg_prerm() {
                     eerror rm "${ROOT}/usr/share/eclectic/modules/auto/${alt}.eclectic" failed
                 ;;
             *)
-                eerror eclectic "${alt}" update "${provider}" returned $?
+                eerror eclectic alternatives update "${alt}" "${provider}" returned $?
                 exlogfailure
                 ;;
         esac
