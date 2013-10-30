@@ -132,9 +132,15 @@ inherit alternatives
 EOF
         fi
 
-        echo eclectic alternatives update "${alt}" "${provider}"
-        eclectic alternatives update "${alt}" "${provider}" || {
-            eerror eclectic alternatives update "${alt}" "${provider}" returned $?
+        local -a args
+        if [[ ${alt} == _* ]]; then
+            args=( --best )
+        else
+            args=( "${provider}" )
+        fi
+        echo eclectic alternatives update "${alt}" "${args[@]}"
+        eclectic alternatives update "${alt}" "${args[@]}" || {
+            eerror eclectic alternatives update "${alt}" "${args[@]}" returned $?
             exlogfailure
         }
 
@@ -146,13 +152,19 @@ alternatives_pkg_prerm() {
     illegal_in_global_scope
 
     local a alt provider p ignore
-    [[ -n ${REPLACED_BY_ID} ]] || ignore=" --ignore"
+    [[ -n ${REPLACED_BY_ID} ]] || ignore="--ignore"
     for a in "${ALTERNATIVES_PROVIDED[@]}"; do
         alt="${a%:*}"
         provider="${a#*:}"
         echo "Making sure ${alt} has a valid provider"
-        echo eclectic alternatives update "${alt}"${ignore} "${provider}"
-        eclectic alternatives update "${alt}"${ignore} "${provider}" && continue
+        local -a args
+        if [[ ${alt} == _* ]]; then
+            args=( --best ${ignore} ${ignore:+"${provider}"} )
+        else
+            args=( ${ignore} "${provider}" )
+        fi
+        echo eclectic alternatives update "${alt}" "${args[@]}"
+        eclectic alternatives update "${alt}" "${args[@]}" && continue
         case $? in
             0) : ;;
             2)
@@ -164,7 +176,7 @@ alternatives_pkg_prerm() {
                 fi
                 ;;
             *)
-                eerror eclectic alternatives update "${alt}" "${provider}" returned $?
+                eerror eclectic alternatives update "${alt}" "${args[@]}" returned $?
                 exlogfailure
                 ;;
         esac
