@@ -36,6 +36,7 @@ configure_one_multibuild() {
     local args=(
         -DCLANG_PATH_TO_LLVM_BUILD:STRING=/usr
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
+        -DLLVM_MAIN_SRC_DIR:STRING=/usr
     )
     ecmake "${args[@]}"
 }
