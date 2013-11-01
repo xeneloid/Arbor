@@ -6,7 +6,7 @@ require sourceforge [ pnv="${MY_PNV}_src_all" ]
 
 SUMMARY="A UNIX port of 7z"
 
-LICENCES="|| ( LGPL-3 LGPL-2.1 )"
+LICENCES="|| ( LGPL-3 LGPL-2.1 ) unRAR"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="platform: amd64 x86"
@@ -31,13 +31,7 @@ src_prepare() {
             -e "/^CXX/s:\$(ALLFLAGS):${CXXFLAGS} \$(ALLFLAGS):g" \
             -e "/^DEST_SHARE/s:lib/:${LIBDIR}/:" \
             -e "/^DEST_MAN/s:man:share/&:" \
-            -e "/Rar/d" \
             -i makefile*
-
-    edo sed -e "/Rar/d" \
-            -e "/RAR/d" \
-            -i CPP/7zip/Bundles/Format7zFree/makefile
-    edo rm -rf CPP/7zip/Compress/Rar
 
     edo sed -i -e "/strip/d" install.sh
 
@@ -59,7 +53,6 @@ EOF
     dosym /usr/bin/7z /usr/bin/7za
     dosym /usr/bin/7z /usr/bin/7zr
 
-    edo rmdir "${IMAGE}"/usr/${LIBDIR}/${PN}/Codecs
     edo find "${IMAGE}" -type f -iname "*License*" -o -iname "*copying*" -delete
 }
 
