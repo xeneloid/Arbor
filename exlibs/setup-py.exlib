@@ -1,0 +1,159 @@
+# Copyright 2013 Jorge Aparicio
+# Distributed under the terms of the GNU General Public License v2
+
+# exparams:
+#   import ( format: distutils or setuptools ) ( defaults to empty )
+#     which packaging system will be used ( check setup.py in sources )
+#
+#   blacklist ( defaults to none )
+#     see python.exlib
+#
+#   has_bin, has_lib, min_versions, python_opts, multibuild, multiunpack, work,
+#   with_opt, option_name
+#     see python.exlib
+
+# example:
+#
+# require setup-py [ import=setuptools blacklist="3" ]
+
+myexparam -b with_opt=false
+exparam -v SETUP_PY_WITH_OPT with_opt
+
+if exparam -b with_opt; then
+    myexparam option_name=python
+    exparam -v OPTION_NAME option_name
+    SETUP_PY_WITH_OPT+=" option_name=${OPTION_NAME}"
+fi
+
+myexparam -b multibuild=true
+exparam -v SETUP_PY_MULTIBUILD multibuild
+
+if exparam -b multibuild; then
+    myexparam work=${PNV}
+    exparam -v SETUP_PY_WORK work
+    SETUP_PY_MULTIBUILD="${SETUP_PY_MULTIBUILD} multiunpack=true work=${SETUP_PY_WORK}"
+fi
+
+myexparam has_bin=false
+myexparam has_lib=true
+myexparam blacklist=none
+myexparam min_versions=
+myexparam python_opts=
+
+require python [ has_bin=$(exparam has_bin) \
+                 has_lib=$(exparam has_lib) \
+                 blacklist="$(exparam blacklist)" \
+                 min_versions="$(exparam min_versions)" \
+                 python_opts="$(exparam python_opts)" \
+                 multibuild=${SETUP_PY_MULTIBUILD} \
+                 with_opt=${SETUP_PY_WITH_OPT} ]
+
+myexparam import=
+
+exparam -v SETUP_PY_IMPORT import
+
+if [[ -z SETUP_PY_IMPORT ]]; then
+    die "packaging system (distutils/setuptools) must be set in the import exparam"
+fi
+
+if [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
+    DEPENDENCIES+="
+        build:
+            ( $(exparam -b with_opt && echo "${OPTION_NAME}?")
+                ( dev-python/setuptools[python_abis:*(-)?] ) )
+    "
+fi
+
+setup-py_run_phase() {
+    if exparam -b multibuild; then
+        python_run_phase
+    else
+        setup-py_${EXHERES_PHASE}_one_multibuild
+    fi
+}
+
+export_exlib_phases src_prepare src_configure src_compile src_install
+
+setup-py_prepare_one_multibuild() {
+    [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+    default
+
+    # remove ez_setup stuff to prevent packages
+    # from installing setuptools on their own
+    rm -rf ez_setup*
+    echo "def use_setuptools(*args, **kwargs): pass" > ez_setup.py
+}
+
+prepare_one_multibuild() {
+    setup-py_prepare_one_multibuild
+}
+
+setup-py_src_prepare() {
+    setup-py_run_phase
+}
+
+setup-py_configure_one_multibuild() {
+    [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+    edo ${PYTHON} -B setup.py config "${SETUP_PY_SRC_CONFIGURE_PARAMS[@]}"
+}
+
+configure_one_multibuild() {
+    setup-py_configure_one_multibuild
+}
+
+setup-py_src_configure() {
+    setup-py_run_phase
+}
+
+setup-py_compile_one_multibuild() {
+    [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+    edo ${PYTHON} -B setup.py build "${SETUP_PY_SRC_COMPILE_PARAMS[@]}"
+}
+
+compile_one_multibuild() {
+    setup-py_compile_one_multibuild
+}
+
+setup-py_src_compile() {
+    setup-py_run_phase
+}
+
+setup-py_install_one_multibuild() {
+    [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+    edo ${PYTHON} -B setup.py install --root="${IMAGE}" --no-compile "${SETUP_PY_SRC_INSTALL_PARAMS[@]}"
+
+    emagicdocs
+
+    python_bytecompile "${SETUP_PY_BYTECOMPILE_PARAMS[@]}"
+}
+
+install_one_multibuild() {
+    setup-py_install_one_multibuild
+}
+
+setup-py_src_install() {
+    setup-py_run_phase
+}
+
+export_exlib_phases src_test
+
+if [[ ${SETUP_PY_IMPORT} == distutils ]]; then
+    setup-py_test_one_multibuild() {
+        [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
+        ewarn "distutils doesn't run any test suite on its own"
+    }
+elif [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
+    setup-py_test_one_multibuild() {
+        [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
+        edo ${PYTHON} -B setup.py test "${SETUP_PY_SRC_TEST_PARAMS[@]}"
+    }
+fi
+
+test_one_multibuild() {
+    setup-py_test_one_multibuild
+}
+
+setup-py_src_test() {
+    setup-py_run_phase
+}
+
