@@ -5,6 +5,18 @@
 #   import ( format: distutils or setuptools ) ( defaults to empty )
 #     which packaging system will be used ( check setup.py in sources )
 #
+#   test ( format: nose or pytest ) ( defaults to empty )
+#     if empty:
+#       distutils will NOT run any test, this should only be used if upstream
+#       doesn't provide a test suite.
+#       setuptools will use its built-in test system, which may or may not run
+#       the provided test suite.
+#       the packager can reimplement setup-py_test_one_multibuild in this case
+#
+#     nose: nosetests "${NOSETESTS_PARAMS[@]}" will be run
+#
+#     pytest: py.test "${PYTEST_PARAMS[@]}" will be run
+#
 #   blacklist ( defaults to none )
 #     see python.exlib
 #
@@ -14,7 +26,7 @@
 
 # example:
 #
-# require setup-py [ import=setuptools blacklist="3" ]
+# require setup-py [ import=distutils test=nose blacklist="3" ]
 
 myexparam -b with_opt=false
 exparam -v SETUP_PY_WITH_OPT with_opt
@@ -137,16 +149,49 @@ setup-py_src_install() {
 
 export_exlib_phases src_test
 
-if [[ ${SETUP_PY_IMPORT} == distutils ]]; then
-    setup-py_test_one_multibuild() {
-        [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
-        ewarn "distutils doesn't run any test suite on its own"
-    }
-elif [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
-    setup-py_test_one_multibuild() {
-        [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
-        edo ${PYTHON} -B setup.py test "${SETUP_PY_SRC_TEST_PARAMS[@]}"
-    }
+myexparam test=
+exparam -v SETUP_PY_TEST test
+
+if [[ -z ${SETUP_PY_TEST} ]]; then
+    if [[ ${SETUP_PY_IMPORT} == distutils ]]; then
+        setup-py_test_one_multibuild() {
+            [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
+            ewarn "distutils doesn't run any test suite on its own"
+        }
+    elif [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
+        setup-py_test_one_multibuild() {
+            [[ -n ${@}  ]] && die "${FUNCNAME} takes no arguments"
+            edo ${PYTHON} -B setup.py test "${SETUP_PY_SRC_TEST_PARAMS[@]}"
+        }
+    fi
+else
+    case ${SETUP_PY_TEST} in
+        nose)
+            DEPENDENCIES+=" ( test: dev-python/nose[python_abis:*(-)?] )"
+
+            setup-py_test_one_multibuild() {
+                [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+
+                NOSETESTS=nosetests-${MULTIBUILD_PYTHON_ABIS_CURRENT_TARGET}
+
+                PYTHONPATH="$(ls -d build/lib*)" edo ${NOSETESTS} "${NOSETESTS_PARAMS[@]}"
+            }
+            ;;
+        pytest)
+            DEPENDENCIES+=" ( test: dev-python/pytest[python_abis:*(-)?] )"
+
+            setup-py_test_one_multibuild() {
+                [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+
+                PYTEST=py.test-${MULTIBUILD_PYTHON_ABIS_CURRENT_TARGET}
+
+                PYTHONPATH="$(ls -d build/lib*)" edo ${PYTEST} "${PYTEST_PARAMS[@]}"
+            }
+           ;;
+        *)
+            die "unknown test system"
+            ;;
+    esac
 fi
 
 test_one_multibuild() {
