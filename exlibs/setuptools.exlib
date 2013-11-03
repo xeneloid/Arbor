@@ -41,6 +41,8 @@ case ${PYTHON_EXLIB_API} in
         }
         ;;
     2)
+        die "use the setup-py exlib instead of setuptools"
+
         # we currently don't support 3.1 du to test failures
         myexparam python_sup="2.6 2.7 3.2 3.3"
 

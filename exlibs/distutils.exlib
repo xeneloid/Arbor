@@ -68,6 +68,8 @@ case ${PYTHON_EXLIB_API} in
         }
         ;;
     2)
+        die "use the setup-py exlib instead of distutils"
+
         myexparam python_sup="2.6 2.7 3.1 3.2 3.3"
         myexparam -b multibuild=true
         myexparam -b with_opt=false
