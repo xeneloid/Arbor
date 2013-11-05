@@ -59,19 +59,19 @@ pam_build_src_prepare() {
 configure_one_multibuild() {
     # Works around an autoconf 2.62 bug; libintl.h is included before
     # _GNU_SOURCE is defined in config.h. cf. Gentoo bug 217154.
-   append-flags -D_GNU_SOURCE
-   econf \
-       --libdir=/${LIBDIR} \
-       --disable-audit \
-       --disable-prelude \
-       --disable-regenerate-docu \
-       --disable-selinux \
-       --enable-cracklib \
-       --enable-db=no \
-       --enable-isadir=/${LIBDIR}/security \
-       --enable-nls \
-       --enable-securedir=/${LIBDIR}/security \
-       $(option_enable nis)
+    append-flags -D_GNU_SOURCE
+    econf \
+        --libdir=/${LIBDIR} \
+        --disable-audit \
+        --disable-prelude \
+        --disable-regenerate-docu \
+        --disable-selinux \
+        --enable-cracklib \
+        --enable-db=no \
+        --enable-isadir=/${LIBDIR}/security \
+        --enable-nls \
+        --enable-securedir=/${LIBDIR}/security \
+        $(option_enable nis)
 }
 
 pam_build_src_configure() {
