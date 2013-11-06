@@ -109,7 +109,7 @@ src_install() {
     edo find "${IMAGE}"/usr/share/man '(' -name id.1 -o -name passwd.5 -o -name getspnam.3 -o -name nologin.8 ')' -delete
 
     # Remove nologin which is installed by util-linux[>=2.24]
-    edo rm "${IMAGE}"/sbin/nologin
+    edo rm "${IMAGE}"/usr/$(exhost --target)/sbin/nologin
 
     edo find "${IMAGE}" -type d -empty -delete
 }
