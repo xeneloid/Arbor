@@ -22,8 +22,6 @@ DEPENDENCIES=""
 
 WORK=${WORKBASE}
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/tz-build-Makefile-fixes.patch )
-
 DEFAULT_SRC_COMPILE_PARAMS=(
     cc="${CC}"
     AR="${AR}"
