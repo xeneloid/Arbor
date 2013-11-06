@@ -81,6 +81,7 @@ EOF
             AR=${CHOST}-ar                                  \
             RANLIB=${CHOST}-ranlib                          \
             CC="${CC} -B/usr/${CHOST}/${CHOST}/bin"         \
+            CXX="${CXX} -B/usr/${CHOST}/${CHOST}/bin"       \
             CFLAGS_FOR_TARGET="${!target_cflags_var}"       \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
         "${WORKBASE}/${PN#static-}-${PV}/configure"         \
@@ -96,10 +97,12 @@ EOF
                 --enable-fast-install                       \
                 --disable-bootstrap                         \
                 --disable-decimal-float                     \
+                --disable-libatomic                         \
                 --disable-libffi                            \
                 --disable-libgomp                           \
                 --disable-libmudflap                        \
                 --disable-libquadmath                       \
+                --disable-libsanitizer                      \
                 --disable-libssp                            \
                 --disable-lto                               \
                 --disable-multilib                          \
