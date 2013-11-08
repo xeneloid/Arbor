@@ -140,7 +140,8 @@ UPSTREAM_DOCUMENTATION="${HOMEPAGE}onlinedocs/libstdc++/libstdc++-html-USERS-${S
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch"
                               "${FILES}/0001-config-fix-definition-for-target-flags.patch"
                               "${FILES}/0001-allow-build-host-target-_configargs-to-override-the-.patch"
-                              "${FILES}/0001-makefile.in-honour-configure-args-for-subdirs.patch" )
+                              "${FILES}/0001-makefile.in-honour-configure-args-for-subdirs.patch"
+                              "${FILES}/${PN}-cross-flags.patch" )
 
 RESTRICT="test" # tests are expensive
 
@@ -163,6 +164,12 @@ gcc_pkg_setup() {
             [[ -n ${!target_cflags_var} ]] || die "CFLAGS for ${target} are not set"
         fi
     done
+
+    # NOTE(tridactyla) gcc does not appear to use CPP directly anywhere in the build process, and
+    # also does not handle CPP_FOR_BUILD. In order to appease the configure scripts, we unset CPP so
+    # that gcc doesn't attempt to use CPP as CPP_FOR_BUILD, and will use the default ${CC} -E
+    # instead.
+    unset CPP
 }
 
 gcc_src_unpack() {
@@ -202,8 +209,23 @@ gcc_src_prepare() {
     edo sed -e '/export_sym_check=/c export_sym_check="${target_alias}-objdump -T"'                 \
             -i "${WORK}/gcc/configure"
 
+    local build_cppflags_var=${CHOST//-/_}_CPPFLAGS
+
+    # NOTE(tridactyla) gcc uses the value of $(ALL_CPPFLAGS) (which is $(INCLUDES) $(CPPFLAGS)) for
+    # BUILD_CPPFLAGS. The build_configargs trick used in gcc_src_configure does not work here
+    # because the gcc subdirectory is built for host, and uses the build toolchain explicitly.
+    edo sed -e "s,^\(BUILD_CPPFLAGS\)=.*,\1 = \$(INCLUDES) ${!build_cppflags_var}," \
+            -i "${WORK}/gcc/Makefile.in"
+
+    # NOTE(tridactyla) When ${host} != ${build}, gcc's configure invokes itself with
+    # --host=${build}, so it can generate auto-build.h correctly. However, it does not use
+    # build_configargs like a normal build configure, so we have to set CPPFLAGS explicitly.
+    edo sed -e "/\${realsrcdir}\/configure/i CPPFLAGS=\"${!build_cppflags_var}\" \\\\" \
+            -i "${WORK}/gcc/configure"
+
     # Do not try fix the systems header files.
     edo sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
     default
 }
 
@@ -214,6 +236,7 @@ gcc_src_configure() {
     local build_cflags_var=${CHOST//-/_}_CFLAGS
     local build_ldflags_var=${CHOST//-/_}_LDFLAGS
     local build_cxxflags_var=${CHOST//-/_}_CXXFLAGS
+    local build_cppflags_var=${CHOST//-/_}_CPPFLAGS
     local cloog_backend=
 
     # support for optional languages
@@ -236,6 +259,7 @@ gcc_src_configure() {
         local target_cflags_var=${target//-/_}_CFLAGS
         local target_ldflags_var=${target//-/_}_LDFLAGS
         local target_cxxflags_var=${target//-/_}_CXXFLAGS
+        local target_cppflags_var=${target//-/_}_CPPFLAGS
 
         if option !targets:${target} ; then
             echo "    Cross-Compile Target: ${target} (disabled)"
@@ -283,6 +307,15 @@ gcc_cv_objdump=${target}-objdump
 gcc_cv_libc_provides_ssp=yes
 EOF
 
+        # NOTE(tridactyla) gcc no longer handles CPPFLAGS_FOR_{BUILD,TARGET} variables. In order to
+        # honor the flags set by the user, pass CPPFLAGS through {build,target}_configargs.
+        local target_configargs=(
+            --prefix=/usr/${target}
+            --with-slibdir=/usr/${target}/lib
+            CPPFLAGS=\"${!target_cppflags_var}\"
+        )
+        local build_configargs=( CPPFLAGS=\"${!build_cppflags_var}\" )
+
         # TODO(compnerd) figure out why the program transformation for ${target} = ${host} results
         # in a double prefix
         # NOTE(compnerd) the --with-sysroot='""' is a brilliant hack designed to allow gcc to
@@ -306,7 +339,8 @@ EOF
             CFLAGS_FOR_BUILD="${!build_cflags_var}"                                                 \
             LDFLAGS_FOR_BUILD="${!build_ldflags_var}"                                               \
             CXXFLAGS_FOR_BUILD="${!build_cxxflags_var}"                                             \
-            target_configargs="--prefix=/usr/${target} --with-slibdir=/usr/${target}/lib"           \
+            target_configargs="${target_configargs[*]}"                                             \
+            build_configargs="${build_configargs[*]}"                                               \
         "${WORKBASE}/${PNV/_p/-}/configure"                                                         \
                 --cache-file=config.cache                                                           \
                 --build=${CHOST}                                                                    \
