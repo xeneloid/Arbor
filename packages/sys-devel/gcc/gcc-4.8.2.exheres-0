@@ -5,7 +5,7 @@ require gcc
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
+DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}/${PN}-java-unwinder.patch"
     -p1 "${FILES}/gcc-4.8-serial-configuration-ordering.patch"
 )
