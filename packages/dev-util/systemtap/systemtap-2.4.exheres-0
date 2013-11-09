@@ -5,5 +5,5 @@ require systemtap
 
 PLATFORMS="~amd64"
 
-DOWNLOADS="http://sourceware.org/systemtap/ftp/releases/${PNV}.tar.gz"
+DOWNLOADS="http://sourceware.org/${PN}/ftp/releases/${PNV}.tar.gz"
 

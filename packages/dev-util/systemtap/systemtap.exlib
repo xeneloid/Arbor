@@ -6,7 +6,7 @@ require python [ has_bin=true has_lib=false multibuild=false python_dep='[>=2.7&
 export_exlib_phases src_install
 
 SUMMARY="A scripting language and tool for dynamically instrumenting running production Linux operating systems."
-HOMEPAGE="http://sourceware.org/systemtap"
+HOMEPAGE="http://sourceware.org/${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
