@@ -25,20 +25,12 @@ DEPENDENCIES="
         sys-devel/gettext
 "
 
-ECONF_SOURCE=${WORK}
-WORK=${WORKBASE}/build
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     '--enable-nls'
     ac_cv_libsigsegv=no # do not link against libsigsegv
 )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FUTURES LIMITATIONS POSIX.STD )
-
-src_unpack() {
-    default
-    edo mkdir "${WORK}"
-}
 
 src_prepare() {
     default
@@ -47,7 +39,7 @@ src_prepare() {
     # During building gawk is called which can't be run when cross compiling
     if ! exhost --is-native -q ; then
         edo sed -e '/check-recursive all-recursive: check-for-shared-lib-support/d' \
-                -i "${ECONF_SOURCE}"/extension/Makefile.in
+                -i extension/Makefile.in
     fi
 }
 
