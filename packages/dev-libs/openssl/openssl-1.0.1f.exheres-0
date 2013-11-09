@@ -23,8 +23,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.0.1f-fix_pod_syntax-1.patch
 )
 
-# TODO(compnerd) fix parallel build
-DEFAULT_SRC_COMPILE_PARAMS=( -j1 LIBDIR=lib MANDIR=/usr/share/man )
 # Tests don't run in parallel
 DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
@@ -51,6 +49,15 @@ src_configure() {
 
     edo "${WORK}"/Configure $(_openssl_host_os) \
         --prefix=/usr/$(exhost --target) --openssldir=/etc/ssl shared threads
+}
+
+src_compile() {
+    # TODO(compnerd) fix parallel build
+    # NOTE(tridactyla) openssl uses CROSS_COMPILE to test whether to build the rehash target (which
+    # runs newly built executables). If we set it through Configure, it prepends the value to all of
+    # the tools (which already have the correct prefix), so set it here instead.
+    emake -j1 LIBDIR=lib MANDIR=/usr/share/man \
+        $(exhost --is-native -q || echo CROSS_COMPILE=1)
 }
 
 src_install() {
