@@ -5,7 +5,7 @@
 
 require sourceforge
 require systemd-service [ systemd_files=[ systemd/rpcbind.service systemd/rpcbind.socket ] ]
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="RPC server replacing portmap"
 DESCRIPTION="
@@ -34,6 +34,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/b3b031b07cc5909aaf964f9d4cf46f6097769320.patch
     "${FILES}"/0001-systemd-add-support-for-system-bus-activation.patch
     "${FILES}"/0001-socket-activation-don-t-unlink-socket-we-didn-t-create.patch
     "${FILES}"/0001-socket-activation-fix-rpcbind-service-to-use-separate-socket.patch
