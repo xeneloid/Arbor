@@ -24,6 +24,8 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-fix-configure-test-flags.patch )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --dbdir=/var/lib/dhcpcd
     --libexecdir=/usr/$(exhost --target)/lib/dhcpcd
