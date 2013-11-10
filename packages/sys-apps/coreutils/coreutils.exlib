@@ -28,6 +28,13 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( gmp )
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-install-program=arch,hostname' '--enable-largefile' )
 
 src_configure() {
+    if ! exhost --is-native -q ; then
+        # We set the PERL environment variable to be empty so that make doesn't attempt to rebuild
+        # the manpages with help2man (which runs the compiled executables to generate man pages).
+        # This also disables some tests, but since we are cross-compiling they won't be run anyway.
+        export PERL=
+    fi
+
     # Configuration takes a million years without this hack.
     esandbox hack_toolong
     default
