@@ -89,24 +89,25 @@ src_test() {
 }
 
 src_install() {
+    local host=$(exhost --target)
+
     # busybox
-    into /
     newbin busybox.dynamic busybox
     newbin busybox.static  busybox-static
 
     # udhcpc
     exeinto /usr/share/udhcpc
     newexe examples/udhcp/simple.script default.script
-    dosym /bin/busybox /bin/udhcpc
+    dosym busybox /usr/${host}/bin/udhcpc
 
     # udhcpd
     insinto /etc
     doins examples/udhcp/udhcpd.conf
-    dosym /bin/busybox /bin/udhcpd
+    dosym busybox /usr/${host}/bin/udhcpd
 
     # dumpleases
     keepdir /var/lib/misc/
-    dosym /bin/busybox /bin/dumpleases
+    dosym busybox /usr/${host}/bin/dumpleases
 
     # docs
     emagicdocs
