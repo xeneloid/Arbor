@@ -56,5 +56,9 @@ src_install() {
         insinto /usr/share/doc/${PNVR}
         doins -r examples
     fi
+
+    hereenvd 30perp << EOF
+PERP_BASE=/etc/perp
+EOF
 }
 
