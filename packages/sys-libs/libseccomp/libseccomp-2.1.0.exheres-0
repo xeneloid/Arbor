@@ -16,6 +16,9 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1
+    # The Makefile claims that libseccomp requires gcc-specific functionality, so it looks for the
+    # compiler in the GCC environment variable. However, it seems to work fine with clang...
+    GCC="${CC}"
     # Explicitly set LDFLAGS so that users flags are always honored (even if they are unset) and
     # make doesn't fall back to the default value, which uses linker options without -Wl (this
     # somehow works with gcc).
