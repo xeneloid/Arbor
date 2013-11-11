@@ -7,18 +7,18 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SLOT="2"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="gtk-doc
-    man-pages [[ description = [ Generate and install man pages ] ]]
-"
+MYOPTIONS="gtk-doc"
 
 DEPENDENCIES="
     build:
         app-doc/gtk-doc-autotools
         sys-devel/gettext[>=0.11]
+        (
+            app-text/docbook-xml-dtd:4.1.2 [[ note = [ Checked in configure.ac but not used ] ]]
+            app-text/docbook-xsl-stylesheets
+            dev-libs/libxslt
+        ) [[ description = [ For man pages ] ]]
         gtk-doc? ( dev-doc/gtk-doc[>=1.15] )
-        man-pages? ( app-text/docbook-xml-dtd:4.1.2
-                     app-text/docbook-xsl-stylesheets
-                     dev-libs/libxslt )
     build+run:
         dev-util/elfutils[>=0.142]
         dev-libs/libffi[>=3.0.0]
@@ -54,8 +54,8 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-static' '--disable-fam' '--disable-selinux'
                                '--enable-xattr' '--enable-libelf' '--with-pcre=internal'
                                '--with-threads=posix' '--disable-dtrace' '--disable-systemtap'
-                               '--disable-gcov' )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( gtk-doc 'man-pages man' )
+                               '--disable-gcov' '--enable-man' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( gtk-doc )
 DEFAULT_SRC_CONFIGURE_TESTS=( '--enable-modular-tests --disable-modular-tests' )
 
 src_prepare() {

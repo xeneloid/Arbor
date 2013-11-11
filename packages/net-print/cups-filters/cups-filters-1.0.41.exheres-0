@@ -58,10 +58,12 @@ configure_one_multibuild() {
         --enable-imagefilters
         --disable-static
         --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')cups" \
+        --with-domainsocket=/run/cups/cups.sock
         --with-fontdir=fonts/conf.avail
         --with-jpeg
         --with-pdftops=hybrid
         --with-png
+        --with-rundir=/run/cups
         --with-test-font-path=/usr/share/fonts/X11/dejavu/DejaVuSans.ttf
         --with-tiff
         --without-php

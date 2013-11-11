@@ -83,7 +83,7 @@ the code did in fact not work at all. Sorry about that!
 This time around it should work :-)
 
  Makefile.am                |   15 ++
- configure.in               |   11 +
+ configure.ac               |   11 +
  src/rpcbind.c              |  467 +++++++++++++++++++++++++-------------------
  systemd/.gitignore         |    1 +
  systemd/rpcbind.service.in |    9 +
@@ -119,10 +119,10 @@ index 9fa608e..194b467 100644
  rpcinfo_SOURCES =       src/rpcinfo.c
  rpcinfo_LDADD   =       $(TIRPC_LIBS)
  
-diff --git a/configure.in b/configure.in
+diff --git a/configure.ac b/configure.ac
 index 2b67720..397d52d 100644
---- a/configure.in
-+++ b/configure.in
+--- a/configure.ac
++++ b/configure.ac
 @@ -29,6 +29,17 @@ AC_SUBST([rpcuser], [$with_rpcuser])
   
  PKG_CHECK_MODULES([TIRPC], [libtirpc])

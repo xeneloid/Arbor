@@ -1,0 +1,43 @@
+# Copyright 2013 Ivan Diorditsa <ivan.diorditsa@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require python [ has_bin=true has_lib=false multibuild=false python_dep='[>=2.7&<3]' python_sup='2.7' ]
+
+export_exlib_phases src_install
+
+SUMMARY="A scripting language and tool for dynamically instrumenting running production Linux operating systems."
+HOMEPAGE="http://sourceware.org/${PN}"
+
+LICENCES="GPL-2"
+SLOT="0"
+
+DEPENDENCIES="
+    build+run:
+        dev-util/elfutils
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-docs
+    --disable-publican
+    --disable-refdocs
+
+    --disable-rpath
+    --disable-server
+    --disable-sqlite
+
+    --without-avahi
+    --without-dyninst
+    --without-nss
+    --without-rpm
+    --without-selinux
+)
+
+systemtap_src_install()
+{
+    default
+
+    edo rmdir "${IMAGE}"/etc{/systemtap,}
+}
+
+# TODO: tests maybe?
+

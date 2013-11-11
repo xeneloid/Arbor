@@ -1,0 +1,29 @@
+Title: eclectic python
+Author: Marc-Antoine Perennou <keruspe@exherbo.org>
+Content-Type: text/plain
+Posted: 2013-10-11
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/python
+
+WARNING: experimental, it is recommended that you stick with
+python2 as the default. You can check with "eclectic python show"
+once you've updated your system.
+
+You are now able to switch your system python version using
+eclectic python set <2|3>
+All you have to do is to update your installed python2 slots,
+as some files provided by eclectic-python were formerly provided
+by eclectic python2, and then the python3 ones if any.
+
+If you update some python3 slots before the python2 ones, python3
+will be selected as the system python, run "eclectic python set 2"
+to switch back to python2.
+
+Whilst having python3 as the system python is currently not officially
+supported by a lot of exhereses and upstreams, this is a first step forward.
+
+Patches welcome if things break with python3. And things *WILL* break.
+
+Note that at least all packages using python.exlib without api=2 are
+currently broken with python3 as the default.

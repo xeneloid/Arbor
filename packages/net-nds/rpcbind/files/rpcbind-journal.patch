@@ -499,8 +499,8 @@
  			filename, errno, strerror(errno));
  	}
  	if (debugging)
---- rpcbind-0.2.0/configure.in
-+++ rpcbind-0.2.0/configure.in
+--- rpcbind-0.2.0/configure.ac
++++ rpcbind-0.2.0/configure.ac
 @@ -36,6 +36,7 @@ AC_ARG_WITH([systemdsystemunitdir],
    if test "x$with_systemdsystemunitdir" != xno; then
      AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])

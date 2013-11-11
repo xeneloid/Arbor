@@ -1,0 +1,9 @@
+# Copyright 2013 Ivan Diorditsa <ivan.diorditsa@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require systemtap
+
+PLATFORMS="~amd64"
+
+DOWNLOADS="http://sourceware.org/${PN}/ftp/releases/${PNV}.tar.gz"
+
