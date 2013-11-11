@@ -72,6 +72,10 @@ case ${PYTHON_EXLIB_API} in
     1)
         myexparam python_dep=
 
+        if [[ $(exparam python_dep) == \[*\] ]] ; then
+            die "Please migrate ${CATEGORY}/${PNV} to new python.exlib api v2."
+        fi
+
         if exparam -b has_bin; then
             [[ -n $(exparam python_dep) ]] && DEPENDENCIES+="
             build+run:
