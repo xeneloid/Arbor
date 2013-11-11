@@ -15,5 +15,10 @@ LICENCES="LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
-DEFAULT_SRC_COMPILE_PARAMS=( V=1 )
+DEFAULT_SRC_COMPILE_PARAMS=( V=1
+    # Explicitly set LDFLAGS so that users flags are always honored (even if they are unset) and
+    # make doesn't fall back to the default value, which uses linker options without -Wl (this
+    # somehow works with gcc).
+    LDFLAGS="${LDFLAGS}"
+)
 
