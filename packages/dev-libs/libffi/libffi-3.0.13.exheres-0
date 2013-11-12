@@ -51,15 +51,13 @@ src_prepare() {
     edo sed -e "/multi_os_directory=/,+4d" -i configure
 }
 
-test_prepare_one_multibuild() {
-    case "${MULTIBUILD_TARGET}" in
-        32) edo sed -e "s|\"-O|\"-m32 -O|" -i "${WORK}"/testsuite/libffi.call/call.exp
-            edo sed -e "s|set cxx_options \" -shared-libgcc -lstdc++\"|set cxx_options \" -m32 -shared-libgcc -lstdc++\"|" -i "${WORK}"/testsuite/libffi.special/special.exp
-            ;;
-        64) edo sed -e "s|\"-m32 -O|\"-O|" -i "${WORK}"/testsuite/libffi.call/call.exp
-            edo sed -e "s|set cxx_options \" -m32 -shared-libgcc -lstdc++\"|set cxx_options \" -shared-libgcc -lstdc++\"|" -i "${WORK}"/testsuite/libffi.special/special.exp
-            ;;
-    esac
+test_one_multibuild() {
+    cat > local.exp << EOF
+set CC_FOR_TARGET "${CC}"
+set CFLAGS_FOR_TARGET "${CFLAGS}"
+EOF
+
+    default
 }
 
 install_one_multibuild() {
