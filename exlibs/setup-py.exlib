@@ -17,6 +17,10 @@
 #
 #     pytest: py.test "${PYTEST_PARAMS[@]}" will be run
 #
+#   cfg_file ( format: setup or site ) ( defaults to empty )
+#     the name of cfg file to be created for more details see:
+#     http://docs.python.org/2/distutils/configfile.html
+#
 #   blacklist ( defaults to none )
 #     see python.exlib
 #
@@ -24,9 +28,40 @@
 #   with_opt, option_name
 #     see python.exlib
 
+# VARIABLES:
+#   SETUP_CFG_COMMANDS ( format: command )
+#     [command] section will be added to the cfg file
+#
+#   SETUP_CFG_command_PARAMS ( format: ( "opt1 = val1" "opt2=val2" ) )
+#     opt=val pairs will be added under the [command] section of the cfg file
+#
+#   SETUP_CFG_command_OPTIONS ( format: ( "a b c d" "e f g h" ) )
+#     a = $(option b c d) will be resolved and added under the [command]
+#     section of the cfg file
+
 # example:
 #
-# require setup-py [ import=distutils test=nose blacklist="3" ]
+#   SETUP_CFG_COMMANDS="gui_support packages"
+#   SETUP_CFG_gui_support_PARAMS=(
+#       "agg = True"
+#   )
+#   SETUP_CFG_gui_support_OPTIONS=(
+#       "gtkagg gtk True False"
+#   )
+#   SETUP_CFG_packages_PARAMS=(
+#       "sample_data = False"
+#   )
+#
+#   require setup-py [ import=distutils cfg_file=setup test=nose \
+#                      blacklist="3" ]
+#
+#   generates the following setup.cfg file
+#
+#   [gui_support]
+#   agg = True
+#   gtkagg = $(option gtk True False)
+#   [packages]
+#   sample_data = False
 
 myexparam -b with_opt=false
 exparam -v SETUP_PY_WITH_OPT with_opt
@@ -76,6 +111,14 @@ if [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
     "
 fi
 
+myexparam cfg_file=
+
+exparam -v CFG_FILE cfg_file
+
+if [[ ! -z ${CFG_FILE}  ]] && [[ -z ${SETUP_CFG_COMMANDS}  ]]; then
+    die "No commands specified in SETUP_CFG_COMMANDS"
+fi
+
 setup-py_run_phase() {
     if exparam -b multibuild; then
         python_run_phase
@@ -104,8 +147,46 @@ setup-py_src_prepare() {
     setup-py_run_phase
 }
 
+setup-cfg_var_name() {
+    [[ ${#} -eq 1 ]] || die "setup-cfg_var_name needs exactly one argument"
+
+    echo SETUP_CFG_${SETUP_CFG_THIS}_${1}[@]
+}
+
+setup-cfg_get_var() {
+    [[ ${#} -eq 1 ]] || die "setup-cfg_get_var needs exactly one argument"
+
+    local var=$(setup-cfg_var_name ${1})
+    SETUP_CFG_OUT=("${!var}")
+}
+
+setup-cfg_option() {
+    [[ ${#} -eq 4 ]] || die "setup-cfg_option needs exactly four arguments"
+
+    echo $1 = $(option $2 $3 $4)
+}
+
 setup-py_configure_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
+
+    if [[ ! -z $CFG_FILE ]]; then
+        for cmd in $SETUP_CFG_COMMANDS; do
+            SETUP_CFG_THIS=$cmd
+
+            echo [$cmd] >> ${CFG_FILE}.cfg
+
+            setup-cfg_get_var PARAMS
+            for param in "${SETUP_CFG_OUT[@]}"; do
+                echo $param >> ${CFG_FILE}.cfg
+            done
+
+            setup-cfg_get_var OPTIONS
+            for opt in "${SETUP_CFG_OUT[@]}"; do
+                setup-cfg_option $opt >> ${CFG_FILE}.cfg
+            done
+        done
+    fi
+
     edo ${PYTHON} -B setup.py config "${SETUP_PY_SRC_CONFIGURE_PARAMS[@]}"
 }
 
