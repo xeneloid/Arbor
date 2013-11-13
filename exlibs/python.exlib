@@ -210,10 +210,10 @@ case ${PYTHON_EXLIB_API} in
             MYOPTIONS+=' ('
             exparam -b with_opt && MYOPTIONS+=" ${OPTION_NAME}?"
             # define python subotions with description, requires and number_select
-            MYOPTIONS+=" ( python_abis: ( ${PYTHON_FILTERED_ABIS} ) ) [["
+            MYOPTIONS+=" ( python_abis: ( ${PYTHON_FILTERED_ABIS} ) [["
             # set the maximum of enabled python_abis:*
             exparam -b multibuild && MYOPTIONS+=' number-selected = at-least-one' || MYOPTIONS+=' number-selected = exactly-one'
-            MYOPTIONS+=' ]] )'
+            MYOPTIONS+=' ]] ) )'
 
             DEPENDENCIES+="build+run: ( "
             exparam -b with_opt && DEPENDENCIES+="${OPTION_NAME}? "
