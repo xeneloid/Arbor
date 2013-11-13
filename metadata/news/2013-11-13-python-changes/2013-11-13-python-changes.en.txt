@@ -1,0 +1,23 @@
+Title: Python changes
+Author: Bo Ørsted Andresen <zlin@exherbo.org>
+Content-Type: text/plain
+Posted: 2013-11-13
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/python
+
+In order to facilitate python multibuild, we have introduced
+setup-py.exlib and changed the API for python.exlib.
+
+For executables the highest supported python version will be used by
+default from now on. To override one can manually run the executable
+with the desired python interpreter (e.g. python2.7 /usr/bin/script.py).
+
+The new API is incompatible with the previous multibuild python
+packaging, and packages which are currently relying on python.exlib
+APIv2 will need to be converted over to the new system.  Currently, we
+have 70 packages that have yet to be converted, and any help fixing
+those packages is appreciated. Refer to [1] for more details on how to
+fix them properly.
+
+[1] http://lists.exherbo.org/pipermail/exherbo-dev/2013-November/001262.html
