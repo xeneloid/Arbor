@@ -95,13 +95,9 @@ require python [ has_bin=$(exparam has_bin) \
                  multibuild=${SETUP_PY_MULTIBUILD} \
                  with_opt=${SETUP_PY_WITH_OPT} ]
 
-myexparam import=
+myexparam import
 
 exparam -v SETUP_PY_IMPORT import
-
-if [[ -z SETUP_PY_IMPORT ]]; then
-    die "packaging system (distutils/setuptools) must be set in the import exparam"
-fi
 
 if [[ ${SETUP_PY_IMPORT} == setuptools ]]; then
     DEPENDENCIES+="
