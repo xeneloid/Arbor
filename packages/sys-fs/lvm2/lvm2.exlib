@@ -48,29 +48,33 @@ lvm2_pkg_setup() {
 }
 
 configure_one_multibuild() {
-    econf \
-        --exec-prefix=/ \
-        --libdir=/${LIBDIR} \
-        --enable-applib \
-        --enable-cmdlib \
-        --enable-pkgconfig \
-        --enable-readline \
-        --enable-udev_rules \
-        --enable-udev_sync \
-        --with-clvmd-pidfile=/run/clvmd.pid \
-        --with-cmirrord-pidfile=/run/cmirrord.pid \
-        --with-dmeventd-pidfile=/run/dmeventd.pid \
-        --with-default-locking-dir=/run/lock/lvm \
-        --with-default-run-dir=/run/lvm \
-        --with-tmpfilesdir=/usr/${LIBDIR}/tmpfiles.d \
-        --with-udevdir="${UDEVRULESDIR}" \
-        --with-usrlibdir=/usr/${LIBDIR} \
-        --disable-lvmetad \
-        --disable-nls \
-        --disable-selinux \
-        --disable-static_link \
-        $(option_enable dmeventd) \
+    local myconf=(
+        --exec-prefix=/
+        --libdir=/${LIBDIR}
+        --enable-applib
+        --enable-cmdlib
+        --enable-pkgconfig
+        --enable-readline
+        --enable-udev_rules
+        --enable-udev_sync
+        --with-clvmd-pidfile=/run/clvmd.pid
+        --with-cmirrord-pidfile=/run/cmirrord.pid
+        --with-dmeventd-pidfile=/run/dmeventd.pid
+        --with-default-locking-dir=/run/lock/lvm
+        --with-default-run-dir=/run/lvm
+        --with-tmpfilesdir=/usr/${LIBDIR}/tmpfiles.d
+        --with-udevdir="${UDEVRULESDIR}"
+        --with-usrlibdir=/usr/${LIBDIR}
+        --disable-lvmetad
+        --disable-nls
+        --disable-selinux
+        --disable-static_link
+        $(option_enable dmeventd)
         $(option_enable fsadm)
+        $(option_enable systemd udev-systemd-background-jobs)
+    )
+
+    econf "${myconf[@]}"
 }
 
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
@@ -78,6 +82,8 @@ DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 WORK=${WORKBASE}/LVM2.${PV}
 
 lvm2_src_install() {
+    edo cp "${WORK}"/conf/thin-performance.profile "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}"/conf
+
     easy-multibuild_src_install
 
     install_systemd_files
