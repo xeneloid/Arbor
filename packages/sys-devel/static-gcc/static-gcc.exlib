@@ -120,7 +120,8 @@ EOF
                 --without-headers                           \
                 --with-as=/usr/${CHOST}/bin/${target}-as    \
                 --with-ld=/usr/${CHOST}/bin/${target}-ld    \
-                --with-system-zlib
+                --with-system-zlib                          \
+                --with-multilib-list=
     done
 }
 

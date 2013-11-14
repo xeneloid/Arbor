@@ -326,7 +326,8 @@ EOF
                 --with-pkgversion="exherbo ${PNVR}"                                                 \
                 --with-system-zlib                                                                  \
                 --with-sysroot='""'                                                                 \
-                --with-gxx-include-dir=/usr/${target}/include/c++/${PV}
+                --with-gxx-include-dir=/usr/${target}/include/c++/${PV}                             \
+                --with-multilib-list=
     done
 }
 
