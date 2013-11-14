@@ -48,6 +48,8 @@ DEPENDENCIES="
         ]]
     run:
         sys-apps/bc                [[ note = [ pstopdf filter ] ]]
+    test:
+        fonts/dejavu
     suggestion:
         net-print/foomatic-db      [[ note = [ for non-PostScript printers ] ]]
         net-print/foomatic-filters [[ note = [ for non-PostScript printers ] ]]
