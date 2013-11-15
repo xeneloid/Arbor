@@ -69,15 +69,15 @@ pam_build_src_prepare() {
 }
 
 pam_build_src_configure() {
-    local host_prefix=$(exhost --build)
-    local build_cflags=${host_prefix//-/_}_CFLAGS                   \
-        build_cppflags=${host_prefix//-/_}_CPPFLAGS                 \
-        build_ldflags=${host_prefix//-/_}_LDFLAGS
+    local build=$(exhost --build)
+    local build_cflags=${build//-/_}_CFLAGS         \
+          build_cppflags=${build//-/_}_CPPFLAGS     \
+          build_ldflags=${build//-/_}_LDFLAGS
 
-    CC_FOR_BUILD="${host_prefix}-gcc"                               \
-    BUILD_CFLAGS="${!build_cflags}"                                 \
-    BUILD_CPPFLAGS="${!build_cppflags}"                             \
-    BUILD_LDFLAGS="${!build_ldflags}"                               \
+    CC_FOR_BUILD="${build}-gcc"                     \
+    BUILD_CFLAGS="${!build_cflags}"                 \
+    BUILD_CPPFLAGS="${!build_cppflags}"             \
+    BUILD_LDFLAGS="${!build_ldflags}"               \
         default
 }
 
