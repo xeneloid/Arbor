@@ -19,8 +19,8 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-python/argparse[python_abis:2.6?]
-        dev-python/argparse[python_abis:3.1?]
+        python_abis:2.6? ( dev-python/argparse[python_abis:2.6] )
+        python_abis:3.1? ( dev-python/argparse[python_abis:3.1] )
 "
 
 src_test() {
