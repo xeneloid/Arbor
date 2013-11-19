@@ -192,7 +192,8 @@ setup-py_configure_one_multibuild() {
                 setup-cfg_option $opt >> ${CFG_FILE}.cfg
             done
 
-            setup-cfg_${cmd}_append
+            declare -F setup-cfg_${cmd}_append >/dev/null &&
+                setup-cfg_${cmd}_append
         done
     fi
 
