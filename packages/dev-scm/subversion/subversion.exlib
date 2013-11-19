@@ -41,7 +41,7 @@ DEPENDENCIES="
         dev-db/sqlite:3[>=3.7.6.3]
         dev-libs/apr:1[>=1.3.0]
         dev-libs/apr-util:1[>=0.9.7][berkdb?]
-        net-misc/neon[>=0.29.6&<0.30]
+        net-libs/serf
         apache? ( www-servers/apache )
         berkdb? ( sys-libs/db:=[>=4.0.14&<4.9] )
         keyring? (
@@ -99,7 +99,6 @@ subversion_src_configure() {
         --without-jikes \
         --without-junit \
         --without-sasl \
-        --without-serf \
         $(option_with apache apxs) \
         $(option_with berkdb berkeley-db $(option berkdb &&
             echo "db.h:$(berkdb_includedir)::db-$(berkdb_slot)")) \
