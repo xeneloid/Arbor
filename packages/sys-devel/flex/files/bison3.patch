@@ -1,0 +1,42 @@
+Author: Wouter van Kesteren <woutershep@gmail.com>
+Upstream: no
+Reason: YYLEX_PARAM is nolonger supported in bison-3
+
+diff -Naurp flex-2.5.37/tests/test-bison-yylloc/parser.y flex-2.5.37-bison3/tests/test-bison-yylloc/parser.y
+--- flex-2.5.37/tests/test-bison-yylloc/parser.y	2013-11-19 13:57:31.000000000 +0100
++++ flex-2.5.37-bison3/tests/test-bison-yylloc/parser.y	2013-11-19 13:56:46.000000000 +0100
+@@ -22,6 +22,7 @@
+  */
+ 
+ %parse-param { void* scanner }
++%lex-param { void* scanner }
+ 
+ /* 
+    How to compile:
+@@ -34,7 +35,6 @@
+ #include "config.h"
+ 
+ #define YYERROR_VERBOSE 1
+-#define YYLEX_PARAM   scanner
+ 
+ extern int testget_lineno(void*);
+ 
+diff -Naurp flex-2.5.37/tests/test-bison-yylval/parser.y flex-2.5.37-bison3/tests/test-bison-yylval/parser.y
+--- flex-2.5.37/tests/test-bison-yylval/parser.y	2013-11-19 13:57:31.000000000 +0100
++++ flex-2.5.37-bison3/tests/test-bison-yylval/parser.y	2013-11-19 13:56:46.000000000 +0100
+@@ -26,6 +26,7 @@
+    bison --defines --output-file="parser.c" --name-prefix="test" parser.y
+  */
+ %parse-param { void* scanner }
++%lex-param { void* scanner }
+ %{
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -33,7 +34,6 @@
+ #include "config.h"
+ 
+ #define YYERROR_VERBOSE 1
+-#define YYLEX_PARAM   scanner
+ 
+ 
+ /* A dummy function. A check against seg-faults in yylval->str. */

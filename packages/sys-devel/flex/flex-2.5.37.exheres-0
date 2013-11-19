@@ -18,6 +18,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-2.5.35-gcc-4.4-elif.patch"
     "${FILES}/${PN}-2.5.36-bison-2.6.1.patch"
+    "${FILES}"/bison3.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --hates=docdir )
