@@ -19,5 +19,8 @@ DEPENDENCIES="
         sys-devel/m4[>=1.4.16]
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-nls )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --enable-yacc
+)
 
