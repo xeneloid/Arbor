@@ -39,6 +39,12 @@
 #     a = $(option b c d) will be resolved and added under the [command]
 #     section of the cfg file
 
+# functions:
+#   setup-cfg_${COMMNAD}_append
+#     append "option = value" pairs under the [command] section that require
+#     more complex dependencies on options e.g. optionq foo && optionq bar or
+#     python_abis e.g. ${MULTIBUILD_TARGET}
+
 # example:
 #
 #   SETUP_CFG_COMMANDS="gui_support packages"
@@ -52,6 +58,10 @@
 #       "sample_data = False"
 #   )
 #
+#   setup-cfg_gui_support_append() {
+#       echo gtk3cairo = $(option cairo $(option gtk3 True False) False) >> setup.cfg
+#   }
+#
 #   require setup-py [ import=distutils cfg_file=setup test=nose \
 #                      blacklist="3" ]
 #
@@ -60,6 +70,7 @@
 #   [gui_support]
 #   agg = True
 #   gtkagg = $(option gtk True False)
+#   gtk3cairo = $(option cairo $(option gtk3 True False) False)
 #   [packages]
 #   sample_data = False
 
@@ -180,6 +191,8 @@ setup-py_configure_one_multibuild() {
             for opt in "${SETUP_CFG_OUT[@]}"; do
                 setup-cfg_option $opt >> ${CFG_FILE}.cfg
             done
+
+            setup-cfg_${cmd}_append
         done
     fi
 
