@@ -22,7 +22,7 @@
 #require vim/doc flag-o-matic fdo-mime bash-completion
 require vim-doc flag-o-matic
 
-[[ "${PN}" != 'vim-runtime' ]] && require alternatives python
+[[ "${PN}" != 'vim-runtime' ]] && require alternatives python [ blacklist="3.1" multibuild=false with_opt=true ]
 [[ "${PN}" != 'gvim' ]] && require bash-completion
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_prerm pkg_postrm
@@ -64,7 +64,6 @@ if [[ ${PN} != vim-runtime ]]; then
             gpm?     ( sys-libs/gpm[>=1.19.3] )
             !minimal? ( app-editors/vim-runtime[=${PV}] )
             perl?    ( dev-lang/perl:* )
-            python?  ( dev-lang/python:= )
             ruby?    ( dev-lang/ruby:* )
             cscope?  ( dev-util/cscope )"
            #acl?     ( kernel_linux? ( sys-apps/acl ) )
@@ -218,9 +217,16 @@ vim_src_configure() {
                 --disable-rubyinterp \
                 $(option_enable gpm)
                 $(option_enable perl perlinterp) \
-                $(option_enable python pythoninterp)
                 $(option_enable ruby rubyinterp)
                 $(option_enable cscope)"
+
+        if [[ $(python_get_abi) == 2.* ]]; then
+            myconf+=" --enable-pythoninterp"
+            export vi_cv_path_python="${PYTHON}"
+        else
+            myconf+=" --enable-python3interp"
+            export vi_cv_path_python3="${PYTHON}"
+        fi
    #if [[ "${PN}" == "gvim" ]] ; then
    #    myconf+=" $(option_enable netbeans)"
    #fi
