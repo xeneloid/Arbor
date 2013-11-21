@@ -63,19 +63,19 @@ binutils_src_configure() {
 
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
-        econf                                               \
-                --target=${target}                          \
-                --disable-werror                            \
-                --enable-gold                               \
-                --enable-ld                                 \
-                --enable-lto                                \
-                --enable-plugins                            \
-                --enable-shared                             \
-                --enable-threads                            \
-                --with-lib-path=${libpath}                  \
-                $(if test x"${target}" = x"${host}" ; then
-                    echo --program-prefix=${host}-
-                  fi)
+        econf                                           \
+            --target=${target}                          \
+            --disable-werror                            \
+            --enable-gold                               \
+            --enable-ld                                 \
+            --enable-lto                                \
+            --enable-plugins                            \
+            --enable-shared                             \
+            --enable-threads                            \
+            --with-lib-path=${libpath}                  \
+            $(if test x"${target}" = x"${host}" ; then
+                echo --program-prefix=${host}-
+              fi)
     done
 }
 
