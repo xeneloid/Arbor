@@ -14,6 +14,8 @@ SLOT="0"
 MYOPTIONS=""
 
 DEPENDENCIES="
+    build:
+        app-doc/asciidoc
     build+run:
         sys-libs/ncurses
     run:
