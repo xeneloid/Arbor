@@ -41,6 +41,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-bpf-compiler
     --enable-devel
     --enable-libipq
+    --enable-nfsynproxy
 )
 DEFAULT_SRC_COMPILE_PARAMS=( V=1 )
 DEFAULT_SRC_INSTALL_EXCLUDE=( "release.sh" )
