@@ -2,7 +2,8 @@
 # Copyright 2009 Mike Kelly
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix=tar.gz ]
+require python [ blacklist='3' has_bin=true multibuild=false ] \
+        sourceforge [ suffix=tar.gz ]
 
 SUMMARY="Text based document generation"
 HOMEPAGE="http://www.methods.co.nz/asciidoc/"
@@ -16,7 +17,6 @@ DEPENDENCIES="
     run:
         app-text/docbook-xml-dtd:4.5
         app-text/docbook-xsl-stylesheets
-        dev-lang/python:*
         dev-libs/libxslt
 
     suggestion:
@@ -40,5 +40,9 @@ src_prepare() {
 src_install() {
     option vim-syntax && dodir /usr/share/vim/vimfiles
     default
+
+    # fix shebang
+    edo sed -i -e "s:#!/usr/bin/env python:#!/usr/bin/env python2:" \
+        "${IMAGE}"/usr/bin/{asciidoc,a2x}.py
 }
 
