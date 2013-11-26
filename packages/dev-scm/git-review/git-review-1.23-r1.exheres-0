@@ -12,7 +12,7 @@ git-review is a tool that helps submitting git branches to gerrit for review.
 "
 HOMEPAGE="https://launchpad.net/${PN}"
 
-LICENCES="Apache-2"
+LICENCES="Apache-2.0"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
