@@ -97,6 +97,9 @@ ruby-2.0_src_test() {
 }
 
 ruby-2.0_src_install() {
+    # otherwise install fails weirdly
+    emake yes-fake
+
     default
 
     local \
