@@ -263,9 +263,9 @@ else
             setup-py_test_one_multibuild() {
                 [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
 
-                NOSETESTS=nosetests-${MULTIBUILD_PYTHON_ABIS_CURRENT_TARGET}
+                NOSETESTS="nosetests-$(python_get_abi)"
 
-                PYTHONPATH="$(ls -d build/lib*)" edo ${NOSETESTS} "${NOSETESTS_PARAMS[@]}"
+                PYTHONPATH="$(ls -d ${PWD}/build/lib*)" edo ${NOSETESTS} "${NOSETESTS_PARAMS[@]}"
             }
             ;;
         pytest)
@@ -274,9 +274,9 @@ else
             setup-py_test_one_multibuild() {
                 [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
 
-                PYTEST=py.test-${MULTIBUILD_PYTHON_ABIS_CURRENT_TARGET}
+                PYTEST="py.test-$(python_get_abi)"
 
-                PYTHONPATH="$(ls -d build/lib*)" edo ${PYTEST} "${PYTEST_PARAMS[@]}"
+                PYTHONPATH="$(ls -d ${PWD}/build/lib*)" edo ${PYTEST} "${PYTEST_PARAMS[@]}"
             }
            ;;
         *)
