@@ -56,12 +56,13 @@ DEPENDENCIES+="
 MYOPTIONS=""
 
 if [[ ${PN} != vim-runtime ]]; then
-    MYOPTIONS+=" gpm perl python ruby
+    MYOPTIONS+=" gpm lua perl python ruby
         minimal [[ description = [ Build without runtime scripts (no syntax highlighting, help) ] ]]
         cscope [[ description = [ add support for the cscope code browser ] ]]"
     DEPENDENCIES+="
         build+run:
             gpm?     ( sys-libs/gpm[>=1.19.3] )
+            lua?     ( dev-lang/lua )
             !minimal? ( app-editors/vim-runtime[=${PV}] )
             perl?    ( dev-lang/perl:* )
             ruby?    ( dev-lang/ruby:* )
@@ -206,6 +207,7 @@ vim_src_configure() {
         myconf="--with-features=tiny \
             --enable-gui=no \
             --without-x \
+            --disable-luainterp \
             --disable-perlinterp \
             --disable-pythoninterp \
             --disable-rubyinterp \
@@ -216,6 +218,7 @@ vim_src_configure() {
                 --enable-multibyte \
                 --disable-rubyinterp \
                 $(option_enable gpm)
+                $(option_enable lua luainterp) \
                 $(option_enable perl perlinterp) \
                 $(option_enable ruby rubyinterp)
                 $(option_enable cscope)"
