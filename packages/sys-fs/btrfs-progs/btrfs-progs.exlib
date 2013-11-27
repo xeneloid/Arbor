@@ -7,7 +7,8 @@ if ever is_scm ; then
     DOWNLOADS=""
     require scm-git
 else
-    DOWNLOADS="mirror://kernel/linux/kernel/people/mason/btrfs/${PNV}.tar.bz2"
+    DOWNLOADS="mirror://kernel/linux/kernel/people/mason/btrfs-progs/${PN}-v${PV}.tar.xz"
+    WORK="${WORKBASE}/${PN}-v${PV}"
 fi
 
 require systemd-service
