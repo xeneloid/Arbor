@@ -4,7 +4,7 @@
 WORK="${WORKBASE}/${PN}2-8-7"
 MPNV="lynx2.8.7rel.2"
 
-SUMMARY="The classic text-based web browser"
+SUMMARY="Classic text-based web browser"
 HOMEPAGE="http://lynx.isc.org"
 DOWNLOADS="${HOMEPAGE}/current/${MPNV}.tar.gz"
 
