@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Free Software for extracting Microsoft cabinet file"
-HOMEPAGE="http://www.${PN.org.uk"
+HOMEPAGE="http://www.${PN}.org.uk"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
