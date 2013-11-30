@@ -180,8 +180,10 @@ git-googlecode_src_install() {
     option git_remote_helpers:bzr && dobin contrib/remote-helpers/git-remote-bzr
     option git_remote_helpers:mercurial && dobin contrib/remote-helpers/git-remote-hg
 
-    if option python ; then
-        python_bytecompile
+    if ! ever at_least 1.8.5 ; then
+        if option python ; then
+            python_bytecompile
+        fi
     fi
 
     exeinto /usr/libexec/${PN}
