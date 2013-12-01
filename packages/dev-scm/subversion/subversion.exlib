@@ -4,8 +4,14 @@
 # Based in part upon 'subversion-1.4.6-r2.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
+if ever at_least 1.8.4 ; then
+    blacklist=none
+else
+    blacklist=3
+fi
+
 require bash-completion autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ] \
-        perl-module python [ blacklist='3' multibuild=false with_opt=true ] berkdb
+        perl-module python [ blacklist=${blacklist} multibuild=false with_opt=true ] berkdb
 
 export_exlib_phases src_prepare src_configure src_compile src_test_expensive src_install
 
@@ -62,19 +68,22 @@ DEPENDENCIES="
         perl? ( dev-perl/URI )
     suggestion:
         net-misc/openssh [[ description = [ Enables support for svn+ssh:// URIs ] ]]
-    test-expensive:
-        dev-lang/python:*[>=2.4]
 "
 
 if ever at_least 1.8.4 ; then
     DEPENDENCIES+="
         build+run:
-            net-libs/serf
+            dev-db/sqlite:3[>=3.7.15.1] [[ note = [ recommended version ] ]]
+            net-libs/serf[>=1.2.1]
+        test-expensive:
+            dev-lang/python:*[>=2.5]
     "
 else
     DEPENDENCIES+="
         build+run:
             net-misc/neon[>=0.29.6&<0.30]
+        test-expensive:
+            dev-lang/python:*[>=2.4]
     "
 fi
 
@@ -103,8 +112,10 @@ subversion_src_configure() {
         ${myconf} \
         --enable-local-library-preloading \
         --enable-nls \
+        $(ever at_least 1.8.4 && echo --disable-ev2-impl) \
         --disable-javahl \
         --disable-mod-activation \
+        $(ever at_least 1.8.4 && echo --disable-plaintext-password-storage) \
         --disable-static \
         --without-gssapi \
         --without-jikes \
