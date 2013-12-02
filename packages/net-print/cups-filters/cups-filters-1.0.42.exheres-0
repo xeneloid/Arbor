@@ -19,6 +19,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     avahi
+    dbus
     systemd
     multibuild_c: 32 64
 "
@@ -42,9 +43,14 @@ DEPENDENCIES="
             net-dns/avahi[multibuild_c:*(-)?]
             net-print/cups[>=1.6][avahi][multibuild_c:*(-)?]
         )
+        dbus? ( sys-apps/dbus[multibuild_c:*(-)?] )
         !app-text/ghostscript[<9.09] [[
             description = [ cups-filters now provides gstopxl and gstoraster ]
             resolution = upgrade-blocked-before
+        ]]
+        !net-print/foomatic-filters [[
+            description = [ cups-filters now includes foomatic-filters ]
+            resolution = uninstall-blocked-before
         ]]
     run:
         sys-apps/bc                [[ note = [ pstopdf filter ] ]]
@@ -52,7 +58,6 @@ DEPENDENCIES="
         fonts/dejavu
     suggestion:
         net-print/foomatic-db      [[ note = [ for non-PostScript printers ] ]]
-        net-print/foomatic-filters [[ note = [ for non-PostScript printers ] ]]
 "
 
 configure_one_multibuild() {
@@ -71,6 +76,7 @@ configure_one_multibuild() {
         --without-php
         --without-rcdir
         $(option_enable avahi)
+        $(option_enable dbus)
     )
 
     econf "${args[@]}"
