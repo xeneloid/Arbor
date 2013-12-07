@@ -11,7 +11,6 @@ the packet filtering framework of Linux 2.4 and 2.6. It supports binary plugins
 for adding packet interpreters and output-targets (e.g., for logging into databases,
 user-defined filetypes, etc.).
 "
-
 HOMEPAGE="http://www.netfilter.org/projects/${PN}"
 DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
 
