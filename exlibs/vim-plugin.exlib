@@ -10,6 +10,9 @@
 
 require vim-doc
 
+# options required in vim/gvim. e.g. [lua], defaults to empty
+myexparam vim_options=
+exparam -v VIM_PLUGIN_VIM_OPTIONS vim_options
 # minimum required vim/gvim version, defaults to 6.4
 myexparam vim_version=6.4
 exparam -v VIM_PLUGIN_VIM_VERSION vim_version
@@ -29,8 +32,8 @@ exparam -v VIM_SCRIPT_TYPE script_type
 DEPENDENCIES="
     build+run:
         || (
-            app-editors/vim[>=${VIM_PLUGIN_VIM_VERSION}]
-            app-editors/gvim[>=${VIM_PLUGIN_VIM_VERSION}]
+            app-editors/vim[>=${VIM_PLUGIN_VIM_VERSION}]${VIM_PLUGIN_VIM_OPTIONS}
+            app-editors/gvim[>=${VIM_PLUGIN_VIM_VERSION}]${VIM_PLUGIN_VIM_OPTIONS}
         )
 "
 
