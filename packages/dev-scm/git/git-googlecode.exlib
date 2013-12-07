@@ -146,7 +146,7 @@ git-googlecode_src_compile() {
 git-googlecode_src_test() {
     esandbox allow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
     # default_src_test executes the wrong target, "make check", first
-    myemake test
+    myemake -j1 test
     esandbox disallow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
 }
 
