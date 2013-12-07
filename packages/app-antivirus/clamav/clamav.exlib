@@ -17,7 +17,8 @@ LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="baselayout ipv6 milter unrar"
 
-RESTRICT="test" ## Sydbox violations, failures
+# Sydbox violations, failures
+RESTRICT="test"
 
 DEPENDENCIES="
     test:
