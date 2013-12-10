@@ -48,7 +48,10 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}/grub-2-gets.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+        "${FILES}"/${PNV}-Fix-build-with-FreeType-2.5.1.patch
+    -p0 "${FILES}"/grub-2-gets.patch
+)
 
 pkg_setup() {
     # grub2 should be compiled with -Os, other optimizations may result in oversized core images
