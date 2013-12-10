@@ -5,3 +5,7 @@ require podofo
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-Use-cmake-s-FindFreetype.cmake-module.patch
+)
+
