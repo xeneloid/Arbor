@@ -17,7 +17,7 @@ REMOTE_IDS="freecode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout caps ipv6 pcre systemd tcpd vim-syntax
+MYOPTIONS="baselayout caps pcre systemd tcpd vim-syntax
     amqp    [[ description = [ Output logs over AMQP ] ]]
     json    [[ description = [ Ingest and produce json-formatted log data ] ]]
     mongodb [[ description = [ Write logs to a mongodb instance ] ]]
@@ -60,6 +60,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-module-dir=/usr/${LIBDIR}/syslog-ng
     --sysconfdir=/etc/syslog-ng
     --enable-dynamic-linking
+    --enable-ipv6
     --enable-ssl
     --disable-env-wrapper
     # This seems to need a different library than net-libs/GeoIP
@@ -74,7 +75,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     amqp
     "caps linux-caps"
     json
-    ipv6
     mongodb
 #    pacct
     pcre
