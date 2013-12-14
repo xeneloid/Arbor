@@ -13,7 +13,6 @@ PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     idn  [[ description = [ Enable support for internationalized domain names ] ]]
-    ipv6
 "
 
 DEPENDENCIES="
@@ -39,8 +38,8 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
 
 src_configure() {
     local myconf=(
+        --enable-ipv6
         --enable-nls
-        $(option_enable ipv6)
         $(option_enable idn iri)
         --with-ssl=$(optionv gnutls || echo openssl)
     )
