@@ -15,7 +15,7 @@ REMOTE_IDS+=" freecode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout ipv6 milter unrar"
+MYOPTIONS="baselayout milter unrar"
 
 # Sydbox violations, failures
 RESTRICT="test"
@@ -30,13 +30,14 @@ DEPENDENCIES="
         user/clamav
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 milter unrar )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( milter unrar )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-check
     --enable-bzip2
     --enable-dns-fix
     --enable-clamuko        # On-access scanning
     --enable-id-check       # Use id utility instead of /etc/passwd parsing (Gentoo #72540)
+    --enable-ipv6
     --with-dbdir=/var/lib/clamav
     --with-iconv
     --disable-experimental
