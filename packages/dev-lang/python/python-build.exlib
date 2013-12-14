@@ -9,7 +9,7 @@
 MY_PNV="Python-${PV}"
 
 # python: no has_lib or multibuild as it needs only the pyc part of the exlib
-require flag-o-matic python [ has_lib=false multibuild=false ] alternatives
+require flag-o-matic python [ has_lib=false multibuild=false blacklist=none ] alternatives
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
 
 export_exlib_phases pkg_pretend src_prepare src_configure src_test src_install
@@ -26,7 +26,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/releases/${PV}/"
 
 LICENCES="PSF-2.2"
 SLOT="$(ever range 1-2)"
-MYOPTIONS="dbm examples ipv6 readline sqlite tk
+MYOPTIONS="dbm examples readline sqlite tk
     ( berkdb gdbm ) [[ requires = dbm ]]
     dbm? ( ( berkdb gdbm ) [[ number-selected = exactly-one ]] )
 "
@@ -52,13 +52,13 @@ DEPENDENCIES="
 
 WORK="${WORKBASE}/${MY_PNV}"
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-ipv6
     --enable-shared
     $(ever at_least 3 || echo --enable-unicode=ucs4)
     --with-system-ffi
     ac_cv_file__dev_ptc=no
     ac_cv_file__dev_ptmx=yes
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
 
 PYTHON_BYTECOMPILE_EXCLUDES=( bad_coding badsyntax lib2to3/tests/data site-packages )
 

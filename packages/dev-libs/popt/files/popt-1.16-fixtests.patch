@@ -1,6 +1,6 @@
-From: Timo Gurr <tgurr@exherbo.org>
+From: http://rpm5.org/cvs/chngview?cn=14201
 Reason: Fixes the last two tests which fail otherwise
-Upstream: Reported
+Upstream: Fixed in trunk
 
 diff -Naur popt-1.16.orig/testit.sh popt-1.16/testit.sh
 --- popt-1.16.orig/testit.sh	2009-07-26 18:25:23.000000000 +0200

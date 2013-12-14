@@ -27,7 +27,7 @@ UPSTREAM_RELEASE_NOTES="http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS
 
 LICENCES="BSD-3 BSD-4 GPL-2 MIT"
 SLOT="0"
-MYOPTIONS="baselayout caps debug ipv6 parse-clocks"
+MYOPTIONS="baselayout caps debug parse-clocks"
 
 DEPENDENCIES="
     build+run:
@@ -40,12 +40,12 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-ipv6
     --with-crypto
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     "caps linuxcaps"
     "debug debugging"
-    ipv6
     parse-clocks
 )
 

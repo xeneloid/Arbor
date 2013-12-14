@@ -10,7 +10,6 @@ DEPENDENCIES="
     build+run:
         || (
             dev-lang/icedtea6:${SLOT}
-            dev-lang/sun-jdk-bin:${SLOT}
         )
 "
 

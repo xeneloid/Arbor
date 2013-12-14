@@ -32,7 +32,6 @@ MYOPTIONS="
     baselayout
     berkdb
     idn
-    ipv6
     ldap
     mysql [[ requires = [ -threads ] ]]
     postgres [[ description = [ Adds support for the PostgreSQL backend. ] ]]
@@ -77,6 +76,7 @@ bind_src_configure() {
         --includedir=/usr/include \
         --localstatedir=/var \
         --sysconfdir=/etc/${PN} \
+        --enable-ipv6 \
         --enable-isc-spnego=no \
         --enable-largefile=yes \
         --with-dlz-filesystem=yes \
@@ -87,7 +87,6 @@ bind_src_configure() {
         --with-libtool=yes \
         --with-libxml2=yes \
         --with-randomdev=/dev/urandom \
-        $(myoption enable ipv6) \
         $(myoption enable threads) \
         $(myoption enable threads linux-caps) \
         $(myoption with berkdb dlz-bdb) \

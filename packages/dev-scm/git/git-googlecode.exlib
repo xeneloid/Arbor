@@ -32,7 +32,6 @@ MYOPTIONS="
     baselayout
     curl
     emacs [[ description = [ Install various Emacs libraries: git.el, git-blame.el and vc-git.el ] ]]
-    ipv6
     python [[ description = [ Install helper scripts for git remote helpers, a compatibility layer with other SCMs ] ]]
     tk
     webdav [[ requires = curl description = [ Adds support for pushing using http:// and https:// transports ] ]]
@@ -115,7 +114,6 @@ git-googlecode_src_unpack() {
 git-googlecode_src_configure() {
     myoptions+=" NO_GETTEXT=YesPlease"
     option curl || myoptions+=" NO_CURL=YesPlease"
-    option ipv6 || myoptions+=" NO_IPV6=YesPlease"
     option python || myoptions+=" NO_PYTHON=YesPlease"
     option tk || myoptions+=" NO_TCLTK=YesPlease"
     option webdav || myoptions+=" NO_EXPAT=YesPlease"
@@ -146,7 +144,7 @@ git-googlecode_src_compile() {
 git-googlecode_src_test() {
     esandbox allow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
     # default_src_test executes the wrong target, "make check", first
-    myemake test
+    myemake -j1 test
     esandbox disallow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
 }
 
@@ -180,8 +178,10 @@ git-googlecode_src_install() {
     option git_remote_helpers:bzr && dobin contrib/remote-helpers/git-remote-bzr
     option git_remote_helpers:mercurial && dobin contrib/remote-helpers/git-remote-hg
 
-    if option python ; then
-        python_bytecompile
+    if ! ever at_least 1.8.5 ; then
+        if option python ; then
+            python_bytecompile
+        fi
     fi
 
     exeinto /usr/libexec/${PN}

@@ -84,7 +84,8 @@ multibuild_save_build_target() {
 
 # multibuild_switch_build_target $class $target
 multibuild_switch_build_target() {
-    multibuild_save_build_target "${@}"
+    local target=MULTIBUILD_${class}_CURRENT_TARGET
+    [[ -n ${!target} ]] && multibuild_save_build_target "${@}"
     multibuild_load_build_target "${@}"
 }
 
@@ -146,7 +147,9 @@ multibuild_load_default_targets() {
     local class target
     for class in ${MULTIBUILD_CLASSES}; do
         x=MULTIBUILD_${class}_DEFAULT_TARGET
-        multibuild_load_build_target ${class} ${!x:-DEFAULT}
+        if [[ -n ${!x} ]]; then
+            multibuild_load_build_target ${class} ${!x:-DEFAULT}
+        fi
     done
 }
 
@@ -165,7 +168,9 @@ multibuild_sanity_check_profile() {
     done
 
     x=MULTIBUILD_${class}_DEFAULT_TARGET
-    [[ ${target} == ${!x} ]] || die "Invalid profile sets ${target} target last, should be ${!x}"
+    if [[ ${!x} ]]; then
+        [[ ${target} == ${!x} ]] || die "Invalid profile sets ${target} target last, should be ${!x}"
+    fi
 }
 
 if [[ ${EXHERES_PHASE} != metadata ]] ; then

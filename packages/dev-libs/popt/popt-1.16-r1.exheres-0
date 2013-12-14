@@ -1,0 +1,40 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
+SUMMARY="Command line parsing library"
+HOMEPAGE="http://www.rpm5.org"
+DOWNLOADS="${HOMEPAGE}/files/${PN}/${PNV}.tar.gz"
+
+REMOTE_IDS="freecode:${PN}"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="parts: development documentation libraries"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}"/${PNV}-fixtests.patch
+    -p1 "${FILES}"/${PNV}-pkgconfigdir.patch
+    -p1 "${FILES}"/${PNV}-automake-1.13-1.patch
+    -p1 "${FILES}"/${PNV}-automake-1.13-2.patch
+)
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --disable-static
+)
+
+src_install() {
+    default
+
+    expart documentation /usr/share/{doc,man}
+    expart libraries /usr/$(exhost --target)/lib
+    expart development /usr/$(exhost --target)/{include,lib/pkgconfig}
+}
+

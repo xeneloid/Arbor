@@ -40,16 +40,16 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        !dev-db/mariadb [[
-            description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]
-            resolution = uninstall-blocked-after
-        ]]
         group/${PN}
         user/${PN}
         dev-libs/libaio[multibuild_c:*(-)?]
         dev-libs/openssl[>=0.9.7][multibuild_c:*(-)?]
         sys-libs/zlib[>=1.2.3][multibuild_c:*(-)?]
         tcpd? ( sys-apps/tcp-wrappers[multibuild_c:*(-)?] )
+        !dev-db/mariadb [[
+            description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]
+            resolution = uninstall-blocked-after
+        ]]
     suggestion:
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
@@ -114,6 +114,7 @@ configure_one_multibuild() {
         -DMYSQL_UNIX_ADDR:PATH=/run/mysqld/mysqld.sock
         -DSYSCONFDIR:PATH=/etc/mysql
         -DENABLED_PROFILING:BOOL=TRUE
+        -DWITH_ASAN:BOOL=FALSE
         -DWITH_EXTRA_CHARSETS:STRING=all
         # Default ENGINES for MySQL 5.6 community build (currently == xlarge) minus embedded
         -DWITH_ARCHIVE_STORAGE_ENGINE:BOOL=TRUE
@@ -178,6 +179,7 @@ mysql_src_install() {
 
     # Remove empty directories
     edo rm -r "${IMAGE}"/usr/data
+    edo rm -r "${IMAGE}"/usr/share/mysql/info
 
     keepdir /etc/mysql
 

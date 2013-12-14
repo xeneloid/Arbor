@@ -16,7 +16,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.
         test-dbus-daemon \
         udev-rules \
         pam \
-        python [ python_dep='[>=2.7]' python_sup='2.7 3.2 3.3' multibuild=false with_opt=true ]
+        python [ blacklist="2.6 3.1" multibuild=false with_opt=true ]
 
 export_exlib_phases pkg_pretend pkg_setup src_prepare src_configure src_test src_install pkg_postinst
 
@@ -52,11 +52,6 @@ MYOPTIONS="
     gobject-introspection
     gtk-doc
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
-    old-net [[ description =
-                [ Use legacy unpredictable kernel names for network interfaces.
-                  cf. http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames
-                ]
-            ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
@@ -489,10 +484,6 @@ EOT
 
     if option python ; then
         python_bytecompile
-    fi
-
-    if option old-net ; then
-        dosym /dev/null /etc/udev/rules.d/80-net-name-slot.rules
     fi
 }
 

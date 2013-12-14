@@ -1,0 +1,72 @@
+# Copyright 2010 Timo Gurr <tgurr@gentoo.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'rpcbind-0.2.0.ebuild' from Gentoo, which is:
+#     Copyright 1999-2009 Gentoo Foundation
+
+require sourceforge
+require systemd-service [ systemd_files=[ systemd/rpcbind.service systemd/rpcbind.socket ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
+SUMMARY="RPC server replacing portmap"
+DESCRIPTION="
+The rpcbind utility is a server that converts RPC program numbers
+into universal addresses.
+"
+HOMEPAGE+=" http://git.infradead.org/users/steved/${PN}.git"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="baselayout"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config[>=0.20]
+    build+run:
+        net-libs/libtirpc
+        !net-nds/portmap [[
+            description = [ rpcbind replaces portmap ]
+            resolution = uninstall-blocked-after
+        ]]
+    run:
+        user/rpc
+        group/rpc
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/b3b031b07cc5909aaf964f9d4cf46f6097769320.patch
+    "${FILES}"/0001-systemd-add-support-for-system-bus-activation.patch
+    "${FILES}"/0001-socket-activation-don-t-unlink-socket-we-didn-t-create.patch
+    "${FILES}"/0001-socket-activation-fix-rpcbind-service-to-use-separate-socket.patch
+    "${FILES}"/rpcbind-journal.patch
+    "${FILES}"/move-lock-file-to-run-fs.patch
+    "${FILES}"/rpcbind-exherbo-systemd-disable-warmstart.patch
+)
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --bindir=/sbin
+    --enable-warmstarts
+    --with-statedir=/run/${PN}
+    --with-rpcuser=rpc
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    "systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}"
+)
+
+src_install() {
+    default
+
+    if option systemd ; then
+        insinto /usr/${LIBDIR}/tmpfiles.d
+        hereins ${PN}.conf <<EOF
+d /run/rpcbind 0700 rpc rpc
+EOF
+    fi
+
+    if option baselayout ; then
+        newinitd "${FILES}"/rpcbind.initd rpcbind
+        newconfd "${FILES}"/rpcbind.confd rpcbind
+    fi
+}
+

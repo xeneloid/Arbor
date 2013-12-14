@@ -21,7 +21,7 @@ DOWNLOADS="mirror://ruby/${SLOT}/${MY_PNV}.tar.bz2"
 
 MYOPTIONS="
     berkdb gdbm ncurses readline tk
-    doc examples ipv6
+    doc examples
 "
 
 tag_number=$(ever replace_all '_' ${PV})
@@ -56,9 +56,7 @@ ruby-2.0_src_configure() {
     unset SOCKS_SERVER
 
     local cfargs=(
-        # Yes, this does always call --enable-ipv6
         --enable-ipv6
-        $(option ipv6 || echo --with-lookup-order-hack=INET)
         $(option_enable doc install-doc)
 
         --with-ruby-version=minor
@@ -97,6 +95,9 @@ ruby-2.0_src_test() {
 }
 
 ruby-2.0_src_install() {
+    # otherwise install fails weirdly
+    emake yes-fake
+
     default
 
     local \
