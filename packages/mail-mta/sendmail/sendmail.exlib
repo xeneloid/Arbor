@@ -22,7 +22,7 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="Sendmail"
 
 SLOT="0"
-MYOPTIONS="baselayout ipv6 ldap mbox nis sasl sockets ssl tcpd"
+MYOPTIONS="baselayout ldap mbox nis sasl sockets ssl tcpd"
 
 DEPENDENCIES="
     build+run:
@@ -87,8 +87,7 @@ sendmail_src_prepare() {
         && confLIBS="${confLIBS} -lssl -lcrypto" \
         && conf_sendmail_LIBS="${conf_sendmail_LIBS} -lssl -lcrypto"
 
-    option ipv6 \
-        && confENVDEF="${confENVDEF} -DNETINET6"
+    confENVDEF="${confENVDEF} -DNETINET6"
 
     option nis \
         && confENVDEF="${confENVDEF} -DNIS"
