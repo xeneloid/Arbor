@@ -1,5 +1,5 @@
 # Copyright 2010 Jan Meier <jan@codejunky.org>
-# Copyright 2008, 2010 Wulf C. Krueger
+# Copyright 2008-2013 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'ppp-2.4.4-r21.ebuild' from Gentoo, which is:
 #       Copyright 1999-2008 Gentoo Foundation
@@ -29,7 +29,6 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     activefilter [[ description = [ Enables activefilter support ] ]]
     atm          [[ description = [ Enables support for PPP over ATM (PPPoA) ] ]]
-    ipv6
     pam
     radius
 "
@@ -65,9 +64,7 @@ src_prepare() {
         edo sed -i "s/^#USE_PAM=y/USE_PAM=y/" pppd/Makefile.linux
     fi
 
-    if option ipv6 ; then
-        edo sed -i "s/#HAVE_INET6/HAVE_INET6/" pppd/Makefile.linux
-    fi
+    edo sed -i "s/#HAVE_INET6/HAVE_INET6/" pppd/Makefile.linux
 
     edo sed -i "s/^#CBCP=y/CBCP=y/" pppd/Makefile.linux
 
@@ -116,7 +113,7 @@ src_install() {
     for i in ip-up ip-down ; do
         doexe "${WORKBASE}"/scripts/${i}
         insinto /etc/ppp/${i}.d
-        option ipv6 && dosym ${i} /etc/ppp/${i/ip/ipv6}
+        dosym ${i} /etc/ppp/${i/ip/ipv6}
         doins "${WORKBASE}"/scripts/${i}.d/*
     done
 
