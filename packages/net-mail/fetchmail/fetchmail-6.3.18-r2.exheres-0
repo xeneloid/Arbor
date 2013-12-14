@@ -10,7 +10,7 @@ DOWNLOADS="mirror://berlios/${PN}/${PNV}.tar.xz"
 LICENCES="GPL-2 public-domain"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="ipv6 tk"
+MYOPTIONS="tk"
 
 DEPENDENCIES="
     build:
@@ -32,7 +32,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-gssapi --without-kerberos5 --without-kerberos --without-hesiod
     --with-ssl
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
+DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-ipv6 )
 # Don't run t.validate-xhtml, always fails to load DTDs here
 DEFAULT_SRC_TEST_PARAMS=( TESTS=t.smoke )
 
