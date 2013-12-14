@@ -1,4 +1,4 @@
-# Copyright 2008-2012 Wulf C. Krueger
+# Copyright 2008-2013 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'tcp-wrappers-7.6-r8.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
@@ -17,7 +17,6 @@ LICENCES="tcp_wrappers_license"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
-    ipv6
     multibuild_c: 32 64
 "
 DEPENDENCIES=""
@@ -26,13 +25,12 @@ prepare_one_multibuild() {
     PATCHDIR="${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${PV}"
 
     expatch "${PATCHDIR}/${PNV}-makefile.patch" "${PATCHDIR}/${PNV}-shared.patch" "${PATCHDIR}/generic"
-
-    option ipv6 && expatch -p2 "${PATCHDIR}"/${PNV}-ipv6-1.14.diff
+    expatch -p2 "${PATCHDIR}"/${PNV}-ipv6-1.14.diff
 }
 
 compile_one_multibuild() {
     local myconf="-DHAVE_WEAKSYMS"
-    option ipv6 && myconf+=" -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len"
+    myconf+=" -DINET6=1 -Dss_family=__ss_family -Dss_len=__ss_len"
 
     emake \
         REAL_DAEMON_DIR=/usr/sbin \
