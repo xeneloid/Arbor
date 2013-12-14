@@ -11,7 +11,7 @@ DOWNLOADS="${HOMEPAGE}/current/${MPNV}.tar.gz"
 LICENCES="GPL-1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="ipv6"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
@@ -19,9 +19,9 @@ DEPENDENCIES="
         sys-libs/ncurses
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-cgi-links
                                --enable-file-upload
+                               --enable-ipv6
                                --enable-nls
                                --hates=docdir
                                --sysconfdir='/etc/lynx'
