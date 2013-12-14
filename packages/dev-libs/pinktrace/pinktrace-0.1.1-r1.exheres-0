@@ -4,7 +4,7 @@
 require pinktrace
 
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="doc python ruby ipv6" # TODO: haskell
+MYOPTIONS="doc python ruby" # TODO: haskell
 
 DEPENDENCIES="
     build:
@@ -21,10 +21,10 @@ DEPENDENCIES="
 src_configure() {
     econf \
         --enable-easy \
+        --enable-ipv6 \
         $(option_enable doc doxygen) \
         $(option doc && option python && echo '--enable-python-doc') \
         $(option doc && option ruby && echo '--enable-ruby-doc') \
-        $(option_enable ipv6) \
         $(option_enable python) \
         $(option_enable ruby)
 }
