@@ -27,7 +27,6 @@ LICENCES="PHP-3"
 SLOT="0"
 MYOPTIONS="
     debug
-    ipv6
     apache [[ description = [ Build PHP for the Apache webserver. ] ]]
     pear [[ description = [ Support for using the PHP Extension and Application Repository (PEAR). ] requires = [ php_extensions: pcre xml ] ]]
     fpm [[ description = [ Build alternative FastCGI implementation (FastCGI Process Manager) for heavy-loaded sites. ] ]]
@@ -178,6 +177,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-hash
     --enable-inifile
     --enable-intl
+    --enable-ipv6
     --enable-json
     --enable-magic-quotes
     --enable-mbstring
@@ -254,7 +254,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     debug
     fpm
-    ipv6
     "php_extensions:exif exif"
     "php_extensions:fileinfo fileinfo"
     "php_extensions:filter filter"
