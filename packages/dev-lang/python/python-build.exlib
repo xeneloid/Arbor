@@ -26,7 +26,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/releases/${PV}/"
 
 LICENCES="PSF-2.2"
 SLOT="$(ever range 1-2)"
-MYOPTIONS="dbm examples ipv6 readline sqlite tk
+MYOPTIONS="dbm examples readline sqlite tk
     ( berkdb gdbm ) [[ requires = dbm ]]
     dbm? ( ( berkdb gdbm ) [[ number-selected = exactly-one ]] )
     multibuild_c: ( 32 64 )
@@ -53,11 +53,11 @@ DEPENDENCIES="
 
 WORK="${WORKBASE}"
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-ipv6
     --enable-shared
     $(ever at_least 3 || echo --enable-unicode=ucs4)
     --with-system-ffi
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ipv6 )
 
 python-build_prepare_one_multibuild() {
     if ! ever at_least 3.3; then
