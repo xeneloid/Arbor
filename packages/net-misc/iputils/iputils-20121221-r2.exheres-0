@@ -11,7 +11,7 @@ DOWNLOADS="${HOMEPAGE}/${MY_PNV}.tar.bz2
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="caps idn ipv6"
+MYOPTIONS="caps idn"
 
 DEPENDENCIES="
     build+run:
@@ -37,8 +37,7 @@ src_compile() {
         CC="${CC}" \
         USE_GNUTLS=no \
         USE_CAP=$(optionv caps || echo no) \
-        USE_IDN=$(optionv idn || echo no) \
-        $(option ipv6 || echo IPV6_TARGETS=)
+        USE_IDN=$(optionv idn || echo no)
 }
 
 src_install() {
@@ -49,14 +48,12 @@ src_install() {
     into /usr
     dosbin arping clockdiff ipg rarpd rdisc tftpd tracepath
 
-    if option ipv6; then
-        into /
-        dobin ping6
-        edo chmod +s "${IMAGE}"/bin/ping6
+    into /
+    dobin ping6
+    edo chmod +s "${IMAGE}"/bin/ping6
 
-        into /usr
-        dosbin tracepath6
-    fi
+    into /usr
+    dosbin tracepath6
 
     edo rm doc/traceroute6.8
 
