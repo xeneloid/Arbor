@@ -18,14 +18,13 @@ DEPENDENCIES="
     build+run:
         dev-libs/libpthread-stubs
         dev-libs/openssl
-        dev-libs/v8
+        sys-libs/zlib
 "
 
 SRC_CONFIGURE_PARAMS=(
+    --prefix=/usr
     --shared-openssl
     --shared-zlib
-    --shared-v8
-    --shared-v8-includes=/usr/include
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
@@ -36,8 +35,10 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( "waf" )
 
 LD="${CXX}"
 
+RESTRICT="test"
+
 src_configure() {
-    edo ./configure --prefix=/usr "${SRC_CONFIGURE_PARAMS[@]}"
+    edo ./configure "${SRC_CONFIGURE_PARAMS[@]}"
 }
 
 src_install() {
