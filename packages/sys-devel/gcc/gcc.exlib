@@ -156,6 +156,8 @@ gcc_src_prepare() {
             -e 's,DEFAULT_ASSEMBLER+set,DEFAULT_ASSEMBLER+permissive,'  \
             -i "gcc/configure"
 
+    # Do not try fix the systems header files.
+    edo sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
     default
 }
 
