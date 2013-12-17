@@ -21,10 +21,8 @@ MYOPTIONS="gmp pcre"
 DEPENDENCIES="
     build:
         sys-devel/bison[>=2.6]
-        sys-devel/flex[>=2.5.33]
+        sys-devel/flex[>=2.5.36]
         virtual/pkg-config[>=0.9.0]
-    test:
-        dev-perl/XML-DOM
     build+run:
         dev-libs/libgcrypt
         dev-libs/libgpg-error
@@ -45,6 +43,4 @@ src_configure() {
         --with-regex-library=$(optionv pcre || echo "posix") \
         $(option_enable pcre)
 }
-
-# Note wrt src_test(): 'roqet -d debug' always fails.
 
