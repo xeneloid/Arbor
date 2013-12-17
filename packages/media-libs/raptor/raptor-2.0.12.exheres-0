@@ -33,6 +33,7 @@ DEPENDENCIES="
         dev-libs/libxslt[>=1.0.18]
         dev-libs/yajl[>=2.0.0]
 "
+# NOTE: feed validation RelaxNG tests need jing: http://www.thaiopensource.com/relaxng/jing.html
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
