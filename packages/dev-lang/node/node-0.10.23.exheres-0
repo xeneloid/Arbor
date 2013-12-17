@@ -18,12 +18,15 @@ DEPENDENCIES="
     build+run:
         dev-libs/libpthread-stubs
         dev-libs/openssl
+        dev-libs/v8
         sys-libs/zlib
 "
 
 SRC_CONFIGURE_PARAMS=(
     --prefix=/usr
     --shared-openssl
+    --shared-v8
+    --shared-v8-include=/usr/include
     --shared-zlib
 )
 
