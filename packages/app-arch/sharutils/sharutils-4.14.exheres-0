@@ -22,7 +22,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.18.1]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-nls )
