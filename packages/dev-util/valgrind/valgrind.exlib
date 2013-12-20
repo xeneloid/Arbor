@@ -22,7 +22,7 @@ DEPENDENCIES="
 "
 
 prepare_one_multibuild() {
-    edo sed -e 's:^CFLAGS="-Wno-long-long":& $CFLAGS:' -i configure.in
+    edo sed -e 's:^CFLAGS="-Wno-long-long":& $CFLAGS:' -i configure.ac
     edo sed -e "s:doc/${PN}:doc/${PNV}:" -i docs/Makefile.am
 
     # specifying a debuginfo type on the commandline breaks one or

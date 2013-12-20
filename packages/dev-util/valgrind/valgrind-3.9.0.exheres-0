@@ -7,9 +7,3 @@ require valgrind
 
 PLATFORMS="-* ~amd64 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/glibc-2.18.patch
-    "${FILES}"/ptrace.patch
-    -p0 "${FILES}"/r13294.patch
-)
-
