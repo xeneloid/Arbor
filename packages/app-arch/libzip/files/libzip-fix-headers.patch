@@ -1,0 +1,29 @@
+Source: Adapted from a Debian patch
+Upstream: Unknown
+Reason: zipconf.h in include is needed by e.g. ebook-tools
+
+From 3c1e666b8c8d390b247bfb57e8a77099e78a8142 Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Fri, 20 Dec 2013 11:11:50 +0100
+Subject: [PATCH] install zipconf.h header
+
+---
+ lib/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index a74f409..6290d68 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -3,7 +3,7 @@ libincludedir = ${libdir}/@PACKAGE@/include
+ 
+ lib_LTLIBRARIES = libzip.la
+ noinst_HEADERS = zipint.h
+-include_HEADERS = zip.h
++include_HEADERS = zip.h zipconf.h
+ nodist_libinclude_HEADERS = zipconf.h
+ 
+ # also update CMakeLists.txt when changing version
+-- 
+1.8.5.1
+
