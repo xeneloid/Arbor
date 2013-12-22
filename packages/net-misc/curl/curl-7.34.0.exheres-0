@@ -67,6 +67,7 @@ test_one_multibuild() {
 EOF
     esandbox allow_net --connect "inet:127.0.0.1@9011"
     esandbox allow_net --connect "inet:127.0.0.1@60000"
+    esandbox allow_net --connect "inet6:::1@8999"
 
     # Default TEST_F is -a -p -r; we add -n (no valgrind) -v (verbose) and remove -r (run time statistics)
     local test_args=( -a -p -n -v )
@@ -75,6 +76,7 @@ EOF
 
     esandbox disallow_net --connect "inet:127.0.0.1@9011"
     esandbox disallow_net --connect "inet:127.0.0.1@60000"
+    esandbox disallow_net --connect "inet6:::1@8999"
 }
 
 install_one_multibuild() {
