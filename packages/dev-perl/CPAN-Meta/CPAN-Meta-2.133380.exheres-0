@@ -25,7 +25,7 @@ DEPENDENCIES="
         dev-perl/JSON
         dev-perl/Parse-CPAN-Meta
         dev-perl/PathTools
-        dev-perl/Scalar-List-Utils
+        dev-perl/Scalar-List-Utils[>=1.33]
 "
 
 BUGS_TO="will@worrbase.com"
