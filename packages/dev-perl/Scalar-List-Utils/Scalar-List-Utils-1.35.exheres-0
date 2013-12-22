@@ -3,7 +3,7 @@
 # Based in part upon 'Scalar-List-Utils-1.19.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require perl-module [ module_author=GBARR ]
+require perl-module [ module_author=PEVANS ]
 
 SUMMARY="Scalar-List-Utils module for perl"
 
