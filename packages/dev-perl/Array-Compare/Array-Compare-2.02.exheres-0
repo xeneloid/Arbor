@@ -12,5 +12,10 @@ MYOPTIONS=""
 DEPENDENCIES="
     build:
         dev-perl/Module-Build
+        dev-perl/Moose
+    test:
+        dev-perl/Test-NoWarnings
+        dev-perl/Test-Pod
+        dev-perl/Test-Simple
 "
 
