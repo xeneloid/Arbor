@@ -22,3 +22,7 @@ MYOPTIONS=""
 
 BUGS_TO="will@worrbase.com"
 
+DEPENDENCIES="
+    test:
+        dev-perl/Scalar-List-Utils[>=1.33]"
+
