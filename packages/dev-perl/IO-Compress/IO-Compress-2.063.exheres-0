@@ -11,8 +11,8 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-perl/Compress-Raw-Bzip2[>=2.061]
-        dev-perl/Compress-Raw-Zlib[>=2.061]
+        dev-perl/Compress-Raw-Bzip2[>=${PV}]
+        dev-perl/Compress-Raw-Zlib[>=${PV}]
 "
 
 src_install() {
