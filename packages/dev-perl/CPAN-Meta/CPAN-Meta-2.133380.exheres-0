@@ -1,6 +1,8 @@
 # Copyright 2012 Will Orr <will@worrbase.com>
 # Distributed under the terms of the GNU General Public License v2
 
+# TODO: This one is part of perl-core[>=5.19.1]
+
 require perl-module [ module_author=DAGOLDEN ]
 
 SUMMARY="the distribution metadata for a CPAN dist"
@@ -17,16 +19,6 @@ fields, consult the spec.
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
-
-DEPENDENCIES="
-    build+run:
-        dev-perl/CPAN-Meta-Requirements
-        dev-perl/CPAN-Meta-YAML
-        dev-perl/JSON
-        dev-perl/Parse-CPAN-Meta
-        dev-perl/PathTools
-        dev-perl/Scalar-List-Utils[>=1.33]
-"
 
 BUGS_TO="will@worrbase.com"
 
