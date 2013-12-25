@@ -19,9 +19,6 @@ DEPENDENCIES="
         dev-libs/openssl
         tk? ( dev-lang/python:=[tk] )"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}/${PNV}-broken-headers.patch"
-)
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FEATURES )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -32,24 +29,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-gssapi --without-kerberos5 --without-kerberos --without-hesiod
     --with-ssl
 )
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-ipv6 )
-# Don't run t.validate-xhtml, always fails to load DTDs here
-DEFAULT_SRC_TEST_PARAMS=( TESTS=t.smoke )
 
 src_configure() {
     # Configure automagically enables the tk interface unless PYTHON=:
     option tk || pythonexport PYTHON=:
     default
-}
-
-src_install() {
-    default
-
-    dodir /usr/share/doc/${PNVR}/html
-    insinto /usr/share/doc/${PNVR}/html
-    doins *.html
-
-    docinto contrib
-    dodoc contrib/*
 }
 
