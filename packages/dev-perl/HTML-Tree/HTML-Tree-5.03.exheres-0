@@ -3,7 +3,7 @@
 # Based in part upon 'HTML-Tree-3.23.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require perl-module [ module_author=JFEARN ]
+require perl-module [ module_author=CJM ]
 
 SUMMARY="A library to manage HTML-Tree in PERL"
 
@@ -15,5 +15,8 @@ DEPENDENCIES="
     build+run:
         dev-perl/HTML-Tagset
         dev-perl/HTML-Parser
+        dev-perl/libwww-perl
+    test:
+        dev-perl/Test-Fatal
 "
 
