@@ -9,7 +9,7 @@ DOWNLOADS=""
 
 SLOT="1"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build+run:
