@@ -1,7 +1,8 @@
 # Copyright 2007-2008 Bo Ørsted Andresen
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ] easy-multibuild python
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ] easy-multibuild
+require python [ blacklist="3" has_lib=true multibuild=false python_opts="[multibuild_c:*(-)?]" with_opt=true ]
 
 SUMMARY="XML C Parser and Toolkit v2"
 HOMEPAGE="http://www.xmlsoft.org"
@@ -21,7 +22,7 @@ UPSTREAM_CHANGELOG="${HOMEPAGE}/ChangeLog.html"
 LICENCES="MIT"
 SLOT="2.0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="doc examples python
+MYOPTIONS="doc examples
     multibuild_c: 32 64"
 
 DEPENDENCIES="
@@ -29,7 +30,6 @@ DEPENDENCIES="
         app-arch/xz[multibuild_c:*(-)?]
         sys-libs/readline[multibuild_c:*(-)?]
         sys-libs/zlib[>=1.2.5-r1][multibuild_c:*(-)?]
-        python? ( dev-lang/python:=[multibuild_c:*(-)?] )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -75,6 +75,17 @@ install_one_multibuild() {
     default
     option python && python_bytecompile
 
+    # The package build system installs stuff to /usr/share/doc/${PNV}; move
+    # it to .../${PNVR} as necessary
+    if [[ ${PNV} != ${PNVR} ]]; then
+        edo cp -pPRT "${IMAGE}"/usr/share/doc/${PNV} "${IMAGE}"/usr/share/doc/${PNVR}
+        edo rm -r "${IMAGE}"/usr/share/doc/${PNV}
+    fi
+    if option python; then
+        edo cp -pPRT "${IMAGE}"/usr/share/doc/${PN}-python-${PV} "${IMAGE}"/usr/share/doc/${PNVR}/python
+        edo rm -r "${IMAGE}"/usr/share/doc/${PN}-python-${PV}
+    fi
+
     # devhelp doesn't support out-of-source builds
     edo cp -pPR "${WORK}"/doc/devhelp "${IMAGE}"/usr/share/doc/${PNVR}/html/
 
@@ -85,6 +96,9 @@ install_one_multibuild() {
 
     if ! option examples; then
         edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/examples
+        if option python; then
+            edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/python/examples
+        fi
     fi
 }
 
