@@ -8,8 +8,6 @@ PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
     build+run:
-        || (
-            dev-lang/icedtea7:${SLOT}
-        )
+        dev-lang/icedtea7:${SLOT}
 "
 
