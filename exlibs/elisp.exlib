@@ -9,6 +9,8 @@ require elisp-module
 
 export_exlib_phases src_compile src_install pkg_postinst pkg_postrm
 
+myexparam -b generate_autoloads=false
+
 DEPENDENCIES="
     build+run:
         app-editors/emacs
@@ -20,6 +22,10 @@ elisp_src_compile() {
 
 elisp_src_install() {
     elisp-install ${PN} *.el *.elc
+    if exparam -b generate_autoloads; then
+        elisp-generate-autoload ${PN}-autoloads.el
+        elisp-install ${PN} ${PN}-autoloads.el
+    fi
     elisp-install-site-file
 }
 
