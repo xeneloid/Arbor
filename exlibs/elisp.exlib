@@ -23,7 +23,7 @@ elisp_src_compile() {
 elisp_src_install() {
     elisp-install ${PN} *.el *.elc
     if exparam -b generate_autoloads; then
-        elisp-generate-autoload ${PN}-autoloads.el
+        elisp-generate-autoloads ${PN}-autoloads.el
         elisp-install ${PN} ${PN}-autoloads.el
     fi
     elisp-install-site-file
