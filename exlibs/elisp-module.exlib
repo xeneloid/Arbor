@@ -68,6 +68,15 @@ elisp-install-site-file() {
     fi
 }
 
+# Install a stub file that loads the autoloads
+elisp-install-stub() {
+    illegal_in_global_scope
+
+    echo "Installing emacs lisp stub"
+    dodir "${ELISP_SITE_DIR}"
+    echo "(require '${PN}-autoloads)" > "${IMAGE}${ELISP_SITE_DIR}"/${ELISP_PN}-exherbo.el.in
+}
+
 # Concatenate all the site-files into a single file, in no particular order
 elisp-generate-global-site-file() {
     illegal_in_global_scope

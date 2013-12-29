@@ -10,6 +10,7 @@ require elisp-module
 export_exlib_phases src_compile src_install pkg_postinst pkg_postrm
 
 myexparam -b generate_autoloads=false
+myexparam -b install_stub=false
 
 DEPENDENCIES="
     build+run:
@@ -26,7 +27,11 @@ elisp_src_install() {
         elisp-generate-autoloads ${PN}-autoloads.el
         elisp-install ${PN} ${PN}-autoloads.el
     fi
-    elisp-install-site-file
+    if exparam -b install_stub; then
+        elisp-install-stub
+    else
+        elisp-install-site-file
+    fi
 }
 
 elisp_pkg_postinst() {
