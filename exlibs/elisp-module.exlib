@@ -6,8 +6,8 @@
 # The main functions provided by this exlib are elisp-compile and
 # elisp-install, which are self-explanatory.
 #
-# In addition, elisp-install-site-file can be used to install the
-# site-file ELISP_SITE_FILE, which defaults to FILES/PN-exherbo.el.in,
+# In addition, elisp-install-site-file can be used to install a
+# site-file (defaults to FILES/PN-exherbo.el.in),
 # after which the global site-file ELISP_GLOBAL_SITE_FILE needs to be
 # regenerated. elisp-module_pkg_postinst and elisp-module_pkg_postrm
 # take care of that.
@@ -16,6 +16,10 @@
 # during compilation
 
 export_exlib_phases pkg_postinst pkg_postrm
+
+myexparam pn=${PN}
+
+exparam -v ELISP_PN pn
 
 readonly ELISP_SITE_LISP=/usr/share/emacs/site-lisp
 readonly ELISP_GLOBAL_SITE_FILE=${ELISP_SITE_LISP}/site-exherbo.el
@@ -49,12 +53,19 @@ elisp-install() {
 elisp-install-site-file() {
     illegal_in_global_scope
 
-    local esf=${ELISP_SITE_FILE:-${FILES}/${PN}-exherbo.el.in}
     echo "Installing emacs lisp site file"
-    (
-        insinto "${ELISP_SITE_DIR}"
-        doins "${esf}"
-    )
+    if [[ -n ${ELISP_SITE_FILE} ]]; then
+        ewarn "ELISP_SITE_FILE is deprecated. Please pass the exparam pn instead."
+        (
+            insinto "${ELISP_SITE_DIR}"
+            doins "${ELISP_SITE_FILE}"
+        )
+    else
+        (
+            insinto "${ELISP_SITE_DIR}"
+            doins "${FILES}"/${ELISP_PN}-exherbo.el.in
+        )
+    fi
 }
 
 # Concatenate all the site-files into a single file, in no particular order
