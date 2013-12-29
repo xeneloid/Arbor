@@ -51,11 +51,6 @@ elisp-install-site-file() {
 
     local esf=${ELISP_SITE_FILE:-${FILES}/${PN}-exherbo.el.in}
     echo "Installing emacs lisp site file"
-    if [[ ${esf##*/} != *-exherbo.el.in ]]; then
-        # Autoloading happens by filename only.
-        # If we don't stick to this convention, collisions might occur
-        die "Invalid name for a site-file"
-    fi
     (
         insinto "${ELISP_SITE_DIR}"
         doins "${esf}"
