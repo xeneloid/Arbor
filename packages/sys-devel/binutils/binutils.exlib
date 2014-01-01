@@ -1,7 +1,8 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 ] alternatives
+require gnu [ suffix=bz2 ]
+require alternatives
 
 export_exlib_phases src_unpack src_prepare src_test_expensive src_install
 
@@ -24,7 +25,10 @@ DEPENDENCIES="
 ECONF_SOURCE="${WORKBASE}/${PNV}"
 WORK=${WORKBASE}/build
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/76_all_use-new-ld-dtags.patch" )
+if ! ever at_least 2.24 ; then
+    DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/76_all_use-new-ld-dtags.patch" )
+fi
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-werror
     --enable-plugins
