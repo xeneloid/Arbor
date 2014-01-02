@@ -42,6 +42,9 @@ global_conf=(
         runtime-link=shared
         threading=multi
         toolset=gcc
+        cflags="${CFLAGS}"
+        cxxflags="${CXXFLAGS}"
+        linkflags="${LDFLAGS}"
 )
 
 src_configure() {
@@ -70,7 +73,7 @@ src_install() {
         install
 
     # Install compatibility symlinks to get -mt-suffixed libs
-    edo pushd /usr/${LIBDIR}
+    edo pushd "${IMAGE}"/usr/${LIBDIR}
     for lib in *.so; do
         dosym ${lib} /usr/${LIBDIR}/${lib/.so/-mt.so}
     done
