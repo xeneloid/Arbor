@@ -7,6 +7,7 @@
 MY_PN=${PN#bootstrap-}
 
 require alternatives gnu [ pn=${MY_PN} suffix=bz2 ]
+require flag-o-matic
 
 SUMMARY="Bootstrap multilib GNU Compiler Collection"
 
@@ -18,7 +19,6 @@ MYOPTIONS=""
 REMOTE_IDS="freecode:${MY_PN}"
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}${MY_PN}-${SLOT}/"
 UPSTREAM_CHANGELOG="${UPSTREAM_RELEASE_NOTES}changes.html"
-UPSTREAM_DOCUMENTATION="${HOMEPAGE}onlinedocs/libstdc++/libstdc++-html-USERS-${SLOT}/ [[ description = [ API documentation ] ]]"
 
 # 170 tests fail
 RESTRICT="test"
@@ -75,12 +75,17 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     # ... disable shared libraries
     --disable-shared
     --disable-decimal-float
+    --disable-libatomic
+    --disable-libffi
+    --disable-libitm
     --disable-libgomp
     --disable-libmudflap
+    --disable-libsanitizer
+    --disable-libstdc++-v3
     --disable-threads
 
-    # ... only build support for C
-    --enable-languages=c
+    # ... only build support for C and C++
+    --enable-languages=c,c++
     --disable-build-with-cxx
     --disable-build-poststage1-with-cxx
 
@@ -101,6 +106,13 @@ pkg_setup() {
 src_unpack() {
     default
     edo mkdir "${WORK}"
+}
+
+src_configure() {
+    # NOTE(compnerd) LTO support is disabled, remove -flto from CFLAGS
+    filter-flags -flto
+    filter-flags -fuse-linker-plugin
+    default
 }
 
 src_install() {
