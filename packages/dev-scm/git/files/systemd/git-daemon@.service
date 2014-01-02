@@ -5,8 +5,8 @@
 Description=git daemon Per-connection server
 
 [Service]
-User=${GIT_USER}
-Group=${GIT_GROUP}
+User=nobody
+Group=nobody
 StandardInput=socket
 StandardOutput=socket
 EnvironmentFile=/etc/conf.d/git-daemon.conf
