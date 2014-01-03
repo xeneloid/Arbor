@@ -34,6 +34,10 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
+        dev-lang/perl:*
+        dev-lang/python:*
+        sys-devel/bison
+        sys-devel/flex
         doc? (
             dev-lang/python:*
             app-arch/unzip
@@ -48,7 +52,6 @@ DEPENDENCIES="
         qt4? ( x11-libs/qt:4[>=4.3.0] )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-Fixed-compilation-issues-in-doxyapp.patch )
 # Prevent Makefiles from running "qmake"; run "eqmake4" instead in src_configure
 DEFAULT_SRC_COMPILE_PARAMS=( QMAKE=true )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( LANGUAGE.HOWTO )
@@ -76,8 +79,8 @@ src_prepare() {
         export QTDIR=/usr
 
         if option examples; then
-            # Without this, doxyapp complains about unresolved libpthread symbols
-            edo sed -e '/^LIBS[[:space:]]/s~$~ -lpthread~' \
+            # "error: cannot find -liconv"
+            edo sed -e '/^LIBS[[:space:]]/s~-liconv~~' \
                     -i addon/doxyapp/doxyapp.pro.in
         fi
     fi
@@ -92,7 +95,8 @@ src_configure() {
         --prefix /usr \
         --shared \
         $(option qt4 && echo "--with-doxywizard") \
-        $(option examples && echo "--with-doxyapp")
+        $(option examples && echo "--with-doxyapp") \
+        $(option examples && echo "--with-doxmlparser") \
     #   $(option sqlite && echo "--with-sqlite3")
 }
 
