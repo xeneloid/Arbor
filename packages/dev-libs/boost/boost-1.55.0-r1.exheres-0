@@ -42,10 +42,11 @@ global_conf=(
         runtime-link=shared
         threading=multi
         toolset=gcc
-        cflags="${CFLAGS}"
-        cxxflags="${CXXFLAGS}"
-        linkflags="${LDFLAGS}"
 )
+
+[[ -n ${CFLAGS} ]] && global_conf+=( cflags="${CFLAGS}" )
+[[ -n ${CXXFLAGS} ]] && global_conf+=( cxxflags="${CXXFLAGS}" )
+[[ -n ${LDFLAGS} ]] && global_conf+=( linkflags="${LDFLAGS}" )
 
 src_configure() {
     local bootstrap_conf=(
