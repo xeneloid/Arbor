@@ -1,7 +1,6 @@
 # Copyright 2009 Mike Kelly
 # Distributed under the terms of the GNU General Public License v2
 
-
 SUMMARY="Ragel State Machine Compiler"
 DESCRIPTION="
 Ragel compiles executable finite state machines from regular languages.
@@ -12,29 +11,34 @@ recognition of a regular language. Code embedding is done using inline
 operators that do not disrupt the regular language syntax.
 "
 HOMEPAGE="http://www.complang.org/ragel/"
-DOWNLOADS="${HOMEPAGE}/ragel-6.5.tar.gz"
+DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS="java mono objc ruby"
+MYOPTIONS="go java mono objc ruby"
 
 DEPENDENCIES="
     build+run:
-        java? ( sys-devel/gcc[>=4.3][java] )
+        go?   ( sys-devel/gcc:=[go] )
+        java? ( sys-devel/gcc:=[>=4.3][java] )
         mono? ( dev-lang/mono )
-        objc? ( sys-devel/gcc[objc] )
-        ruby? ( dev-lang/ruby )
+        objc? ( sys-devel/gcc:=[objc] )
+        ruby? ( dev-lang/ruby:= )
 "
 
 BUGS_TO="pioto@exherbo.org"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}/${PNV}-gcc-4.4.patch"
-)
+# needs fig2dev and pdflatex
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-manual )
 
-src_install() {
+src_configure() {
+    option go   || export GOBIN=no
+    option java || export JAVAC=no
+    option mono || export GMCS=no
+    option objc || export OBJC=no
+    option ruby || export RUBY=no
+
     default
-    mv "${IMAGE}"/usr/share/doc/${PN}/${PN}-guide.pdf "${IMAGE}"/usr/share/${PNVR}/
-    rm -rf "${IMAGE}"/usr/share/doc/${PN}
 }
+
