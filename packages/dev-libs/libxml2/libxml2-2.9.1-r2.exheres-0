@@ -48,6 +48,12 @@ src_unpack() {
 src_prepare() {
     # prevent fetching with wget during src_test
     edo ln -s "${FETCHEDDIR}"/xsts-{${TAR1},${TAR2}}.tar.gz xstc/
+
+    # there is no flag to choose a python abi, instead configure will use the
+    # abi obtained from /usr/bin/python. Hence, we'll force configure to use
+    # /usr/bin/python$(python_get_abi) instead.
+    edo sed -i -e 's:bin/python:bin/python'"$(python_get_abi):" configure.in
+
     autotools_src_prepare
 }
 
