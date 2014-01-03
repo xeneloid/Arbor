@@ -15,6 +15,8 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="waf"
 
 DEPENDENCIES="
+    build:
+        dev-lang/python:*[<3.0]
     build+run:
         dev-libs/libpthread-stubs
         dev-libs/openssl
@@ -39,6 +41,11 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( "waf" )
 LD="${CXX}"
 
 RESTRICT="test"
+
+src_prepare() {
+    default
+    edo sed -i -e 's:#!/usr/bin/env python:#!/usr/bin/env python2:' configure
+}
 
 src_configure() {
     edo ./configure "${SRC_CONFIGURE_PARAMS[@]}"
