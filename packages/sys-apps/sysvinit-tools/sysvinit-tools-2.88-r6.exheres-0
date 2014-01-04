@@ -5,9 +5,8 @@ require flag-o-matic
 
 SUMMARY="System V init tools"
 DESCRIPTION="
-These are only the useful tools from old, crufty, obsolete sysvinit:
+This is the only useful tool from old, crufty, obsolete sysvinit:
 - killall5
-- pidof (alias to killall5)
 "
 HOMEPAGE="http://savannah.nongnu.org/projects/${PN/-tools}"
 DOWNLOADS="http://download.savannah.gnu.org/releases/${PN/-tools}/${PNV/-tools}dsf.tar.bz2"
@@ -28,6 +27,10 @@ DEPENDENCIES="
             description = [ sys-apps/util-linux 2.22 installs sulogin and utmpdump previously provided by this package ]
             resolution = upgrade-blocked-before
         ]]
+        !sys-process/procps[<3.3.9] [[
+            description = [ sys-process/procps 3.3.9 installs pidof previously provided by this package ]
+            resolution = uninstall-blocked-after
+        ]]
 "
 
 WORK=${WORKBASE}/${PNV/-tools}dsf
@@ -42,8 +45,5 @@ src_install() {
 
     exeinto /sbin
     doexe src/killall5
-
-    dodir /bin
-    dosym /sbin/killall5 /bin/pidof
 }
 
