@@ -21,6 +21,12 @@ MYOPTIONS="
         requires = gnutls
     ]]
     multibuild_c: 32 64
+
+    ( linguas:
+        an ar as be bg bn_IN ca ca@valencia cs da de el en_CA en_GB eo es et eu fa fi fr fur gl gu
+        he hi hu id it ja km kn ko lt lv ml mr nb nl or pa pl pt_BR pt ro ru sk sl sr@latin sr sv ta
+        te tg th tr ug uk vi zh_CN zh_HK zh_TW
+    )
 "
 
 DEPENDENCIES="
