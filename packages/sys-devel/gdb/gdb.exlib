@@ -14,7 +14,11 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/ANNOUNCEMENT [[ lang = en ]]"
 
 LICENCES="GPL-3 LGPL-3"
 SLOT="0"
-MYOPTIONS="python"
+MYOPTIONS="python
+    ( linguas:
+        da de es fi fr ga id it ja nl pt_BR ro ru rw sv tr uk vi zh_CN
+    )
+"
 
 RESTRICT="test"
 
