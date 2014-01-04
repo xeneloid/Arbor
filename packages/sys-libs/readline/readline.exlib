@@ -40,6 +40,8 @@ SLOT="0"
 MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
+    build:
+        virtual/pkg-config
     build+run:
         sys-libs/ncurses[multibuild_c:*(-)?]
 "
@@ -62,8 +64,14 @@ readline_src_prepare() {
         expatch "${patches[@]}"
     fi
 
-    # Gentoo #71420
-    edo sed -e 's:^SHLIB_LIBS=:SHLIB_LIBS=-lncursesw:' -i support/shobj-conf
+    # link to ncursesw instead of ncurses, commit bb62b887
+    # force ncurses(w) linking Gentoo #71420
+    # use pkg-config to get the right values Gentoo #457558
+    local ncurses_libs=$(PKG_CONFIG_PATH=. pkg-config ncursesw --libs)
+    sed -e "/^SHLIB_LIBS=/s:=.*:='${ncurses_libs}':" \
+        -i support/shobj-conf
+    sed -e "/^[[:space:]]*LIBS=.-lncurses/s:-lncurses:${ncurses_libs}:" \
+        -i examples/rlfe/configure
 
     default
 }
