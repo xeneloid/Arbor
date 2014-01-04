@@ -34,6 +34,10 @@ MYOPTIONS="
     obj-c++         [[ description = [ build support for the Objective C++ language ] ]]
     objc-runtime    [[ description = [ build the Objective-C runtime (needed for building Objective-C code) ] ]]
     openmp          [[ description = [ build support for OpenMP ] ]]
+
+    ( linguas:
+        be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
+    )
 "
 
 DEPENDENCIES="
