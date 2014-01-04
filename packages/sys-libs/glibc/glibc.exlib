@@ -32,6 +32,11 @@ MYOPTIONS="
     systemd [[
         description = [ Install systemd service file for name service cache daemon (nscd) ]
     ]]
+
+    ( linguas:
+        be bg ca cs da de el en_GB eo es fi fr gl hr hu id it ja ko lt nb nl pl pt_BR ru rw sk sv tr
+        vi zh_CN zh_TW
+    )
 "
 
 DEPENDENCIES="
