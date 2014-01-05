@@ -1,7 +1,7 @@
 # Copyright 2009 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require setup-py [ import=setuptools blacklist=3 has_bin=true multibuild=false ]
+require setup-py [ import=distutils blacklist=3 has_bin=true multibuild=false ]
 
 export_exlib_phases src_install
 
