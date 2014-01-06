@@ -23,8 +23,8 @@ SUMMARY="The extensible, customizable, self-documenting, real-time display edito
 LICENCES="GPL-3"
 SLOT="0"
 MYOPTIONS="
-    X alsa dbus freetype gif gpm gtk gtk3 otf svg tiff tiff xpm xim
-    ( freetype gif gtk gtk3 otf svg tiff xpm xim ) [[ requires = X ]]
+    X alsa dbus freetype gif gpm gtk gtk3 otf svg tiff tiff xim
+    ( freetype gif gtk gtk3 otf svg tiff xim ) [[ requires = X ]]
     ( gtk gtk3 ) [[ number-selected = at-most-one ]]
     gconf [[
         description = [ Allows emacs to determine the system font ]
@@ -57,6 +57,7 @@ DEPENDENCIES="
             media-libs/libpng
             x11-data/xbitmaps
             x11-libs/libICE
+            x11-libs/libXpm
             x11-libs/libSM
             x11-libs/libX11
             gif? ( media-libs/giflib )
@@ -71,7 +72,6 @@ DEPENDENCIES="
             otf? ( dev-libs/libotf )
             svg? ( gnome-desktop/librsvg:2[>=2.11.0] )
             tiff? ( media-libs/tiff )
-            xpm? ( x11-libs/libXpm )
         )
         dbus? ( sys-apps/dbus[>=1.0.0] )
         freetype? (
@@ -111,12 +111,12 @@ emacs_src_configure() {
     )
 
     config_withs=(
-        'X x' 'X jpeg' 'X png'
+        'X x' 'X jpeg' 'X png' 'X xpm'
         'alsa sound'
         'freetype xft'
         'otf libotf'
         'svg rsvg'
-        'dbus' 'gconf' 'gif' 'gpm' 'tiff' 'xpm' 'xim'
+        'dbus' 'gconf' 'gif' 'gpm' 'tiff' 'xim'
     )
 
     local toolkit=no
