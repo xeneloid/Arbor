@@ -6,8 +6,8 @@
 # The main functions provided by this exlib are elisp-compile and
 # elisp-install, which are self-explanatory.
 #
-# In addition, elisp-install-site-file can be used to install the
-# site-file ELISP_SITE_FILE, which defaults to FILES/PN-exherbo.el.in,
+# In addition, elisp-install-site-file can be used to install a
+# site-file (defaults to FILES/PN-exherbo.el.in),
 # after which the global site-file ELISP_GLOBAL_SITE_FILE needs to be
 # regenerated. elisp-module_pkg_postinst and elisp-module_pkg_postrm
 # take care of that.
@@ -16,6 +16,10 @@
 # during compilation
 
 export_exlib_phases pkg_postinst pkg_postrm
+
+myexparam pn=${PN}
+
+exparam -v ELISP_PN pn
 
 readonly ELISP_SITE_LISP=/usr/share/emacs/site-lisp
 readonly ELISP_GLOBAL_SITE_FILE=${ELISP_SITE_LISP}/site-exherbo.el
@@ -49,17 +53,28 @@ elisp-install() {
 elisp-install-site-file() {
     illegal_in_global_scope
 
-    local esf=${ELISP_SITE_FILE:-${FILES}/${PN}-exherbo.el.in}
     echo "Installing emacs lisp site file"
-    if [[ ${esf##*/} != *-exherbo.el.in ]]; then
-        # Autoloading happens by filename only.
-        # If we don't stick to this convention, collisions might occur
-        die "Invalid name for a site-file"
+    if [[ -n ${ELISP_SITE_FILE} ]]; then
+        ewarn "ELISP_SITE_FILE is deprecated. Please pass the exparam pn instead."
+        (
+            insinto "${ELISP_SITE_DIR}"
+            doins "${ELISP_SITE_FILE}"
+        )
+    else
+        (
+            insinto "${ELISP_SITE_DIR}"
+            doins "${FILES}"/${ELISP_PN}-exherbo.el.in
+        )
     fi
-    (
-        insinto "${ELISP_SITE_DIR}"
-        doins "${esf}"
-    )
+}
+
+# Install a stub file that loads the autoloads
+elisp-install-stub() {
+    illegal_in_global_scope
+
+    echo "Installing emacs lisp stub"
+    dodir "${ELISP_SITE_DIR}"
+    echo "(require '${PN}-autoloads)" > "${IMAGE}${ELISP_SITE_DIR}"/${ELISP_PN}-exherbo.el.in
 }
 
 # Concatenate all the site-files into a single file, in no particular order
@@ -82,6 +97,13 @@ elisp-generate-global-site-file() {
 }
 
 elisp-generate-autoload() {
+    illegal_in_global_scope
+
+    ewarn "elisp-generate-autoload has been renamed to elisp-generate-autoloads";
+    elisp-generate-autoloads "$@"
+}
+
+elisp-generate-autoloads() {
     illegal_in_global_scope
 
     edo ${EMACS} "${ELISP_FLAGS[@]}" \

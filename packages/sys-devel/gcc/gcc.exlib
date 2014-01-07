@@ -32,6 +32,10 @@ MYOPTIONS="
     obj-c++         [[ description = [ build support for the Objective C++ language ] ]]
     objc-runtime    [[ description = [ build the Objective-C runtime (needed for building Objective-C code) ] ]]
     openmp          [[ description = [ build support for OpenMP ] ]]
+
+    ( linguas:
+        be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
+    )
 "
 
 DEPENDENCIES="
@@ -42,11 +46,11 @@ DEPENDENCIES="
         doc? ( app-doc/doxygen[>=1.5.1] )
         java? ( app-arch/unzip app-arch/zip )
     build+run:
-        dev-libs/mpc[>=0.8.1]
+        dev-libs/mpc:=[>=0.8.1]
     test-expensive:
         dev-util/dejagnu
         sys-devel/autogen
-        dev-libs/mpc[>=0.8.1]
+        dev-libs/mpc:=[>=0.8.1]
         dev-libs/mpfr:=[>=2.3]
     build+run:
         sys-devel/binutils[>=2.20.1] [[ note = [ minimal version of binutils for LTO ] ]]
@@ -60,7 +64,7 @@ if ! ever at_least 4.6 ; then
     "
 fi
 
-if ever at_least 4.8_pre20130303 ; then
+if ever at_least 4.8 ; then
     DEPENDENCIES+="
         build+run:
             dev-libs/mpfr:=[>=2.4.0]
@@ -86,7 +90,7 @@ fi
 
 # NOTE(?) upstream says it is a build time dependency, but uninstall breaks at least gcc-4.6,
 # probably also gcc[>=4.4]
-if ever at_least 4.8_pre20130303 ; then
+if ever at_least 4.8 ; then
     DEPENDENCIES+="
         build+run:
             graphite? (
@@ -142,6 +146,10 @@ RESTRICT="test" # tests are expensive
 
 WORK="${WORKBASE}/${PNV/_p?(re)/-}"
 
+if ! ever at_least 4.8 ; then
+    DEFAULT_SRC_COMPILE_PARAMS=( bootstrap )
+fi
+
 gcc_pkg_setup() {
     local target=
 
@@ -194,6 +202,8 @@ gcc_src_prepare() {
     edo sed -e '/export_sym_check=/c export_sym_check="${target_alias}-objdump -T"'                 \
             -i "${WORK}/gcc/configure"
 
+    # Do not try fix the systems header files.
+    edo sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
     default
 }
 
@@ -291,7 +301,7 @@ EOF
                 --datarootdir=/usr/share                                                            \
                 --localstatedir=/var                                                                \
                 --sysconfdir=/etc                                                                   \
-                $(if ever at_least 4.8_pre20130303 ; then
+                $(if ever at_least 4.8 ; then
                     echo --disable-bootstrap
                 fi)                                                                                 \
                 --disable-multilib                                                                  \
@@ -305,10 +315,10 @@ EOF
                 $(option_enable fortran libquadmath)                                                \
                 $(option_enable fortran libquadmath-support)                                        \
                 $(option_with graphite cloog)                                                       \
-                $(ever at_least 4.8_pre20130303                                                     \
+                $(ever at_least 4.8                                                                 \
                     || option_with graphite ppl)                                                    \
                 $(if ever at_least 4.6 && optionq graphite ; then
-                    if ! ever at_least 4.8_pre20130303 ; then
+                    if ! ever at_least 4.8 ; then
                         option_enable graphite cloog-backend ${cloog_backend}
                         ever at_least 4.7 && echo '--disable-cloog-version-check'
                     fi

@@ -1,11 +1,11 @@
-# Copyright 2009, 2010 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'multipath-tools-0.4.8.ebuild' from Gentoo, which is:
 #     Copyright 1999-2009 Gentoo Foundation
 
-require udev-rules
+require udev-rules systemd-service
 
-export_exlib_phases src_prepare src_compile src_install pkg_postinst
+export_exlib_phases src_prepare src_install pkg_postinst
 
 SUMMARY="Userland tools for the device Mapper multipathing driver"
 DESCRIPTION="
@@ -16,10 +16,6 @@ HOMEPAGE="http://christophe.varoqui.free.fr"
 DOWNLOADS="${HOMEPAGE}/${PN}/${PNV}.tar.bz2"
 
 BUGS_TO="philantrop@exherbo.org"
-
-UPSTREAM_CHANGELOG="${HOMEPAGE}"
-UPSTREAM_RELEASE_NOTES="${HOMEPAGE}"
-UPSTREAM_DOCUMENTATION="${HOMEPAGE} [[ lang = en ]]"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -33,20 +29,17 @@ DEPENDENCIES="
         sys-fs/sysfsutils[>=2.1.0]
 "
 
+DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( multipath.conf.annotated multipath.conf.synthetic )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( kpartx )
-
-WORK=${WORKBASE}
 
 multipath-tools_src_prepare() {
     default
 
+    edo sed -i -e '1iSYSTEMD=1' Makefile.inc
     edo sed -i -e '/KRNLLIB/s:/lib/:/'${LIBDIR}'/:' Makefile
     edo sed -i -e '/libudevdir/s:/lib/:/usr/libexec/:' Makefile.inc
-}
-
-multipath-tools_src_compile() {
-    emake -j1 CC="${CC}"
+    edo sed -i -e "/unitdir/s:/usr/lib/systemd/system:${SYSTEMDSYSTEMUNITDIR}:" Makefile.inc
 }
 
 multipath-tools_src_install() {
@@ -57,10 +50,12 @@ multipath-tools_src_install() {
 
     # Move udev rules into the correct place.
     dodir "${UDEVRULESDIR}"
-    edo mv "${IMAGE}"/etc/udev/rules.d/multipath.rules "${IMAGE}"/"${UDEVRULESDIR}"/65-multipath.rules
     edo mv "${IMAGE}"/etc/udev/rules.d/kpartx.rules "${IMAGE}"/"${UDEVRULESDIR}"/66-kpartx.rules
-    edo chmod 644 "${IMAGE}"/"${UDEVRULESDIR}"/{65-multipath,66-kpartx}.rules
+    edo chmod 644 "${IMAGE}"/"${UDEVRULESDIR}"/66-kpartx.rules
     edo find "${IMAGE}"/etc -type d -empty -delete
+
+    edo rmdir "${IMAGE}"/usr/share/doc/mpathpersist
+    edo find "${IMAGE}"/${LIBDIR}/ -type l -delete
 
     if option baselayout ; then
         # This is the monitoring daemon

@@ -14,14 +14,17 @@ SUMMARY="A low-level configuration system"
 HOMEPAGE="http://live.gnome.org/dconf"
 
 DEFAULT_SRC_COMPILE_PARAMS=( AR="${AR}" )
+MYOPTIONS="
+    ( linguas:
+        an ar as be bg bn_IN ca ca@valencia cs da de el en_GB eo es et eu fa fi fr fur gl he hi hu
+        id it ja ko lt lv ml mr nb nl pa pl pt_BR pt ru sk sl sr@latin sr sv ta te tg th tr ug uk vi
+        zh_CN zh_HK zh_TW
+    )
+"
+
 DEFAULT_SRC_INSTALL_PARAMS=( completiondir=/ )
 
 dconf_src_test() {
-    if ! exhost --is-native -q ; then
-        echo "cross compiled host, skipping tests"
-        return
-    fi
-
     unset DISPLAY
     unset DBUS_SESSION_BUS_ADDRESS
     unset DBUS_SESSION_BUS_PID

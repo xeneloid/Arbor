@@ -32,6 +32,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-zlib
     --without-p11-kit
     --disable-crywrap
+    --enable-local-libopts # else the build fails with autogen installed
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'doc gtk-doc' )
 

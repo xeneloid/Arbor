@@ -62,11 +62,6 @@ e2fsprogs_src_compile() {
 }
 
 e2fsprogs_src_test() {
-    if [[ ! -e /etc/mtab ]] ; then
-        ewarn "${PN} tests skipped: /etc/mtab doesn't exist"
-        return
-    fi
-
     # Not everyone has 2TB of free space.
     edo rm -rf tests/{r_64bit_big_expand,r_bigalloc_big_expand,r_ext4_big_expand}
 
