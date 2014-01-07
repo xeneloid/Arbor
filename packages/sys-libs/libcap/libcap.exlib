@@ -9,7 +9,7 @@ export_exlib_phases src_unpack src_prepare src_compile
 
 SUMMARY="POSIX 1003.1e capabilities"
 HOMEPAGE="http://sites.google.com/site/fullycapable/"
-DOWNLOADS="mirror://kernel/linux/libs/security/linux-privs/${PN}${PV:0:1}/${PNV}.tar.bz2"
+DOWNLOADS="mirror://kernel/linux/libs/security/linux-privs/${PN}${PV:0:1}/${PNV}.tar.gz"
 
 LICENCES="|| ( GPL-2 BSD-3 )"
 SLOT="0"
