@@ -47,16 +47,9 @@ src_compile() {
 
 src_install() {
     into /usr/$(exhost --target)
-    dobin ping
-    edo chmod +s "${IMAGE}"/usr/$(exhost --target)/bin/ping
-    dosbin arping clockdiff ipg rarpd rdisc tftpd tracepath
-
-    into /
-    dobin ping6
-    edo chmod +s "${IMAGE}"/usr/$(exhost --target)/bin/ping6
-
-    into /usr
-    dosbin tracepath6
+    dobin ping{,6}
+    edo chmod +s "${IMAGE}"/usr/$(exhost --target)/bin/ping{,6}
+    dosbin arping clockdiff ipg rarpd rdisc tftpd tracepath{,6}
 
     edo rm doc/traceroute6.8
 
