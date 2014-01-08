@@ -66,7 +66,7 @@ src_prepare() {
     # link to ncursesw instead of ncurses, commit bb62b887
     # force ncurses(w) linking Gentoo #71420
     # use pkg-config to get the right values Gentoo #457558
-    local ncurses_libs=$(PKG_CONFIG_PATH=. pkg-config ncursesw --libs)
+    local ncurses_libs=$(PKG_CONFIG_PATH=. ${PKG_CONFIG} ncursesw --libs)
     sed -e "/^SHLIB_LIBS=/s:=.*:='${ncurses_libs}':" \
         -i support/shobj-conf
     sed -e "/^[[:space:]]*LIBS=.-lncurses/s:-lncurses:${ncurses_libs}:" \
