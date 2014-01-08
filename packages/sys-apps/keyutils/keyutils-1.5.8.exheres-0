@@ -10,7 +10,7 @@ LICENCES="
     LGPL-2.1 [[ description = [ applies to the library ] ]]
 "
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""

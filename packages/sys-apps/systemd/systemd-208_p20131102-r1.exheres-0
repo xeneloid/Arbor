@@ -5,5 +5,5 @@ require systemd
 
 DOWNLOADS="http://dev.exherbo.org/~philantrop/distfiles/${PNV}.tar.xz"
 
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 

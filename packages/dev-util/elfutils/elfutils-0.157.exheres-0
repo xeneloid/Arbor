@@ -9,7 +9,7 @@ DOWNLOADS="${HOMEPAGE}/${PV}/${PNV}.tar.bz2"
 
 LICENCES="GPL-3 || ( GPL-2 LGPL-3 )"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     multibuild_c: 32 64
 "
