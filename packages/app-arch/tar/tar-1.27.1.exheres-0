@@ -20,7 +20,7 @@ DEPENDENCIES="
         )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-look-for-host-prefixed-ar.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-look-for-host-prefixed-ar.patch )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'acl posix-acls' )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( PORTS )
 
