@@ -1,0 +1,50 @@
+# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require cmake [ api=2 ]
+
+FILE_ID=34
+
+SUMMARY="An elegant unit testing framework for C"
+DESCRIPTION="It supports mock objects and only requires the standard C
+library, works on a lot of platforms (including embedded) and with different
+compilers.
+cmocka is a fork for Google's cmockery unit testing framework to fix bugs and
+support it in future.
+See https://code.google.com/p/cmockery"
+
+HOMEPAGE="http://cmocka.org/"
+DOWNLOADS="https://open.cryptomilk.org/attachments/download/${FILE_ID}/${PNV}.tar.xz"
+
+LICENCES="Apache-2.0 BSD-3 [[ note = [ cmake scripts ] ]]"
+SLOT="0"
+
+UPSTREAM_DOCUMENTATION="http://api.cmocka.org/"
+
+MYOPTIONS="doc"
+
+DEPENDENCIES="
+    build:
+        doc? ( app-doc/doxygen )
+"
+
+REMOTE_IDS="freecode:cmocka"
+
+CMAKE_SRC_CONFIGURE_TESTS+=(
+    '-DUNIT_TESTING:BOOL=TRUE DUNIT_TESTING:BOOL=FALSE'
+)
+
+src_compile() {
+    default
+    option doc && emake doc
+}
+
+src_install() {
+    cmake_src_install
+
+    if option doc ; then
+        docinto html
+        dodoc -r doc/html/*
+    fi
+}
+
