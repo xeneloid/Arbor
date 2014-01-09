@@ -32,7 +32,7 @@ prepare_one_multibuild() {
     # Workaround "'make install' is dangerous and not supported" error
     edo sed -i -r \
         -e '/^install-(data|exec)-local:/s|^.*$|&\ndisabled-&|' \
-        Makefile.in
+        Makefile.am
 
     default
 }
