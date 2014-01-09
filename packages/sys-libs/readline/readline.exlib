@@ -11,7 +11,7 @@ else
     PATCH_LEVEL=0
 fi
 
-require flag-o-matic gnu [ suffix=gz ] easy-multibuild
+require gnu [ suffix=gz ] easy-multibuild
 
 export_exlib_phases src_prepare
 
@@ -77,12 +77,6 @@ readline_src_prepare() {
 }
 
 configure_one_multibuild() {
-    filter-flags -m32
-    case "${MULTIBUILD_TARGET}" in
-        32) export CC="${CC} -m32";;
-        64) export CC="${CC/ -m32/}";;
-    esac
-
     econf \
         --hates=libdir \
         --libdir=/${LIBDIR} \
