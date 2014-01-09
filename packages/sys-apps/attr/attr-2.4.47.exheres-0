@@ -4,7 +4,7 @@
 # Based in part upon 'attr-2.4.43.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require flag-o-matic easy-multibuild [ multiunpack=true work=${PNV} ]
+require easy-multibuild [ multiunpack=true work=${PNV} ]
 
 SUMMARY="Extended attributes tools"
 HOMEPAGE="http://savannah.nongnu.org/projects/${PN}/"
@@ -32,12 +32,6 @@ prepare_one_multibuild() {
 }
 
 configure_one_multibuild() {
-    filter-flags -m32
-    case "${MULTIBUILD_TARGET}" in
-        32) export CC="${CC} -m32";;
-        64) export CC="${CC/ -m32/}";;
-    esac
-
     unset PLATFORM # cf. Gentoo bug 184564
     export OPTIMIZER="${CFLAGS}"
     export DEBUG="-DNDEBUG"
