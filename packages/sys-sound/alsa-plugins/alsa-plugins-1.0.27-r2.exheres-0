@@ -17,11 +17,10 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     ffmpeg
     jack
+    libav [[ requires = ffmpeg ]]
     libsamplerate
     pulseaudio
     speex
-
-    libav [[ requires = ffmpeg ]]
     multibuild_c: 32 64
 "
 
