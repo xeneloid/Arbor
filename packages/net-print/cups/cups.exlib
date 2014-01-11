@@ -44,6 +44,7 @@ DEPENDENCIES="
         acl? ( sys-apps/acl[multibuild_c:*(-)?] )
         avahi? ( net-dns/avahi[dns_sd][multibuild_c:*(-)?] )
         dbus? ( sys-apps/dbus[multibuild_c:*(-)?] )
+       !gnutls? ( dev-libs/openssl[multibuild_c:*(-)?] )
         gnutls? ( dev-libs/gnutls[multibuild_c:*(-)?] )
         kerberos? ( app-crypt/heimdal[multibuild_c:*(-)?] )
         pam? ( sys-libs/pam[multibuild_c:*(-)?] )
@@ -113,8 +114,8 @@ configure_one_multibuild() {
         $(option_enable debug debug) \
         $(option_enable debug debug-guards) \
         $(option_enable debug debug-printfs) \
-        $(option_enable gnutls gnutls) \
         $(option_enable !gnutls openssl) \
+        $(option_enable gnutls gnutls) \
         $(option_enable kerberos gssapi) \
         $(option_enable pam) \
         $(option_enable tcpd tcp-wrappers) \
