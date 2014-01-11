@@ -41,33 +41,23 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'python' )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( README.tests TODO_SCHEMAS )
 
-ECONF_SOURCE=${WORK}
-WORK=${WORKBASE}/build
-
 src_unpack() {
     unpack ${PNV}.tar.gz
 
     # test suite
-    edo cd "${ECONF_SOURCE}"
+    edo cd "${WORK}"
     unpack xmlts${TEST_VERSION}.tar.gz
-
-    edo mkdir "${WORK}"
 }
 
 src_prepare() {
     # prevent fetching with wget during src_test
-    edo ln -s "${FETCHEDDIR}"/xsts-{${TAR1},${TAR2}}.tar.gz "${ECONF_SOURCE}"/xstc/
+    edo ln -s "${FETCHEDDIR}"/xsts-{${TAR1},${TAR2}}.tar.gz xstc/
 
     # there is no flag to choose a python abi, instead configure will use the
     # abi obtained from /usr/bin/python. Hence, we'll force configure to use
     # /usr/bin/python$(python_get_abi) instead.
     edo sed -i -e "s:\(bin/python\):\1$(python_get_abi):" configure.in
 
-    # NOTE(?) tests don't support out-of-source builds
-    edo ln -s "${ECONF_SOURCE}/result" "${WORK}/result"
-    edo ln -s "${ECONF_SOURCE}/test" "${WORK}/test"
-
-    edo cd "${ECONF_SOURCE}"
     autotools_src_prepare
 }
 
