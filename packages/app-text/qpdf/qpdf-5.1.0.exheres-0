@@ -34,3 +34,5 @@ configure_one_multibuild() {
         $(expecting_tests && echo '--enable-test-compare-images' || echo '--disable-test-compare-images')
 }
 
+# TODO: Use src_test_expensive to run the largefiles test suite
+
