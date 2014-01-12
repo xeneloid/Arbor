@@ -1,7 +1,7 @@
 # Copyright 2013 Ivan Diorditsa <ivan.diorditsa@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require python [ has_bin=true has_lib=false blacklist="3 2.6" min_versions="2.7" ]
+require python [ has_bin=true has_lib=false blacklist="3" min_versions="2.7" ]
 
 export_exlib_phases src_install
 
