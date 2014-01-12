@@ -1,0 +1,12 @@
+Title: Unmask of glibc-2.18
+Author: Paul Seidler <sepek@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-01-12
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: sys-libs/glibc
+
+Glibc-2.18 is now unmasked.
+
+Always remember: Do NOT downgrade glibc!
+This is your last chance to mask glibc 2.18.
