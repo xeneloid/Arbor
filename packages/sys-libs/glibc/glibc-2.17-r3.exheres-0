@@ -13,6 +13,7 @@ src_prepare() {
     expatch "${FILES}"/b5407047839c1f0df26196597c9ec6fbbde4cac1.patch
     expatch "${FILES}"/fc1abbe2ccbcc8b8cb4525e3838e459ff3841635.patch
     expatch "${FILES}"/0001-configure-allow-building-with-GNU-Make-4.patch
+    expatch "${FILES}"/glibc-2.18-xattr-compat-hack.patch
 
     # fail with sydbox
     edo sed \
