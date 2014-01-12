@@ -12,6 +12,7 @@ src_prepare() {
     edo cd "${ECONF_SOURCE}"
 
     expatch "${FILES}"/0001-configure-allow-building-with-GNU-Make-4.patch
+    expatch "${FILES}"/8b43a2274a593ce91e673db1cfac6e808134bc84.patch
 
     # fail with sydbox
     edo sed \
