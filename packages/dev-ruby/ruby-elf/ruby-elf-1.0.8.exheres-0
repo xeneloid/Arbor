@@ -1,0 +1,21 @@
+# Copyright 2014 Alex Elsayed <eternaleye@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require gem
+
+SUMMARY="A pure-Ruby parser for the ELF file format"
+DESCRIPTION= "
+Ruby-Elf is a pure-Ruby library for parse and fetch information
+about ELF format used by Linux, FreeBSD, Solaris and other
+Unix-like operating systems, and include a set of analysis tools
+helpful for both optimisations and verification of compiled ELF files.
+"
+HOMEPAGE="http://www.flameeyes.eu/projects/ruby-elf"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+BUGS_TO="eternaleye@gmail.com"
+
