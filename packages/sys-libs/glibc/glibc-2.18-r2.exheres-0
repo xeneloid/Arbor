@@ -6,23 +6,19 @@ require glibc [ source_uri="mirror://gnu/${PN}/${PNV}.tar.xz" \
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/glibc-2.18-xattr-compat-hack.patch )
+
 src_prepare() {
     edo cd "${ECONF_SOURCE}"
 
-    expatch "${FILES}"/318cd0b1809e203ab57b6c1afe4928bc439ea7ee.patch
-    expatch "${FILES}"/b5407047839c1f0df26196597c9ec6fbbde4cac1.patch
-    expatch "${FILES}"/fc1abbe2ccbcc8b8cb4525e3838e459ff3841635.patch
     expatch "${FILES}"/0001-configure-allow-building-with-GNU-Make-4.patch
+    expatch "${FILES}"/8b43a2274a593ce91e673db1cfac6e808134bc84.patch
 
     # fail with sydbox
     edo sed \
-        -e 's:tst-eintr1 ::' -i "${WORKBASE}"/${PNV}/nptl/Makefile
+        -e '68s:tst-dir ::' -i "${WORKBASE}"/${PNV}/posix/Makefile
     edo sed \
-        -e '69s:tst-dir ::' -i "${WORKBASE}"/${PNV}/posix/Makefile
-    edo sed \
-        -e 's:tst-openat ::' \
-        -e 's:tst-renameat ::' \
-        -e 's:tst-fchmodat ::' -i "${WORKBASE}"/${PNV}/io/Makefile
+        -e 's:tst-renameat ::' -i "${WORKBASE}"/${PNV}/io/Makefile
 
     glibc_src_prepare
 }

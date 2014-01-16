@@ -1,0 +1,31 @@
+Author: Saleem Abdulrasool <compnerd@compnerd.org>
+Upstream: no (standalone clang is unsupported in 3.4)
+--- 
+--- clang-3.4/test/CMakeLists.txt	2014-01-14 18:26:58.793801143 -0800
++++ clang-3.4/test/CMakeLists.txt	2014-01-14 18:30:01.693514582 -0800
+@@ -59,15 +59,17 @@
+ 
+   include(FindPythonInterp)
+   if(PYTHONINTERP_FOUND)
+-    if( LLVM_MAIN_SRC_DIR )
+-      set(LIT "${LLVM_MAIN_SRC_DIR}/utils/lit/lit.py")
+-    else()
+-      set(LIT "${PATH_TO_LLVM_BUILD}/bin/${CMAKE_CFG_INTDIR}/llvm-lit")
+-      # Installed LLVM does not contain ${CMAKE_CFG_INTDIR} in paths.
+-      if( NOT EXISTS ${LIT} )
+-        set(LIT "${PATH_TO_LLVM_BUILD}/bin/llvm-lit")
++    if (NOT LIT)
++      if( LLVM_MAIN_SRC_DIR )
++        set(LIT "${LLVM_MAIN_SRC_DIR}/utils/lit/lit.py")
++      else()
++        set(LIT "${PATH_TO_LLVM_BUILD}/bin/${CMAKE_CFG_INTDIR}/llvm-lit")
++        # Installed LLVM does not contain ${CMAKE_CFG_INTDIR} in paths.
++        if( NOT EXISTS ${LIT} )
++          set(LIT "${PATH_TO_LLVM_BUILD}/bin/llvm-lit")
++        endif()
+       endif()
+-    endif()
++    endif ()
+ 
+     set(LIT_ARGS "${CLANG_TEST_EXTRA_ARGS} ${LLVM_LIT_ARGS}")
+     separate_arguments(LIT_ARGS)

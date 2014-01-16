@@ -14,12 +14,11 @@ HOMEPAGE="https://launchpad.net/${PN}"
 
 LICENCES="Apache-2.0"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~arm"
 MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        python_abis:2.6? ( dev-python/argparse[python_abis:2.6] )
         python_abis:3.1? ( dev-python/argparse[python_abis:3.1] )
 "
 

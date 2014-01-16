@@ -20,13 +20,16 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --with-pthreads )
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/fuse_gtest_files_python3comp.diff" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/fuse_gtest_files_python3comp.diff"
+    "${FILES}"/${PN}-1.7.0-as-needed.patch
+)
 
 src_prepare() {
     # Workaround "'make install' is dangerous and not supported" error
     edo sed -i -r \
         -e '/^install-(data|exec)-local:/s|^.*$|&\ndisabled-&|' \
-        Makefile.in
+        Makefile.am
 
     default
 }

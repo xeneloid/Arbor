@@ -4,8 +4,6 @@
 # Based in part upon 'attr-2.4.43.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require flag-o-matic
-
 SUMMARY="Extended attributes tools"
 HOMEPAGE="http://savannah.nongnu.org/projects/${PN}/"
 DOWNLOADS="http://download.savannah.gnu.org/releases/${PN}/${PNV}.src.tar.gz"

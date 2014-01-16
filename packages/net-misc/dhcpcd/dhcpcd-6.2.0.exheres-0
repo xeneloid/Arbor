@@ -22,7 +22,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build+run:
+        sys-apps/systemd [[ note = [ for udev ] ]]
+"
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-fix-configure-test-flags.patch )
 
@@ -30,6 +33,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --dbdir=/var/lib/dhcpcd
     --libexecdir=/usr/$(exhost --target)/lib/dhcpcd
     --rundir=/run
+    --enable-ipv6
     --with-hooks="yp ntp"
 )
 

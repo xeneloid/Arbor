@@ -1,0 +1,14 @@
+Title: Python 2.6 droped from ::arbor
+Author: Paul Seidler <sepek@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-01-12
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/python
+
+Since October 29 2013 all support for python 2.6 by upstream has ended
+(PEP-0361). We follow up by dropping 2.6 from our trees by now. It was
+masked since mid of november.
+
+There are probably some leftovers in some packages, please clean them up
+if you spot them by dropping support for 2.6.

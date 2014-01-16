@@ -17,6 +17,7 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     ffmpeg
     jack
+    libav [[ requires = ffmpeg ]]
     libsamplerate
     pulseaudio
     speex
@@ -26,7 +27,10 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         sys-sound/alsa-lib[>=1.0.25][multibuild_c:*(-)?]
-        ffmpeg? ( || ( media/ffmpeg media/libav ) )
+        ffmpeg? (
+            !libav? ( media/ffmpeg )
+            libav? ( media/libav )
+        )
         jack? ( media-sound/jack-audio-connection-kit[>=0.98][multibuild_c:*(-)?] )
         libsamplerate? ( media-libs/libsamplerate[multibuild_c:*(-)?] )
         pulseaudio? ( media-sound/pulseaudio[>=0.9.11][multibuild_c:*(-)?] )

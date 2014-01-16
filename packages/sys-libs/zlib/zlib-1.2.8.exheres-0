@@ -3,8 +3,6 @@
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic
-
 # TODO(compnerd) work out-of-tree builds
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
@@ -37,8 +35,6 @@ src_prepare() {
 }
 
 src_configure() {
-    append-flags -fPIC
-
     # NOTE(compnerd) zlib does not support the usual configure arguments
     # TODO(compnerd) figure out how to deal with clang
     edo env                                            \

@@ -11,7 +11,7 @@ else
     PATCH_LEVEL=0
 fi
 
-require flag-o-matic gnu [ suffix=gz ]
+require gnu [ suffix=gz ]
 
 SUMMARY="GNU command line editing and history library"
 DESCRIPTION="

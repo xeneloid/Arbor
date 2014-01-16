@@ -37,12 +37,7 @@ case ${PYTHON_EXLIB_API} in
 
         setuptools_src_test() {
             [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
-
-            if exhost --is-native -q ; then
-                edo ${PYTHON} -B setup.py test "${SETUPTOOLS_SRC_TEST_PARAMS[@]}"
-            else
-                echo "cross compiled host, skipping tests"
-            fi
+            edo ${PYTHON} -B setup.py test "${SETUPTOOLS_SRC_TEST_PARAMS[@]}"
         }
         ;;
     2)

@@ -1,0 +1,80 @@
+From 75ec21831aa71af888fd2bcc27e00face76783af Mon Sep 17 00:00:00 2001
+From: Saleem Abdulrasool <compnerd@compnerd.org>
+Date: Tue, 14 Jan 2014 18:11:28 -0800
+Subject: [PATCH] unittests: explicit stringify StringRefs for conversion
+
+When clang is built outside of the LLVM tree (against a corresponding version),
+there is no definition providing for operator<<(std::ostream &, StringRef) which
+is required for the assertion routines in google-test tests.  Avoid the
+compilation failure by explicitly stringifying the StringRef prior to use.
+---
+ unittests/AST/DeclPrinterTest.cpp             | 7 ++++---
+ unittests/AST/StmtPrinterTest.cpp             | 7 ++++---
+ unittests/Tooling/CompilationDatabaseTest.cpp | 2 +-
+ 3 files changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/unittests/AST/DeclPrinterTest.cpp b/unittests/AST/DeclPrinterTest.cpp
+index 33c5136..807221f 100644
+--- a/unittests/AST/DeclPrinterTest.cpp
++++ b/unittests/AST/DeclPrinterTest.cpp
+@@ -77,7 +77,8 @@ public:
+   OwningPtr<FrontendActionFactory> Factory(newFrontendActionFactory(&Finder));
+ 
+   if (!runToolOnCodeWithArgs(Factory->create(), Code, Args, FileName))
+-    return testing::AssertionFailure() << "Parsing error in \"" << Code << "\"";
++    return testing::AssertionFailure()
++      << "Parsing error in \"" << Code.str() << "\"";
+ 
+   if (Printer.getNumFoundDecls() == 0)
+     return testing::AssertionFailure()
+@@ -90,8 +91,8 @@ public:
+ 
+   if (Printer.getPrinted() != ExpectedPrinted)
+     return ::testing::AssertionFailure()
+-      << "Expected \"" << ExpectedPrinted << "\", "
+-         "got \"" << Printer.getPrinted() << "\"";
++      << "Expected \"" << ExpectedPrinted.str() << "\", "
++         "got \"" << Printer.getPrinted().str() << "\"";
+ 
+   return ::testing::AssertionSuccess();
+ }
+diff --git a/unittests/AST/StmtPrinterTest.cpp b/unittests/AST/StmtPrinterTest.cpp
+index 473ee13..eac36d6 100644
+--- a/unittests/AST/StmtPrinterTest.cpp
++++ b/unittests/AST/StmtPrinterTest.cpp
+@@ -76,7 +76,8 @@ public:
+   OwningPtr<FrontendActionFactory> Factory(newFrontendActionFactory(&Finder));
+ 
+   if (!runToolOnCodeWithArgs(Factory->create(), Code, Args))
+-    return testing::AssertionFailure() << "Parsing error in \"" << Code << "\"";
++    return testing::AssertionFailure()
++      << "Parsing error in \"" << Code.str() << "\"";
+ 
+   if (Printer.getNumFoundStmts() == 0)
+     return testing::AssertionFailure()
+@@ -89,8 +90,8 @@ public:
+ 
+   if (Printer.getPrinted() != ExpectedPrinted)
+     return ::testing::AssertionFailure()
+-      << "Expected \"" << ExpectedPrinted << "\", "
+-         "got \"" << Printer.getPrinted() << "\"";
++      << "Expected \"" << ExpectedPrinted.str() << "\", "
++         "got \"" << Printer.getPrinted().str() << "\"";
+ 
+   return ::testing::AssertionSuccess();
+ }
+diff --git a/unittests/Tooling/CompilationDatabaseTest.cpp b/unittests/Tooling/CompilationDatabaseTest.cpp
+index c575dff..4920d6d 100644
+--- a/unittests/Tooling/CompilationDatabaseTest.cpp
++++ b/unittests/Tooling/CompilationDatabaseTest.cpp
+@@ -24,7 +24,7 @@ static void expectFailure(StringRef JSONDatabase, StringRef Explanation) {
+   std::string ErrorMessage;
+   EXPECT_EQ(NULL, JSONCompilationDatabase::loadFromBuffer(JSONDatabase,
+                                                           ErrorMessage))
+-    << "Expected an error because of: " << Explanation;
++    << "Expected an error because of: " << Explanation.str();
+ }
+ 
+ TEST(JSONCompilationDatabase, ErrsOnInvalidFormat) {
+-- 
+1.8.3.4 (Apple Git-47)

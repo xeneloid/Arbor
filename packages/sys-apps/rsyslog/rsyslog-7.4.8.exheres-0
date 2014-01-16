@@ -25,7 +25,7 @@ UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/manual.html [[ lang = en ]]"
 
 LICENCES="GPL-3 LGPL-3"
 SLOT="4"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~ppc64 ~x86"
 MYOPTIONS="
     baselayout
     debug
@@ -43,12 +43,12 @@ DEPENDENCIES="
     build+run:
         dev-libs/json-c
         dev-libs/libee[>=0.3.1]
-        dev-libs/libestr[>=0.1.0]
+        dev-libs/libestr[>=0.1.9]
         gnutls? ( dev-libs/gnutls )
         kerberos? ( app-crypt/heimdal )
         mysql? ( dev-db/mysql )
         postgresql? ( dev-db/postgresql )
-        relp? ( net-libs/librelp )
+        relp? ( net-libs/librelp[>=1.0.3] )
     run:
         systemd? ( sys-apps/systemd[>=38] )
     suggestion:
@@ -61,6 +61,8 @@ RESTRICT="test"
 
 src_configure() {
     local myconf=(
+        --disable-mmnormalize
+        --enable-cached-man-pages
         --enable-imdiag
         --enable-imptcp
         --enable-imfile
@@ -87,6 +89,8 @@ src_configure() {
         $(option_enable mysql)
         $(option_enable postgresql pgsql)
         $(option_enable relp)
+        $(option_enable systemd imjournal)
+        $(option_enable systemd omjournal)
 
         $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR})
     )
@@ -120,7 +124,8 @@ src_install() {
     # html docs
     insinto /usr/share/doc/${PNVR}/html
     doins -r "${WORK}"/doc/*.{html,png,jpg}
-    dodoc "${WORK}"/rsyslog.conf
+
+    edo rmdir "${IMAGE}"/usr/share/man/man1
 
     if option baselayout ; then
         newinitd "${FILES}"/${PN}.initd ${PN}

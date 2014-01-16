@@ -19,6 +19,7 @@ were added.
 HOMEPAGE="http://www.zsh.org/"
 DOWNLOADS="
     ftp://ftp.zsh.org/pub/${PNV}.tar.bz2
+    http://www.zsh.org/pub/${PNV}.tar.bz2
     mirror://sourceforge/${PN}/${PNV}.tar.bz2
     doc? (
         ftp://ftp.zsh.org/pub/${PNV}-doc.tar.bz2

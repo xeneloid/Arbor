@@ -167,13 +167,10 @@ python-build_src_install() {
         edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python.pc
         edo mv "${IMAGE}"/usr/${target}/bin/idle{,${SLOT}}
         edo mv "${IMAGE}"/usr/${target}/bin/pydoc{,${SLOT}}
-    else
-        edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)
-    fi
-
-    if ever at_least 2.7; then
         edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)-config
         edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python$(ever major).pc
+    else
+        edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)
     fi
 
     if ever at_least 3.2; then
@@ -194,10 +191,6 @@ python-build_src_install() {
     fi
 
     case ${SLOT} in
-        2.6)
-            edo mv "${IMAGE}"/usr/share/man/man1/python{,${SLOT}}.1
-            edo rm "${IMAGE}"/usr/${target}/bin/python-config
-            ;;
         2.7)
             edo rm "${IMAGE}"/usr/share/man/man1/python.1
             edo rm "${IMAGE}"/usr/share/man/man1/python$(ever major).1

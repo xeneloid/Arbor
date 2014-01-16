@@ -37,12 +37,22 @@ configure_one_multibuild() {
         -DCLANG_PATH_TO_LLVM_BUILD:STRING=/usr
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
         -DLLVM_MAIN_SRC_DIR:STRING=/usr
+        -DCLANG_INCLUDE_TESTS:BOOL=TRUE
+        -DLIT:STRING=/usr/bin/llvm-lit
     )
+    if ever at_least 3.4 ; then
+        # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
+        # method is hidden; move the definition out of line, and export the interface
+        args+=( -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO )
+    fi
     ecmake "${args[@]}"
 }
 
 test_one_multibuild() {
-    PATH=/usr/libexec/llvm:${PWD}/utils/TableGen/clang_tblgen_build_subdir:$PATH CLANG=${PWD}/bin/clang emake clang-test
+    PATH="/usr/libexec/llvm:${PWD}/utils/TableGen/clang_tblgen_build_subdir:${PATH}" \
+    CLANG="${PWD}/bin/clang" \
+    LIT=/usr/bin/llvm-lit \
+    emake clang-test
 }
 
 src_install() {
@@ -50,6 +60,7 @@ src_install() {
 
     # the sole file here, config.h, is explicitly not installed
     edo rmdir "${IMAGE}"/usr/include/clang/Config
+    ever at_least 3.4 && edo rmdir "${IMAGE}/usr/include/clang/IDE"
 
     edo pushd "${CMAKE_SOURCE}"/tools
     insinto /usr/share/clang-analyzer

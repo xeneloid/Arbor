@@ -8,5 +8,5 @@ require clang
 
 DOWNLOADS="http://llvm.org/releases/${PV}/${MY_PNV}.tar.gz"
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 

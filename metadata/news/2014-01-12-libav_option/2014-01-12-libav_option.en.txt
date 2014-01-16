@@ -1,0 +1,15 @@
+Title: Introducing libav option
+Author: Quentin Glidic <sardemff7@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-01-12
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: media/libav
+
+Most packages using ffmpeg were updated to work with libav too.
+This lead the || ( media/ffmpeg media/libav ) dependencies in Exherbo.
+
+These dependencies are now using the libav option.
+This option is just a dependency switch.
+You need to enable it for every package you build with ffmpeg support
+(being mandatory or with an option).
