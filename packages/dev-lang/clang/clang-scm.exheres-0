@@ -5,5 +5,5 @@ SCM_REPOSITORY="http://llvm.org/git/clang.git"
 
 require scm-git clang
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 

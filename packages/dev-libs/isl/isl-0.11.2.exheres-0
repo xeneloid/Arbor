@@ -6,7 +6,7 @@ require isl
 
 LICENCES="MIT"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 # automagic for the docs: perl, pdflatex, pod2html
