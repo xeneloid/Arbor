@@ -146,7 +146,7 @@ src_configure() {
         $(option_enable session-management utmpdump) \
         $(option_enable systemd socket-activation) \
         $(option_with session-management utempter) \
-        $(option_with systemd systemdsystemunitdir /usr/$(exhost --target)/systemd/system) \
+        $(option_with systemd systemdsystemunitdir /usr/$(exhost --target)/lib/systemd/system) \
         $(option_with udev)
 }
 
