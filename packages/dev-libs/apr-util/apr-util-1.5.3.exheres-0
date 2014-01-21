@@ -17,7 +17,6 @@ DEPENDENCIES="
     build+run:
         dev-libs/apr:1
         dev-libs/expat
-        net-misc/neon
         berkdb? ( sys-libs/db:= )
         gdbm? ( sys-libs/gdbm )
         ldap? ( net-directory/openldap )
