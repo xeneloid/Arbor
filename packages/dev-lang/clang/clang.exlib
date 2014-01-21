@@ -60,7 +60,7 @@ src_install() {
 
     # the sole file here, config.h, is explicitly not installed
     edo rmdir "${IMAGE}"/usr/include/clang/Config
-    ever at_least 3.4 && edo rmdir "${IMAGE}/usr/include/clang/IDE"
+    ever at_least 3.4 && ! ever is_scm && edo rmdir "${IMAGE}/usr/include/clang/IDE"
 
     edo pushd "${CMAKE_SOURCE}"/tools
     insinto /usr/share/clang-analyzer
