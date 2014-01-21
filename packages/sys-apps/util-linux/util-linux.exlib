@@ -132,18 +132,19 @@ configure_one_multibuild() {
         --enable-nls \
         --disable-static \
         --with-ncurses \
-        --without-python \
-        --without-slang \
         --without-audit \
+        --without-python \
         --without-selinux \
+        --without-slang \
+        --without-smack \
         $(for tool in "${enabled_tools[@]}" ; do echo --enable-${tool} ; done) \
         $(for tool in "${disabled_tools[@]}" ; do echo --disable-${tool} ; done) \
         $(for tool in "${conflicts[@]}" ; do echo --disable-${tool} ; done) \
         $(for tool in "${deprecated[@]}" ; do echo --disable-${tool} ; done) \
         $(option_enable gtk-doc) \
-        $(option_with session-management utempter) \
         $(option_enable session-management utmpdump) \
         $(option_enable systemd socket-activation) \
+        $(option_with session-management utempter) \
         $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}) \
         $(option_with udev)
 }
