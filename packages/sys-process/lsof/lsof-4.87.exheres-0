@@ -36,7 +36,9 @@ src_unpack() {
 }
 
 src_configure() {
-    LSOF_CC="${CC}" edo ./Configure -n linux
+    # 00FAQ: ..and note that LSOF_AR must specify [..] the arguments for it
+    LSOF_AR="${AR} cr" LSOF_CC="${CC}" LSOF_RANLIB="${RANLIB}" \
+        edo ./Configure -n linux
 }
 
 DEFAULT_SRC_COMPILE_PARAMS=( DEBUG="" )
