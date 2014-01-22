@@ -4,7 +4,12 @@
 
 SUMMARY="nftables user space utility"
 DESCRIPTION="
-nftables is the project that aims to replace the existing {ip,ip6,arp,eb}tables framework. Basically, this project provides a new packet filtering framework, a new userspace utility and also a compatibility layer for {ip,ip6}tables. nftables is built upon the building blocks of the Netfilter infrastructure such as the existing hooks, the connection tracking system, the userspace queueing component and the logging subsystem.
+nftables is the project that aims to replace the existing {ip,ip6,arp,eb}tables
+framework. Basically, this project provides a new packet filtering framework, a
+new userspace utility and also a compatibility layer for {ip,ip6}tables. nftables
+is built upon the building blocks of the Netfilter infrastructure such as the
+existing hooks, the connection tracking system, the userspace queueing component
+and the logging subsystem.
 "
 HOMEPAGE="http://netfilter.org/projects/${PN}"
 DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
