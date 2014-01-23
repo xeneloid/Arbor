@@ -27,14 +27,19 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl 'caps libcap' xattr )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( gmp )
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-install-program=arch,hostname' '--enable-largefile' )
 
-src_configure() {
-    if ! exhost --is-native -q ; then
-        # We set the PERL environment variable to be empty so that make doesn't attempt to rebuild
-        # the manpages with help2man (which runs the compiled executables to generate man pages).
-        # This also disables some tests, but since we are cross-compiling they won't be run anyway.
-        export PERL=
-    fi
+src_prepare() {
+    default
 
+    # avoid generating the man pages for cross compilation, the previous empty
+    # PERL workaround doesn't work anymore with 8.22
+    if ! exhost --is-native -q ; then
+        expatch "${FILES}"/${PN}-mangen.patch
+        set -- man/*.x
+        edo touch ${@/%x/1}
+    fi
+}
+
+src_configure() {
     # Configuration takes a million years without this hack.
     esandbox hack_toolong
     default
