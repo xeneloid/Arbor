@@ -11,6 +11,8 @@ libnftnl is a userspace library providing a low-level netlink programming interf
 known as libnftables. This library is currently used by nftables.
 "
 
+BUGS_TO="philantrop@exherbo.org"
+
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
