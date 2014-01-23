@@ -14,7 +14,7 @@ and the logging subsystem.
 HOMEPAGE="http://netfilter.org/projects/${PN}"
 DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
 
-BUGS_TO="roidelapluie@inuits.eu"
+BUGS_TO="roidelapluie@inuits.eu philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
 
 UPSTREAM_CHANGELOG="${HOMEPAGE}/files/changes-iptables-${PV}.txt [[ lang = en ]]"
