@@ -19,6 +19,8 @@ and the connection
 HOMEPAGE="http://asg.web.cmu.edu/sasl/sasl-library.html"
 DOWNLOADS="ftp://ftp.cyrusimap.org/${PN}/${PNV/-rc/rc}.tar.gz"
 
+BUGS_TO="philantrop@exherbo.org"
+
 LICENCES="cyrus-sasl"
 SLOT="0"
 
