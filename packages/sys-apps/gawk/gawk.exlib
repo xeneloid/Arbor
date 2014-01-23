@@ -43,6 +43,12 @@ src_unpack() {
 src_prepare() {
     default
     option baselayout && edo cp -R "${FILES}"/filefuncs-$(ever major) "${WORKBASE}"/filefuncs
+
+    # During building gawk is called which can't be run when cross compiling
+    if ! exhost --is-native -q ; then
+        edo sed -e '/check-recursive all-recursive: check-for-shared-lib-support/d' \
+                -i "${ECONF_SOURCE}"/extension/Makefile.in
+    fi
 }
 
 src_compile() {
