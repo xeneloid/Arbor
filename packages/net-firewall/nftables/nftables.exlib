@@ -1,0 +1,32 @@
+# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2014 Julien Pivotto <roidelapluie@inuits.eu>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="nftables user space utility"
+DESCRIPTION="
+nftables is the project that aims to replace the existing {ip,ip6,arp,eb}tables
+framework. Basically, this project provides a new packet filtering framework, a
+new userspace utility and also a compatibility layer for {ip,ip6}tables. nftables
+is built upon the building blocks of the Netfilter infrastructure such as the
+existing hooks, the connection tracking system, the userspace queueing component
+and the logging subsystem.
+"
+HOMEPAGE="http://netfilter.org/projects/${PN}"
+DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
+
+BUGS_TO="roidelapluie@inuits.eu philantrop@exherbo.org"
+REMOTE_IDS="freecode:${PN}"
+
+UPSTREAM_CHANGELOG="${HOMEPAGE}/files/changes-iptables-${PV}.txt [[ lang = en ]]"
+UPSTREAM_DOCUMENTATION="http://netfilter.org/documentation/"
+
+LICENCES="GPL-2"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        net-libs/libmnl
+        net-libs/libnftnl
+"
+

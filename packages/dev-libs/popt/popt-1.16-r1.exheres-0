@@ -20,7 +20,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p1 "${FILES}"/${PNV}-fixtests.patch
     -p1 "${FILES}"/${PNV}-pkgconfigdir.patch
     -p1 "${FILES}"/${PNV}-automake-1.13-1.patch
     -p1 "${FILES}"/${PNV}-automake-1.13-2.patch

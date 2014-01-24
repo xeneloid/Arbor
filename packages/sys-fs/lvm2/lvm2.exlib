@@ -1,10 +1,8 @@
 # Copyright 2008 Kim Højgaard-Hansen
-# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service easy-multibuild udev-rules
-
-export_exlib_phases pkg_setup
 
 SUMMARY="Userspace toolset providing logical volume management facilities"
 DESCRIPTION="
@@ -36,6 +34,7 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-apps/systemd[multibuild_c:*(-)?]
+        sys-apps/util-linux[>=2.24][multibuild_c:*(-)?]
         sys-libs/readline[multibuild_c:*(-)?]
 "
 
@@ -43,15 +42,12 @@ DEPENDENCIES="
 # and leave stale volumes lingering around if they fail
 RESTRICT="test"
 
-lvm2_pkg_setup() {
-    exdirectory --allow /etc/systemd/system
-}
-
 configure_one_multibuild() {
     local myconf=(
         --exec-prefix=/
         --libdir=/${LIBDIR}
         --enable-applib
+        --enable-blkid_wiping
         --enable-cmdlib
         --enable-pkgconfig
         --enable-readline
@@ -77,20 +73,12 @@ configure_one_multibuild() {
     econf "${myconf[@]}"
 }
 
-DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
-
 WORK=${WORKBASE}/LVM2.${PV}
 
 install_one_multibuild() {
-    edo cp "${WORK}"/conf/thin-performance.profile "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}"/conf
-
     default
 
     install_systemd_files
-    if option systemd ; then
-        dodir /etc/systemd/system/basic.target.wants
-        dosym "${SYSTEMDSYSTEMUNITDIR}"/lvm2.service /etc/systemd/system/basic.target.wants/lvm2.service
-    fi
 
     if option baselayout; then
         insinto /${LIBDIR}/rcscripts/addons
