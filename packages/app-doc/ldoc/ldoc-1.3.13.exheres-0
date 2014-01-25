@@ -1,7 +1,7 @@
 # Copyright 2013 Jakob Nixdorf <flocke@shadowice.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=stevedonovan pn=LDoc rev=${PV} ] lua
+require github [ user=stevedonovan pn=LDoc ] lua
 
 SUMMARY="A LuaDoc-compatible documentation generation system"
 
