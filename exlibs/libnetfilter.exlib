@@ -10,6 +10,8 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="LGPL-2.1"
 SLOT="0"
 
+UPSTREAM_DOCUMENTATION="http://netfilter.org/documentation/"
+
 DEPENDENCIES="
     build:
         dev-util/pkg-config
