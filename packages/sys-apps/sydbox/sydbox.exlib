@@ -38,7 +38,7 @@ if ! ever at_least 1; then
     "
 fi
 
-if ever at_least 1; then
+if ever at_least 1.0.0; then
     DEPENDENCIES+="
         build+run:
             dev-libs/pinktrace[~scm]"
