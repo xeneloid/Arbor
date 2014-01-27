@@ -3,7 +3,7 @@
 
 SUMMARY="POSIX man-pages (0p, 1p, 3p)"
 HOMEPAGE="http://www.kernel.org/doc/man-pages/"
-DOWNLOADS="mirror://kernel/linux/docs/man-pages/${PN}/${PN}-${PV/a/-a}.tar.bz2"
+DOWNLOADS="mirror://kernel/linux/docs/man-pages/${PN}/${PN}-${PV/a/-a}.tar.xz"
 
 LICENCES=""
 SLOT="0"
