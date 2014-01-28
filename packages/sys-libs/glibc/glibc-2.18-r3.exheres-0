@@ -6,7 +6,11 @@ require glibc [ source_uri="mirror://gnu/${PN}/${PNV}.tar.xz" \
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/glibc-2.18-xattr-compat-hack.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/glibc-2.18-xattr-compat-hack.patch
+    "${FILES}"/Add-strstr-with-unaligned-loads.-Fixes-bug-12100.patch
+    "${FILES}"/Remove-use-of-SSE4.2-functions-for-strstr-on-i686.patch
+)
 
 src_prepare() {
     edo cd "${ECONF_SOURCE}"
