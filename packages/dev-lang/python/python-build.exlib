@@ -186,14 +186,15 @@ python-build_install_one_multibuild() {
     fi
     popd
 
+    edo rm "${IMAGE}"/usr/bin/python$(ever major)-config
+    edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python$(ever major).pc
+
     if [[ $(ever major) == 2 ]]; then
         edo rm "${IMAGE}"/usr/bin/smtpd.py
         edo rm "${IMAGE}"/usr/bin/python
         edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python.pc
         edo mv "${IMAGE}"/usr/bin/idle{,${SLOT}}
         edo mv "${IMAGE}"/usr/bin/pydoc{,${SLOT}}
-        edo rm "${IMAGE}"/usr/bin/python$(ever major)-config
-        edo rm "${IMAGE}"/usr/${LIBDIR}/pkgconfig/python$(ever major).pc
     else
         edo rm "${IMAGE}"/usr/bin/python$(ever major)
     fi
