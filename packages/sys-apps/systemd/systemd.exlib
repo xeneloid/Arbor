@@ -222,6 +222,7 @@ configure_one_multibuild() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        $(ever is_scm && echo --enable-compat-libs)
         --enable-coredump
         --enable-gudev
         --enable-hostnamed
