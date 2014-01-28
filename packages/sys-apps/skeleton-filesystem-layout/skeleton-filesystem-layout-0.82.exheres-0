@@ -81,9 +81,12 @@ pkg_postinst() {
     # create directory structure. for readability leave out /usr and /var
     # structures and create them separately.
     for x in bin boot dev{,/pts} etc home mnt \
-        media opt proc run sbin sys; do
+        media opt proc run sbin; do
             create_root_owned_directory "${ROOT}${x}"
     done
+    if [[ ! -e ${ROOT}/sys ]]; then
+        edo mkdir -p "${ROOT}"/sys
+    fi
 
     edo chmod 0640 "${ROOT}"/etc/sysctl.conf
     edo chmod 0600 "${ROOT}"/etc/shadow
