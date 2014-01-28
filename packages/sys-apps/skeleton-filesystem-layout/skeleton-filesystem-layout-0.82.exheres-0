@@ -84,6 +84,7 @@ pkg_postinst() {
         media opt proc run sbin; do
             create_root_owned_directory "${ROOT}${x}"
     done
+    edo touch "${ROOT}"/opt/.keep
     if [[ ! -e ${ROOT}/sys ]]; then
         edo mkdir -p "${ROOT}"/sys
     fi
