@@ -76,23 +76,27 @@ DEPENDENCIES="
         dev-scm/cvsps               [[ description = [ Dependency for 'git cvsimport' ] ]]
         dev-perl/DBI                [[ description = [ Dependency for 'git cvsserver' ] ]]
         dev-lang/python:*           [[ description = [ Dependency for 'git p4' ] ]]
-        dev-scm/subversion[perl]    [[ description = [ Dependency for 'git svn' ] group-name = [ git-svn ] ]]
-        dev-perl/Error              [[ description = [ Dependency for 'git send-email' and other perl-based git tools ]
-                                       group-name = [ git-send-email ]
-                                       note = [ Error is barely alive and is not in ::arbor, thus, ineligible for stages ]
-                                    ]]
-        dev-perl/Error              [[ description = [ Dependency for 'git svn' and other perl-based git tools ]
-                                       group-name = [ git-svn ]
-                                       note = [ Error is barely alive and is not in ::arbor, thus, ineligible for stages ]
-                                    ]]
-        dev-perl/libwww-perl        [[ description = [ Dependency for 'git svn' ] group-name = [ git-svn ] ]]
         dev-perl/TermReadKey        [[ description = [ Dependency for 'git add --interactive, git svn' ] group-name = [ git-svn ] ]]
-        dev-perl/Authen-SASL        [[ description = [ Dependency for 'git send-email' ] group-name = [ git-send-email ] ]]
-        dev-perl/Crypt-RC4          [[ description = [ Dependency for 'git send-email' ] group-name = [ git-send-email ] ]]
-        dev-perl/Net-SMTP-SSL       [[ description = [ Dependency for 'git send-email' ] group-name = [ git-send-email ] ]]
-        virtual/mta                 [[ description = [ Dependency for 'git send-email' ] group-name = [ git-send-email ] ]]
         net-misc/openssh            [[ description = [ Enables support for ssh:// URIs ] ]]
         net-misc/rsync              [[ description = [ Enables support for rsync:// URIs ] ]]
+
+        (
+            dev-perl/Authen-SASL
+            dev-perl/Crypt-RC4
+            dev-perl/Error          [[ description = [ Dependency for 'git send-email' and other perl-based git tools ]
+                                       note = [ Error is barely alive and is not in ::arbor, thus, ineligible for stages ]
+                                    ]]
+            dev-perl/Net-SMTP-SSL
+            virtual/mta
+        ) [[ *description = [ Dependency for 'git send-email' ] *group-name = [ git-send-email ] ]]
+        (
+            dev-perl/Error          [[ description = [ Dependency for 'git svn' and other perl-based git tools ]
+                                       note = [ Error is barely alive and is not in ::arbor, thus, ineligible for stages ]
+                                    ]]
+            dev-perl/libwww-perl
+            dev-scm/subversion[perl]
+        ) [[ *description = [ Dependency for 'git svn' ] *group-name = [ git-svn ] ]]
+
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
 
