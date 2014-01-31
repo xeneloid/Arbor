@@ -1,6 +1,7 @@
 [Unit]
-Description=SSH Per-Connection Server
-After=syslog.target
+Description=OpenSSH per-connection server daemon
+Wants=sshd-keygen.service
+After=auditd.service sshd-keygen.service
 
 [Service]
 ExecStart=-/usr/sbin/sshd -i
