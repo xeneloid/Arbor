@@ -5,11 +5,15 @@
 # Based in part upon 'perl-5.8.8-r4.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
-require perl-5 [ Module_Build_pv=0.4003 ]
+require perl-5 [ Module_Build_pv=0.4003 cross_perl_ver=[ 0.8.3 5.18.1 ] ]
 
 PLATFORMS="~amd64 ~arm ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p1 "${FILES}/${PN}-5.11.3-Remove-Syslog-tests.patch"
+    "${FILES}"/${PN}-5.18.1-support-passing-libperl-to-configure.patch
+    "${FILES}"/${PN}-5.18.1-dynaloader-is-needed-to-build-Makefiles.patch
+    "${FILES}"/${PN}-5.18.1-set-a-default-vendorprefix.patch
+    "${FILES}"/${PN}-5.18.1-there-is-no-such-thing-as-site-vendor-scriptdir.patch
 )
 
