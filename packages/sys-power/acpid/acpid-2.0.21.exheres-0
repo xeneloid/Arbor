@@ -21,7 +21,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="baselayout"
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build:
+        sys-kernel/linux-headers[>=3.1] [[ note = [ for KEY_MICMUTE in input.h ] ]]
+"
 
 BUGS_TO="pioto@exherbo.org"
 

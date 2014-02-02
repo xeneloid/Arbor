@@ -483,6 +483,7 @@ __gcc_slot_shared_data() {
     done
 
     for item in "${IMAGE}"/usr/share/locale/*/*/{cpplib,gcc}.mo ; do
+        [[ -e ${item} ]] || continue
         name=$(basename "${item}" .mo)
         edo mv "${item%.mo}"{,-${SLOT}}.mo
     done
@@ -604,6 +605,7 @@ __gcc_provide_slot_alternatives() {
 
     # locale data
     for item in "${IMAGE}"/usr/share/locale/*/*/{cpplib,gcc}-${SLOT}.mo ; do
+        [[ -e ${item} ]] || continue
         name=$(basename "${item}" -${SLOT}.mo)
         location=$(dirname "${item}")
         alternatives+=( "${ROOT:-/}${location##${IMAGE}/}/${name}.mo" "${name}-${SLOT}.mo" )

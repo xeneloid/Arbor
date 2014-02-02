@@ -1,12 +1,14 @@
 [Unit]
-Description=SSH Secure Shell Service
-After=syslog.target
+Description=OpenSSH server daemon
+After=syslog.target network.target auditd.service
 
 [Service]
+ExecStartPre=/usr/bin/ssh-keygen -A
 ExecStart=/usr/sbin/sshd -D
-KillMode=process
-Restart=always
 ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
 
 [Install]
 WantedBy=multi-user.target

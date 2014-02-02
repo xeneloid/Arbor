@@ -1,4 +1,4 @@
-# Copyright 2010-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
@@ -200,6 +200,7 @@ systemd_src_configure() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        $(ever is_scm && echo --enable-compat-libs)
         --enable-coredump
         --enable-gudev
         --enable-hostnamed

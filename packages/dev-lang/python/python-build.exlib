@@ -161,14 +161,15 @@ python-build_src_install() {
     fi
     popd
 
+    edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)-config
+    edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python$(ever major).pc
+
     if [[ $(ever major) == 2 ]]; then
         edo rm "${IMAGE}"/usr/${target}/bin/smtpd.py
         edo rm "${IMAGE}"/usr/${target}/bin/python
         edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python.pc
         edo mv "${IMAGE}"/usr/${target}/bin/idle{,${SLOT}}
         edo mv "${IMAGE}"/usr/${target}/bin/pydoc{,${SLOT}}
-        edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)-config
-        edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python$(ever major).pc
     else
         edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)
     fi

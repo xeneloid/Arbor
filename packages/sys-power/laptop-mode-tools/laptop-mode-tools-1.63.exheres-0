@@ -1,7 +1,7 @@
 # Copyright 2008, 2009 Mike Kelly <pioto@exherbo.org>
 # Distributed under the terms of the GPL v2
 
-require udev-rules github [ user=rickysarraf rev="upstream/${PV}" ] systemd-service [ systemd_files=[ etc/systemd/laptop-mode.service ] ]
+require udev-rules github [ user=rickysarraf tag="upstream/${PV}" ] systemd-service [ systemd_files=[ etc/systemd/laptop-mode.service ] ]
 
 SUMMARY="A laptop power saving package for Linux systems"
 DESCRIPTION="
@@ -28,8 +28,6 @@ DEPENDENCIES="
     run:
         sys-power/acpid
 "
-
-WORK=${WORKBASE}/${PN}-upstream-${PV}
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-0001-Make-usr-lib-path-configurable.patch )
 

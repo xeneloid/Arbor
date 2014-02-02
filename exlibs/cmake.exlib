@@ -120,8 +120,8 @@ cmake_have() {
     _cmake_option HAVE "$@"
 }
 
-#   `cmake_option Foo        -> foo     ? -DFoo:BOOL=TRUE        : -DFoo:BOOL=FALSE
-#   `cmake_option FOO Bar    -> bar     ? -DFOO_Bar:BOOL=TRUE    : -DFOO_Bar:BOOL=FALSE
+#   `cmake_option Foo            -> foo     ? -DFoo:BOOL=TRUE        : -DFoo:BOOL=FALSE
+#   `cmake_option bar FOO_Bar    -> bar     ? -DFOO_Bar:BOOL=TRUE    : -DFOO_Bar:BOOL=FALSE
 cmake_option() {
     illegal_in_global_scope
 

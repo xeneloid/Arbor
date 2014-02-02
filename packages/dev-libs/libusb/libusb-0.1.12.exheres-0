@@ -7,7 +7,7 @@ require sourceforge [ suffix=tar.gz ] easy-multibuild [ work=${PNV} ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
 
 SUMMARY="Userspace access to USB devices"
-
+HOMEPAGE="http://${PN}.info"
 LICENCES="LGPL-2"
 SLOT="0.1"
 PLATFORMS="~amd64 ~x86"

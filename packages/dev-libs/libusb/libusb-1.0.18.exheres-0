@@ -1,13 +1,10 @@
-# Copyright 2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2013-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge
 
 SUMMARY="library that provides generic access to USB devices"
-DESCRIPTION="
-libusbx a fork of libusb and designed as a drop in replacement for it.
-"
-
+HOMEPAGE="http://${PN}.info"
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
 
@@ -24,8 +21,8 @@ DEPENDENCIES="
         sys-libs/glibc[>=2.9]
     build+run:
         sys-apps/systemd [[ note = [ udev is used for device enumeration and hotplug support ] ]]
-        !dev-libs/libusb:1 [[
-            description = [ dev-libs/libusbx is a fork and drop-in replacement of dev-libs/libusb ]
+        !dev-libs/libusbx:1 [[
+            description = [ dev-libs/libusbx won and was renamed back to libusb ]
             resolution = uninstall-blocked-after
         ]]
 "

@@ -2,33 +2,43 @@
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam pn=${MY_PN:-${PN}}
-myexparam pv=${MY_PV:-${PV}}
-myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 myexparam user=$(exparam pn)
 
-# Only used for proper tarballs that can be downloaded from https://github.com/downloads/<user>/<pn>
-# Automatically generated tarballs from git trees (see below) always use tar.gz
-myexparam suffix=tar.bz2
-
-# the tag or commit hash to get as a tarball
 myexparam rev=${GITHUB_REVISION}
+myexparam tag=${GITHUB_TAG:-${MY_PV:-${PV}}}
 
 # branch can only be used for scm versions
 myexparam branch=${GITHUB_BRANCH}
+
+# For manually generated tarballs that can be uploaded.
+# github has deprecated this API though and it might vanish in the future.
+# Not sure if the downloads will stay then.
+# Automatically generated tarballs from git trees (see below) always use tar.gz
+myexparam suffix=
+myexparam pv=${MY_PV:-${PV}}
+myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
 HOMEPAGE="https://github.com/$(exparam user)/$(exparam pn)"
 
 if ever is_scm ; then
     SCM_REPOSITORY="git://github.com/$(exparam user)/$(exparam pn).git"
-    [[ -n $(exparam branch) ]] && SCM_BRANCH="$(exparam branch)"
+    exparam -v SCM_BRANCH branch
     require scm-git
+elif [[ -n $(exparam suffix) ]] ; then
+    DOWNLOADS="https://github.com/downloads/$(exparam user)/$(exparam pn)/$(exparam pnv).$(exparam suffix)"
+    WORK="${WORKBASE}"/$(exparam pnv)
 else
     if [[ -n $(exparam rev) ]] ; then
-        DOWNLOADS="https://github.com/$(exparam user)/$(exparam pn)/archive/$(exparam rev).tar.gz -> ${PNV}.tgz"
-        WORK="${WORKBASE}/$(exparam pn)-$(exparam rev)"
-    else
-        DOWNLOADS="https://github.com/downloads/$(exparam user)/$(exparam pn)/$(exparam pnv).$(exparam suffix)"
-        WORK="${WORKBASE}"/$(exparam pnv)
+        exparam -v what rev
+        exparam -v work rev
+    elif [[ -n $(exparam tag) ]] ; then
+        exparam -v what tag
+        exparam -v work tag
+        # github strips the one leading 'v' from tags if it is followed by a number
+        [[ ${work} =~ ^v[0-9] ]] && work=${work#v}
     fi
+
+    DOWNLOADS="https://github.com/$(exparam user)/$(exparam pn)/archive/${what}.tar.gz -> ${PNV}.tgz"
+    WORK="${WORKBASE}/$(exparam pn)-${work////-}"
 fi
 

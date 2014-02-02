@@ -1,4 +1,4 @@
-# Copyright 2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2013-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Virtual for libusb/libusbx"
@@ -11,9 +11,6 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        || (
-            dev-libs/libusbx:1
-            dev-libs/libusb:1
-        )
+        dev-libs/libusb:1
 "
 

@@ -1,4 +1,4 @@
-# Copyright 2009 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge [ suffix=tar.gz ]
@@ -13,16 +13,13 @@ PDFCrack features both a dictionary and brute-force mode.
 
 BUGS_TO="philantrop@exherbo.org"
 
-UPSTREAM_RELEASE_NOTES="http://sourceforge.net/project/shownotes.php?group_id=168561&release_id=617515"
-
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
-
 DEPENDENCIES=""
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-Makefile.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-0.11-Makefile.patch )
 
 src_install() {
     emagicdocs

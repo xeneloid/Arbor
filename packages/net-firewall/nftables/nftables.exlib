@@ -1,6 +1,8 @@
-# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Copyright 2014 Julien Pivotto <roidelapluie@inuits.eu>
 # Distributed under the terms of the GNU General Public License v2
+
+require libnetfilter
 
 SUMMARY="nftables user space utility"
 DESCRIPTION="
@@ -11,22 +13,18 @@ is built upon the building blocks of the Netfilter infrastructure such as the
 existing hooks, the connection tracking system, the userspace queueing component
 and the logging subsystem.
 "
-HOMEPAGE="http://netfilter.org/projects/${PN}"
-DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
 
-BUGS_TO="roidelapluie@inuits.eu philantrop@exherbo.org"
-REMOTE_IDS="freecode:${PN}"
-
-UPSTREAM_CHANGELOG="${HOMEPAGE}/files/changes-iptables-${PV}.txt [[ lang = en ]]"
-UPSTREAM_DOCUMENTATION="http://netfilter.org/documentation/"
+BUGS_TO+="roidelapluie@inuits.eu"
 
 LICENCES="GPL-2"
-SLOT="0"
 MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        dev-libs/gmp
         net-libs/libmnl
         net-libs/libnftnl
+    suggestion:
+        app-doc/docbook2X
 "
 
