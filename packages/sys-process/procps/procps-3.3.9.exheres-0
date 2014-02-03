@@ -19,7 +19,7 @@ DEPENDENCIES="
         sys-devel/gettext
     build+run:
         sys-libs/ncurses
-        systemd? ( sys-apps/systemd )
+        systemd? ( sys-apps/systemd[>=206] )
         !sys-apps/sysvinit-tools[<2.88-r6] [[
             description = [ procps now provides pidof ]
             resolution = upgrade-blocked-before
