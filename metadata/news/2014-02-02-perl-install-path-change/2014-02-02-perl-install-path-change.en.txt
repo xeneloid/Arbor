@@ -1,0 +1,20 @@
+Title: Perl 5.18.2 changed installation path for modules
+Author: Benedikt Morbach <moben@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-02-02
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/perl
+
+perl has been bumped to 5.18.2
+As of this version, the path to which perl modules are installed has changed.
+You need to rebuild all packages that install perl modules after you updated perl.
+To do this you can run:
+	cave resolve -1x $(cave print-owners -f '%c/%p:%s ' /usr/LIBDIR/perl5/vendor_perl)
+
+where LIBDIR is 'lib' if you are on a 32bit arch and 'lib64' if you are on 64bit.
+
+If you installed any site-modules manually, you have to reinstall those as well.
+
+The upside to this is that in the future, perl modules will ony need to be rebuilt on major version bumps.
+

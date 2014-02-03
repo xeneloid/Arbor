@@ -1,7 +1,10 @@
 # Copyright 2008 Fernando J. Pereda
+# Copyright 2013 Johannes Nixdorf <mixi@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'postfix-2.5.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
+
+export_exlib_phases src_configure src_install
 
 require pam alternatives systemd-service
 
@@ -16,7 +19,6 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/announcements/${PNV}.html [[ lang = en ]]"
 
 LICENCES="IPL-1.0"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
 MYOPTIONS="baselayout cyrus ldap ssl mysql"
 
 DEPENDENCIES="
@@ -35,40 +37,42 @@ DEPENDENCIES="
     ssl? ( dev-libs/openssl )
 "
 
-src_compile() {
-    local ccargs="" auxlibs=""
+BUGS_TO="mixi@exherbo.org"
 
-    auxlibs+=" -pthread -lpam"
+postfix_src_configure() {
+    local \
+        auxlibs=( -pthread -lpam ) \
+        ccargs=( '-DDEF_DAEMON_DIR=\"/usr/${LIBDIR}/postfix\"'
+                 '-DDEF_MANPAGE_DIR=\"/usr/share/man\"'
+                 '-DDEF_README_DIR=\"/usr/share/doc/${PNVR}/readme\"'
+                 '-DDEF_HTML_DIR=\"/usr/share/doc/${PNVR}/html\"'
+                  -DUSE_SASL_AUTH )
 
-    if option ssl ; then
-        ccargs+=" -DUSE_TLS"
-        auxlibs+=" -lssl -lcrypto"
+    if option ssl; then
+        ccargs+=( -DUSE_TLS )
+        auxlibs+=( -lssl -lcrypto )
     fi
 
-    ccargs+=' -DUSE_SASL_AUTH'
-    if option cyrus ; then
-        ccargs+=" -DUSE_CYRUS_SASL -I/usr/include/sasl"
-        auxlibs+=" -lsasl2"
+    if option cyrus; then
+        ccargs+=( -DUSE_CYRUS_SASL -I/usr/include/sasl )
+        auxlibs+=( -lsasl2 )
     fi
-    if option ldap ; then
-        ccargs+=" -DHAS_LDAP"
-        auxlibs+=" -lldap -llber"
+
+    if option ldap; then
+        ccargs+=( -DHAS_LDAP )
+        auxlibs+=( -lldap -llber )
     fi
-    if option mysql ; then
-        ccargs+=" -DHAS_MYSQL -I/usr/include/mysql"
-        auxlibs+=" -L/usr/${LIBDIR}/mysql/ -lmysqlclient -lz -lm"
+
+    if option mysql; then
+        ccargs+=( -DHAS_MYSQL -I/usr/include/mysql )
+        auxlibs+=( -L/usr/${LIBDIR}/mysql/ -lmysqlclient -lz -lm )
     fi
-    ccargs+=' -DDEF_DAEMON_DIR=\"/usr/'${LIBDIR}'/postfix\"'
-    ccargs+=' -DDEF_MANPAGE_DIR=\"/usr/share/man\"'
-    ccargs+=' -DDEF_README_DIR=\"/usr/share/doc/'${PNVR}'/readme\"'
-    ccargs+=' -DDEF_HTML_DIR=\"/usr/share/doc/'${PNVR}'/html\"'
 
     emake CC="${CC}" OPT="${CFLAGS}" \
-        CCARGS="${ccargs}" AUXLIBS="${auxlibs}" makefiles
-    emake
+        CCARGS="${ccargs[*]}" AUXLIBS="${auxlibs[*]}" makefiles
 }
 
-src_install() {
+postfix_src_install() {
     edo /bin/sh postfix-install \
         -non-interactive \
         install_root="${IMAGE}" \
