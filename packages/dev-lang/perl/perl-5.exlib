@@ -15,7 +15,7 @@ export_exlib_phases src_unpack src_prepare src_configure src_test src_install
 myexparam Module_Build_pv=
 myexparam cross_perl_ver=[ ]
 
-exparam -v CROSS_PERL_VER cross_perl_ver
+exparam -v CROSS_PERL_VER cross_perl_ver[@]
 
 SUMMARY="Perl is a general-purpose programming language originally developed for text manipulation"
 HOMEPAGE="http://www.perl.org"
