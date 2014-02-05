@@ -327,6 +327,7 @@ EOF
         # installed repository. Until this is fixed, just assume the prefix is "${CHOST}-".
         edo env                                                                                     \
             CC="${CC} -B/usr/${CHOST}/${host}/bin"                                                  \
+            CXX="${CXX} -B/usr/${CHOST}/${host}/bin"                                                \
             CFLAGS_FOR_TARGET="${!target_cflags_var}"                                               \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"                                             \
             CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"                                           \
