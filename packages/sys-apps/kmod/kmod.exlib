@@ -49,31 +49,34 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 AT_M4DIR=( m4 )
 
 src_install() {
-    local alternatives=(
-        kmod-tools ${PN} 10
-        /usr/$(exhost --target)/bin/lsmod       ${PN}.lsmod
-        /usr/share/man/man5/depmod.d.5          ${PN}.depmod.d.5
-        /usr/share/man/man5/modprobe.d.5        ${PN}.modprobe.d.5
-        /usr/share/man/man5/modules.dep.5       ${PN}.modules.dep.5
-        /usr/share/man/man5/modules.dep.bin.5   ${PN}.modules.dep.bin.5
-        /usr/share/man/man8/depmod.8            ${PN}.depmod.8
-        /usr/share/man/man8/insmod.8            ${PN}.insmod.8
-        /usr/share/man/man8/lsmod.8             ${PN}.lsmod.8
-        /usr/share/man/man8/modinfo.8           ${PN}.modinfo.8
-        /usr/share/man/man8/modprobe.8          ${PN}.modprobe.8
-        /usr/share/man/man8/rmmod.8             ${PN}.rmmod.8
-    )
+    local host=$(exhost --target)
 
     default
 
-    dodir /usr/$(exhost --target)/sbin
-    dosym kmod /usr/$(exhost --target)/bin/lsmod
-    dosym kmod /usr/$(exhost --target)/sbin/lsmod
-
-    alternatives_for "${alternatives[@]}"
+    # alternatives
+    dodir /usr/${host}/{,s}bin
+    local a alternatives=( kmod-tools ${PN} 10 )
+    for a in depmod insmod modinfo modprobe lsmod rmmod; do
+        dosym ../bin/kmod /usr/${host}/sbin/${a}
+        alternatives+=(
+            /usr/${host}/sbin/${a}     ${PN}.${a}
+            /usr/share/man/man8/${a}.8 ${PN}.${a}.8
+        )
+    done
 
     if ! option bash-completion ; then
         edo rm -r "${IMAGE}"/no
     fi
+
+    dosym kmod /usr/${host}/bin/${PN}.lsmod
+    alternatives+=(
+        /usr/${host}/bin/lsmod                  ${PN}.lsmod
+        /usr/share/man/man5/depmod.d.5          ${PN}.depmod.d.5
+        /usr/share/man/man5/modprobe.d.5        ${PN}.modprobe.d.5
+        /usr/share/man/man5/modules.dep.5       ${PN}.modules.dep.5
+        /usr/share/man/man5/modules.dep.bin.5   ${PN}.modules.dep.bin.5
+    )
+
+    alternatives_for "${alternatives[@]}"
 }
 
