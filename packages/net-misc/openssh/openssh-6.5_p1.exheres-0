@@ -69,6 +69,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-6.3_p1-allow-host-prefixed-ar.patch
     -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
 )
 
@@ -146,6 +147,7 @@ src_test() {
 
 src_install() {
     emake install-nokeys DESTDIR="${IMAGE}"
+
     edo chmod 600 "${IMAGE}"/etc/ssh/sshd_config
     dobin contrib/ssh-copy-id
 

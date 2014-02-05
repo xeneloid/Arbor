@@ -69,6 +69,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-6.3_p1-allow-host-prefixed-ar.patch
     -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
     "${FILES}"/${PN}-6.3-CVE-2013-4548.patch
 )
@@ -112,8 +113,7 @@ src_configure() {
         $(option_with ldns) \
         $(option_with readline libedit) \
         $(option_with pam) \
-        $(option_with tcpd tcp-wrappers) \
-        ac_cv_path_AR="${AR}"
+        $(option_with tcpd tcp-wrappers)
 }
 
 src_compile() {
@@ -148,8 +148,6 @@ src_test() {
 
 src_install() {
     emake install-nokeys DESTDIR="${IMAGE}"
-
-    into /usr/$(exhost --target)
 
     edo chmod 600 "${IMAGE}"/etc/ssh/sshd_config
     dobin contrib/ssh-copy-id
