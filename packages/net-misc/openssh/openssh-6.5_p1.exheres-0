@@ -88,7 +88,7 @@ src_prepare() {
     fi
 
     edo sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h
-    edo sed -i -e "s:-lcrypto:$(pkg-config --libs openssl):" configure.ac
+    edo sed -i -e "s:-lcrypto:$($(exhost --tool-prefix)pkg-config --libs openssl):" configure.ac
 
     eautoreconf
 }
