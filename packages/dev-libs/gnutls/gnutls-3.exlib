@@ -14,9 +14,11 @@ DOWNLOADS="ftp://ftp.${PN}.org/gcrypt/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
 
 LICENCES="LGPL-2.1"
 SLOT="0"
-MYOPTIONS="doc
+MYOPTIONS="
+    doc
     pkcs11 [[ description = [ Use p11-kit to support multiple external pkcs11 providers ] ]]
-multibuild_c: 32 64"
+    multibuild_c: 32 64
+"
 
 DEPENDENCIES="
     build:
@@ -26,26 +28,21 @@ DEPENDENCIES="
         dev-libs/libtasn1[>=3.1][multibuild_c:*(-)?]
         dev-libs/nettle[>=2.7][multibuild_c:*(-)?]
         sys-libs/zlib[>=1.2.3][multibuild_c:*(-)?]
-        pkcs11? ( dev-libs/p11-kit[multibuild_c:*(-)?] )
+        pkcs11? ( dev-libs/p11-kit[>=0.11][multibuild_c:*(-)?] )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-local-libopts # else the build fails with autogen installed
+    --disable-crywrap
     --disable-guile
     --disable-valgrind-tests
     --with-zlib
-    --disable-crywrap
-    --enable-local-libopts # else the build fails with autogen installed
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'doc gtk-doc' 'pkcs11 p11-kit' )
 
 AT_M4DIR=( m4 gl/m4 src/libopts/m4/ )
 
 gnutls-3_src_prepare() {
-    # Thomas Witt
-    # Upstream: reported
-    # Reason: cert-test, complex-cert fails if builddir and srcdir differ
-    edo sed -i -e 's+$srcdir/tmp-pem.pem+tmp-pem.pem+' tests/cert-tests/pem-decoding
-
     # Source: Trond A Ekseth <troeks@gmail.com>
     # Upstream: No
     # Reason: Binding to 0.0.0.0 creates access violations under sydbox.
@@ -59,13 +56,13 @@ gnutls-3_src_prepare() {
     edo sed -e '/TESTS =/s:testdsa::' -i tests/dsa/Makefile.am
     edo sed -e '/TESTS +=/s:testcerts::' -i tests/openpgp-certs/Makefile.am
 
-    # Disable a test that fails to return
-    edo sed -i -e s/mini-loss-time// tests/Makefile.am
-
     autotools_src_prepare
 }
 
 test_one_multibuild() {
+    # pkcs12-decode requires it's test data in builddir
+    edo cp "${WORK}"/tests/pkcs12-decode/*.p12 "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/tests/pkcs12-decode/"
+
     esandbox allow_net "LOOPBACK@80"
     esandbox allow_net "LOOPBACK@5559"
     esandbox allow_net --connect "LOOPBACK@5557"
