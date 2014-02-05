@@ -3,7 +3,7 @@
 # Based in part upon 'screen-4.0.3.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
-require gnu [ suffix=bz2 ] pam autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
+require gnu [ suffix=bz2 ] pam autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ]
 
 SUMMARY="A full-screen terminal multiplexer/window manager"
 DOWNLOADS="ftp://ftp.uni-erlangen.de/pub/utilities/${PN}/${PNV}.tar.gz"

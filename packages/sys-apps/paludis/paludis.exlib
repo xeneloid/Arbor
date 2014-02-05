@@ -23,10 +23,6 @@ DEPENDENCIES="
         virtual/pkg-config
         doc? (
             app-doc/doxygen
-            python? (
-                dev-python/epydoc
-                dev-python/Pygments
-            )
             ruby? (
                 dev-ruby/syntax
             )
@@ -55,7 +51,7 @@ DEPENDENCIES="
         net-misc/rsync
         sys-apps/sydbox[>=0.7.6]
         sys-devel/dwz
-        bash-completion? (  app-shells/bash-completion[>=1.1] )
+        bash-completion? ( app-shells/bash-completion[>=1.1] )
     post:
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )"
 
@@ -72,6 +68,9 @@ if ever at_least scm; then
             app-doc/asciidoc[>=8.6.3]
             app-text/tidy
             app-text/xmlto
+            doc? (
+                python? ( dev-python/Sphinx )
+            )
     "
 else
     MYOPTIONS+=" prebuilt-documentation [[ description = [ Use prebuilt documentation ] ]]"
@@ -80,6 +79,12 @@ else
             !prebuilt-documentation? (
                 app-doc/asciidoc[>=8.6.3]
                 app-text/xmlto
+            )
+            doc? (
+                python? (
+                    dev-python/epydoc
+                    dev-python/Pygments
+                )
             )
     "
 fi
