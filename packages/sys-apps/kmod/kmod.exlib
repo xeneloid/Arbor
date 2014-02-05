@@ -37,9 +37,6 @@ DEPENDENCIES="
         ]]
 "
 
-ECONF_SOURCE=${WORK}
-WORK=${WORKBASE}/build
-
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-logging' '--enable-manpages' '--enable-tools' '--with-xz'
                                '--with-zlib' )
 
@@ -50,20 +47,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 )
 
 AT_M4DIR=( m4 )
-
-src_unpack() {
-    default
-    edo mkdir "${WORK}"
-}
-
-src_test() {
-    if exhost --is-native -q; then
-        edo mkdir testsuite
-        default
-    else
-        echo "cross compiled host, skipping tests"
-    fi
-}
 
 src_install() {
     local alternatives=(
