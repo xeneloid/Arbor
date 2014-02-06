@@ -1,4 +1,4 @@
-# Copyright 2009, 2010, 2012 Ingmar Vanhassel
+# Copyright 2009, 2010, 2012, 2013, 2014 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A search engine library"
@@ -12,7 +12,7 @@ the Probabilistic Information Retrieval model and also supports a rich set of
 boolean query operators.
 "
 HOMEPAGE="http://www.xapian.org/"
-DOWNLOADS="http://oligarchy.co.uk/xapian/${PV}/${PNV}.tar.gz"
+DOWNLOADS="http://oligarchy.co.uk/xapian/${PV}/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -23,8 +23,13 @@ UPSTREAM_RELEASE_NOTES="http://svn.xapian.org/*checkout*/tags/${PV}/${PN}/NEWS"
 # The thousands (!) of tests are very, very expensive in terms of runtime.
 RESTRICT="test"
 
+DEPENDENCIES="
+    build:
+        app-arch/xz
+"
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    # Don't run tests under valgrind if present, takes ages
+    # Don\'t run tests under valgrind if present, takes ages
     VALGRIND=
     --disable-documentation
 )
