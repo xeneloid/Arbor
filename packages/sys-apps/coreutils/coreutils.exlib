@@ -5,7 +5,7 @@
 require gnu [ suffix=xz ]
 require alternatives
 
-export_exlib_phases src_configure src_test src_test_expensive src_install
+export_exlib_phases src_prepare src_configure src_test src_test_expensive src_install
 
 SUMMARY="Core file, shell and text utilities expected to be on any system."
 
@@ -31,6 +31,13 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-install-program=arch,hostname
     --enable-largefile
 )
+
+coreutils_src_prepare() {
+    # Don't try rebuilding the (unchanged anyway) man pages. The help2man step
+    # loves to fail if done during cross-compiles and for chroots.
+    set -- man/*.x
+    touch ${@/%x/1}
+}
 
 coreutils_src_configure() {
     # Configuration takes a million years without this hack.
