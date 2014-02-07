@@ -107,6 +107,8 @@ dbus_src_test() {
 }
 
 dbus_src_install() {
+    local host=$(exhost --target)
+
     default
 
     if ! option doc ; then
@@ -124,11 +126,11 @@ dbus_src_install() {
     keepdir \
             /etc/dbus-1/session.d/              \
             /etc/dbus-1/system.d/               \
-            /usr/libexec/dbus-1                 \
+            /usr/${host}/libexec/dbus-1         \
             /usr/share/dbus-1/services          \
             /usr/share/dbus-1/system-services   \
             /var/lib/dbus                       \
-            /usr/$(exhost --target)/lib/dbus-1.0/test
+            /usr/${host}/lib/dbus-1.0/test
 
     if option doc; then
         insinto /usr/share/doc/${PNVR}/html/
