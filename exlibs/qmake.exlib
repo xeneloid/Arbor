@@ -2,7 +2,7 @@
 # Copyright 2014 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-# EQMAKE4_SOURCES
+# EQMAKE_SOURCES
 # TODO: CONFIG += / -=
 
 export_exlib_phases src_configure
@@ -41,7 +41,7 @@ eqmake() {
 
     [[ -x ${qmake_path} ]] || die "eqmake() called but no qmake found under ${qmake_path}"
 
-    [[ ${@} == ${@%.pro} && -z ${EQMAKE4_SOURCES[@]} ]] && EQMAKE4_SOURCES=( ${PN}.pro )
+    [[ ${@} == ${@%.pro} && -z ${EQMAKE_SOURCES[@]} ]] && EQMAKE_SOURCES=( ${PN}.pro )
 
     edo ${qmake_path} \
         QTDIR="/usr/${LIBDIR}" \
@@ -54,10 +54,10 @@ eqmake() {
         QMAKE_LFLAGS_DEBUG="${LDFLAGS}" \
         CONFIG+=nostrip \
         "${EQMAKE_PARAMS[@]}" \
-        "${EQMAKE4_SOURCES[@]}" "${@}"
+        "${EQMAKE_SOURCES[@]}" "${@}"
 }
 
-qmake4_src_configure() {
+qmake_src_configure() {
     illegal_in_global_scope
 
     eqmake ${qt_slot}
