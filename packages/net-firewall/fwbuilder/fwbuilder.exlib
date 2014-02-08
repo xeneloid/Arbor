@@ -1,7 +1,7 @@
 # Copyright 2009-2012 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 ] ] qmake4
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 ] ] qmake
 
 export_exlib_phases src_prepare src_configure src_install
 
@@ -45,7 +45,7 @@ fwbuilder_src_prepare() {
     edo sed -i -e "/\.\/configure/d" autogen.sh
     edo ./autogen.sh
 
-    # We're running eqmake4 instead.
+    # We're running eqmake instead.
     edo sed -i -e '/runqmake.sh/d' configure
 }
 
@@ -54,7 +54,7 @@ fwbuilder_src_configure() {
 
     default
 
-    eqmake4 -recursive
+    eqmake -recursive
 }
 
 fwbuilder_src_install() {

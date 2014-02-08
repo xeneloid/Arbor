@@ -4,7 +4,7 @@
 # Based in part upon 'doxygen-1.5.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require qmake4 [ no_qt_dependency=true ] freedesktop-mime
+require qmake freedesktop-mime
 
 SUMMARY="Documentation system for C++, C, Java, Objective-C, Python, IDL, and other languages"
 HOMEPAGE="http://www.doxygen.org/"
@@ -52,7 +52,7 @@ DEPENDENCIES="
         qt4? ( x11-libs/qt:4[>=4.3.0] )
 "
 
-# Prevent Makefiles from running "qmake"; run "eqmake4" instead in src_configure
+# Prevent Makefiles from running "qmake"; run "eqmake" instead in src_configure
 DEFAULT_SRC_COMPILE_PARAMS=( QMAKE=true )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( LANGUAGE.HOWTO )
 DEFAULT_SRC_INSTALL_PARAMS=( MAN1DIR="share/man/man1" )
@@ -87,7 +87,7 @@ src_prepare() {
 }
 
 src_configure() {
-    option qt4 && eqmake4 addon/doxywizard/doxywizard.pro -o addon/doxywizard/Makefile.doxywizard
+    option qt4 && eqmake addon/doxywizard/doxywizard.pro -o addon/doxywizard/Makefile.doxywizard
 
     # Custom configure file hates --without-* and most standard econf options
     edo ./configure \
