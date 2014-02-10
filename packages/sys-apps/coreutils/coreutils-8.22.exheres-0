@@ -1,7 +1,9 @@
 # Copyright 2007-2009 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require coreutils
+# Yes, it partly works with automake-1.13 but a bug when generating the man pages
+# can cause the build to fail. So, let's keep 1.12 here for the time being.- WK
+require coreutils autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
 
 PLATFORMS="~amd64 ~arm ~x86"
 
@@ -24,6 +26,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 # random failures for some tests (with sydbox), at least:
 # test-fchownat test-fdutimensat test-getaddrinfo test-getlogin test-linkat test-symlinkat test-unlinkat test-utimensat
 RESTRICT="test"
+
+AT_M4DIR=( m4 )
 
 src_test() {
     # hard code the limit until we find a better way
