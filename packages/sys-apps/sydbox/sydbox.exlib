@@ -8,9 +8,9 @@ DESCRIPTION="
 Sydbox is a ptrace based sandbox for Linux.
 "
 if ever at_least 1; then
-    HOMEPAGE="http://git.exherbo.org/?p=${PN}-1.git;a=summary"
+    HOMEPAGE="http://git.exherbo.org/sydbox-1.git"
 else
-    HOMEPAGE="http://git.exherbo.org/?p=${PN}.git;a=summary"
+    HOMEPAGE="http://git.exherbo.org/sydbox.git"
 fi
 DOWNLOADS="http://dev.exherbo.org/~alip/${PN}/${PNV}.tar.bz2"
 

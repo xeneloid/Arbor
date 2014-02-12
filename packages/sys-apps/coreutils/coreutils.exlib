@@ -15,6 +15,7 @@ MYOPTIONS="acl caps gmp xattr
 
 DEPENDENCIES="
     build:
+        dev-lang/perl [[ description = [ needed by help2man & colour stuff ] ]]
         sys-devel/gettext[>=0.18.1]
     build+run:
         acl? ( sys-apps/acl )

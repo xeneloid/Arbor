@@ -1,4 +1,4 @@
-# Copyright 2010-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 export_exlib_phases src_install
@@ -14,8 +14,8 @@ into Windows.
 "
 HOMEPAGE="http://horms.net/projects/kexec"
 DOWNLOADS="
-    mirror://kernel/linux/utils/kernel/${PN/-tools}/${PNV}.tar.bz2
-    ${HOMEPAGE}/${PN}/${PNV}.tar.bz2
+    mirror://kernel/linux/utils/kernel/${PN/-tools}/${PNV}.tar.xz
+    ${HOMEPAGE}/${PN}/${PNV}.tar.xz
 "
 
 BUGS_TO="philantrop@exherbo.org"

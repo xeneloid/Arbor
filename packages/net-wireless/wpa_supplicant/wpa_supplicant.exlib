@@ -5,7 +5,7 @@
 myexparam -b checkout=false
 exparam -v CHECKOUT checkout
 
-require qmake4 [ no_qt_dependency=true ] systemd-service
+require qmake systemd-service
 
 SUMMARY="Linux WPA/WPA2/IEEE 802.1X Supplicant"
 DESCRIPTION="
@@ -244,7 +244,7 @@ src_configure() {
     # seconds.
     #config_enable DELAYED_MIC_ERROR_REPORT
 
-    option qt4 && eqmake4 -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
+    option qt4 && eqmake -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
 }
 
 src_compile() {

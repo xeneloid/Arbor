@@ -14,7 +14,8 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/ANNOUNCEMENT [[ lang = en ]]"
 
 LICENCES="GPL-3 LGPL-3"
 SLOT="0"
-MYOPTIONS="python
+MYOPTIONS="
+    python
     ( linguas:
         da de es fi fr ga id it ja nl pt_BR ro ru rw sv tr uk vi zh_CN
     )
@@ -31,7 +32,7 @@ DEPENDENCIES="
         dev-libs/expat
         dev-libs/gmp:=[>=4.2]
         dev-libs/mpc:=[>=0.8.0]
-        dev-libs/mpfr:=[>=2.3.1]
+        dev-libs/mpfr:=[>=2.4.0]
         sys-libs/ncurses[>=5.2]
         sys-libs/readline
         python? ( dev-lang/python:= )
@@ -63,12 +64,9 @@ src_test_expensive() {
 src_install() {
     default
 
-    if option !python ; then
-        edo rm -r "${IMAGE}"/usr/share/gdb/python/{gdb,}
-    fi
-
     # sys-devel/binutils installs opcodes.mo
     edo find "${IMAGE}" -name opcodes.mo -delete
+
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
 
