@@ -64,7 +64,7 @@ configure_one_multibuild() {
 
         if option platform:arm ; then
             configuration=linux-armv4
-        elif option platform:amd64 || option platform:x86
+        elif option platform:amd64 || option platform:x86 ; then
             configuration=linux-elf
         else
             die "unsupported platform"
