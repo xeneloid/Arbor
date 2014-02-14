@@ -1,0 +1,17 @@
+Author: Saleem Abdulrasool <compnerd@compnerd.org>
+Upstream: No
+Reason: exherbo mishandles gmp slotting, resulting in incompatible building
+--- 
+--- mpfr-2.4.2/mpfr.h   2014-02-14 06:09:36.074830644 +0000
++++ mpfr-2.4.2/mpfr.h   2014-02-14 06:09:55.829600648 +0000
+@@ -39,6 +39,10 @@
+ # include <gmp.h>
+ #endif
+
++#ifndef __gmp_const
++#  define __gmp_const const
++#endif
++
+ /* Check if stdio.h is included or if the user wants FILE */
+ #if defined (_GMP_H_HAVE_FILE) || defined (MPFR_USE_FILE)
+ # define _MPFR_H_HAVE_FILE 1
