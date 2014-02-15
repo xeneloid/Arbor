@@ -12,6 +12,8 @@ git-review is a tool that helps submitting git branches to gerrit for review.
 "
 HOMEPAGE="https://launchpad.net/${PN}"
 
+BUGS_TO="philantrop@exherbo.org"
+
 LICENCES="Apache-2.0"
 SLOT="0"
 PLATFORMS="~amd64 ~arm"
