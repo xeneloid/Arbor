@@ -1,5 +1,5 @@
 # Copyright 2010 Jan Meier <jan@codejunky.org>
-# Copyright 2008-2013 Wulf C. Krueger
+# Copyright 2008-2014 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'ppp-2.4.4-r21.ebuild' from Gentoo, which is:
 #       Copyright 1999-2008 Gentoo Foundation
@@ -19,7 +19,8 @@ UPSTREAM_DOCUMENTATION="http://www.samba.org/ppp/documentation.html"
 BUGS_TO="philantrop@exherbo.org"
 
 HOMEPAGE="http://www.samba.org/ppp"
-DOWNLOADS="ftp://ftp.samba.org/pub/ppp/${PNV}.tar.gz
+DOWNLOADS="
+    ftp://ftp.samba.org/pub/ppp/${PNV}.tar.gz
     http://dev.exherbo.org/~philantrop/distfiles/${PN}-2.4.4-scripts-${SCRIPT_VER}.tar.bz2
 "
 
@@ -41,8 +42,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/respect-cflags.patch
-    "${FILES}"/gtk2.patch
-    "${FILES}"/${PNV}-pppol2tp.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
@@ -64,8 +63,6 @@ src_prepare() {
         edo sed -i "s/^#USE_PAM=y/USE_PAM=y/" pppd/Makefile.linux
     fi
 
-    edo sed -i "s/#HAVE_INET6/HAVE_INET6/" pppd/Makefile.linux
-
     edo sed -i "s/^#CBCP=y/CBCP=y/" pppd/Makefile.linux
 
     # Set correct libdir
@@ -80,8 +77,6 @@ src_prepare() {
         edo sed -e "s:/etc/radiusclient:/etc/ppp/radius:g" \
                 -i pppd/plugins/radius/{*.8,*.c,*.h,etc/*}
     fi
-
-    edo rm include/linux/if_pppol2tp.h
 }
 
 src_install() {
