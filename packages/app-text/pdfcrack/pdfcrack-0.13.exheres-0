@@ -19,7 +19,15 @@ PLATFORMS="~amd64"
 MYOPTIONS=""
 DEPENDENCIES=""
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-0.11-Makefile.patch )
+src_prepare() {
+    default
+
+    # Don't overwrite ${CFLAGS}
+    edo sed -i -e "/^CFLAGS=/d" Makefile
+
+    # Don't hardcode gcc
+    edo sed -i -e "s:gcc:${CC}:" Makefile
+}
 
 src_install() {
     emagicdocs
