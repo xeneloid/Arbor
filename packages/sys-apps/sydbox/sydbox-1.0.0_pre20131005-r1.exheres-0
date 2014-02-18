@@ -13,3 +13,7 @@ DEPENDENCIES="
 
 AT_M4DIR=( m4 )
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-disable-utimensat-for-now.patch
+)
+
