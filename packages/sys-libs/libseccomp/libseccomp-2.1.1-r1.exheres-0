@@ -1,7 +1,7 @@
 # Copyright 2012 Pierre Lejeune <superheron@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix='tar.gz' ]
+require sourceforge [ suffix='tar.gz' ] easy-multibuild [ multiunpack=true ]
 
 SUMMARY="High level interface to the Linux Kernel's seccomp filter"
 DESCRIPTION="
@@ -14,6 +14,10 @@ filtering interface that should be familiar to, and easily adopted by applicatio
 LICENCES="LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
+
+MYOPTIONS="
+    multibuild_c: 32 64
+"
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1
     # The Makefile claims that libseccomp requires gcc-specific functionality, so it looks for the
