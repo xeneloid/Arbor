@@ -1,0 +1,36 @@
+# Copyright 2009 Mike Kelly
+# Copyright 2014 Quentin "Sardem FF7" Glidic <sardemff7@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: Freedesktop notifications providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers:
+        notification-daemon
+        notify-osd
+        dunst
+        eventd
+        awesome
+        notification-daemon-xfce
+        gnome-shell
+        kde-runtime
+    ) [[
+        *description = [ Freedesktop notifications provider ]
+        number-selected = at-least-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:notification-daemon? ( x11-apps/notification-daemon )
+    providers:notify-osd? ( x11-apps/notify-osd )
+    providers:dunst? ( x11-apps/dunst )
+    providers:eventd? ( net/eventd[dbus] )
+    providers:awesome? ( x11-wm/awesome[>=3.1] [[ description = [ with the naughty library ] ]] )
+    providers:notification-daemon-xfce? ( xfce-extra/notification-daemon-xfce )
+    providers:gnome-shell? ( gnome-desktop/gnome-shell )
+    providers:kde-runtime? ( kde/kde-runtime [[ description = [ with knotify ] ]] )
+"
+
