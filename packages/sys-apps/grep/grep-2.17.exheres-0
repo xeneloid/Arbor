@@ -14,7 +14,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext[>=0.18]
+        sys-devel/gettext[>=0.18.2]
     build+run:
         dev-libs/pcre
 "
