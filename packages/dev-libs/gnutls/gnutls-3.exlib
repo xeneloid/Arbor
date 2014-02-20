@@ -61,7 +61,7 @@ gnutls-3_src_prepare() {
 }
 
 test_one_multibuild() {
-    # pkcs12-decode requires it's test data in builddir
+    # pkcs12-decode and set_pkcs12_cred require the test data in builddir
     edo cp "${WORK}"/tests/pkcs12-decode/*.p12 "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/tests/pkcs12-decode/"
 
     esandbox allow_net "LOOPBACK@80"

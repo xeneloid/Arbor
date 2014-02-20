@@ -128,5 +128,8 @@ install_one_multibuild() {
     if option !X && option !gtk; then
         rmdir "${IMAGE}"/usr/${LIBDIR}/${PN}{/${PV},}
     fi
+
+    # use gsc which links to libgs
+    edo mv -f "${IMAGE}"/usr/bin/gs{c,}
 }
 

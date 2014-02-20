@@ -16,6 +16,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-Allow-user-to-override-objdump.patch )
+MYOPTIONS=""
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1
     # The Makefile claims that libseccomp requires gcc-specific functionality, so it looks for the

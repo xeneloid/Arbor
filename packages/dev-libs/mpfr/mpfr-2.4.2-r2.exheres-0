@@ -17,6 +17,8 @@ DEPENDENCIES="
         dev-libs/mpfr:3
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/mpfr-2.4.2-gmp:5.patch" )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-shared )
 
 src_install() {

@@ -27,6 +27,18 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
 _openssl_host_os() {
+    # local configuration=(
+    #   alpha64:linux-alpha-gcc # TODO(compnerd) Alpha64 ev56+ needs -mcpu, linux-alpha+bwx-gcc
+    #   armd64:linux-x86_64
+    #   arm:linux-armv4 # TODO(compnerd) do we want to port android armv7 to Linux?
+    #   ia64:linux-ia64 # TODO(compnerd) ICC should be linux-ia64-icc
+    #   ppc:linux-ppc
+    #   ppc64:linux-ppc64
+    #   s390:linux${MULTIBUILD_TARGET}-s390x
+    #   sparc:linux-sparcv9 # XXX(compnerd) do we even care about sparc v8?
+    #   sparc64:linux64-sparcv9
+    #   x86:linux-elf # TODO(compnerd) ICC should be linux-ia32-icc
+    # )
     case "$(exhost --target)" in
     arm-exherbo-linux-gnueabi)
         echo linux-armv4

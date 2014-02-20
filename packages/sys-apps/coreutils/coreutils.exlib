@@ -1,11 +1,17 @@
 # Copyright 2007-2009 Bryan Østergaard
 # Copyright 2009 Ingmar Vanhassel
+# Copyright 2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ]
-require alternatives
+require gnu [ suffix=xz ] alternatives
+
+export_exlib_phases src_prepare src_configure src_test src_test_expensive src_install pkg_preinst
 
 SUMMARY="Core file, shell and text utilities expected to be on any system."
+
+DOWNLOADS+=" http://dev.exherbo.org/distfiles/${PNV}-man-pages.tar.xz"
+
+BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="GPL-3"
 SLOT="0"
@@ -22,54 +28,89 @@ DEPENDENCIES="
         caps? ( sys-libs/libcap )
         gmp? ( dev-libs/gmp:= )
         xattr? ( sys-apps/attr )
+        !sys-apps/net-tools[<1.60_p20120127084908-r1]  [[
+           description = [ used to install /bin/hostname ]
+           resolution = uninstall-blocked-after
+        ]]
+    test:
+        sys-apps/sydbox[>=0.6.8] [[ note = [ tests fail with sydbox older than 0.6.8 ] ]]
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl 'caps libcap' xattr )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-build-man-local.mk-Don-t-regenerate-the-man-pages.patch
+    "${FILES}"/0001-Disable-tests-that-fail-with-sydbox.patch
+    "${FILES}"/0001-Disable-test-bind-and-test-connect-which-both-want-t.patch
+    "${FILES}"/b469fa044a81762a9eb0da92b4fb47467154c4f1.patch
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    acl
+    "caps libcap"
+    xattr
+)
+
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( gmp )
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-install-program=arch,hostname' '--enable-largefile' )
 
-src_prepare() {
-    default
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-install-program=arch,hostname
+    --enable-largefile
+)
 
-    # avoid generating the man pages for cross compilation, the previous empty
-    # PERL workaround doesn't work anymore with 8.22
-    if ! exhost --is-native -q ; then
-        expatch "${FILES}"/${PN}-mangen.patch
-        set -- man/*.x
-        edo touch ${@/%x/1}
-    fi
+AT_M4DIR=( m4 )
+
+coreutils_src_prepare() {
+    autotools_src_prepare
+
+    # The help2man step loves to fail if done during cross-compiles and for chroots.
+    # Don't try rebuilding the man pages which we pre-generate and put into a
+    # separate tarball. Preparing the man pages tarball works like this:
+    # 1. cave resolve coreutils -z1x --abort-at-phase install
+    # 2. From ${WORK}, take the .1 files in the man sub-directory
+    # 3. Add all .1 files to coreutils-${PV}-man-pages.tar.xz, preserving the paths, e. g.
+    #    coreutils-8.22/man.
+    # 4. Upload it to dev.exherbo.org:/srv/www/dev.exherbo.org/distfiles/
+
+    # Touch the man pages to prevent rebuilding.
+    set -- man/*.x
+    edo touch ${@/%x/1}
 }
 
-src_configure() {
+coreutils_src_configure() {
     # Configuration takes a million years without this hack.
-    esandbox hack_toolong
-    default
-    esandbox nohack_toolong
-}
-
-src_test() {
-    if exhost --is-native -q; then
-        esandbox allow /dev/full
+    # Only necessary with older sydbox versions.
+    if has_version --root "sys-apps/sydbox[<1.0.0_pre]"; then
+        esandbox hack_toolong
         default
-        esandbox disallow /dev/full
+        esandbox nohack_toolong
     else
-        echo "cross compiled host, skipping tests"
+        default
     fi
 }
 
-src_test_expensive() {
-    if exhost --is-native -q; then
-        local -a expensive_tests
-        edo cd tests
-        expensive_tests=($( find . -type f | xargs grep -E --files-with-matches '^(very_|)expensive_$' | sed -e 's:^\./::g'))
-        expensive_tests=("${expensive_tests[@]:-expensive_tests_grep_broke}")
-        emake check RUN_{VERY_,}EXPENSIVE_TESTS=yes TESTS="${expensive_tests[*]}"
-    else
-        echo "cross compiled host, skipping tests"
-    fi
+coreutils_src_test() {
+    # hard code the limit until we find a better way
+    edo sed -e 's/name_max=$(stat -f -c %l .)/name_max=150/' \
+        -i tests/du/long-from-unreadable.sh \
+        -i tests/rm/deep-2.sh
+
+    esandbox allow /dev/full
+
+    default
+
+    esandbox disallow /dev/full
 }
 
-src_install() {
+coreutils_src_test_expensive() {
+    local -a expensive_tests
+
+    edo pushd tests
+    expensive_tests=($( find . -type f | xargs grep -E --files-with-matches '^(very_|)expensive_$' | sed -e 's:^\./::g'))
+    expensive_tests=("${expensive_tests[@]:-expensive_tests_grep_broke}")
+    emake check RUN_{VERY_,}EXPENSIVE_TESTS=yes TESTS="${expensive_tests[*]}"
+    edo popd
+}
+
+coreutils_src_install() {
     default
 
     # NOTE(compnerd) do not provide a link for hostname.  /bin is part of ${PATH} by default, and
@@ -79,15 +120,15 @@ src_install() {
     edo mv "${IMAGE}/usr/$(exhost --target)/bin/hostname" "${IMAGE}/usr/$(exhost --target)/bin/hostname.${PN}"
     edo mv "${IMAGE}/usr/share/man/man1/hostname.1" "${IMAGE}/usr/share/man/man1/hostname.${PN}.1"
 
-    alternatives_for hostname ${PN} 100 \
+    alternatives_for hostname coreutils 100 \
         /usr/$(exhost --target)/bin/hostname /usr/$(exhost --target)/bin/hostname.${PN} \
         /usr/share/man/man1/hostname.1 /usr/share/man/man1/hostname.${PN}.1
 
     insinto /etc
-    newins "${WORK}/src/dircolors.hin" DIR_COLORS
+    newins src/dircolors.hin DIR_COLORS
 }
 
-pkg_preinst() {
+coreutils_pkg_preinst() {
     if exhost --is-native -q && [[ $(readlink -f "${ROOT##/}"/bin) == ${ROOT##/}/bin ]] ; then
         # NOTE(compnerd) preserve legacy paths for paludis
         for bin in bin/pwd bin/rm {,usr/}bin/readlink usr/bin/env ; do

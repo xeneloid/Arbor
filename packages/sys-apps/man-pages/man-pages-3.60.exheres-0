@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Collection of Linux man pages"
-HOMEPAGE="http://www.kernel.org/doc/man-pages/"
-DOWNLOADS="mirror://kernel/linux/docs/man-pages/${PNV}.tar.xz"
+HOMEPAGE="http://www.kernel.org/doc/${PN}"
+DOWNLOADS="mirror://kernel/linux/docs/${PN}/${PNV}.tar.xz"
 
 LICENCES="${PN}"
 SLOT="0"

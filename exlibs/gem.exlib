@@ -20,12 +20,7 @@ HOMEPAGE="http://${PN}.rubyforge.org"
 
 DEPENDENCIES="
     build+run:
-        dev-lang/ruby:=
-        || (
-            dev-lang/ruby:2.0
-            dev-lang/ruby:1.9
-            dev-ruby/rubygems[>=1.2.0]
-        )
+        dev-lang/ruby:=[>=2.0] [[ note = [ gem is included in newer Ruby ] ]]
 "
 
 exparam -b has_rdoc && MYOPTIONS="doc"
