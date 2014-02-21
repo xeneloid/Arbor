@@ -18,6 +18,8 @@ DEPENDENCIES="
         dev-lang/ruby:=
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Fix-tests.patch )
+
 src_configure() {
     edo ruby extconf.rb
 }
