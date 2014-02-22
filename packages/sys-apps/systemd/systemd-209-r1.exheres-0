@@ -5,3 +5,6 @@ require systemd
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+# Temporary measure due to test breakage on multilib
+RESTRICT="test"
+

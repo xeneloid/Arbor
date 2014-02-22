@@ -303,11 +303,11 @@ configure_one_multibuild() {
 
     if ever at_least 209; then
         myconfig+=(
+            --enable-compat-libs
             --enable-dbus
             --enable-multi-seat-x
             --enable-networkd
             --enable-rfkill
-            --disable-compat-libs
             $(option_enable kdbus)
             $(option_enable seccomp)
         )
