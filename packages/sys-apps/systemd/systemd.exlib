@@ -34,9 +34,10 @@ do we support it.
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/${PN}"
 BUGS_TO="philantrop@exherbo.org"
 LICENCES="
-    LGPL-2.1 [[ note = [ Everything but ] ]]
-    GPL-2    [[ note = [ src/udev and ] ]]
-    MIT      [[ note = [ sd-daemon.[ch] and sd-readahead.[ch] ] ]]
+    LGPL-2.1        [[ note = [ Everything but ] ]]
+    GPL-2           [[ note = [ src/udev, ] ]]
+    MIT             [[ note = [ sd-readahead.[ch], ] ]]
+    public-domain   [[ note = [ src/shared/MurmurHash2.c, src/shared/siphash24.c, src/journal/lookup3.c ] ]]
 "
 SLOT="0"
 MYOPTIONS="
@@ -62,6 +63,13 @@ MYOPTIONS="
     zsh-completion
 "
 
+if ever at_least 209; then
+    MYOPTIONS+="
+        kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
+        seccomp [[ description = [ System call filtering support via seccomp ] ]]
+    "
+fi
+
 DEPENDENCIES="
     build:
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
@@ -76,8 +84,7 @@ DEPENDENCIES="
     build+run:
         app-arch/xz
         dev-libs/glib:2[>=2.26]
-        sys-apps/dbus[>=1.4.0]
-        sys-apps/kmod[>=14]
+        sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
         sys-apps/usbutils[>=0.82]
@@ -131,6 +138,20 @@ DEPENDENCIES="
             ]]
         )
 "
+
+if ever at_least 209; then
+    DEPENDENCIES+="
+        build+run:
+            seccomp? ( sys-libs/libseccomp[>=1.0.0] )
+        run:
+            sys-apps/dbus[>=1.4.0]
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            sys-apps/dbus[>=1.4.0]
+    "
+fi
 
 AT_M4DIR=( m4 )
 
@@ -186,7 +207,7 @@ systemd_src_prepare() {
     edo sed -i -e '/test-sched-prio/s:test-sched-prio:$(NULL):' Makefile.am
 
     # Broken.
-    edo sed -i -e '/test-hashmap/s:test-hashmap:$(NULL):' Makefile.am
+    #    edo sed -i -e '/test-hashmap/s:test-hashmap:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -253,7 +274,26 @@ systemd_src_configure() {
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
 
+    if ever at_least 209; then
+        myconfig+=(
+            --enable-compat-libs
+            --enable-dbus
+            --enable-multi-seat-x
+            --enable-networkd
+            --enable-rfkill
+            $(option_enable kdbus)
+            $(option_enable seccomp)
+        )
+    fi
+
     edo mkdir -p src/gudev
+
+    if ever at_least 209; then
+        if option simple-net || option static-net ; then
+            ewarn "WARNING: Both the simple-net and the static-net options will be removed in favour"
+            ewarn "of systemd-networkd in a few releases."
+        fi
+    fi
 
     econf "${myconfig[@]}"
 }
@@ -418,8 +458,10 @@ LC_MEASUREMENT=C
 LC_IDENTIFICATION=C
 EOF
 
-    # Don't create /var/log/journal, the user should do that
-    edo rmdir "${IMAGE}"/var/log/{journal,}
+    if ! ever at_least 209; then
+        # Don't create /var/log/journal, the user should do that
+        edo rmdir "${IMAGE}"/var/log/{journal,}
+    fi
 
     # keepdir some stuff
     keepdir /etc/systemd/session
@@ -534,6 +576,12 @@ systemd_pkg_postinst() {
 
     # Update the message catalogue index
     nonfatal edo /usr/${CHOST}/bin/journalctl --root="${ROOT}" --update-catalog || ewarn "Updating journal message catalogue failed (journalctl --update-catalog)"
+
+    if has_version 'sys-apps/system[>=209]' && [[ -L ${ROOT}/etc/udev/rules.d/80-net-name-slot.rules ]]; then
+        ewarn "You're not using predictable network interface names (bad choice!). If you want"
+        ewarn "to keep using those, you need to mask 80-net-setup-link.rules since systemd-209"
+        ewarn "now. cf. http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/"
+    fi
 
     local cruft=(
         "${ROOT}"/etc/init.d/sysinit.bash
