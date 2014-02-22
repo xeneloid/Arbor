@@ -15,13 +15,15 @@ export_exlib_phases src_unpack src_prepare src_configure src_test src_install
 myexparam Module_Build_pv=
 myexparam cross_perl_ver=[ ]
 
+# first value:  perlcross version
+# second value: perl version it applies to (if != ${PV})
 exparam -v CROSS_PERL_VER cross_perl_ver[@]
 
 SUMMARY="Perl is a general-purpose programming language originally developed for text manipulation"
 HOMEPAGE="http://www.perl.org"
 DOWNLOADS="
     mirror://cpan/src/5.0/${PNV}.tar.bz2
-    mirror://berlios/perlcross/${PN}-${CROSS_PERL_VER[1]:-${PV}}-cross-${CROSS_PERL_VER[0]}.tar.gz
+    https://github.com/arsv/${PN}-cross/raw/releases/${PN}-${CROSS_PERL_VER[1]:-${PV}}-cross-${CROSS_PERL_VER[0]}.tar.gz
 "
 
 REMOTE_IDS="cpan:${PN} freecode:${PN}"
