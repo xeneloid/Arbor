@@ -35,7 +35,7 @@ do we support it.
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/${PN}"
 BUGS_TO="philantrop@exherbo.org"
 LICENCES="
-    LGPL-2.         [[ note = [ Everything but ] ]]
+    LGPL-2.1        [[ note = [ Everything but ] ]]
     GPL-2           [[ note = [ src/udev, ] ]]
     MIT             [[ note = [ sd-readahead.[ch], ] ]]
     public-domain   [[ note = [ src/shared/MurmurHash2.c, src/shared/siphash24.c, src/journal/lookup3.c ] ]]
