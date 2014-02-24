@@ -246,7 +246,6 @@ configure_one_multibuild() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
-        $(ever is_scm && echo --enable-compat-libs)
         --enable-coredump
         --enable-gudev
         --enable-hostnamed
@@ -475,7 +474,7 @@ EOF
 
     nonfatal edo mv "${IMAGE}"/var/${LIBDIR} "${IMAGE}"/var/lib
 
-    if ! ever at_least 209; then
+    if ! ever at_least 209 || ever at_least scm; then
         # Don't create /var/log/journal, the user should do that
         edo rmdir "${IMAGE}"/var/log/{journal,}
     fi
