@@ -72,7 +72,8 @@ if ever at_least 209; then
 fi
 
 MYOPTIONS+="
-    multibuild_c: 32 64
+    ( multibuild_c: 32 64 )
+    ( linguas: fr it pl ru )
 "
 
 DEPENDENCIES="
