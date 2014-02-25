@@ -475,10 +475,8 @@ EOF
 
     nonfatal edo mv "${IMAGE}"/var/${LIBDIR} "${IMAGE}"/var/lib
 
-    if ! ever at_least 209 || ever at_least scm; then
-        # Don't create /var/log/journal, the user should do that
-        edo rmdir "${IMAGE}"/var/log/{journal,}
-    fi
+    # Don't create /var/log/journal, the user should do that
+    edo rmdir "${IMAGE}"/var/log/{journal,}
 
     # keepdir some stuff
     keepdir /etc/systemd/session
