@@ -87,6 +87,9 @@ DEPENDENCIES="
             app-doc/gtk-doc-autotools[>=1.18]
             dev-libs/libxslt
         )
+        python? (
+            dev-python/lxml[python_abis:*(-)?]
+        )
     build+run:
         app-arch/xz[multibuild_c:*(-)?]
         dev-libs/glib:2[>=2.26][multibuild_c:*(-)?]
@@ -133,7 +136,6 @@ DEPENDENCIES="
             gnome-bindings/pygobject:3
             gnome-desktop/gobject-introspection:1
         ) [[ description = [ Required for systemd-analyze - analyze the boot performance of your system ] ]]
-        dev-python/lxml [[ description = [ For a prettier directive index (man systemd.directives) ] ]]
         dev-python/pycairo [[ description = [ Get fancy svgs about the boot process through systemd-analyze plot  ] ]]
         sys-apps/kexec-tools [[ description = [ Support for systemctl kexec - booting a kernel immediately, skipping the BIOS ] ]]
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
