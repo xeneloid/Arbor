@@ -70,6 +70,10 @@ if ever at_least 209; then
     "
 fi
 
+MYOPTIONS+="
+    ( linguas: fr it pl ru )
+"
+
 DEPENDENCIES="
     build:
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
@@ -80,6 +84,9 @@ DEPENDENCIES="
         gtk-doc? (
             app-doc/gtk-doc-autotools[>=1.18]
             dev-libs/libxslt
+        )
+        python? (
+            dev-python/lxml[python_abis:*(-)?]
         )
     build+run:
         app-arch/xz
@@ -127,7 +134,6 @@ DEPENDENCIES="
             gnome-bindings/pygobject:3
             gnome-desktop/gobject-introspection:1
         ) [[ description = [ Required for systemd-analyze - analyze the boot performance of your system ] ]]
-        dev-python/lxml [[ description = [ For a prettier directive index (man systemd.directives) ] ]]
         dev-python/pycairo [[ description = [ Get fancy svgs about the boot process through systemd-analyze plot  ] ]]
         sys-apps/kexec-tools [[ description = [ Support for systemctl kexec - booting a kernel immediately, skipping the BIOS ] ]]
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
@@ -221,7 +227,6 @@ systemd_src_configure() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
-        $(ever is_scm && echo --enable-compat-libs)
         --enable-coredump
         --enable-gudev
         --enable-hostnamed
@@ -458,10 +463,8 @@ LC_MEASUREMENT=C
 LC_IDENTIFICATION=C
 EOF
 
-    if ! ever at_least 209; then
-        # Don't create /var/log/journal, the user should do that
-        edo rmdir "${IMAGE}"/var/log/{journal,}
-    fi
+    # Don't create /var/log/journal, the user should do that
+    edo rmdir "${IMAGE}"/var/log/{journal,}
 
     # keepdir some stuff
     keepdir /etc/systemd/session

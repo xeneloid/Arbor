@@ -1,18 +1,13 @@
 # Copyright 2014 Quentin "Sardem FF7" Glidic <sardemff7@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SUMMARY="Virtual for DHCP clients"
-HOMEPAGE=""
-DOWNLOADS=""
+require ruby-2
 
-SLOT="0"
+LICENCES="|| ( Ruby-1.9 BSD-2 )"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
 
 DEPENDENCIES="
-    || (
-        net-misc/dhcpcd
-        net-misc/dhcp
-    )
+    build+run:
+        dev-libs/gmp:=
 "
 

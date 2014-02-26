@@ -1,0 +1,23 @@
+# Copyright 2014 Marc-Antoine Perennou <keruspe@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: mysql database providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers:
+        mysql
+        mariadb
+    ) [[
+        *description = [ mysql database provider ]
+        number-selected = exactly-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:mysql? ( dev-db/mysql[~>${PV}] )
+    providers:mariadb? ( dev-db/mariadb[~>${PV}] )
+"
+

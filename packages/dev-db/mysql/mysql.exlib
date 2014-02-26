@@ -50,6 +50,10 @@ DEPENDENCIES="
             description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]
             resolution = uninstall-blocked-after
         ]]
+        !dev-db/Percona-Server [[
+            description = [ Percona-Server is a drop-in replacement for MySQL with same binary names ]
+            resolution = uninstall-blocked-after
+        ]]
     suggestion:
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "

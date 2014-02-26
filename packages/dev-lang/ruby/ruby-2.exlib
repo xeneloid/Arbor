@@ -51,7 +51,7 @@ DEFAULT_SRC_COMPILE_PARAMS=( EXTLDFLAGS="${LDFLAGS}" )
 
 WORK="${WORKBASE}"/${MY_PNV}
 
-ruby-2.0_src_configure() {
+ruby-2_src_configure() {
     # picked up by ext/socket/extconf
     unset SOCKS_SERVER
 
@@ -90,20 +90,20 @@ ruby-2.0_src_configure() {
     econf "${cfargs[@]}"
 }
 
-ruby-2.0_src_test() {
+ruby-2_src_test() {
     emake test TERM="dumb"
 }
 
-ruby-2.0_src_install() {
+ruby-2_src_install() {
     # otherwise install fails weirdly
     emake yes-fake
 
     default
 
     local \
-        rubylibdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=rubylibdir) \
-        sitearchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=sitearchdir) \
-        vendorarchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=vendorarchdir)
+        rubylibdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=rubylibdir) \
+        sitearchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=sitearchdir) \
+        vendorarchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=vendorarchdir)
     keepdir "${vendorarchdir}" "${sitearchdir}"
 
     if option examples; then
@@ -118,11 +118,18 @@ ruby-2.0_src_install() {
         alternatives+=( /${target} ${src##*/} )
     done
 
-    # Split gems/ up into vendor_gems/ (shipped with ruby) and gems/
+    # Split gems/ up into vendor_gems/ (packaged gems) and gems/ (user-installed gems)
     edo sed -e "s/default_dir]/default_dir, default_dir.gsub\('gems','vendor_gems'\)]/" -i \
         "${IMAGE}"/${rubylibdir}/rubygems/defaults.rb
+    if ever at_least 2.1.1; then
+        edo sed -e "s/Gem.default_dir/&.gsub\('gems','vendor_gems'\)/" -i \
+            "${IMAGE}"/${rubylibdir}/rubygems/basic_specification.rb
+    else
+        edo sed -e "s/Gem.default_dir/&.gsub\('gems','vendor_gems'\)/" -i \
+            "${IMAGE}"/${rubylibdir}/rubygems/specification.rb
+    fi
     edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/{,vendor_}gems
-    keepdir /usr/${LIBDIR}/ruby/{vendor_,}gems/${SLOT}/{build_info,cache,doc,gems,specifications}
+    keepdir /usr/${LIBDIR}/ruby/{vendor_,}gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
 
     # FIXME: I don't know what this is
     keepdir /usr/${LIBDIR}/ruby/${SLOT}/racc/rdoc

@@ -45,7 +45,10 @@ DEPENDENCIES="
         avahi? ( net-dns/avahi[dns_sd][multibuild_c:*(-)?] )
         dbus? ( sys-apps/dbus[multibuild_c:*(-)?] )
        !gnutls? ( dev-libs/openssl[multibuild_c:*(-)?] )
-        gnutls? ( dev-libs/gnutls[multibuild_c:*(-)?] )
+        gnutls? (
+            dev-libs/gnutls[multibuild_c:*(-)?]
+            dev-libs/libgcrypt[multibuild_c:*(-)?]
+        )
         kerberos? ( app-crypt/heimdal[multibuild_c:*(-)?] )
         pam? ( sys-libs/pam[multibuild_c:*(-)?] )
         perl? ( dev-lang/perl:= )
