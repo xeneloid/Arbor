@@ -51,7 +51,7 @@ DEFAULT_SRC_COMPILE_PARAMS=( EXTLDFLAGS="${LDFLAGS}" )
 
 WORK="${WORKBASE}"/${MY_PNV}
 
-ruby-2.0_src_configure() {
+ruby-2_src_configure() {
     # picked up by ext/socket/extconf
     unset SOCKS_SERVER
 
@@ -90,20 +90,20 @@ ruby-2.0_src_configure() {
     econf "${cfargs[@]}"
 }
 
-ruby-2.0_src_test() {
+ruby-2_src_test() {
     emake test TERM="dumb"
 }
 
-ruby-2.0_src_install() {
+ruby-2_src_install() {
     # otherwise install fails weirdly
     emake yes-fake
 
     default
 
     local \
-        rubylibdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=rubylibdir) \
-        sitearchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=sitearchdir) \
-        vendorarchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-2.0 --variable=vendorarchdir)
+        rubylibdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=rubylibdir) \
+        sitearchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=sitearchdir) \
+        vendorarchdir=$(PKG_CONFIG_PATH=. pkg-config ruby-${SLOT} --variable=vendorarchdir)
     keepdir "${vendorarchdir}" "${sitearchdir}"
 
     if option examples; then
