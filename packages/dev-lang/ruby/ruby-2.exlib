@@ -122,7 +122,7 @@ ruby-2_src_install() {
     edo sed -e "s/default_dir]/default_dir, default_dir.gsub\('gems','vendor_gems'\)]/" -i \
         "${IMAGE}"/${rubylibdir}/rubygems/defaults.rb
     edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/{,vendor_}gems
-    keepdir /usr/${LIBDIR}/ruby/{vendor_,}gems/${SLOT}/{build_info,cache,doc,gems,specifications}
+    keepdir /usr/${LIBDIR}/ruby/{vendor_,}gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
 
     # FIXME: I don't know what this is
     keepdir /usr/${LIBDIR}/ruby/${SLOT}/racc/rdoc
