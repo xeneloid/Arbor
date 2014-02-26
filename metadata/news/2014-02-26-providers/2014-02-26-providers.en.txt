@@ -1,0 +1,23 @@
+Title: Introducing providers
+Author: Quentin Glidic <sardemff7@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-01-12
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: virtual/blas
+Display-If-Installed: virtual/cron
+Display-If-Installed: virtual/dhcp-client
+Display-If-Installed: virtual/kerberos
+Display-If-Installed: virtual/libaacs
+Display-If-Installed: virtual/mta
+Display-If-Installed: virtual/pkg-config
+Display-If-Installed: virtual/syslog
+Display-If-Installed: virtual/zathura-pdf
+
+
+A new suboption appears: "providers". It is meant to allow users to 
+select a provider for a feature.
+For now, virtuals are migrating, but more packages will come.
+
+You just need to add the relevant options to your options.conf for
+each virtual (cave should tell you about the needed option anyway).
