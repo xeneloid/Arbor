@@ -60,6 +60,6 @@ gem_src_install() {
         done
     fi
 
-    keepdir ${vendor_gem_dir}/{build_info,doc,gems,cache,specifications}
+    keepdir ${vendor_gem_dir}/{build_info,doc,extensions,gems,cache,specifications}
 }
 
