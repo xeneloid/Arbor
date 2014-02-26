@@ -1,0 +1,25 @@
+Title: Multiruby
+Author: Quentin Glidic <sardemff7@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-03-04
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/ruby
+
+Here comes multiruby. Your gems will be installed for all your
+installed (and selected) ruby slots.
+
+The used suboption is "ruby_abis", currently supporting slots
+2.0 and 2.1.
+
+Gems will need to be updated to specify their dependencies with
+"[ruby_abis:*(-)?]".
+This change is break gem.exlib API but all gems used the minimal
+API, so nothing to change on this side.
+
+gem.exlib gain two exparams:
+- ruby_slots: the list of supported slots (defaults to all)
+- ruby_opt: the option enabling the ruby support (if the gem
+            should only be installed conditionnaly)
+If you specify ruby_opt, you have to call gem_src_install by
+yourself.
