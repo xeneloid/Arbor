@@ -118,9 +118,16 @@ ruby-2_src_install() {
         alternatives+=( /${target} ${src##*/} )
     done
 
-    # Split gems/ up into vendor_gems/ (shipped with ruby) and gems/
+    # Split gems/ up into vendor_gems/ (packaged gems) and gems/ (user-installed gems)
     edo sed -e "s/default_dir]/default_dir, default_dir.gsub\('gems','vendor_gems'\)]/" -i \
         "${IMAGE}"/${rubylibdir}/rubygems/defaults.rb
+    if ever at_least 2.1.1; then
+        edo sed -e "s/Gem.default_dir/&.gsub\('gems','vendor_gems'\)/" -i \
+            "${IMAGE}"/${rubylibdir}/rubygems/basic_specification.rb
+    else
+        edo sed -e "s/Gem.default_dir/&.gsub\('gems','vendor_gems'\)/" -i \
+            "${IMAGE}"/${rubylibdir}/rubygems/specification.rb
+    fi
     edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/{,vendor_}gems
     keepdir /usr/${LIBDIR}/ruby/{vendor_,}gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
 
