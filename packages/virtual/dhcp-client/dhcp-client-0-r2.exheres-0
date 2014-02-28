@@ -10,6 +10,7 @@ MYOPTIONS="
     ( providers:
         dhcpcd
         dhcp
+        systemd
     ) [[
         *description = [ DHCP client provider ]
         number-selected = at-least-one
@@ -19,5 +20,6 @@ MYOPTIONS="
 DEPENDENCIES="
     providers:dhcpcd? ( net-misc/dhcpcd )
     providers:dhcp? ( net-misc/dhcp )
+    providers:systemd? ( sys-apps/systemd[>=209] )
 "
 
