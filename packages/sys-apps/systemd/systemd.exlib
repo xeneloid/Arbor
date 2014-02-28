@@ -269,6 +269,7 @@ configure_one_multibuild() {
         --enable-vconsole
         --enable-xz
         --disable-audit
+        --disable-apparmor
         --disable-chkconfig
         --disable-ima
         --disable-selinux
