@@ -192,8 +192,8 @@ systemd_pkg_setup() {
 }
 
 systemd_src_prepare() {
-    if [[ -d ${FILES}/patches ]]; then
-        expatch -p1 "${FILES}"/patches
+    if [[ -d ${FILES}/patches-${PV} ]]; then
+        expatch -p1 "${FILES}"/patches-${PV}
     fi
 
     # Set the correct libdir if necessary.
