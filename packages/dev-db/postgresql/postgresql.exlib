@@ -38,17 +38,43 @@ DOWNLOADS="mirror://${PN}/source/v${PV}/${PNV}.tar.bz2"
 LICENCES="PostgreSQL"
 SLOT="0"
 MYOPTIONS="
-    hstore [[ description = [ Adds support for hstore module ] ]]
+    fuzzystrmatch [[ description = [ Extension with distance functions on text (mostly for phonetic comparisons) ] ]]
+    hstore [[ description = [ Extension with the hstore data type ] ]]
+    intarray [[ description = [ Extension with additional functions and indices for int arrays and int sets ] ]]
     ldap
+    lo [[ description = [ Extension with the large object support functions and the vacuumlo command line utility ] ]]
+    ltree [[ description = [ Extension with the ltree data type for hierarquical categorization ] ]]
     pam
-    perl
-    pgcrypto [[ description = [ Adds support for pgcrypto module ] ]]
-    python
-    readline
+    perl [[ description = [ Support for both PL/Perl and Pl/PerlU server-side programming languages ] ]]
+    pg_trgm [[ description = [ Extension with trigram support for Full-Text Search ] ]]
+    pgcrypto [[ description = [ Extension with cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
+    python [[ description = [ Support for PL/Python (only the \"untrusted\" version) server-side programming language ] ]]
+    readline [[ description = [ Used only by the client psql for history control and autocomplete funcionality ] ]]
     ssl
-    tcl
-    xml [[ description = [ Add support for XML data type ] ]]
+    tablefunc [[ description = [ Extension with some set returning functions (normal_rand, crosstab variations and connectby) ] ]]
+    tcl [[ description = [ Support for both PL/Tcl and PL/TclU server-side programming languages ] ]]
+    xml [[ description = [ Add core support for XML data type ] ]]
 "
+
+# The contrib directory is somewhat messy.
+# It contains server-side administrative tools (usually very tightly coupled
+# to the internal API and may or may not need a LOAD command in the db to be
+# used), extensions (each versioned independently, loosely coupled to the
+# internal API and needing a CREATE EXTENSION command in the db to be used),
+# command line utilities (not coupled to the internal API, in fact, upstream
+# recommends using the most recent available always instead of using the
+# respective versions on each cluster) and also others.
+OPTIONS_IN_CONTRIB=(
+    fuzzystrmatch
+    hstore
+    intarray
+    lo
+    'lo vacuumlo'
+    ltree
+    pg_trgm
+    pgcrypto
+    tablefunc
+)
 
 DEPENDENCIES="
     build:
@@ -106,27 +132,27 @@ postgresql_src_prepare() {
     edo sed -e "s:/no/such/location:${WORK}&:" -i src/test/regress/{input,output}/tablespace.source
 }
 
+postgresql_src_emake_contrib_one() {
+    edo pushd "contrib/$1"
+    emake DESTDIR="${IMAGE}" $2
+    edo popd
+}
+
+postgresql_src_emake_contrib() {
+    for o in "${OPTIONS_IN_CONTRIB[@]}"; do
+        option $o || continue
+        local c=$(option $o)
+        postgresql_src_emake_contrib_one ${c:-$o} $1
+    done
+
+    postgresql_src_emake_contrib_one pg_upgrade $1
+    postgresql_src_emake_contrib_one pg_upgrade_support $1
+}
+
 postgresql_src_compile() {
     default
 
-    if option hstore; then
-        edo pushd contrib/hstore
-        emake
-        edo popd
-    fi
-    if option pgcrypto; then
-        edo pushd contrib/pgcrypto
-        emake
-        edo popd
-    fi
-
-    edo pushd contrib/pg_upgrade
-    emake
-    edo popd
-    edo pushd contrib/pg_upgrade_support
-    emake
-    edo popd
-
+    postgresql_src_emake_contrib
 }
 
 # XXX: See http://wiki.postgresql.org/wiki/Detailed_installation_guides
@@ -143,30 +169,15 @@ d /run/postgresql 0770 postgres postgres
 EOF
     fi
 
-    if option hstore; then
-        edo pushd contrib/hstore
-        emake DESTDIR="${IMAGE}" install
-        edo popd
-    fi
-    if option pgcrypto; then
-        edo pushd contrib/pgcrypto
-        emake DESTDIR="${IMAGE}" install
-        edo popd
-    fi
-
-    edo pushd contrib/pg_upgrade
-    emake DESTDIR="${IMAGE}" install
-    edo popd
-    edo pushd contrib/pg_upgrade_support
-    emake DESTDIR="${IMAGE}" install
-    edo popd
-
+    postgresql_src_emake_contrib install
 }
 
 postgresql_src_test() {
     esandbox allow_net 'unix:/tmp/.s.PGSQL.*'
     esandbox allow_net --connect 'unix:/tmp/.s.PGSQL.*'
+
     default
+
     esandbox disallow_net 'unix:/tmp/.s.PGSQL.*'
     esandbox disallow_net --connect 'unix:/tmp/.s.PGSQL.*'
 }

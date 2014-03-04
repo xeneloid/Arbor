@@ -5,3 +5,9 @@ require postgresql
 
 PLATFORMS="~amd64 ~x86"
 
+MYOPTIONS="${MYOPTIONS}
+    postgres_fdw [[ description = [ Extension with the Foreign Data Wrapper to access other PostgreSQL servers ] ]]
+"
+
+OPTIONS_IN_CONTRIB=( "${OPTIONS_IN_CONTRIB[@]}" postgres_fdw )
+
