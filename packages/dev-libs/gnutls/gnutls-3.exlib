@@ -16,6 +16,7 @@ LICENCES="LGPL-2.1"
 SLOT="0"
 MYOPTIONS="
     doc
+    dane   [[ description = [ DNSSEC DANE support for validating certificates ] ]]
     pkcs11 [[ description = [ Use p11-kit to support multiple external pkcs11 providers ] ]]
     multibuild_c: 32 64
 "
@@ -28,6 +29,7 @@ DEPENDENCIES="
         dev-libs/libtasn1[>=3.1][multibuild_c:*(-)?]
         dev-libs/nettle[>=2.7][multibuild_c:*(-)?]
         sys-libs/zlib[>=1.2.3][multibuild_c:*(-)?]
+        dane? ( net-dns/unbound )
         pkcs11? ( dev-libs/p11-kit[>=0.20.0][multibuild_c:*(-)?] )
 "
 
@@ -38,7 +40,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-valgrind-tests
     --with-zlib
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'doc gtk-doc' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    dane
+    'doc gtk-doc'
+)
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'pkcs11 p11-kit' )
 
 AT_M4DIR=( m4 gl/m4 src/libopts/m4/ )
