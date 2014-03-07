@@ -39,45 +39,33 @@ DEPENDENCIES="
         net-www/elinks [[ description = [ Provides a text based browser for viewing HTML-formatted mail ] ]]
 "
 
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --with-ssl
+    --sysconfdir=/etc/${PN}
+    --with-docdir=/usr/share/doc/${PNV}
+    --with-homespool=.maildir
+    --with-regex
+
+    --enable-flock
+    --disable-fcntl
+    --enable-nfs-fix
+    --enable-external-dotlock
+
+    --enable-imap
+    --enable-pop
+    --enable-smtp
+
+    # hcache
+    --enable-hcache
+    --without-bdb
+    --without-qdbm
+
+    --without-gnutls
+)
+
+DEFAULT_SRC_CONFIGURE_OPTIONS=( 'ncurses --with-curses' 'slang --with-slang' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug gpgme )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( gdbm idn sasl tokyocabinet )
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-1.5.20-gpgme.patch )
-
-src_configure() {
-    local opts=(
-        --enable-nls
-        --with-ssl
-        --sysconfdir=/etc/${PN}
-        --with-docdir=/usr/share/doc/${PNV}
-        --with-homespool=.maildir
-        --with-regex
-
-        --enable-flock
-        --disable-fcntl
-        --enable-nfs-fix
-        --enable-external-dotlock
-
-        --enable-imap
-        --enable-pop
-        --enable-smtp
-
-        --enable-hcache
-        --without-bdb
-        --without-qdbm
-        --without-gnutls
-
-        $(option_enable debug)
-        $(option_enable gpgme)
-
-        $(option_with gdbm)
-        $(option_with idn)
-        $(option_with sasl)
-        $(option_with tokyocabinet)
-    )
-
-    # Using DEFAULT_SRC_CONFIGURE_OPTION_WITHS causes --without-slang to be set when using ncurses
-    # which, for some reason, still causes mutt to be build against slang.
-    option slang && opts+=(--with-slang)
-    option ncurses && opts+=(--with-curses)
-
-    econf "${opts[@]}"
-}
 
