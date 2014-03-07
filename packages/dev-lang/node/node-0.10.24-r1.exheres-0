@@ -12,7 +12,7 @@ HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="waf"
+MYOPTIONS="npm [[ description = [ install bundled npm module ] ]] waf"
 
 DEPENDENCIES="
     build:
@@ -22,6 +22,7 @@ DEPENDENCIES="
         dev-libs/openssl
         dev-libs/v8
         sys-libs/zlib
+    npm? ( run: !dev-node/npm )
 "
 
 SRC_CONFIGURE_PARAMS=(
@@ -48,6 +49,10 @@ src_prepare() {
 }
 
 src_configure() {
+    if ! option npm; then
+        SRC_CONFIGURE_PARAMS+=( --without-npm )
+    fi
+
     edo ./configure "${SRC_CONFIGURE_PARAMS[@]}"
 }
 
