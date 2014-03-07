@@ -1,15 +1,46 @@
 # Copyright 2008 Richard Brown
+# Copyright 2014 Quentin "Sardem FF7" Glidic <sardemff7@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'gems.eclass' from Gentoo, which is:
 #     Copyright 1999-2005 Gentoo Foundation
 #
 # Purpose: Install rubygems packages
 
-export_exlib_phases src_install
+# If your gem does not support all our Ruby slots, you have to list
+# all supported slots yourself
+myexparam ruby_abis=[ 2.0 2.1 ]
+
+# Hide the ruby_abis:* options and the dependencies behind an option
+# If you specify one, you have to call gem_src_install by yourself
+# (Note that gem_src_install does not call default_src_install)
+myexparam ruby_opt=
 
 myexparam -b has_rdoc=true
-myexparam ruby=ruby
-myexparam gem=gem
+
+exparam -v RUBY_ABIS ruby_abis[@]
+exparam -v RUBY_OPT ruby_opt
+
+require alternatives
+
+gem_myoptions() {
+    local abi
+    [[ -n "${RUBY_OPT}" ]] && echo -n "${RUBY_OPT}? "
+    echo -n "( ruby_abis: "
+    for abi in "${RUBY_ABIS[@]}"; do
+        echo -n "${abi} "
+    done
+    echo -n ") [[ number-selected = at-least-one ]]"
+}
+
+gem_dependencies() {
+    local abi
+    [[ -n "${RUBY_OPT}" ]] && echo -n "${RUBY_OPT}? "
+    echo "("
+    for abi in "${RUBY_ABIS[@]}"; do
+        echo "ruby_abis:${abi}? ( dev-lang/ruby:${abi} )"
+    done
+    echo ")"
+}
 
 if [[ -z ${DOWNLOADS} ]]; then
     DOWNLOADS="http://gems.rubyforge.org/gems/${PNV}.gem"
@@ -17,21 +48,24 @@ if [[ -z ${DOWNLOADS} ]]; then
 fi
 
 HOMEPAGE="http://${PN}.rubyforge.org"
+MYOPTIONS="$(gem_myoptions)"
 
 DEPENDENCIES="
     build+run:
-        dev-lang/ruby:=[>=2.0] [[ note = [ gem is included in newer Ruby ] ]]
+    $(gem_dependencies)
 "
 
-exparam -b has_rdoc && MYOPTIONS="doc"
+exparam -b has_rdoc && MYOPTIONS+=" doc"
 
 WORK=${WORKBASE}
 
-RUBY="$(exparam ruby)"
-GEM="$(exparam gem)"
 
-gem_src_install() {
+gem_install_abi() {
     unset GEM_HOME GEM_PATH RUBYOPT
+    local abi=$1 RUBY GEM
+
+    RUBY=ruby${abi}
+    GEM=gem${abi}
 
 
     site_gem_dir=$(${RUBY} -rubygems -e 'print Gem.dir')
@@ -40,26 +74,42 @@ gem_src_install() {
     export GEM_HOME="${IMAGE%/}${vendor_gem_dir}"
     export GEM_PATH="${vendor_gem_dir}:${GEM_HOME}"
 
-    local myconf=
+    local myconf=()
     if exparam -b has_rdoc; then
         if option doc; then
-            myconf="--ri --rdoc"
+            myconf+=( --ri --rdoc )
         else
-            myconf+="--no-ri --no-rdoc"
+            myconf+=( --no-ri --no-rdoc )
         fi
     else
-        myconf+="--no-ri --no-rdoc"
+        myconf+=( --no-ri --no-rdoc )
     fi
 
-    edo ${GEM} install "${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${PNV}.gem}" --local ${myconf}
+    local gem=${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${PNV}.gem}
+
+    edo ${GEM} install "${gem}" --local "${myconf[@]}"
 
     if [[ -d ${IMAGE}/${vendor_gem_dir}/bin ]]; then
-        exeinto /usr/bin
-        for exe in "${IMAGE}"/${vendor_gem_dir}/bin/* ; do
-            doexe "${exe}"
+        local alternatives=( _${PN} ${abi} ${abi} ) path exe
+        dodir /usr/bin
+        edo pushd "${IMAGE}"
+        for path in ${vendor_gem_dir#/}/bin/* ; do
+            exe=$(basename ${path})
+            alternatives+=( /usr/bin/${exe} /usr/bin/${exe}${abi} )
+            dosym ../../${path} /usr/bin/${exe}${abi}
         done
+        edo popd
+        alternatives_for "${alternatives[@]}"
     fi
 
-    keepdir ${vendor_gem_dir}/{build_info,doc,gems,cache,specifications}
+    keepdir ${vendor_gem_dir}/{build_info,doc,extensions,gems,cache,specifications}
 }
 
+[[ -z "${RUBY_OPT}" ]] && export_exlib_phases src_install
+
+gem_src_install() {
+    local abi
+    for abi in "${RUBY_ABIS[@]}"; do
+        option ruby_abis:${abi} && gem_install_abi ${abi}
+    done
+}

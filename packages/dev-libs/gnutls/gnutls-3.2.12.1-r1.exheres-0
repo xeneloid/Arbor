@@ -12,3 +12,5 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 # Parallel make fails in doc/
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
+WORK=${WORKBASE}/${PN}-$(ever range 1-3)
+

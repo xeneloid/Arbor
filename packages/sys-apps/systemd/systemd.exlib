@@ -190,8 +190,8 @@ systemd_pkg_setup() {
 }
 
 systemd_src_prepare() {
-    if [[ -d ${FILES}/patches ]]; then
-        expatch -p1 "${FILES}"/patches
+    if [[ -d ${FILES}/patches-${PV} ]]; then
+        expatch -p1 "${FILES}"/patches-${PV}
     fi
 
     if option gtk-doc ; then
@@ -245,6 +245,7 @@ systemd_src_configure() {
         --enable-vconsole
         --enable-xz
         --disable-audit
+        --disable-apparmor
         --disable-chkconfig
         --disable-ima
         --disable-selinux
