@@ -6,3 +6,5 @@ require lvm2
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-readline-6.3.patch )
+
