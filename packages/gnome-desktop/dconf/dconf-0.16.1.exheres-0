@@ -24,6 +24,8 @@ DEPENDENCIES="
         sys-apps/dbus
         editor? ( x11-libs/gtk+:3[>=2.90.7]
                   dev-libs/libxml2:2.0 )
+    test:
+        sys-apps/dbus[X] [[ note = [ for autolaunch ] ]]
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'editor' 'gtk-doc' )
