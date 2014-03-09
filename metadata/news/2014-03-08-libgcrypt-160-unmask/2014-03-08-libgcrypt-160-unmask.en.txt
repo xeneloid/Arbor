@@ -1,0 +1,23 @@
+Title: libgcrypt >= 1.6.0 unmask
+Author: Timo Gurr <tgurr@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-03-08
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-libs/libgcrypt[<1.6]
+Display-If-Installed: sys-fs/cryptsetup
+
+WARNING: libgcrypt after 1.5.3 breaks Whirlpool hash encrypted
+containers.
+
+In gcrypt 1.5.3 and before Whirlpool is broken and it was fixed in
+the next version. If you selected Whirlpool as hash on creation of
+a LUKS container, it does not work anymore with the fixed library.
+
+cryptsetup 1.6.4 in combination with libgcrypt 1.6.1 or later
+introduced a compatibility feature for handling broken containers.
+
+Please refer to the upstream FAQ about how to handle the situation,
+details can be found in "8.3 Gcrypt after 1.5.3 breaks Whirlpool":
+
+https://code.google.com/p/cryptsetup/wiki/FrequentlyAskedQuestions

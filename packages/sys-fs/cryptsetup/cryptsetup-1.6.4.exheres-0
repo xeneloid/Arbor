@@ -6,6 +6,7 @@
 require googlecode easy-multibuild
 
 SUMMARY="Userland utilities for dm-crypt"
+DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -31,7 +32,7 @@ DEPENDENCIES="
         dev-libs/popt[>=1.7][multibuild_c:*(-)?]
         sys-apps/util-linux [[ note = [ cryptsetup needs libuuid ] ]]
         sys-fs/lvm2[multibuild_c:*(-)?] [[ note = [ cryptsetup needs device-mapper from the LVM2 package ] ]]
-        gcrypt? ( dev-libs/libgcrypt[>=1.1.42][multibuild_c:*(-)?]
+        gcrypt? ( dev-libs/libgcrypt[>=1.6.1][multibuild_c:*(-)?]
                   dev-libs/libgpg-error[multibuild_c:*(-)?] )
         nettle? ( dev-libs/nettle[>=2.4][multibuild_c:*(-)?] )
         openssl? ( dev-libs/openssl[>=0.9.8][multibuild_c:*(-)?] )
@@ -40,7 +41,6 @@ DEPENDENCIES="
 
 # static cryptsetup must be disabled because lvm2 can't be linked statically anymore.
 # FIPS (requires dev-libs/libgcrypt[>=1.4.5]) is probably not interesting for us, so hard disable it
-# gcrypt-pbkdf2 requires dev-libs/libgcrypt[>=1.6.0] which is masked for testing (last checked 2014/01/29)
 configure_one_multibuild() {
     econf --prefix=/ \
         --includedir=/usr/include \
@@ -49,10 +49,10 @@ configure_one_multibuild() {
         --enable-nls \
         --enable-udev \
         --disable-fips \
-        --disable-gcrypt-pbkdf2 \
         --disable-pwquality \
         --disable-selinux \
         --disable-static-cryptsetup \
+        $(option_enable gcrypt gcrypt-pbkdf2) \
         $(option_enable python) \
         --with-crypto_backend=$(
         if option gcrypt; then

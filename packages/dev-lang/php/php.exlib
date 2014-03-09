@@ -1,13 +1,9 @@
-# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-myexparam suhosin_version=
-
-export_exlib_phases pkg_pretend src_prepare src_test_expensive src_install
+export_exlib_phases src_test_expensive src_install
 
 require systemd-service
-
-exparam -v SUHOSIN_VERSION suhosin_version
 
 SUMMARY="PHP is a general-purpose scripting language especially suited for web development"
 DESCRIPTION="
@@ -19,9 +15,7 @@ It has excellent support for databases, XML, LDAP, IMAP, Java, various Internet
 protocols, and general data manipulation, and is extensible via its powerful API.
 "
 HOMEPAGE="http://www.${PN}.net"
-DOWNLOADS="
-    ${HOMEPAGE}/distributions/${PNV}.tar.bz2
-"
+DOWNLOADS="${HOMEPAGE}/distributions/${PNV}.tar.bz2"
 
 LICENCES="PHP-3"
 SLOT="0"
@@ -36,7 +30,6 @@ MYOPTIONS="
     (
         php_extensions:
             curl          [[ description = [ Build the cURL extension. ] ]]
-            curlwrappers  [[ description = [ Configure PHP to use cURL for URL streams. ] ]]
             berkdb        [[ description = [ Build the Berkeley DB extension. ] ]]
             exif          [[ description = [ Support acquiring metadata from images using exif. ] ]]
             fileinfo      [[ description = [ Build fileinfo support. ] ]]
@@ -68,16 +61,15 @@ MYOPTIONS="
             xml           [[ description = [ Support for XML parsing/reading/writing. ] ]]
             xmlrpc        [[ description = [ Support for writing XML-RPC servers and clients. ] ]]
             xsl           [[ description = [ Include XSL support. ] ]]
-
-            curlwrappers  [[ requires = [ php_extensions: curl ] ]]
     )
 "
 
-if ever at_least 5.5.0; then
+if ! ever at_least 5.5.9; then
     MYOPTIONS+="
         (
             php_extensions:
-                vpx           [[ description = [ Support for media using vpx. ] ]]
+                curlwrappers  [[ description = [ Configure PHP to use cURL for URL streams. ] ]]
+                curlwrappers  [[ requires = [ php_extensions: curl ] ]]
         )
     "
 fi
@@ -93,11 +85,12 @@ DEPENDENCIES="
         php_extensions:berkdb? ( sys-libs/db:=[>=4.6.21] )
         php_extensions:ftp? ( dev-libs/openssl[>=0.9.6] )
         php_extensions:gd? (
+            media-libs/freetype:2
             media-libs/jpeg[>=6b]
             media-libs/libpng[>=1.2.35]
-            x11-libs/libXpm[>=3.5.7]
-            media-libs/freetype:2
+            media-libs/libvpx
             media-libs/t1lib[>=5.1.2]
+            x11-libs/libXpm[>=3.5.7]
         )
         php_extensions:gdbm? ( sys-libs/gdbm[>=1.8.3] )
         php_extensions:imap? (
@@ -137,22 +130,6 @@ DEPENDENCIES="
         php_extensions:xsl? ( dev-libs/libxslt[>=1.1.0] )
 "
 
-if ever at_least 5.5.0; then
-    DEPENDENCIES+="
-        build+run:
-            php_extensions:vpx? ( media-libs/libvpx )
-    "
-fi
-
-if [[ -n "${SUHOSIN_VERSION}" ]]; then
-    DOWNLOADS+="
-        suhosin? ( http://download.suhosin.org/suhosin-patch-${SUHOSIN_VERSION}.patch.gz )
-    "
-    MYOPTIONS+="
-        suhosin [[ description = [ Add the Suhosin security patch (http://www.hardened-php.net/suhosin/) ] ]]
-    "
-fi
-
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
 
@@ -166,6 +143,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/releases/$(ever replace_all _).php"
 RESTRICT="test"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --hates=docdir
     --libdir=/usr/share/${PN}
     --localstatedir=/var
     --enable-bcmath
@@ -179,7 +157,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-intl
     --enable-ipv6
     --enable-json
-    --enable-magic-quotes
     --enable-mbstring
     --enable-mbregex
     --enable-mbregex-backtrack
@@ -193,16 +170,12 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-sysvsem
     --enable-sysvshm
     --enable-tokenizer
-    --enable-zend-multibyte
     --enable-zip
     --disable-embed
     --disable-embedded-mysqli
-    --disable-safe-mode
-    --hates=docdir
     --with-bz2
     --with-config-file-path=/etc/${PN}
     --with-config-file-scan-dir=/etc/${PN}
-    --with-exec-dir=/usr/bin
     --with-gettext
     --with-gmp
     --with-iconv
@@ -230,6 +203,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-interbase
     --without-iodbc
     --without-isapi
+    --without-litespeed
     --without-milter
     --without-mm
     --without-ndbm
@@ -251,7 +225,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-webjames
 )
 
-if ever at_least 5.5.0; then
+if ever at_least 5.5.9; then
     DEFAULT_SRC_CONFIGURE_PARAMS+=(
         --enable-opcache
     )
@@ -265,7 +239,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     "php_extensions:filter filter"
     "php_extensions:ftp ftp"
     "php_extensions:gd gd-native-ttf"
-    "php_extensions:pdo-sqlite sqlite-utf8"
     "php_extensions:xml dom"
     "php_extensions:xml libxml"
     "php_extensions:xml simplexml"
@@ -280,7 +253,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "apache apxs2"
     pear
     "php_extensions:curl curl"
-    "php_extensions:curlwrappers curlwrappers"
     "php_extensions:berkdb db4"
     "php_extensions:gd gd"
     "php_extensions:gd jpeg-dir /usr"
@@ -321,10 +293,13 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "php_extensions:xsl xsl"
 )
 
-if ever at_least 5.5.0; then
+if ever at_least 5.5.9; then
     DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
         "systemd fpm-systemd"
-        "php_extensions:vpx vpx /usr"
+    )
+else
+    DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
+        "php_extensions:curlwrappers curlwrappers"
     )
 fi
 
@@ -341,23 +316,6 @@ DEFAULT_SRC_INSTALL_EXCLUDE=(
     README.WIN32-BUILD-SYSTEM
     README.Zeus
 )
-
-php_pkg_pretend() {
-    if [[ -z ${SUHOSIN_VERSION} ]] && has_version --root ${CATEGORY}/${PN}[suhosin]; then
-        elog "${PNV} doesn't (yet) support the Suhosin patch. If you rely on it, don't install ${PNV}."
-    fi
-}
-
-php_src_prepare() {
-    default
-
-    if [[ -n "${SUHOSIN_VERSION}" ]] && option suhosin ; then
-        expatch -p1 "${WORKBASE}"/suhosin-patch-${SUHOSIN_VERSION}.patch
-    fi
-
-    # Workaround for PHP bug #48795
-    export EXTRA_LIBS="${EXTRA_LIBS} -lstdc++"
-}
 
 php_src_test_expensive() {
     return
