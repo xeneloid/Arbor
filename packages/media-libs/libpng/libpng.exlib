@@ -20,5 +20,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
-DEFAULT_SRC_CONFIGURE_OPTIONS=( 'arm_cpu_features:neon --enable-arm-neon=on --enable-arm-neon=off' )
+DEFAULT_SRC_CONFIGURE_OPTIONS=(
+    'arm_cpu_features:neon --enable-arm-neon=on --enable-arm-neon=off'
+)
 
