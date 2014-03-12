@@ -35,6 +35,7 @@ DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.4
         app-text/xmlto
+        dev-libs/libxslt
         sys-devel/gettext
         virtual/pkg-config[>=0.20]
         doc? ( app-doc/doxygen )

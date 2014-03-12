@@ -41,7 +41,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-zlib
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
-    dane
+    'dane libdane'
     'doc gtk-doc'
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'pkcs11 p11-kit' )
