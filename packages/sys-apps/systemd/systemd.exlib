@@ -149,6 +149,8 @@ DEPENDENCIES="
 
 if ever at_least 209; then
     DEPENDENCIES+="
+        build:
+            app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
         build+run:
             seccomp? ( sys-libs/libseccomp[>=1.0.0][multibuild_c:*(-)?] )
         run:
