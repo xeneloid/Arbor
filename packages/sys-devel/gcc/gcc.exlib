@@ -381,8 +381,8 @@ EOF
                   else
                     echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
                   fi)                                                                               \
-                --with-as=/usr/${host}/bin/${target}-as                                             \
-                --with-ld=/usr/${host}/bin/${target}-ld                                             \
+                --with-as=/usr/${CHOST}/bin/${target}-as                                            \
+                --with-ld=/usr/${CHOST}/bin/${target}-ld                                            \
                 --with-pkgversion="exherbo ${PNVR}"                                                 \
                 --with-system-zlib                                                                  \
                 --with-sysroot='""'                                                                 \
