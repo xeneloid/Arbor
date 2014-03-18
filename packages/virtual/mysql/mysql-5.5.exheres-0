@@ -7,6 +7,7 @@ HOMEPAGE=""
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
+    multibuild_c: 32 64
     ( providers:
         mysql
         mariadb
@@ -17,7 +18,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:mysql? ( dev-db/mysql[~>${PV}] )
-    providers:mariadb? ( dev-db/mariadb[~>${PV}] )
+    providers:mysql? ( dev-db/mysql[~>${PV}][multibuild_c:*(-)?] )
+    providers:mariadb? ( dev-db/mariadb[~>${PV}][multibuild_c:*(-)?] )
 "
 
