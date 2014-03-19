@@ -10,7 +10,7 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
-    build+run:
-        dev-perl/File-Slurp
+    test:
+        dev-perl/File-Slurp-Tiny
 "
 
