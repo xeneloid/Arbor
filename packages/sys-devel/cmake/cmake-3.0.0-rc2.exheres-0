@@ -1,14 +1,11 @@
 # Copyright 2008 Wulf Krueger <philantrop@exherbo.org>
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake-build
 
 PLATFORMS="~amd64 ~arm ~x86"
-
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PNV}-FindFreetype.patch
-)
 
 src_prepare() {
     default
@@ -18,7 +15,15 @@ src_prepare() {
     fi
     # Don't install bash-completions, use bash-completion.exlib
     edo sed -e '/^install(FILES cmake cpack/d' \
-            -i Docs/bash-completion/CMakeLists.txt
+            -i Auxiliary/bash-completion/CMakeLists.txt
+
+    # Does only work with python2, errors out because of "except UnicodeError, error"
+    edo sed -e "s/COMMAND \${SPHINX_EXECUTABLE}/COMMAND python2 \${SPHINX_EXECUTABLE\}/" \
+            -i Utilities/Sphinx/CMakeLists.txt
+}
+
+src_test() {
+    edo bin/ctest -V -E Qt4And5AutomocReverse
 }
 
 src_install() {
@@ -29,10 +34,10 @@ src_install() {
 
     if option vim-syntax; then
         insinto /usr/share/vim/vimfiles/syntax
-        doins "${WORK}"/Docs/cmake-syntax.vim
+        doins "${WORK}"/Auxiliary/cmake-syntax.vim
 
         insinto /usr/share/vim/vimfiles/indent
-        doins "${WORK}"/Docs/cmake-indent.vim
+        doins "${WORK}"/Auxiliary/cmake-indent.vim
 
         insinto /usr/share/vim/vimfiles/ftdetect
         doins "${FILES}/${VIMFILE}"

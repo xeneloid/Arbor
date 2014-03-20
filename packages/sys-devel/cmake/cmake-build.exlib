@@ -1,10 +1,17 @@
 # Copyright 2008 Wulf Krueger <philantrop@exherbo.org>
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'cmake-2.6.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require bash-completion elisp-optional [ source_directory=Docs ]
+require bash-completion
+
+if ever at_least 3.0.0-rc1 ; then
+    require elisp-optional [ source_directory=Auxiliary ]
+else
+    require elisp-optional [ source_directory=Docs ]
+fi
 
 SUMMARY="Cross platform Make"
 HOMEPAGE="http://www.cmake.org"
@@ -32,12 +39,24 @@ DEPENDENCIES="
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
+if ever at_least 3.0.0-rc1 ; then
+    DEPENDENCIES+="
+        build:
+            dev-python/Sphinx[python_abis:2.7]
+    "
+    BASH_COMPLETIONS=(
+        Auxiliary/bash-completion/cmake
+        'Auxiliary/bash-completion/cpack cpack'
+        'Auxiliary/bash-completion/ctest ctest'
+    )
+else
+    BASH_COMPLETIONS=(
+        Docs/bash-completion/cmake
+        'Docs/bash-completion/cpack cpack'
+        'Docs/bash-completion/ctest ctest'
+    )
+fi
 
-BASH_COMPLETIONS=(
-     Docs/bash-completion/cmake
-     'Docs/bash-completion/cpack cpack'
-     'Docs/bash-completion/ctest ctest'
-)
 VIMFILE="${PN}.vim"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -45,16 +64,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-install-cmake.m4-to-usr-share-aclocal.patch
 )
 DEFAULT_SRC_TEST_PARAMS=( ARGS=--verbose )
-
-src_prepare() {
-    default
-
-    if option qt4; then
-        edo sed -i -e '/Icon/ s/\.png$//' Source/QtDialog/CMake.desktop
-    fi
-    # Don't install bash-completions, use bash-completion.exlib
-    edo sed -i -e '/^install(FILES cmake cpack/d' Docs/bash-completion/CMakeLists.txt
-}
 
 src_configure() {
     local host=$(exhost --target)
@@ -88,29 +97,12 @@ src_configure() {
         -DCMAKE_RANLIB:PATH="${RANLIB}"                                         \
         -DCMAKE_LIBRARY_PATH:STRING=/usr/${host}/lib                            \
         -DCMAKE_INCLUDE_PATH:STRING=/usr/${host}/include                        \
+        $(ever at_least 3.0.0-rc1 && echo "--sphinx-man")                       \
         $(option qt4 && echo "-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Core:BOOL=TRUE")
 }
 
 src_compile() {
     default
     elisp-optional_src_compile
-}
-
-src_install() {
-    default
-
-    bash-completion_src_install
-    elisp-optional_src_install
-
-    if option vim-syntax; then
-        insinto /usr/share/vim/vimfiles/syntax
-        doins "${WORK}"/Docs/cmake-syntax.vim
-
-        insinto /usr/share/vim/vimfiles/indent
-        doins "${WORK}"/Docs/cmake-indent.vim
-
-        insinto /usr/share/vim/vimfiles/ftdetect
-        doins "${FILES}/${VIMFILE}"
-    fi
 }
 
