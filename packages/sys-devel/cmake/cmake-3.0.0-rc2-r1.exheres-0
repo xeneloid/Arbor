@@ -7,6 +7,10 @@ require cmake-build
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-QtDialog-Fix-Qt-5-build-on-non-Windows.patch
+)
+
 src_prepare() {
     default
 
