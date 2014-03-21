@@ -18,9 +18,9 @@ Git is a fast, scalable, distributed revision control system with an unusually
 rich command set that provides both high-level operations and full access to internals
 "
 HOMEPAGE="http://git-scm.com/"
-DOWNLOADS="http://git-core.googlecode.com/files/${PNV}.tar.gz"
-exparam -b htmldocs && DOWNLOADS+=" doc? ( http://git-core.googlecode.com/files/git-htmldocs-${PV}.tar.gz )"
-exparam -b manpages && DOWNLOADS+=" http://git-core.googlecode.com/files/git-manpages-${PV}.tar.gz"
+DOWNLOADS="mirror://kernel/software/scm/git/${PNV}.tar.xz"
+exparam -b htmldocs && DOWNLOADS+=" doc? ( mirror://kernel/software/scm/${PN}/${PN}-htmldocs-${PV}.tar.xz )"
+exparam -b manpages && DOWNLOADS+=" mirror://kernel/software/scm/${PN}/${PN}-manpages-${PV}.tar.xz"
 
 BUGS_TO="ingmar@exherbo.org philantrop@exherbo.org"
 
@@ -99,13 +99,13 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${PNV/_/.}
 
 git-googlecode_src_unpack() {
-    unpack ${PNV}.tar.gz
+    unpack ${PNV}.tar.xz
     edo cd "${WORK}"
-    exparam -b manpages && unpack ${PN}-manpages-${PV}.tar.gz
+    exparam -b manpages && unpack ${PN}-manpages-${PV}.tar.xz
 
     if exparam -b htmldocs && option doc; then
         edo cd Documentation
-        unpack ${PN}-htmldocs-${PV}.tar.gz
+        unpack ${PN}-htmldocs-${PV}.tar.xz
     fi
 }
 
