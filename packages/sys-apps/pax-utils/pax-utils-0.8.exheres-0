@@ -1,8 +1,8 @@
-# Copyright 2008-2013 Wulf C. Krueger
+# Copyright 2008-2014 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Utilities for ELF binaries (e. g. scanelf)"
-HOMEPAGE="http://hardened.gentoo.org/${PN}.xml"
+HOMEPAGE="https://wiki.gentoo.org/wiki/Hardened/PaX_Utilities"
 DOWNLOADS="mirror://gentoo/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
