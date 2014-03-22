@@ -19,6 +19,7 @@ MYOPTIONS="gmp pcre"
 
 DEPENDENCIES="
     build:
+        sys-devel/bison[>=3.0.0]
         sys-devel/flex[>=2.5.36]
         virtual/pkg-config[>=0.9.0]
     build+run:
@@ -31,18 +32,6 @@ DEPENDENCIES="
         !gmp? ( dev-libs/mpfr:=[>=2.4.0] )
         pcre? ( dev-libs/pcre[>=3.9] )
 "
-
-if ever at_least 0.9.32 ; then
-    DEPENDENCIES+="
-        build+run:
-            sys-devel/bison[>=3.0.0]
-    "
-else
-    DEPENDENCIES+="
-        build+run:
-            sys-devel/bison[>=2.6]
-    "
-fi
 
 src_configure() {
     econf \
