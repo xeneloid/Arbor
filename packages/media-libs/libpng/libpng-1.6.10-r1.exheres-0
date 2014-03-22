@@ -5,3 +5,7 @@ require libpng
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+# If you are going to bump version that breaks ABI take a look at
+# libpng.exlib and consider to slot it instead. (Apetrini)
+SLOT="1.6"
+
