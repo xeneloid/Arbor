@@ -18,7 +18,7 @@ MYOPTIONS="
     bluetooth
     canusb [[ description = [ Use libusb to support CAN bus sniffing via CANUSB devices ] ]]
     dbus
-    libnl [[ description = [ Use libnl to support monitor mode on mac80211 devices ] ]]
+    nl80211 [[ description = [ Support monitor mode on nl80211 devices ] ]]
 "
 
 DEPENDENCIES="
@@ -30,7 +30,7 @@ DEPENDENCIES="
         bluetooth? ( net-wireless/bluez )
         canusb? ( virtual/usb:1 )
         dbus? ( sys-apps/dbus[>=1.0.0] )
-        libnl? ( net-libs/libnl:3.0 )
+        nl80211? ( net-libs/libnl:3.0 )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-can --enable-ipv6 --without-snf )
