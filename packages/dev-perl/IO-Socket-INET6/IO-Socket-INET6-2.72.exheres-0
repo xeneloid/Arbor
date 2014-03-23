@@ -16,7 +16,7 @@ DEPENDENCIES="
         dev-perl/Test-Pod
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/${PNV}-fix_tests.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/${PN}-2.71-fix_tests.patch )
 
 src_test() {
     esandbox allow_net --connect "LOOPBACK6@0"
