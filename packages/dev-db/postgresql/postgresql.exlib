@@ -178,6 +178,12 @@ postgresql_src_test() {
 
     default
 
+    esandbox allow_net "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
+    esandbox allow_net --connect "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
+    postgresql_src_emake_contrib check
+    esandbox disallow_net "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
+    esandbox disallow_net --connect "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
+
     esandbox disallow_net 'unix:/tmp/.s.PGSQL.*'
     esandbox disallow_net --connect 'unix:/tmp/.s.PGSQL.*'
 }
