@@ -47,6 +47,7 @@ MYOPTIONS="
     pam
     perl [[ description = [ Support for both PL/Perl and Pl/PerlU server-side programming languages ] ]]
     pg_trgm [[ description = [ Extension with trigram support for Full-Text Search ] ]]
+    pg_upgrade [[ description = [ Command line utility to upgrade clusters between major versions ] ]]
     pgcrypto [[ description = [ Extension with cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
     python [[ description = [ Support for PL/Python (only the \"untrusted\" version) server-side programming language ] ]]
     readline [[ description = [ Used only by the client psql for history control and autocomplete funcionality ] ]]
@@ -72,6 +73,7 @@ OPTIONS_IN_CONTRIB=(
     'lo vacuumlo'
     ltree
     pg_trgm
+    pg_upgrade
     pgcrypto
     tablefunc
 )
@@ -145,8 +147,12 @@ postgresql_src_emake_contrib() {
         postgresql_src_emake_contrib_one ${c:-$o} $1
     done
 
-    postgresql_src_emake_contrib_one pg_upgrade $1
+    # most people want these built into the server but they only realize
+    # it in the worst times, so let's get them ready upfront
+    postgresql_src_emake_contrib_one adminpack $1
+    postgresql_src_emake_contrib_one pg_stat_statements $1
     postgresql_src_emake_contrib_one pg_upgrade_support $1
+    postgresql_src_emake_contrib_one pgrowlocks $1
 }
 
 postgresql_src_compile() {
