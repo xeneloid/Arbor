@@ -113,7 +113,7 @@ configure_one_multibuild() {
         -DINSTALL_SCRIPTDIR:PATH=bin
         # Empty value to not install the sql-bench directory
         -DINSTALL_SQLBENCHDIR:STRING=
-        -DINSTALL_SUPPORTFILESDIR:PATH=share/doc/${PNVR}/support-files
+        -DINSTALL_SUPPORTFILESDIR:PATH=share/mysql
         -DMYSQL_DATADIR:PATH=/var/lib/mysql
         -DMYSQL_UNIX_ADDR:PATH=/run/mysqld/mysqld.sock
         -DSYSCONFDIR:PATH=/etc/mysql
@@ -188,9 +188,9 @@ mysql_src_install() {
     keepdir /etc/mysql
 
     if ever at_least 5.6.10 ; then
-        edo cp "${IMAGE}"/usr/share/doc/${PNVR}/support-files/my-default.cnf "${IMAGE}"/etc/mysql/my.cnf
+        edo cp "${IMAGE}"/usr/share/${PN}/my-default.cnf "${IMAGE}"/etc/mysql/my.cnf
     else
-        edo cp "${IMAGE}"/usr/share/doc/${PNVR}/support-files/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
+        edo cp "${IMAGE}"/usr/share/${PN}/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
     fi
     edo mv "${IMAGE}"/usr/bin/mysqlaccess.conf "${IMAGE}"/etc/mysql/mysqlaccess.conf
     edo chmod 644 "${IMAGE}"/etc/mysql/mysqlaccess.conf
