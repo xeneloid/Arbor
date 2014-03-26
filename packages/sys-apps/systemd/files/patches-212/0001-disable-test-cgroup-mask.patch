@@ -1,0 +1,39 @@
+From 0afee06b26b14d3394733eff74522bda1ccdcef1 Mon Sep 17 00:00:00 2001
+From: Kay Sievers <kay@vrfy.org>
+Date: Wed, 26 Mar 2014 01:30:32 +0000
+Subject: build-sys: disable test-cgroup-mask, it mangles valid user data in /run/user/$UID/
+
+  $ ./test-cgroup-mask
+  ...
+  rmdir("/run/user/2702/systemd/generator") = 0
+  open("/run/user/2702/systemd/generator.late", O_RDONLY|O_NONBLOCK|O_DIRECTORY|O_NOFOLLOW|O_NOATIME|O_CLOEXEC) = 5
+  fstat(5, {st_mode=S_IFDIR|0755, st_size=3200, ...}) = 0
+  fcntl(5, F_GETFL)                       = 0x78800 (flags O_RDONLY|O_NONBLOCK|O_LARGEFILE|O_DIRECTORY|O_NOFOLLOW|O_NOATIME)
+  fcntl(5, F_SETFD, FD_CLOEXEC)           = 0
+  getdents(5, /* 160 entries */, 32768)   = 10072
+  unlinkat(5, "org.gnome.Weather.Application.busname", 0) = 0
+  unlinkat(5, "dbus-org.gnome.Weather.Application.service", 0) = 0
+  ...
+---
+diff --git a/Makefile.am b/Makefile.am
+index abef517..a2ff014 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1172,6 +1172,7 @@ manual_tests += \
+ 	test-hostname \
+ 	test-daemon \
+ 	test-cgroup \
++	test-cgroup-mask \
+ 	test-install \
+ 	test-watchdog \
+ 	test-log \
+@@ -1199,7 +1200,6 @@ tests += \
+ 	test-calendarspec \
+ 	test-strip-tab-ansi \
+ 	test-cgroup-util \
+-	test-cgroup-mask \
+ 	test-prioq \
+ 	test-fileio \
+ 	test-time \
+--
+cgit v0.9.0.2-2-gbebe
