@@ -3,7 +3,7 @@
 # Based in part upon 'gpm-1.20.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ]
 require easy-multibuild [ multiunpack=true ] systemd-service
 
 SUMMARY="Console-based mouse driver"
