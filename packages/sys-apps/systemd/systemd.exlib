@@ -59,7 +59,6 @@ MYOPTIONS="
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
     simple-net [[ description = [ Include an extremely simple service for static networking ] ]]
     static-net [[ description = [ Include a simple service for static networking ] ]]
-    tcpd
     xattr
     zsh-completion
 "
@@ -68,6 +67,12 @@ if ever at_least 209; then
     MYOPTIONS+="
         kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
         seccomp [[ description = [ System call filtering support via seccomp ] ]]
+    "
+fi
+
+if ever at_least 212; then
+    MYOPTIONS+="
+        gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     "
 fi
 
@@ -114,13 +119,12 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt[multibuild_c:*(-)?] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         journal-gateway? (
-            net-libs/libmicrohttpd[>=0.9.5][multibuild_c:*(-)?]
+            net-libs/libmicrohttpd[>=0.9.33][multibuild_c:*(-)?]
             user/systemd-journal-gateway
             group/systemd-journal-gateway
         )
         polkit? ( sys-auth/polkit:1[multibuild_c:*(-)?] )
         qrencode? ( media-libs/qrencode[multibuild_c:*(-)?] )
-        tcpd? ( sys-apps/tcp-wrappers[multibuild_c:*(-)?] )
         xattr? ( sys-apps/attr[multibuild_c:*(-)?] )
     run:
         sys-apps/coreutils
@@ -156,7 +160,15 @@ if ever at_least 209; then
         run:
             sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
     "
-else
+fi
+
+if ever at_least 212; then
+    DEPENDENCIES+="
+        gnutls? ( dev-libs/gnutls[>=3.1.4][multibuild_c:*(-)?] )
+    "
+fi
+
+if ! ever at_least 209; then
     DEPENDENCIES+="
         build+run:
             sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
@@ -299,7 +311,6 @@ configure_one_multibuild() {
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
-        $(option_enable tcpd tcpwrap)
         $(option_enable xattr)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
@@ -315,6 +326,12 @@ configure_one_multibuild() {
             --enable-rfkill
             $(option_enable kdbus)
             $(option_enable seccomp)
+        )
+    fi
+
+    if ever at_least 212; then
+        myconfig+=(
+            $(option_enable gnutls)
         )
     fi
 
