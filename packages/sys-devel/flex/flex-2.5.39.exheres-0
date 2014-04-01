@@ -13,7 +13,7 @@ MYOPTIONS="multibuild_c: 32 64"
 DEPENDENCIES="
     build:
         sys-devel/bison[>=2.6]
-        sys-devel/gettext[>=0.18]
+        sys-devel/gettext[>=0.18.1]
         sys-devel/m4[>=1.4]
 "
 
