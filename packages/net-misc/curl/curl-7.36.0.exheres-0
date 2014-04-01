@@ -28,6 +28,7 @@ DEPENDENCIES="
         idn? ( net-dns/libidn[multibuild_c:*(-)?] )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/f82e0edc171b33528bc4f59036505d98ecf1d816.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{cookies,crypto-auth,largefile,manual,proxy,tls-srp}
     --enable-{dict,file,ftp,gopher,http,ipv6,imap,pop3,rtsp,smtp,telnet,tftp}
@@ -71,7 +72,7 @@ EOF
 
     # Default TEST_F is -a -p -r; we add -n (no valgrind) -v (verbose) and remove -r (run time statistics)
     local test_args=( -a -p -n -v )
-    test_args+=( '!'{600..639} )
+    test_args+=( '!'{600..641} )
     emake test-full TEST_F="${test_args[*]}" # SSH tests hang
 
     esandbox disallow_net --connect "inet:127.0.0.1@9011"
