@@ -8,11 +8,6 @@ GTK_ICON_CACHE_ICON_THEME_DIRECTORIES=()
 
 export_exlib_phases pkg_preinst pkg_postinst pkg_postrm
 
-DEPENDENCIES="
-    build:
-        x11-libs/gtk+:*
-"
-
 gtk_icon_cache_exlib_save_theme_directories()
 {
     illegal_in_global_scope
