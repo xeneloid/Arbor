@@ -42,7 +42,7 @@ DEPENDENCIES="
 if ever at_least 3.0.0-rc1 ; then
     DEPENDENCIES+="
         build:
-            dev-python/Sphinx[python_abis:2.7]
+            dev-python/Sphinx[>=1.2.2][python_abis:2.7]
     "
     BASH_COMPLETIONS=(
         Auxiliary/bash-completion/cmake
@@ -59,7 +59,7 @@ fi
 
 VIMFILE="${PN}.vim"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
+DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/remove-test-failure-submits-via-network2.patch
     "${FILES}"/${PN}-install-cmake.m4-to-usr-share-aclocal.patch
 )

@@ -58,7 +58,6 @@ MYOPTIONS="
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
     simple-net [[ description = [ Include an extremely simple service for static networking ] ]]
     static-net [[ description = [ Include a simple service for static networking ] ]]
-    tcpd
     xattr
     zsh-completion
 "
@@ -67,6 +66,12 @@ if ever at_least 209; then
     MYOPTIONS+="
         kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
         seccomp [[ description = [ System call filtering support via seccomp ] ]]
+    "
+fi
+
+if ever at_least 212; then
+    MYOPTIONS+="
+        gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     "
 fi
 
@@ -112,13 +117,12 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         journal-gateway? (
-            net-libs/libmicrohttpd[>=0.9.5]
+            net-libs/libmicrohttpd[>=0.9.33]
             user/systemd-journal-gateway
             group/systemd-journal-gateway
         )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
-        tcpd? ( sys-apps/tcp-wrappers )
         xattr? ( sys-apps/attr )
     run:
         sys-apps/coreutils
@@ -154,7 +158,15 @@ if ever at_least 209; then
         run:
             sys-apps/dbus[>=1.4.0]
     "
-else
+fi
+
+if ever at_least 212; then
+    DEPENDENCIES+="
+        gnutls? ( dev-libs/gnutls[>=3.1.4][multibuild_c:*(-)?] )
+    "
+fi
+
+if ! ever at_least 209; then
     DEPENDENCIES+="
         build+run:
             sys-apps/dbus[>=1.4.0]
@@ -215,7 +227,10 @@ systemd_src_prepare() {
     edo sed -i -e '/test-sched-prio/s:test-sched-prio:$(NULL):' Makefile.am
 
     # Broken.
-    #    edo sed -i -e '/test-hashmap/s:test-hashmap:$(NULL):' Makefile.am
+    edo sed -i -e '/test-util/s:test-util:$(NULL):' Makefile.am
+    edo sed -i -e '/test-bus-gvariant/s:test-bus-gvariant:$(NULL):' Makefile.am
+    edo sed -i -e '/test-bus-cleanup/s:test-bus-cleanup:$(NULL):' Makefile.am
+    edo sed -i -e '/test-rtnl/s:test-rtnl.*:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -275,7 +290,6 @@ systemd_src_configure() {
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
-        $(option_enable tcpd tcpwrap)
         $(option_enable xattr)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
@@ -291,6 +305,12 @@ systemd_src_configure() {
             --enable-rfkill
             $(option_enable kdbus)
             $(option_enable seccomp)
+        )
+    fi
+
+    if ever at_least 212; then
+        myconfig+=(
+            $(option_enable gnutls)
         )
     fi
 

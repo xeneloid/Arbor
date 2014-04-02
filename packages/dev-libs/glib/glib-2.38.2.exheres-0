@@ -33,8 +33,8 @@ DEPENDENCIES="
     recommendation:
         sys-apps/dbus[>=1.2.14] [[ note = [ Required for GDBus ] ]]
         dev-libs/glib-networking [[ description = [ Required for GNet ] ]]
-        gnome-desktop/dconf [[ description = [ default GSettings backend ] ]]
     suggestion:
+        gnome-desktop/dconf [[ description = [ default GSettings backend ] ]]
         gnome-desktop/gvfs [[ description = [ Provides utilities and support for GIO ] ]]
 "
 

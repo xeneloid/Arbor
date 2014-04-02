@@ -33,9 +33,13 @@ src_prepare() {
 
     if ever at_least 3.4 ; then
         expatch "${FILES}"/${PN}-fix-llvm-config.patch
-        expatch "${FILES}"/llvm-config-path-v2.patch
+        expatch "${FILES}"/llvm-config-path-v3.patch
     else
         expatch "${FILES}"/llvm-config-path.patch
+    fi
+
+    if ever at_least 3.4 && ! ever is_scm; then
+        expatch "${FILES}"/llvm-config-path-3.4.patch
     fi
 
     default

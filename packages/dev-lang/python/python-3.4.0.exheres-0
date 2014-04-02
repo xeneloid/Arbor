@@ -1,0 +1,48 @@
+# Copyright 2009, 2010 Ingmar Vanhassel
+# Distributed under the terms of the GNU General Public License v2
+
+require python-build
+
+PLATFORMS="~amd64 ~arm ~x86"
+
+DEPENDENCIES+="
+    build+run:
+        app-arch/xz[multibuild_c:*(-)?]
+        dev-libs/expat[multibuild_c:*(-)?]
+        !dev-lang/python:3.2[=3.2.5] [[
+            description = [ Man file collision ]
+        ]]
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS+=( '--with-system-expat' )
+
+test_one_multibuild() {
+    local DISABLE_TESTS
+    # test_install_lib: (test_distuils) has problems with path resolution
+    # test_gdb: never-ending threads running under gdb
+    # test_socket: seems to hang
+    # the rest want to bind to 0.0.0.0/::
+    # test_smtpnet test_ssl test_timeout test_urllibnet test_urllib2 test_urllib2net: wants access to DNS
+    DISABLE_TESTS=( test_asyncio test_distutils test_ftplib test_gdb test_pydoc test_smtpnet test_socket
+                    test_sqlite test_ssl test_timeout test_urllibnet test_urllib2 test_urllib2net )
+
+    # for test_socketserver
+    esandbox allow_net "unix:${TEMP%/}"'/unix_socket.*'
+
+    # for test_sysconfig
+    esandbox allow_net "unix:${TEMP%/}"/'tmp*'
+
+    # for test_logging
+    esandbox allow_net "unix:${TEMP%/}"'/test_logging_*.sock'
+
+    # for test_asyncore
+    esandbox allow_net "unix:${PWD%/}"'/build/test_python_*/@test_*_tmp'
+
+    python-build_test_one_multibuild
+
+    esandbox disallow_net "unix:${PWD%/}"'/build/test_python_*/@test_*_tmp'
+    esandbox disallow_net "unix:${TEMP%/}"'/test_logging_*.sock'
+    esandbox disallow_net "unix:${TEMP%/}"/'tmp*'
+    esandbox disallow_net "unix:${TEMP%/}"'/unix_socket.*'
+}
+
