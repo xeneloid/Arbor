@@ -1,0 +1,30 @@
+From 0dff4bf0a6d3db68877e6b0c90bf7f6f9c3b67af Mon Sep 17 00:00:00 2001
+From: Saleem Abdulrasool <compnerd@compnerd.org>
+Date: Tue, 1 Apr 2014 19:29:28 -0700
+Subject: [PATCH] build: fix build with PKCS11 disabled
+
+---
+ tls/tests/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tls/tests/Makefile.am b/tls/tests/Makefile.am
+index 6287b9c..575daf3 100644
+--- a/tls/tests/Makefile.am
++++ b/tls/tests/Makefile.am
+@@ -12,12 +12,12 @@ LDADD  = \
+ test_programs =       \
+ 	certificate   \
+ 	file-database \
+-	connection    \
+ 	$(NULL)
+ 
+ if HAVE_PKCS11
+ 
+ test_programs +=           \
++	connection         \
+ 	pkcs11-util        \
+ 	pkcs11-array       \
+ 	pkcs11-pin         \
+-- 
+1.9.1
+
