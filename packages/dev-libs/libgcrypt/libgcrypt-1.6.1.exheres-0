@@ -4,6 +4,7 @@
 #     Copyright 1999-2008 Gentoo Foundation.
 
 require easy-multibuild
+require flag-o-matic
 
 SUMMARY="General purpose crypto library based on the code used in GnuPG"
 HOMEPAGE="http://www.gnupg.org/"
@@ -25,6 +26,11 @@ DEPENDENCIES="
 "
 
 configure_one_multibuild() {
+    # FIXME(compnerd) using -Os on recent x86_64 CPUs (e.g. IvyBridge) results in a broken
+    # libgcrypt.  Cursory inspection indicates either a mis-aligned SIMD access or an invalid memory
+    # reference.  This is detected via test/basic which fails.
+    replace-flags -O* -O2
+
     # --enable-static - cryptsetup wants static
     # --disable-padlock-support - Suggested by upstream, also see Gentoo #201917
     # --without-capabilities - declared as Alpha code in configure.ac
