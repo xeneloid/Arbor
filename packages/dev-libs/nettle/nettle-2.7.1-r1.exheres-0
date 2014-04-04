@@ -31,3 +31,12 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES+=( 'arm_cpu_features:neon arm-neon' )
 # configure appends -ggdb3 unconditionally and it seems to be explicitly
 # wanted by the author, check what problems arise once it's removed
 
+configure_one_multibuild()
+{
+    econf \
+        --enable-shared \
+        --disable-openssl \
+        $(option_enable arm_cpu_features:neon arm-neon) \
+        $(multibuild_default_target C || echo --with-include-path=/usr/${CHOST}/include)
+}
+
