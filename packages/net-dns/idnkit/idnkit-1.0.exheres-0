@@ -6,7 +6,7 @@ SUMMARY="Idnkit provides functionalities about Internationalized Domain Name pro
 HOMEPAGE="http://www.nic.ad.jp/ja/idn/idnkit/download/"
 DOWNLOADS="${HOMEPAGE}/sources/${PNV}-src.tar.gz"
 
-LICENCES="JNIC"
+LICENCES="BSD-4"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
