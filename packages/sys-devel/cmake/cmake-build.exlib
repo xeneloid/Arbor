@@ -21,7 +21,7 @@ REMOTE_IDS="freecode:${PN}"
 
 UPSTREAM_CHANGELOG="${HOMEPAGE}/files/v$(ever range 1-2)/CMakeChangeLog-${PV}"
 
-LICENCES="CMake"
+LICENCES="BSD-3"
 SLOT="0"
 MYOPTIONS="emacs qt4
     qt5 [[ description = [ Build against Qt5 instead of Qt4. ] ]]
