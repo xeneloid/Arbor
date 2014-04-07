@@ -14,13 +14,15 @@ LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    examples
+    examples vim-syntax
     multibuild_c: 32 64
 "
 
 DEPENDENCIES="
     build:
         dev-lang/python:*[multibuild_c:*(-)?]
+    recommendation:
+        vim-syntax? ( app-vim/googletest-syntax )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --with-pthreads )
