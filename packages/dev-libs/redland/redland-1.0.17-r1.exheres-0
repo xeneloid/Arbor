@@ -27,7 +27,7 @@ DEPENDENCIES="
         dev-libs/rasqal[>=0.9.25&<=0.9.99]
         media-libs/raptor[>=2.0.7]
         berkdb? ( sys-libs/db:=[>=3.1&<=5.3] )
-        mysql? ( dev-db/mysql )
+        mysql? ( virtual/mysql )
         postgresql? ( dev-db/postgresql )
         sqlite? ( dev-db/sqlite:3 )
         virtuoso? (
