@@ -7,6 +7,8 @@ HOMEPAGE=""
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
+    embedded-server [[ description = [ A full-featured server library that can be run inside a client application ] ]]
+    multibuild_c: 32 64
     ( providers:
         mysql
         mariadb
@@ -18,8 +20,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:mysql? ( dev-db/mysql[~>${PV}] )
-    providers:mariadb? ( dev-db/mariadb[~>10.0] )
-    providers:percona? ( dev-db/Percona-Server[~>${PV}] )
+    providers:mysql? ( dev-db/mysql[~>${PV}][embedded-server?][multibuild_c:*(-)?] )
+    providers:mariadb? ( dev-db/mariadb[~>10.0][embedded-server?][multibuild_c:*(-)?] )
+    providers:percona? ( dev-db/Percona-Server[~>${PV}][embedded-server?][multibuild_c:*(-)?] )
 "
 
