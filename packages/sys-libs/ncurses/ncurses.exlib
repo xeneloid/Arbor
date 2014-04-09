@@ -24,6 +24,7 @@ configure_one_multibuild() {
         --libdir=/${LIBDIR}
         --enable-pc-files
         --enable-termcap
+        PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
     )
 
     edo mkdir "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/narrow"
