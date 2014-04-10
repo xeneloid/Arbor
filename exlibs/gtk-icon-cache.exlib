@@ -2,18 +2,19 @@
 # Copyright 2012 Benedikt Morbach <moben@exherbo.org>
 # Distributed under the terms of the GNU General Purpose License v2
 
+# NOTE(moben): This exlib does _not_ depend on gtk+.
+#              If gtk+ isn't installed, then there is no point in pulling it in
+#              just to generate its cache. (example: qt/kde-only system)
+#              Code in x11-libs/gtk+ makes sure that the cache is generated,
+#              should gtk+ be installed at a later point.
+#              If gtk+ is indeed installed, this exlib will regenerate the
+#              cache when an application is installed.
+               
 : ${GTK_UPDATE_ICON_CACHE:=${ROOT}usr/bin/gtk-update-icon-cache}
 
 GTK_ICON_CACHE_ICON_THEME_DIRECTORIES=()
 
 export_exlib_phases pkg_preinst pkg_postinst pkg_postrm
-
-# Stolen from freedesktop-desktop
-gtk_update_icon_cache_is_gtk() {
-    [[ "${CATEGORY}/${PN}" == 'x11-libs/gtk+' ]]
-}
-
-gtk_update_icon_cache_is_gtk || DEPENDENCIES="build: x11-libs/gtk+:*"
 
 gtk_icon_cache_exlib_save_theme_directories()
 {

@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require easy-multibuild gnome.org [ suffix=.tar.xz ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="GIO-based library targeted primarily for use by operating system components"
 HOMEPAGE="https://wiki.gnome.org/Projects/LibGSystem"
+DOWNLOADS="https://git.gnome.org/browse/${PN}/snapshot/${PNV}.tar.gz"
 
 LICENCES="LGPL-2"
 SLOT="0"

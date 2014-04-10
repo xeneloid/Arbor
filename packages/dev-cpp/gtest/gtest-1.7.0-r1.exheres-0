@@ -13,11 +13,13 @@ fatal and non-fatal failures, various options for running the tests, and XML tes
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="examples"
+MYOPTIONS="examples vim-syntax"
 
 DEPENDENCIES="
     build:
         dev-lang/python:*
+    recommendation:
+        vim-syntax? ( app-vim/googletest-syntax )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --with-pthreads )

@@ -46,3 +46,12 @@ configure_one_multibuild() {
     default
 }
 
+install_one_multibuild() {
+    default
+
+    if ! multibuild_default_target C; then
+        edo mkdir -p "${IMAGE}"/usr/${CHOST}/include
+        edo mv "${IMAGE}"/usr/{,${CHOST}}/include/gmp.h
+    fi
+}
+
