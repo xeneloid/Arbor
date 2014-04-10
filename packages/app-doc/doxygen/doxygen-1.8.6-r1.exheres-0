@@ -44,7 +44,6 @@ DEPENDENCIES="
         )
     build+run:
         app-text/ghostscript
-        media-libs/libpng
         dot? (
             media-gfx/graphviz[>=1.8.10]
             media-libs/freetype:2
