@@ -28,7 +28,7 @@ DEPENDENCIES="
         dev-libs/glib:2[>=2.11]
         media-libs/fontconfig[>=2.3.95]
         media-libs/freetype:2[>=2.1.10]
-        media-libs/libpng[>=1.2]
+        media-libs/libpng:=[>=1.2]
         x11-libs/cairo[>=1.1.10]
         x11-libs/pango[>=1.12.4]
         svg? ( gnome-desktop/librsvg:2 )
