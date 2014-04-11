@@ -2,31 +2,31 @@
 # Copyright 2008 Bo Ørsted Andresen
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives
-
-if ever at_least 4.0.0; then
-    require gnu [ suffix=xz ]
-else
-    require gnu [ suffix=bz2 ]
-fi
+require alternatives gnu [ suffix=xz ]
 
 SUMMARY="GNU awk implementation"
 
 LICENCES="GPL-3"
 SLOT="0"
 MYOPTIONS="
-    baselayout [[ description = [ Build and install filefuncs
-        extension to /rcscripts, required by baselayout ] ]]"
+    baselayout [[ description = [ Build and install filefuncs extension to /rcscripts, required by baselayout ] ]]
+"
 
 DEPENDENCIES="
     build:
         sys-devel/gettext
+    build+run:
+        dev-libs/gmp:=
+        dev-libs/mpfr:=
+        sys-libs/readline
 "
 
 # Install binaries outside /usr
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --bindir=/bin
     --enable-nls
+    --with-mpfr
+    --with-readline
     ac_cv_libsigsegv=no # Do not link against libsigsegv
 )
 

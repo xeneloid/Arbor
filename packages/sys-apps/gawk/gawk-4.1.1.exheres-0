@@ -2,9 +2,10 @@
 # Copyright 2008 Bo Ørsted Andresen
 # Distributed under the terms of the GNU General Public License v2
 
-require gawk
+require gawk autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-4.1.1-sandbox_issue.patch )
 DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
