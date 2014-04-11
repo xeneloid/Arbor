@@ -17,6 +17,12 @@ myexparam ruby_opt=
 
 myexparam -b has_rdoc=true
 
+myexparam pn=${MY_PN:-${PN}}
+myexparam pnv=${MY_PNV:-$(exparam pn)-${PV}}
+
+exparam -v RUBY_PN pn
+exparam -v RUBY_PNV pnv
+
 exparam -v RUBY_ABIS ruby_abis[@]
 exparam -v RUBY_OPT ruby_opt
 
@@ -43,11 +49,11 @@ gem_dependencies() {
 }
 
 if [[ -z ${DOWNLOADS} ]]; then
-    DOWNLOADS="http://gems.rubyforge.org/gems/${PNV}.gem"
-    REMOTE_IDS="rubyforge:${PN}"
+    DOWNLOADS="http://gems.rubyforge.org/gems/${RUBY_PNV}.gem"
+    REMOTE_IDS="rubyforge:${RUBY_PN}"
 fi
 
-HOMEPAGE="http://${PN}.rubyforge.org"
+HOMEPAGE="http://${RUBY_PN}.rubyforge.org"
 MYOPTIONS="$(gem_myoptions)"
 
 DEPENDENCIES="
@@ -85,7 +91,7 @@ gem_install_abi() {
         myconf+=( --no-ri --no-rdoc )
     fi
 
-    local gem=${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${PNV}.gem}
+    local gem=${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${RUBY_PNV}.gem}
 
     edo ${GEM} install "${gem}" --local "${myconf[@]}"
 
