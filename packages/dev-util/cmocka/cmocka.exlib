@@ -3,7 +3,7 @@
 
 require cmake [ api=2 ]
 
-FILE_ID=34
+FILE_ID=37
 
 SUMMARY="An elegant unit testing framework for C"
 DESCRIPTION="It supports mock objects and only requires the standard C
