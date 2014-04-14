@@ -36,7 +36,7 @@ DEPENDENCIES="
         media-libs/freetype:2[multibuild_c:*(-)?]
         media-libs/jpeg[multibuild_c:*(-)?]
         media-libs/lcms2[multibuild_c:*(-)?]
-        media-libs/libpng[multibuild_c:*(-)?]
+        media-libs/libpng:=[multibuild_c:*(-)?]
         media-libs/tiff[multibuild_c:*(-)?]
         net-print/cups[>=1.6][multibuild_c:*(-)?]
         avahi? (
