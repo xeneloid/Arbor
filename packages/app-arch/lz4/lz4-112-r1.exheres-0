@@ -21,6 +21,6 @@ WORK=${WORKBASE}/${MY_PNV}
 
 src_prepare() {
     # fix hardcoded libdir
-    edo sed -i -e "s:/lib:/${LIBDIR}:" Makefile
+    edo sed -i -e "s:^LIBDIR=\$(PREFIX)/lib:LIBDIR=\$(PREFIX)/$LIBDIR:" Makefile
 }
 
