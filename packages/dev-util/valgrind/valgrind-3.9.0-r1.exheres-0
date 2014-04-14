@@ -7,3 +7,7 @@ require valgrind
 
 PLATFORMS="-* ~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    -p2 "${FILES}"/${PNV}-Accept-glibc-2.19-as-valid.patch
+)
+
