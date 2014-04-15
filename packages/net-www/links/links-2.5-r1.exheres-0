@@ -39,10 +39,10 @@ DEPENDENCIES="
     build+run:
         sys-libs/ncurses
         X? ( x11-libs/libXext
-            media-libs/libpng[>=1.2.1]
+            media-libs/libpng:=[>=1.2.1]
             jpeg? ( media-libs/jpeg[>=6b] )
             tiff? ( media-libs/tiff[>=3.5.7] ) )
-        fbcon? ( media-libs/libpng[>=1.2.1]
+        fbcon? ( media-libs/libpng:=[>=1.2.1]
             jpeg? ( media-libs/jpeg[>=6b] )
             tiff? ( media-libs/tiff[>=3.5.7] ) )
         gpm? ( sys-libs/gpm )
