@@ -1,9 +1,13 @@
 # Copyright 2008 Fernando J. Pereda
-# Distributed under the terms of the GPLv2
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=tar.gz ]
 
 SUMMARY="A text-based email client"
 HOMEPAGE="http://www.mutt.org/"
-DOWNLOADS="ftp://ftp.mutt.org/mutt/devel/${PNV}.tar.gz"
+
+# Down
+#DOWNLOADS="ftp://ftp.mutt.org/mutt/devel/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -28,6 +32,7 @@ DEPENDENCIES="
         dev-libs/libxslt
         sys-devel/gettext
     build+run:
+        dev-libs/openssl
         gdbm? ( sys-libs/gdbm )
         gpgme? ( app-crypt/gpgme )
         idn? ( net-dns/libidn )
