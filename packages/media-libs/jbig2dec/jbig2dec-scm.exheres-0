@@ -20,5 +20,6 @@ src_prepare() {
     edo sed -n '/creating config_types\.h\.in/,/^EOF/p' autogen.sh > tiny-autogen.sh
     edo sh tiny-autogen.sh
     autotools_src_prepare
+    expatch -p1 "${FILES}"/0001-Fix-compilation-with-libpng-1.5-and-later.patch
 }
 
