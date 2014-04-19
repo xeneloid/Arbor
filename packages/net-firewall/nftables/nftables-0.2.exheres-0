@@ -6,10 +6,3 @@ require nftables
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-fix-configure.in.patch )
-
-src_prepare(){
-    default
-    edo ./autogen.sh
-}
-

@@ -2,7 +2,9 @@
 # Copyright 2014 Julien Pivotto <roidelapluie@inuits.eu>
 # Distributed under the terms of the GNU General Public License v2
 
-require libnetfilter
+require libnetfilter autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
+
+export_exlib_phases src_prepare
 
 SUMMARY="nftables user space utility"
 DESCRIPTION="
@@ -14,17 +16,36 @@ existing hooks, the connection tracking system, the userspace queueing component
 and the logging subsystem.
 "
 
-BUGS_TO+="roidelapluie@inuits.eu"
+BUGS_TO+=" roidelapluie@inuits.eu"
 
 LICENCES="GPL-2"
-MYOPTIONS=""
+MYOPTIONS="
+    debug
+"
 
 DEPENDENCIES="
+    build:
+        app-text/xmlto
+        sys-devel/bison
+        sys-devel/flex
     build+run:
         dev-libs/gmp
         net-libs/libmnl
-        net-libs/libnftnl
-    suggestion:
-        app-doc/docbook2X
+        net-libs/libnftnl[>=1.0.1]
 "
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    debug
+)
+
+nftables_src_prepare() {
+    # docbook2X is weird, has annoying dependencies, the latest release is from
+    # 2007 and nftables doesn't find it even if it's installed. Let's just use
+    # xmlto.
+    edo sed -i -e "s:docbook2x-man:xmlto:" configure.ac
+    edo sed -i -e "s:db2x_docbook2man:xmlto:" configure.ac
+    edo sed -i -e "s:--xinclude:man --skip-validation:" Makefile.rules.in
+
+    autotools_src_prepare
+}
 
