@@ -1,0 +1,25 @@
+# Copyright 2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ project=docbook2x suffix=tar.gz ]
+
+SUMMARY="Converts DocBook into Unix man pages and the GNU Texinfo format"
+BUGS_TO="philantrop@exherbo.org"
+REMOTE_IDS="freecode:${PN}"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        dev-libs/libxslt
+        dev-perl/XML-SAX
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-xslt-processor=libxslt
+    --without-html-xsl
+)
+
