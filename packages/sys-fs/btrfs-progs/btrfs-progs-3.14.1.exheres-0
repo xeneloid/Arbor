@@ -5,5 +5,3 @@ require btrfs-progs
 
 PLATFORMS="~amd64 ~x86"
 
-DOWNLOADS="http://dev.exherbo.org/~philantrop/distfiles/${PNV}.tar.xz"
-
