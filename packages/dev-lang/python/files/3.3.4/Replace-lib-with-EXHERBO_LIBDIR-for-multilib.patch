@@ -148,3 +148,26 @@ index 78b85f6..e12661c 100644
 -- 
 1.7.7.4
 
+diff -udr a/Modules/getpath.c b/Modules/getpath.c
+--- a/Modules/getpath.c	2014-02-09 08:59:26.000000000 +0100
++++ b/Modules/getpath.c	2014-04-21 22:57:02.285033607 +0200
+@@ -122,8 +122,8 @@
+ #endif
+ 
+ #ifndef PYTHONPATH
+-#define PYTHONPATH PREFIX "/lib/python" VERSION ":" \
+-              EXEC_PREFIX "/lib/python" VERSION "/lib-dynload"
++#define PYTHONPATH PREFIX "/@@EXHERBO_LIBDIR@@/python" VERSION ":" \
++              EXEC_PREFIX "/@@EXHERBO_LIBDIR@@/python" VERSION "/lib-dynload"
+ #endif
+ 
+ #ifndef LANDMARK
+@@ -135,7 +135,7 @@
+ static wchar_t progpath[MAXPATHLEN+1];
+ static wchar_t *module_search_path = NULL;
+ static int module_search_path_malloced = 0;
+-static wchar_t *lib_python = L"lib/python" VERSION;
++static wchar_t *lib_python = L"@@EXHERBO_LIBDIR@@/python" VERSION;
+ 
+ static void
+ reduce(wchar_t *dir)
