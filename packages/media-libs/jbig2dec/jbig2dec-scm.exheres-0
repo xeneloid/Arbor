@@ -21,5 +21,6 @@ src_prepare() {
     edo sh tiny-autogen.sh
     autotools_src_prepare
     expatch -p1 "${FILES}"/0001-Fix-compilation-with-libpng-1.5-and-later.patch
+    expatch -p1 "${FILES}"/0001-Install-memento.h.patch
 }
 
