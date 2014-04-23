@@ -76,6 +76,7 @@ python-build_prepare_one_multibuild() {
         Lib/distutils/sysconfig.py
         Lib/site.py
         Makefile.pre.in
+        Modules/getpath.c
     )
 
     if ever at_least 3.2; then
@@ -86,7 +87,6 @@ python-build_prepare_one_multibuild() {
     else
         needs_sed+=(
             Modules/Setup.dist
-            Modules/getpath.c
             setup.py
         )
     fi
@@ -97,7 +97,7 @@ python-build_prepare_one_multibuild() {
         )
     fi
 
-    edo sed -i -e "s:@@EXHERBO_LIBDIR@@:${LIBDIR}:g" ${needs_sed[@]}
+    edo sed -i -e "s:@@EXHERBO_LIBDIR@@:${LIBDIR}:g" "${needs_sed[@]}"
 
     if ! multibuild_default_target C; then
         edo cp "${FILES}"/"${PN}"-config.py .
