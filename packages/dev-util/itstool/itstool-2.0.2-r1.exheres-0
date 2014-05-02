@@ -2,11 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Internalization Tag Set Tool"
-DESCRIPTION="ITS Tool allows you to translate your XML documents with PO files, using rules from the
-W3C Internationalization Tag Set (ITS) to determine what to translate and how to separate it into PO
-file messages."
-HOMEPAGE="http://itstool.org/"
-DOWNLOADS="http://files.itstool.org/${PN}/${PNV}.tar.bz2"
+DESCRIPTION="
+ITS Tool allows you to translate your XML documents with PO files, using rules
+from the W3C Internationalization Tag Set (ITS) to determine what to translate
+and how to separate it into PO file messages.
+"
+HOMEPAGE="http://${PN}.org"
+DOWNLOADS="http://files.${PN}.org/${PN}/${PNV}.tar.bz2"
 
 LICENCES="GPL-3"
 SLOT="0"
