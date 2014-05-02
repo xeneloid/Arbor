@@ -17,6 +17,6 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/libxml2[python]
+        dev-libs/libxml2:2.0[python]
 "
 
