@@ -31,7 +31,7 @@ SLOT="0"
 MYOPTIONS="
     baselayout
     berkdb
-    geoip
+    geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
     idn
     ldap
     mysql [[ requires = [ -threads ] ]]
