@@ -20,7 +20,7 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="as-is"
 SLOT="0"
 MYOPTIONS="
-    geoip
+    geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
     idn
 "
 
