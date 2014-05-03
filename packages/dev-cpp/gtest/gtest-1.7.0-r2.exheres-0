@@ -21,7 +21,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         dev-lang/python:*[multibuild_c:*(-)?]
-    recommendation:
+    suggestion:
         vim-syntax? ( app-vim/googletest-syntax )
 "
 
