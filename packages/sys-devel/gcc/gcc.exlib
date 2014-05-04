@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2008-2010 Bo Ørsted Andresen <zlin@exherbo.org>
-# Copyright 2009,2011,2012,2013 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 2009,2011-2014 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require multibuild
@@ -35,10 +35,17 @@ MYOPTIONS="
     objc-runtime    [[ description = [ build the Objective-C runtime (needed for building Objective-C code) ] ]]
     openmp          [[ description = [ build support for OpenMP ] ]]
 
-    ( linguas:
-        be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
+    (
+        linguas:
+            be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
     )
 "
+
+if ever at_least 4.7 ; then
+    MYOPTIONS+="
+        sanitizers      [[ description = [ build sanitizers (ASAN, TSAN, UBSAN) ] ]]
+    "
+fi
 
 DEPENDENCIES="
     build:
@@ -202,7 +209,14 @@ EOF
     # NOTE(compnerd) disable bootstrap; the exheres is not meant for GCC development, so there is no
     # point in rebuilding and rebuilding again just to verify that GCC is able to self-host for most
     # people.
-    econf --cache-file=config.cache                                 \
+
+    # TODO(compnerd) until someone wants or needs cilk, disable it.
+    # TODO(compnerd) make transactional memory support optional; it requires explicit hardware
+    # support and adds langugae extensions
+    # TODO(compnerd) make vtv an optional feature; it is not free and everything built against it
+    # will need to explicitly depend on the VTV option as it changes vtable information.
+    econf --target=${CHOST}                                         \
+          --cache-file=config.cache                                 \
           --hates=docdir                                            \
           --hates=disable-dependency-tracking                       \
           --libdir=/usr/${LIBDIR}                                   \
@@ -216,16 +230,21 @@ EOF
           --enable-lto $(! ever at_least 4.6 && echo --with-libelf) \
           ${enable_multilib}                                        \
           --enable-nls                                              \
-          $(ever at_least 4.7.2 && echo --enable-serial-configure)  \
+          $(if ever at_least 4.7.2 ; then
+                echo --enable-serial-configure
+            fi)                                                     \
           $(option_enable fortran libquadmath)                      \
           $(option_enable fortran libquadmath-support)              \
           $(option_with graphite cloog)                             \
-          $(ever at_least 4.8                                       \
-                || option_with graphite ppl)                        \
+          $(if ! ever at_least 4.8 ; then
+              option_with graphite ppl
+            fi)                                                     \
           $(if ever at_least 4.6 && optionq graphite ; then
                 if ! ever at_least 4.8 ; then
                     option_enable graphite cloog-backend ${cloog_backend}
-                    ever at_least 4.7 && echo '--disable-cloog-version-check'
+                    if ever at_least 4.7 ; then
+                        echo '--disable-cloog-version-check'
+                    fi
                 fi
             fi)                                                     \
           $(option_enable openmp libgomp)                           \
@@ -233,6 +252,17 @@ EOF
           $(option_enable propolice libssp)                         \
           --with-as=${CHOST}-as                                     \
           --with-ld=${CHOST}-ld                                     \
+          $(if ever at_least 4.7 ; then
+                echo --disable-libitm
+            fi)                                                     \
+          $(if ever at_least 4.8 ; then
+                option_enable sanitizers libsanitizer
+            fi)                                                     \
+          $(if ever at_least 4.9 ; then
+                echo --disable-libcilkrts
+                echo --disable-libvtv --disable-vtable-verify
+                echo --disable-install-libiberty
+            fi)                                                     \
           --with-system-zlib
 }
 
@@ -340,6 +370,9 @@ __gcc_slot_runtime() {
             local extension=${name#*.}          #        so.4.0.1             so.6.0.10           la
 
             case "${name}" in
+            lib*san*)
+                # ignore sanitizers, they are handled in __gcc_slot_sanitizers
+            ;;
             # always use newest available so version and create so symlinks
             libatomic.so*|libffi.so*|libgcc_s.so*|libgfortran.so*|libgcj_bc.so*|libgomp.so*|libitm.so*|libobjc.so*|*.so.0.0.0)
                 # rename /usr/lib/libffi.so.4.0.1 => /usr/lib/libffi-4.3.so.4.0.1
@@ -366,6 +399,29 @@ __gcc_slot_runtime() {
             ;;
             esac
         done
+    done
+}
+
+__gcc_slot_sanitizers() {
+    local sanitiser=
+    for sanitiser in "${IMAGE}"/usr/${LIBDIR}/lib*san* ; do
+        [[ -f ${santiser} ]] || continue
+
+        local path=${library##${IMAGE}}
+        local name=$(basename "${path}")  # libasan.so.1  libasan.a  libasan_preinit.o
+        local extension=${name#*.}        #         so.1          a                  o
+
+        case name in
+        *) die "unknown santizier; was a new sanitizer added?" ;;
+        libasan*|liblsan*|libtsan*|libubsan*)
+            # rename /usr/lib/libasan.so.1.0.0 => /usr/lib/libasan-4.9.0.so.1.0.0
+            edo mv "${IMAGE}${library%.${extension}}"{,-${SLOT}}.${extension}
+            symlinks+=( "${library%.${extension}}-${SLOT}.${extension}" )
+            if [[ ${extension} =~ so* ]] ; then
+                so_symlinks+=( "${library}" )
+            fi
+        ;;
+        esac
     done
 }
 
@@ -439,7 +495,13 @@ __gcc_provide_slot_alternatives() {
 }
 
 gcc_src_install() {
-    default
+    if ever at_least 4.9 ; then
+        # TODO(compnerd) figure out why this hack is needed
+        cd "${WORK}"
+        edo emake -j 1 DESTDIR="${IMAGE}" install
+    else 
+        default
+    fi
 
     local tool
     for tool in cpp gcov ; do
@@ -464,6 +526,7 @@ gcc_src_install() {
     __gcc_slot_ada
     __gcc_slot_java
     __gcc_slot_runtime
+    __gcc_slot_sanitizers
     __gcc_slot_shared_data
     __gcc_setup_gdb_extension
     __gcc_provide_slot_alternatives
