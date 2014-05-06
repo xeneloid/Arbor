@@ -16,6 +16,11 @@ DEPENDENCIES="
     build:
         dev-libs/libxslt
         dev-perl/XML-SAX
+    build+run:
+        !app-text/docbook-utils [[
+            description = [ Both ${PN} and app-text/docbook-utils install /usr/bin/docbook2man. Uninstall ${PN}. ]
+            resolution = manual
+        ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
