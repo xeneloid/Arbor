@@ -42,6 +42,10 @@ DEPENDENCIES="
         app-text/docbook-xml-dtd:*
         dev-perl/SGMLSpm
         jadetex? ( app-text/jadetex )
+        !app-doc/docbook2X [[
+            description = [ Both ${PN} and app-doc/docbook2X install /usr/bin/docbook2man. Uninstall app-doc/docbook2X. ]
+            resolution = uninstall-blocked-after
+        ]]
     suggestion:
         (
             net-www/links
