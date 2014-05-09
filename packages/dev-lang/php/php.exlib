@@ -35,7 +35,7 @@ MYOPTIONS="
             fileinfo      [[ description = [ Build fileinfo support. ] ]]
             filter        [[ description = [ Build the input filter extension. ] ]]
             ftp           [[ description = [ Enable FTP support. ] requires = [ php_extensions: ssl ] ]]
-            gd            [[ description = [ Support dynamic image manipulation via the GD graphics library (activates all supported formats) ] ]]
+            gd            [[ description = [ Support dynamic image manipulation via the bundled GD graphics library (activates all supported formats) ] ]]
             gdbm          [[ description = [ Build the GNU DBM extension. ] ]]
             imap          [[ description = [ Support for the IMAP4 protocol. ] ]]
             kerberos      [[ description = [ Support for Kerberos authentication. ] ]]
@@ -87,7 +87,7 @@ DEPENDENCIES="
         php_extensions:gd? (
             media-libs/freetype:2
             media-libs/jpeg[>=6b]
-            media-libs/libpng[>=1.2.35]
+            media-libs/libpng:=[>=1.2.35]
             media-libs/libvpx
             media-libs/t1lib[>=5.1.2]
             x11-libs/libXpm[>=3.5.7]

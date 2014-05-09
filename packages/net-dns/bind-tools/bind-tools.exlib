@@ -19,10 +19,16 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="as-is"
 SLOT="0"
-MYOPTIONS="idn"
+MYOPTIONS="
+    geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
+    idn
+"
 
 DEPENDENCIES="
     build+run:
+        dev-libs/json-c
+        dev-libs/openssl
+        geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
 "
 
@@ -30,7 +36,10 @@ DEPENDENCIES="
 RESTRICT="test"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-ipv6 )
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( idn )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    geoip
+    idn
+)
 
 WORK=${WORKBASE}/${MY_PNV}
 

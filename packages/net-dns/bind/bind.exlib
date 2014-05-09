@@ -31,23 +31,25 @@ SLOT="0"
 MYOPTIONS="
     baselayout
     berkdb
+    geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
     idn
     ldap
     mysql [[ requires = [ -threads ] ]]
     postgres [[ description = [ Adds support for the PostgreSQL backend. ] ]]
-    ssl
     threads [[ requires = [ -mysql ] ]]
 "
 
 DEPENDENCIES="
     build+run:
+        dev-libs/json-c
         dev-libs/libxml2:2.0
+        dev-libs/openssl
         berkdb? ( sys-libs/db:= )
+        geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         ldap? ( net-directory/openldap )
         mysql? ( dev-db/mysql )
         postgres? ( dev-db/postgresql )
-        ssl? ( dev-libs/openssl )
         threads? ( sys-libs/libcap[>=2.1.0] )
         group/named
         user/named
@@ -86,15 +88,17 @@ bind_src_configure() {
         --with-gssapi=no \
         --with-libtool=yes \
         --with-libxml2=yes \
+        --with-openssl=yes \
+        --with-pkcs11=no \
         --with-randomdev=/dev/urandom \
         $(myoption enable threads) \
         $(myoption enable threads linux-caps) \
         $(myoption with berkdb dlz-bdb) \
+        $(myoption with geoip) \
         $(myoption with idn) \
         $(myoption with ldap dlz-ldap) \
         $(myoption with mysql dlz-mysql) \
-        $(myoption with postgres dlz-postgres) \
-        $(myoption with ssl openssl)
+        $(myoption with postgres dlz-postgres)
 }
 
 # Note to self or anyone who's going to work on bind: It will fail with a cryptic

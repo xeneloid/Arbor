@@ -1,0 +1,39 @@
+Source: Elias Pipping <pipping@exherbo.org>
+Upstream: no
+Reason: Fix compilation with libpng 1.5 and above
+
+---
+ jbig2_image_png.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/jbig2_image_png.c b/jbig2_image_png.c
+index cbef68c..1bd22b0 100644
+--- a/jbig2_image_png.c
++++ b/jbig2_image_png.c
+@@ -38,7 +38,8 @@ jbig2_png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
+ {
+     png_size_t check;
+ 
+-    check = fwrite(data, 1, length, (png_FILE_p)png_ptr->io_ptr);
++    png_voidp io = png_get_io_ptr(png_ptr);
++    check = fwrite(data, 1, length, io);
+     if (check != length) {
+       png_error(png_ptr, "Write Error");
+     }
+@@ -47,10 +48,9 @@ jbig2_png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
+ static void
+ jbig2_png_flush(png_structp png_ptr)
+ {
+-    png_FILE_p io_ptr;
+-    io_ptr = (png_FILE_p)CVT_PTR((png_ptr->io_ptr));
+-    if (io_ptr != NULL)
+-        fflush(io_ptr);
++    png_voidp io = png_get_io_ptr(png_ptr);
++    if (io != NULL)
++        fflush(io);
+ }
+ 
+ int jbig2_image_write_png_file(Jbig2Image *image, char *filename)
+-- 
+1.9.1
+

@@ -28,6 +28,7 @@ ncurses_src_configure() {
         --enable-overwrite
         --enable-pc-files
         --enable-termcap
+        PKG_CONFIG_LIBDIR="${PKG_CONFIG_PATH}"
     )
 
     edo mkdir -p "${WORKBASE}/build/narrow"

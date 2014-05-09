@@ -1,7 +1,12 @@
 # Copyright 2008 Alexander Færøy <ahf@exherbo.org>
+# Copyright 2014 Aleksandar Petrinic <petrinic@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix=tar.xz ]
+require sourceforge [ suffix=tar.xz ] alternatives easy-multibuild
+
+export_exlib_phases src_install pkg_postinst
+
+MY_PV=$(ever delete 1 $(ever range 1-2));
 
 SUMMARY="Portable Network Graphics library"
 
@@ -15,11 +20,96 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        sys-libs/zlib
+        sys-libs/zlib[multibuild_c:*(-)?]
+        !media-libs/libpng:0 [[
+            description = [ Uninstall media-libs/libpng:0 after switching to the slotted version ]
+            resolution = uninstall-blocked-after ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 DEFAULT_SRC_CONFIGURE_OPTIONS=(
     'arm_cpu_features:neon --enable-arm-neon=on --enable-arm-neon=off'
 )
+
+install_one_multibuild() {
+    default
+
+    # Remove symlinks and replace them with targets
+    # <symlink to remove, alternative's source> <alternative's target>
+    local libraries=(
+        libpng.la libpng${MY_PV}.la
+        libpng.so libpng${MY_PV}.so
+        pkgconfig/libpng.pc libpng${MY_PV}.pc
+    )
+
+    # Do the actual work
+    for (( i = 0; i < ${#libraries[@]}; i++ )); do
+        edo rm "${IMAGE}"/usr/${LIBDIR}/${libraries[i]}
+        alternatives_for _libpng ${SLOT} ${SLOT} /usr/${LIBDIR}/${libraries[i]} ${libraries[++i]}
+    done
+}
+
+libpng_src_install() {
+    easy-multibuild_src_install
+
+    # Move man pages and add alternative's links
+    # <man to moves, alternative's source> <move target, alternative's target>
+    local man_pages=(
+        man3/libpng.3 man3/libpng${MY_PV}.3
+        man3/libpngpf.3 man3/libpngpf${MY_PV}.3
+        man5/png.5 man5/png${MY_PV}.5
+    )
+
+    # Remove symlinks and replace them with targets
+    # <symlink to remove, alternative's source> <alternative's target>
+    local headers=(
+        pngconf.h libpng${MY_PV}/pngconf.h
+        png.h libpng${MY_PV}/png.h
+    )
+
+    if ever at_least 1.5; then
+        headers+=( pnglibconf.h libpng${MY_PV}/pnglibconf.h )
+    fi
+
+    # Binaries' symlinks
+    # <symlink to remove, alternative's source> <alternative's target>
+    local binaries=( libpng-config libpng${MY_PV}-config )
+
+    # Do the actual work
+    for (( i = 0; i < ${#man_pages[@]}; i++ )); do
+        edo mv "${IMAGE}"/usr/share/man/${man_pages[i]} "${IMAGE}"/usr/share/man/${man_pages[i+1]}
+        alternatives_for _libpng ${SLOT} ${SLOT} /usr/share/man/${man_pages[i]} /usr/share/man/${man_pages[++i]}
+    done
+
+    for (( i = 0; i < ${#headers[@]}; i++ )); do
+        edo rm "${IMAGE}"/usr/include/${headers[i]}
+        alternatives_for _libpng ${SLOT} ${SLOT} /usr/include/${headers[i]} /usr/include/${headers[++i]}
+    done
+
+    for (( i = 0; i < ${#binaries[@]}; i++ )); do
+        edo rm "${IMAGE}"/usr/bin/${binaries[i]}
+        alternatives_for _libpng ${SLOT} ${SLOT} /usr/bin/${binaries[i]}  /usr/bin/${binaries[++i]}
+    done
+}
+
+libpng_pkg_postinst() {
+    if has_version --root "media-libs/libpng:0"; then
+
+        # Workaround eclectic alternatives issue with --force
+        #
+        # Since "eclectic alternatives updates --force .." doesn't actually
+        # overwrite files with symlinks, I need to delete them manually.
+        # Otherwise the unmerge phase of libpng:0 will just delete them without
+        # recreating the symlinks and let the system in an inconsistent state.
+        # Pay attention that due to slot move and uninstall-blocked-after the
+        # libpng:0 unmerge phase is executed *after* the libpng:1.X pkg_postinst
+        # phase so no recreation of (alternatives') symlinks is done.(Apetrini)
+
+        for f in "${ROOT}"/usr/share/man/{man3/libpng.3,man3/libpngpf.3,man5/png.5}; do
+            [[ -e ${f} && ! -L ${f} ]] && nonfatal edo rm "${f}";
+        done
+    fi
+
+    alternatives_pkg_postinst
+}
 

@@ -54,7 +54,7 @@ DEPENDENCIES="
         alsa? ( sys-sound/alsa-lib[>=1.0.0] )
         X? (
             media-libs/jpeg
-            media-libs/libpng
+            media-libs/libpng:=
             x11-data/xbitmaps
             x11-libs/libICE
             x11-libs/libXpm

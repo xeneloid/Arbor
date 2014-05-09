@@ -1,0 +1,29 @@
+Source: Elias Pipping <pipping@exherbo.org>
+Upstream: No
+Reason: http://bugs.ghostscript.com/show_bug.cgi?id=693284#c11
+
+From a13afd825c0618cae5af53ca6249f2d31b14f007 Mon Sep 17 00:00:00 2001
+From: Elias Pipping <pipping@exherbo.org>
+Date: Wed, 23 Apr 2014 21:35:47 +0200
+Subject: [PATCH] Install memento.h
+
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 2e09431..c1246a1 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -4,7 +4,7 @@
+ AUTOMAKE_OPTIONS = foreign 1.7 dist-bzip2 dist-zip -Wall
+ 
+ lib_LTLIBRARIES = libjbig2dec.la
+-include_HEADERS = jbig2.h
++include_HEADERS = jbig2.h memento.h
+ 
+ CFLAGS = @CFLAGS@ $(XCFLAGS)
+ 
+-- 
+1.9.1
+

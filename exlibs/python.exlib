@@ -31,6 +31,12 @@
 #
 #   multibuild ( format: true or false ) ( defaults to true )
 #     whether the package can be built for several python abis
+#     NOTE: At the moment, a package can only use one multibuild "class".
+#           For example, it can be built for multiple python abis or multiple C abis,
+#           but not both at the same time. If you want to build for 32 and 64 bit,
+#           you have to set multibuild=false here.
+#           Also, all of your python dependencies will have to be multibuild=false
+#           because they need to be installed to the ${LIBDIR} with the right bitness.
 #
 #   multiunpack, work
 #     see easy-multibuild.exlib
