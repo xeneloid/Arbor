@@ -145,7 +145,6 @@ configure_one_multibuild() {
     # -fwrapv: http://bugs.python.org/issue11149
     export OPT="-fwrapv"
     export CPPFLAGS="$(pkg-config --cflags-only-I libffi) $(multibuild_get_var C ${MULTIBUILD_TARGET} CPPFLAGS)"
-    export LDFLAGS="${LDFLAGS} -L/usr/${LIBDIR}"
 
     default
 }
