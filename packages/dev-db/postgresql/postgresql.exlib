@@ -37,24 +37,56 @@ DOWNLOADS="mirror://${PN}/source/v${PV}/${PNV}.tar.bz2"
 
 LICENCES="PostgreSQL"
 SLOT="0"
+
 MYOPTIONS="
-    fuzzystrmatch [[ description = [ Extension with distance functions on text (mostly for phonetic comparisons) ] ]]
-    hstore [[ description = [ Extension with the hstore data type ] ]]
-    intarray [[ description = [ Extension with additional functions and indices for int arrays and int sets ] ]]
     ldap
-    lo [[ description = [ Extension with the large object support functions and the vacuumlo command line utility ] ]]
-    ltree [[ description = [ Extension with the ltree data type for hierarquical categorization ] ]]
     pam
     perl [[ description = [ Support for both PL/Perl and Pl/PerlU server-side programming languages ] ]]
-    pg_trgm [[ description = [ Extension with trigram support for Full-Text Search ] ]]
-    pg_upgrade [[ description = [ Command line utility to upgrade clusters between major versions ] ]]
-    pgcrypto [[ description = [ Extension with cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
     python [[ description = [ Support for PL/Python (only the \"untrusted\" version) server-side programming language ] ]]
     readline [[ description = [ Used only by the client psql for history control and autocomplete funcionality ] ]]
     ssl
-    tablefunc [[ description = [ Extension with some set returning functions (normal_rand, crosstab variations and connectby) ] ]]
     tcl [[ description = [ Support for both PL/Tcl and PL/TclU server-side programming languages ] ]]
     xml [[ description = [ Add core support for XML data type ] ]]
+    (
+        postgresql_extensions:
+            btree_gin [[ description = [ GIN operator classes that implement B-tree equivalent behavior for several data types ] ]]
+            btree_gist [[ description = [ GiST index operator classes that imlement B-tree equivalent behavior for several data types ] ]]
+            chkpass [[ description = [ The chkpass data type for storing encrypted passwords ] ]]
+            citext [[ description = [ The citext data type, a case-insensitive character string type ] ]]
+            cube [[ description = [ The cube data type for representing multidimensional cubes ] ]]
+            dblink [[ description = [ Connect to other PostgreSQL databases from within a database session ] ]]
+            dict_int [[ description = [ An example dictionnary for indexing integers ] ]]
+            dict_xsyn [[ description = [ An example dictionnary for replacing words with their synonyms for full-text search ] ]]
+            earthdistance [[ description = [ Two methods for calculating great circle distances on the surface of the Earth ]
+                             requires    = [ postgresql_extensions: cube ] ]]
+            file_fdw [[ description = [ A foreign-data wrapper for accessing files on the servers's file system ] ]]
+            fuzzystrmatch [[ description = [ Distance functions on text (mostly for phonetic comparisons) ] ]]
+            hstore [[ description = [ The hstore data type ] ]]
+            intagg [[ description = [ An integer aggregator and an enumerator (obsolete) ] ]]
+            intarray [[ description = [ Additional functions and indices for int arrays and int sets ] ]]
+            isn [[ description = [ Data types for international product numbering standards ] ]]
+            lo [[ description = [ The large object support functions and the vacuumlo command line utility ] ]]
+            ltree [[ description = [ The ltree data type for hierarquical categorization ] ]]
+            pageinspect [[ description = [ Low-level functions to inspect pages (for debugging) ] ]]
+            pg_buffercache [[ description = [ Analyze what's happening in the shared buffer cache ] ]]
+            pg_freespacemap [[ description = [ Analyze the free space map ] ]]
+            pg_trgm [[ description = [ Trigram support for Full-Text Search ] ]]
+            pg_upgrade [[ description = [ Command line utility to upgrade clusters between major versions ] ]]
+            pgcrypto [[ description = [ Cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
+            pgstattuple [[ description = [ Functions for tuple-level statistics ] ]]
+            seg [[ description = [ The seg data type for representing line segments or floating point intervals ] ]]
+            spi [[ description = [ Package of autoinc, insert_username, moddatetime, refint and timetravel extensions ] ]]
+            sslinfo [[ description = [ Functions for retrieving informations about the client SSL certificate ]
+                       requires    = [ ssl ] ]]
+            tablefunc [[ description = [ Some set returning functions (normal_rand, crosstab variations and connectby) ] ]]
+            tcn [[ description = [ A trigger function to notify listeners of changes ] ]]
+            test_parser [[ description = [ An example parser for full-text search ] ]]
+            tsearch2 [[ description = [ Backward-compatible text-search function for tsearch2-compatible applications ] ]]
+            unaccent [[ description = [ A text-search dictionnary which removes accents from lexemes ] ]]
+            uuid-ossp [[ description = [ Functions for generating UUIDs ] ]]
+            xml2 [[ description = [ XPath querying and XSLT functionality ]
+                    requires    = [ xml ] ]]
+    )
 "
 
 # The contrib directory is somewhat messy.
@@ -66,16 +98,41 @@ MYOPTIONS="
 # recommends using the most recent available always instead of using the
 # respective versions on each cluster) and also others.
 OPTIONS_IN_CONTRIB=(
+    btree_gin
+    btree_gist
+    chkpass
+    citext
+    cube
+    dblink
+    dict_int
+    dict_xsyn
+    earthdistance
+    file_fdw
     fuzzystrmatch
     hstore
+    intagg
     intarray
+    isn
     lo
     'lo vacuumlo'
     ltree
+    pageinspect
+    pg_buffercache
+    pg_freespacemap
     pg_trgm
     pg_upgrade
     pgcrypto
+    pgstattuple
+    seg
+    spi
+    sslinfo
     tablefunc
+    tcn
+    test_parser
+    tsearch2
+    unaccent
+    uuid-ossp
+    xml2
 )
 
 DEPENDENCIES="
@@ -92,6 +149,7 @@ DEPENDENCIES="
         readline? ( sys-libs/readline )
         ssl? ( dev-libs/openssl )
         tcl? ( dev-lang/tcl:= )
+        postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
         xml? (
             dev-libs/libxml2:=[>=2.6.23]
             dev-libs/libxslt
@@ -101,6 +159,7 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     # 'kerberos krb5'
     ldap pam perl python readline 'ssl openssl' tcl 'xml libxml' 'xml libxslt'
+    'postgresql_extensions:uuid-ossp ossp-uuid'
 )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
@@ -142,8 +201,8 @@ postgresql_src_emake_contrib_one() {
 
 postgresql_src_emake_contrib() {
     for o in "${OPTIONS_IN_CONTRIB[@]}"; do
-        option $o || continue
-        local c=$(option $o)
+        option postgresql_extensions:$o || continue
+        local c=$(option postgresql_extensions:$o)
         postgresql_src_emake_contrib_one ${c:-$o} $1
     done
 
