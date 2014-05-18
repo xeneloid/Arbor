@@ -11,6 +11,8 @@ else
     PATCH_LEVEL=0
 fi
 
+# Need autotools for AC_FUNC_STRCOLL
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 require gnu [ suffix=gz ]
 
 SUMMARY="GNU command line editing and history library"
@@ -72,7 +74,7 @@ src_prepare() {
     sed -e "/^[[:space:]]*LIBS=.-lncurses/s:-lncurses:${ncurses_libs}:" \
         -i examples/rlfe/configure
 
-    default
+    autotools_src_prepare
 }
 
 src_install() {
