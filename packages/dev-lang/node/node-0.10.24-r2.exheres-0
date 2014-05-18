@@ -12,7 +12,10 @@ HOMEPAGE="http://nodejs.org/"
 LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="npm [[ description = [ install bundled npm module ] ]] waf"
+MYOPTIONS="
+    npm [[ description = [ install bundled npm module ] ]]
+    waf
+"
 
 DEPENDENCIES="
     build:
@@ -20,7 +23,6 @@ DEPENDENCIES="
     build+run:
         dev-libs/libpthread-stubs
         dev-libs/openssl
-        dev-libs/v8
         sys-libs/zlib
     npm? ( run: !dev-node/npm )
 "
@@ -28,8 +30,6 @@ DEPENDENCIES="
 SRC_CONFIGURE_PARAMS=(
     --prefix=/usr
     --shared-openssl
-    --shared-v8
-    --shared-v8-include=/usr/include
     --shared-zlib
 )
 
