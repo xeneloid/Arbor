@@ -1,4 +1,4 @@
-# Copyright 2009-2011 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge [ project=squashfs suffix=tar.gz pnv=squashfs${PV} ]
@@ -20,12 +20,14 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     xz  [[ description = [ Support xz compressed images ] ]]
+    lz4 [[ description = [ Support lz4 compressed images ] ]]
     lzo [[ description = [ Support lzo compressed images ] ]]
 "
 
 DEPENDENCIES="
     build+run:
         xz? ( app-arch/xz )
+        lz4? ( app-arch/lz4 )
         lzo? ( app-arch/lzo:2 )
     run:
         sys-libs/zlib
@@ -33,7 +35,6 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/squashfs${PV}/${PN}
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/path-issue.patch -p1 "${FILES}"/buffer-issue.patch )
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" LDFLAGS="${LDFLAGS}" )
 DEFAULT_SRC_INSTALL_PARAMS=( INSTALL_DIR="${IMAGE}"/usr/bin )
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES=( ../ )
@@ -43,6 +44,7 @@ src_prepare() {
     default
 
     option xz && edo sed -i -e 's/#XZ_SUPPORT = 1/XZ_SUPPORT = 1/' Makefile
+    option lz4 && edo sed -i -e 's/#LZ4_SUPPORT = 1/LZ4_SUPPORT = 1/' Makefile
     option lzo && edo sed -i -e 's/#LZO_SUPPORT = 1/LZO_SUPPORT = 1/' Makefile
 }
 
