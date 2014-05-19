@@ -43,6 +43,9 @@ src_prepare() {
     # The mkpasswd program does not belong in here
     edo sed -e '/mkpasswd/s:mkpasswd::' -i Makefile.in
 
+    # make sure to find stty on multiarch
+    edo sed -e "s#STTY_BIN=/bin/stty#STTY_BIN=/usr/$(exhost --target)/bin/stty#g" -i configure.in
+
     autotools_src_prepare
 }
 
