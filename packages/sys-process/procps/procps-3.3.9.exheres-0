@@ -48,6 +48,12 @@ src_prepare() {
     # misc/git-version-gen only works from a checkout, not a snapshot
     echo ${PV} > .tarball-version
 
+    # this test just hardcodes sid 1, presumably because it is unlikely to be there.
+    # It seems that with the kernels process namespacing, which is being used e.g. by
+    # systemd-nspawn, the first process group in the container always gets that sid.
+    edo sed -e "/^set test \"pgrep doesn't match with bogus sid\"$/,+3 d" \
+            -i testsuite/pgrep.test/pgrep.exp
+
     edo po/update-potfiles
     edo autopoint --force
 
