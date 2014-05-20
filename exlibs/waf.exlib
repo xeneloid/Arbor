@@ -58,15 +58,15 @@ waf_src_configure() {
 }
 
 waf_src_compile() {
-    ewaf --jobs=${EXJOBS:-1} build
+    ewaf --jobs=${EXJOBS:-1} "${WAF_SRC_COMPILE_PARAMS[@]}" build
 }
 
 wafsamba_src_test() {
-    ewaf --jobs=${EXJOBS:-1} -v test
+    ewaf --jobs=${EXJOBS:-1} "${WAF_SRC_TEST_PARAMS[@]}" -v test
 }
 
 waf_src_install() {
-    ewaf --jobs=1 install --destdir="${IMAGE}"
+    ewaf --jobs=1 install "${WAF_SRC_INSTALL_PARAMS[@]}" --destdir="${IMAGE}"
     emagicdocs
 }
 
