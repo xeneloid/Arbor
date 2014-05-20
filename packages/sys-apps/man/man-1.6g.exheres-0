@@ -27,6 +27,7 @@ src_configure() {
     "${WORK}/configure"                           \
             -default                              \
             -prefix=/usr/$(exhost --target)       \
+            -sbindir=/usr/$(exhost --target)/bin  \
             -mandir=/usr/share/man                \
             -confdir=/etc                         \
             -compatibility_mode_for_colored_groff
