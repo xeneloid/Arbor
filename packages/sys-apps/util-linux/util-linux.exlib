@@ -80,6 +80,7 @@ DEPENDENCIES="
         sys-apps/bc
 "
 
+DEFAULT_SRC_INSTALL_PARAMS=( usrsbin_execdir=/usr/$(exhost --target)/bin )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
 util-linux_src_prepare() {
@@ -129,7 +130,7 @@ util-linux_src_configure() {
     econf \
         --localstatedir=/run \
         --enable-colors-default \
-        --enable-fs-paths-extra=/usr/$(exhost --target)/sbin \
+        --enable-fs-paths-default=/usr/$(exhost --target)/bin \
         --enable-libblkid \
         --enable-libfdisk \
         --enable-libmount \
