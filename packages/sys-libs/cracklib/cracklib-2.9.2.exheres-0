@@ -36,7 +36,7 @@ src_install() {
 }
 
 pkg_postinst() {
-    edo "/usr/$(exhost --build)/sbin/cracklib-format" "${ROOT:-/}usr/share/dict/cracklib-small" \
-        | "/usr/$(exhost --build)/sbin/cracklib-packer" "${ROOT:-/}var/cache/${PN}/cracklib_dict"
+    edo "/usr/$(exhost --build)/bin/cracklib-format" "${ROOT:-/}usr/share/dict/cracklib-small" \
+        | "/usr/$(exhost --build)/bin/cracklib-packer" "${ROOT:-/}var/cache/${PN}/cracklib_dict"
 }
 
