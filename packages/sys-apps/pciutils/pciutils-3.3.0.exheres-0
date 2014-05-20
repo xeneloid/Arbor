@@ -60,6 +60,7 @@ src_install() {
     params=(
         DESTDIR="${IMAGE}"
         PREFIX=/usr/$(exhost --target)
+        SBINDIR=/usr/$(exhost --target)/bin
         IDSDIR=/usr/share/misc
         MANDIR=/usr/share/man
         STRIP=""
@@ -83,7 +84,7 @@ src_install() {
     edo rmdir "${IMAGE}"/usr/share/misc
 
     # not needed
-    edo rm -f "${IMAGE}"/usr/$(exhost --target)/sbin/update-pciids
+    edo rm -f "${IMAGE}"/usr/$(exhost --target)/bin/update-pciids
     edo rm -f "${IMAGE}"/usr/share/man/man8/update-pciids.8
 
     emagicdocs
