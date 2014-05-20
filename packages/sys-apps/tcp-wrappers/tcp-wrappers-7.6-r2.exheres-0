@@ -32,7 +32,7 @@ src_compile() {
 
     for target in config-check linux; do
         emake                                             \
-            REAL_DAEMON_DIR=/usr/$(exhost --target)/sbin  \
+            REAL_DAEMON_DIR=/usr/$(exhost --target)/bin   \
             EXHERBO_OPT="${myconf}"                       \
             MAJOR=0 MINOR=${PV:0:1} REL=${PV:2:3}         \
             ${target}
@@ -42,8 +42,7 @@ src_compile() {
 src_install() {
     dodir /usr/$(exhost --target)/lib
 
-    into /usr/$(exhost --target)
-    dosbin tcpd tcpdchk tcpdmatch safe_finger try-from
+    dobin tcpd tcpdchk tcpdmatch safe_finger try-from
 
     doman *.[358]
     dosym hosts_access.5 /usr/share/man/man5/hosts.allow.5
@@ -52,7 +51,6 @@ src_install() {
     insinto /usr/$(exhost --target)/include
     doins tcpd.h
 
-    into /usr/$(exhost --target)
     dolib.a libwrap.a
     newlib.so libwrap.so libwrap.so.0.${PV}
     dosym libwrap.so.0.${PV} /usr/$(exhost --target)/lib/libwrap.so.0
