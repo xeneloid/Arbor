@@ -28,9 +28,7 @@ MYOPTIONS=""
 DEPENDENCIES=""
 
 src_install() {
-    into /usr/$(exhost --target)
-    dobin tempfile run-parts
-    dosbin "${WORK}"/{installkernel,savelog}
+    dobin tempfile run-parts installkernel savelog
 
     # needed by run-parts (Gentoo bug #352326)
     keepdir /etc/kernel/postinst.d
