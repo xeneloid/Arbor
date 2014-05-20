@@ -69,12 +69,12 @@ kmod_src_install() {
     default
 
     # alternatives
-    dodir /usr/${host}/{,s}bin
+    dodir /usr/${host}/bin
     local a alternatives=( kmod-tools ${PN} 10 )
     for a in depmod insmod modinfo modprobe lsmod rmmod; do
-        dosym ../bin/kmod /usr/${host}/sbin/${a}
+        dosym kmod /usr/${host}/bin/${a}
         alternatives+=(
-            /usr/${host}/sbin/${a}     ${PN}.${a}
+            /usr/${host}/bin/${a}      ${PN}.${a}
             /usr/share/man/man8/${a}.8 ${PN}.${a}.8
         )
     done
@@ -83,9 +83,7 @@ kmod_src_install() {
         edo rm -r "${IMAGE}"/no
     fi
 
-    dosym kmod /usr/${host}/bin/${PN}.lsmod
     alternatives+=(
-        /usr/${host}/bin/lsmod                  ${PN}.lsmod
         /usr/share/man/man5/depmod.d.5          ${PN}.depmod.d.5
         /usr/share/man/man5/modprobe.d.5        ${PN}.modprobe.d.5
         /usr/share/man/man5/modules.dep.5       ${PN}.modules.dep.5
