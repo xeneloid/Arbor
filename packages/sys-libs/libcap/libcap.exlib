@@ -47,14 +47,21 @@ libcap_src_compile() {
 libcap_src_install() {
     emagicdocs
 
-    emake -j1 DESTDIR="${IMAGE}" prefix=/usr/$(exhost --target) lib=lib man_prefix=/usr/share RAISE_SETFCAP=no install
+    emake -j1                               \
+        DESTDIR="${IMAGE}"                  \
+        SBINDIR=/usr/$(exhost --target)/bin \
+        prefix=/usr/$(exhost --target)      \
+        lib=lib                             \
+        man_prefix=/usr/share               \
+        RAISE_SETFCAP=no                    \
+        install
 
     dopammod pam_cap/pam_cap.so
     dopamsecurity '' pam_cap/capability.conf
 
     dodoc doc/capability.notes
 
-    expart binaries /usr/$(exhost --target)/sbin
+    expart binaries /usr/$(exhost --target)/bin
     expart configuration /etc
     expart development /usr/$(exhost --target)/include
     expart documentation /usr/share/{doc,man}
