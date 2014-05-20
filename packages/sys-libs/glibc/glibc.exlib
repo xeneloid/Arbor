@@ -72,7 +72,11 @@ RESTRICT=test
 ECONF_SOURCE="${WORK}"
 WORK="${WORKBASE}/build"
 
-DEFAULT_SRC_INSTALL_PARAMS=( install_root="${IMAGE}" )
+DEFAULT_SRC_INSTALL_PARAMS=(
+    install_root="${IMAGE}"
+    sbindir=/usr/$(exhost --target)/bin
+    rootsbindir=/usr/$(exhost --target)/bin
+)
 
 glibc_pkg_pretend() {
     if ! kernel_version_at_least $MINIMUM_KERNEL_VERSION ; then
@@ -251,8 +255,8 @@ glibc_pkg_preinst() {
 
         # HACK(compnerd) preserve legacy paths for paludis
         nonfatal edo rm "${ROOT}"/sbin/ldconfig &&
-        nonfatal edo cp "${IMAGE}"/usr/${CHOST}/sbin/ldconfig "${ROOT}"/sbin/ldconfig ||
-            eerror cp "${IMAGE}"/usr/${CHOST}/sbin/ldconfig "${ROOT}"/sbin/ldconfig failed
+        nonfatal edo cp "${IMAGE}"/usr/${CHOST}/bin/ldconfig "${ROOT}"/sbin/ldconfig ||
+            eerror cp "${IMAGE}"/usr/${CHOST}/bin/ldconfig "${ROOT}"/sbin/ldconfig failed
     fi
 }
 
