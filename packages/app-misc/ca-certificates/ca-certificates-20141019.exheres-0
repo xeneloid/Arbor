@@ -61,7 +61,7 @@ EOF
     keepdir /etc/ssl/certs/ /etc/ca-certificates/update.d/
 
     edo mkdir -p "${IMAGE}"/usr/$(exhost --target)
-    edo mv "${IMAGE}"/usr/{,$(exhost --target)/}sbin
+    edo mv "${IMAGE}"/usr/{sbin,$(exhost --target)/bin}
 }
 
 pkg_postinst() {
