@@ -103,12 +103,12 @@ pam_build_src_install() {
     keepdir /etc/security/namespace.d
 
     # NOTE(?) needs to be suid
-    edo chmod u+s "${IMAGE}/usr/$(exhost --target)/sbin/unix_chkpwd"
+    edo chmod u+s "${IMAGE}/usr/$(exhost --target)/bin/unix_chkpwd"
 
     # install base pam configuration files
     dopamd "${FILES}"/pam.d/*
 
-    expart binaries /usr/$(exhost --target)/sbin
+    expart binaries /usr/$(exhost --target)/bin
     expart configuration /etc
     expart development /usr/$(exhost --target)/include
     expart documentation /usr/share/{doc,man}
