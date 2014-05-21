@@ -5,3 +5,5 @@ require paludis
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-bash-4.3.patch )
+
