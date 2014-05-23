@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2010, 2011 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008, 2009, 2010, 2011, 2014 Ingmar Vanhassel <ingmar@exherbo.org>
 # Based in part upon previous work copyrighted to Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
 
@@ -28,7 +28,6 @@ DEPENDENCIES="
         idn? ( net-dns/libidn[multibuild_c:*(-)?] )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/f82e0edc171b33528bc4f59036505d98ecf1d816.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{cookies,crypto-auth,largefile,manual,proxy,tls-srp}
     --enable-{dict,file,ftp,gopher,http,ipv6,imap,pop3,rtsp,smtp,telnet,tftp}
