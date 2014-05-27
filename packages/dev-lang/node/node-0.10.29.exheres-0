@@ -59,7 +59,9 @@ src_configure() {
 src_install() {
     default
 
-    [[ $LIBDIR != lib ]] && edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
+    option npm && \
+        [[ $LIBDIR != lib ]] && \
+        edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
 }
 
 src_test() {
