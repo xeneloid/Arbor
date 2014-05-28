@@ -149,18 +149,28 @@ DEPENDENCIES="
         readline? ( sys-libs/readline )
         ssl? ( dev-libs/openssl )
         tcl? ( dev-lang/tcl:= )
-        postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
         xml? (
             dev-libs/libxml2:=[>=2.6.23]
             dev-libs/libxslt
         )
 "
 
+if ever at_least 9.4; then
+    PG_WITH_UUID="uuid=e2fs"
+else
+    DEPENDENCIES+="
+        build+run:
+            postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
+    "
+    PG_WITH_UUID="ossp-uuid"
+fi
+
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     # 'kerberos krb5'
     ldap pam perl python readline 'ssl openssl' tcl 'xml libxml' 'xml libxslt'
-    'postgresql_extensions:uuid-ossp ossp-uuid'
+    "postgresql_extensions:uuid-ossp ${PG_WITH_UUID}"
 )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
     --enable-nls
