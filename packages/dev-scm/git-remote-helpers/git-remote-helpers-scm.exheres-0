@@ -1,8 +1,6 @@
 # Copyright 2013 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-# This exheres can go once we only have git[>=1.8.2].
-
 SUMMARY="Bridge support in git for mercurial and bazaar"
 DESCRIPTION="
 These bridging tools allow for working on Mercurial and Bazaar repositories as
@@ -14,8 +12,8 @@ Pushing, pulling - everything just works.
 "
 HOMEPAGE="http://felipec.wordpress.com/2012/11/13/git-remote-hg-bzr-2"
 DOWNLOADS="
-    bzr? ( https://raw.github.com/felipec/git/fc/remote/bzr/contrib/remote-helpers/git-remote-bzr )
-    mercurial? ( https://raw.github.com/felipec/git/fc/remote/hg/contrib/remote-helpers/git-remote-hg )
+    bzr? ( https://raw.github.com/felipec/git-remote-bzr/master/git-remote-bzr )
+    mercurial? ( https://raw.github.com/felipec/git-remote-hg/master/git-remote-hg )
 "
 
 BUGS_TO="philantrop@exherbo.org"
@@ -32,20 +30,20 @@ MYOPTIONS="
 
 DEPENDENCIES="
     run:
-        dev-lang/python:=
+        dev-lang/python:=[<3.0.0]
         bzr? ( dev-scm/bzr )
         mercurial? ( dev-scm/mercurial )
-        !dev-scm/git[~1.8.1.5][git_remote_helpers:mercurial] [[
-            description = [ The Mercurial remote helper is included since git-1.8.1.5 ]
-            resolution = manual
+        !dev-scm/git[~1.8.1.5&<2.0.0][git_remote_helpers:mercurial] [[
+            description = [ The Mercurial remote helper is included since git-1.8.1.5 until 1.9.x ]
+            resolution = upgrade-blocked-before
         ]]
-        !dev-scm/git[>=1.8.2][git_remote_helpers:bzr] [[
-            description = [ The remote helpers are included since git-1.8.2 ]
-            resolution = manual
+        !dev-scm/git[>=1.8.2&<2.0.0][git_remote_helpers:bzr] [[
+            description = [ The remote helpers are included since git-1.8.2 until 1.9.x ]
+            resolution = upgrade-blocked-before
         ]]
-        !dev-scm/git[>=1.8.2][git_remote_helpers:mercurial] [[
-            description = [ The remote helpers are included since git-1.8.2 ]
-            resolution = manual
+        !dev-scm/git[>=1.8.2&<2.0.0][git_remote_helpers:mercurial] [[
+            description = [ The remote helpers are included since git-1.8.2 until 1.9.x ]
+            resolution = upgrade-blocked-before
         ]]
 "
 
