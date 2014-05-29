@@ -51,42 +51,30 @@ MYOPTIONS="
         note = [ Needs (U)EFI compatible hardware and a fairly recent kernel with proper configuration ]
     ]]
     gcrypt [[ description = [ Enable cryptographically secured journal files ] ]]
+    gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     gobject-introspection
     gtk-doc
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
+    kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
-    simple-net [[ description = [ Include an extremely simple service for static networking ] ]]
-    static-net [[ description = [ Include a simple service for static networking ] ]]
+    seccomp [[ description = [ System call filtering support via seccomp ] ]]
     xattr
     zsh-completion
-"
-
-if ever at_least 209; then
-    MYOPTIONS+="
-        kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
-        seccomp [[ description = [ System call filtering support via seccomp ] ]]
-    "
-fi
-
-if ever at_least 212; then
-    MYOPTIONS+="
-        gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
-    "
-fi
-
-MYOPTIONS+="
     ( multibuild_c: 32 64 )
-    ( linguas: fr it pl ru )
+    ( linguas: el fr it pl ru )
 "
 
 DEPENDENCIES="
     build:
+        app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
         dev-util/gperf[>=3.0.4] [[ note = [ for keymap ] ]]
         dev-util/intltool[>=0.40.0]
+        sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
+        sys-kernel/linux-headers[>=3.7]
         virtual/pkg-config[>=0.20]
         gtk-doc? (
             app-doc/gtk-doc-autotools[>=1.18]
@@ -117,6 +105,7 @@ DEPENDENCIES="
         acl? ( sys-apps/acl[multibuild_c:*(-)?] )
         cryptsetup? ( sys-fs/cryptsetup[>=1.6.0][multibuild_c:*(-)?] )
         gcrypt? ( dev-libs/libgcrypt[multibuild_c:*(-)?] )
+        gnutls? ( dev-libs/gnutls[>=3.1.4][multibuild_c:*(-)?] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         journal-gateway? (
             net-libs/libmicrohttpd[>=0.9.33][multibuild_c:*(-)?]
@@ -125,15 +114,17 @@ DEPENDENCIES="
         )
         polkit? ( sys-auth/polkit:1[multibuild_c:*(-)?] )
         qrencode? ( media-libs/qrencode[multibuild_c:*(-)?] )
+        seccomp? ( sys-libs/libseccomp[>=1.0.0][multibuild_c:*(-)?] )
         xattr? ( sys-apps/attr[multibuild_c:*(-)?] )
     run:
         sys-apps/coreutils
+        sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
         sys-apps/kbd[>=1.15.2-r1]
         group/dialout
         group/lock [[ note = [ Required for var-lock service ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
-        simple-net? ( sys-apps/net-tools[>=1.60_p20120127084908] )
-        static-net? ( sys-apps/iproute2 )
+        group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
+        user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
     suggestion:
         app-admin/systemd-ui [[ description = [ Optional (G)UI tools for systemd ] ]]
         (
@@ -150,34 +141,6 @@ DEPENDENCIES="
             ]]
         )
 "
-
-if ever at_least 209; then
-    DEPENDENCIES+="
-        build:
-            app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
-            sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
-        build+run:
-            seccomp? ( sys-libs/libseccomp[>=1.0.0][multibuild_c:*(-)?] )
-        run:
-            sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
-    "
-fi
-
-if ever at_least 212; then
-    DEPENDENCIES+="
-        build:
-            sys-kernel/linux-headers[>=3.7]
-        build+run:
-            gnutls? ( dev-libs/gnutls[>=3.1.4][multibuild_c:*(-)?] )
-    "
-fi
-
-if ! ever at_least 209; then
-    DEPENDENCIES+="
-        build+run:
-            sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
-    "
-fi
 
 AT_M4DIR=( m4 )
 
@@ -271,7 +234,9 @@ configure_one_multibuild() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        --enable-compat-libs
         --enable-coredump
+        --enable-dbus
         --enable-gudev
         --enable-hostnamed
         --enable-kmod
@@ -279,15 +244,20 @@ configure_one_multibuild() {
         --enable-logind
         --enable-machined
         --enable-manpages
+        --enable-multi-seat-x
         --enable-myhostname
+        --enable-networkd
         --enable-pam
         --enable-quotacheck
         --enable-randomseed
         --enable-readahead
+        --enable-resolved
+        --enable-rfkill
         # This adds /sbin and /bin to PATH for systemd units again.
         --enable-split-usr
         --enable-tmpfiles
         --enable-timedated
+        --enable-timesyncd
         --enable-vconsole
         --enable-xz
         --disable-audit
@@ -313,35 +283,20 @@ configure_one_multibuild() {
         $(option_enable cryptsetup libcryptsetup)
         $(option_enable efi)
         $(option_enable gcrypt)
+        $(option_enable gnutls)
         $(option_enable gobject-introspection introspection)
         $(option_enable gtk-doc)
         $(option_enable journal-gateway microhttpd)
+        $(option_enable kdbus)
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
+        $(option_enable seccomp)
         $(option_enable xattr)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
-
-    if ever at_least 209; then
-        myconfig+=(
-            --enable-compat-libs
-            --enable-dbus
-            --enable-multi-seat-x
-            --enable-networkd
-            --enable-rfkill
-            $(option_enable kdbus)
-            $(option_enable seccomp)
-        )
-    fi
-
-    if ever at_least 212; then
-        myconfig+=(
-            $(option_enable gnutls)
-        )
-    fi
 
     edo mkdir -p src/gudev
 
