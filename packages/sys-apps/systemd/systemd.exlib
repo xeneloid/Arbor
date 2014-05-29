@@ -300,13 +300,6 @@ configure_one_multibuild() {
 
     edo mkdir -p src/gudev
 
-    if ever at_least 209; then
-        if option simple-net || option static-net ; then
-            ewarn "WARNING: Both the simple-net and the static-net options will be removed in favour"
-            ewarn "of systemd-networkd in a few releases."
-        fi
-    fi
-
     econf "${myconfig[@]}"
 }
 
@@ -372,26 +365,6 @@ systemd_src_install() {
         if [[ ${LIBDIR} != lib ]]; then
             edo rmdir "${IMAGE}"/usr/lib
         fi
-    fi
-
-    # Install simple-net if requested
-    if option simple-net; then
-        insinto /usr/${LIBDIR}/systemd/system
-        doins "${FILES}"/network.service
-        insinto /etc/conf.d
-        doins "${FILES}"/network.conf
-    fi
-
-    if option static-net; then
-        insinto /usr/${LIBDIR}/systemd/system
-        doins "${FILES}"/network4@.service
-        doins "${FILES}"/gateway4.service
-        doins "${FILES}"/network6@.service
-        doins "${FILES}"/gateway6.service
-        insinto /etc/conf.d
-        doins "${FILES}"/network-gateway.conf
-        doins "${FILES}"/network-lo.conf
-        doins "${FILES}"/network-eth0.conf
     fi
 
     if [[ -d "${IMAGE}"/no ]]; then
