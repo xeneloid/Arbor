@@ -88,6 +88,13 @@ DEPENDENCIES="
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
 
+if ever at_least 2.0.0 ; then
+    DEPENDENCIES+="
+        suggestion:
+            dev-scm/git-remote-helpers
+    "
+fi
+
 if ! ever at_least 2.0.0 ; then
     DEPENDENCIES+="
         run:
