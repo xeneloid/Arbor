@@ -41,6 +41,7 @@ LICENCES="
     public-domain   [[ note = [ src/shared/MurmurHash2.c, src/shared/siphash24.c, src/journal/lookup3.c ] ]]
 "
 SLOT="0"
+LANGUAGES=( el fr it pl ru )
 MYOPTIONS="
     acl
     bash-completion
@@ -63,7 +64,7 @@ MYOPTIONS="
     xattr
     zsh-completion
     ( multibuild_c: 32 64 )
-    ( linguas: el fr it pl ru )
+    ( linguas: ${LANGUAGES[@]} )
 "
 
 DEPENDENCIES="
@@ -507,6 +508,22 @@ EOT
 
     # Exclude /var/tmp/paludis/build from cleaning
     edo echo "x /var/tmp/paludis/build" >> "${IMAGE}"/usr/${LIBDIR}/tmpfiles.d/tmp.conf
+
+    # Remove unselected languages
+    for i in "${LANGUAGES[@]}"; do
+        local objects=()
+        objects=(
+            "${IMAGE}"/usr/${LIBDIR}/systemd/catalog/systemd.${i}.catalog
+            "${IMAGE}"/usr/share/locale/${i}
+        )
+        if ! option "linguas:${i}"; then
+            for o in "${objects[@]}"; do
+                [[ -e ${o} ]] && edo rm -r "${o}"
+            done
+            # Remove the mortal remains, empty shells of their former glory... ;-)
+            edo find "${IMAGE}"/usr/share/locale -type d -empty -delete
+        fi
+    done
 
     if option python ; then
         python_bytecompile
