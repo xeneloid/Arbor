@@ -75,7 +75,7 @@ DEPENDENCIES="
         dev-util/intltool[>=0.40.0]
         sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
-        sys-kernel/linux-headers[>=3.7]
+        sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
         gtk-doc? (
             app-doc/gtk-doc-autotools[>=1.18]
