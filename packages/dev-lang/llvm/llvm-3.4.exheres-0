@@ -9,3 +9,5 @@ DOWNLOADS="http://llvm.org/releases/${PV}/${MY_PNV}.tar.gz"
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-fix-tests-haswell.patch )
+
