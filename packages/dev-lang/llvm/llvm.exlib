@@ -11,6 +11,7 @@ LICENCES="UoI-NCSA"
 SLOT="0"
 MYOPTIONS="
     asserts [[ description = [ Enable assertions ] ]]
+    shared-libs [[ description = [ Build libraries dynamically ] ]]
     multibuild_c: 32 64
 "
 
@@ -57,7 +58,7 @@ configure_one_multibuild() {
         -DLLVM_ENABLE_ASSERTIONS:BOOL=$(option asserts TRUE FALSE)
         -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=${CHOST}
         -DLLVM_BINUTILS_INCDIR:STRING=/usr/include
-        -DBUILD_SHARED_LIBS:BOOL=TRUE
+        -DBUILD_SHARED_LIBS:BOOL=$(option shared-libs TRUE FALSE)
     )
     if ever at_least 3.2; then
         args+=( -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD:STRING=R600 )
