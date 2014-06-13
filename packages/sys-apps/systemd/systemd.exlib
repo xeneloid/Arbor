@@ -61,11 +61,16 @@ MYOPTIONS="
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
     seccomp [[ description = [ System call filtering support via seccomp ] ]]
-    xattr
     zsh-completion
     ( multibuild_c: 32 64 )
     ( linguas: ${LANGUAGES[@]} )
 "
+
+if ! ever at_least 214; then
+    MYOPTIONS+="
+        xattr
+    "
+fi
 
 DEPENDENCIES="
     build:
@@ -116,7 +121,6 @@ DEPENDENCIES="
         polkit? ( sys-auth/polkit:1[multibuild_c:*(-)?] )
         qrencode? ( media-libs/qrencode[multibuild_c:*(-)?] )
         seccomp? ( sys-libs/libseccomp[>=1.0.0][multibuild_c:*(-)?] )
-        xattr? ( sys-apps/attr[multibuild_c:*(-)?] )
     run:
         sys-apps/coreutils
         sys-apps/dbus[>=1.4.0][multibuild_c:*(-)?]
@@ -142,6 +146,20 @@ DEPENDENCIES="
             ]]
         )
 "
+
+if ! ever at_least 214; then
+    DEPENDENCIES+="
+        build+run:
+            xattr? ( sys-apps/attr[multibuild_c:*(-)?] )
+    "
+else
+    DEPENDENCIES+="
+        run:
+            user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+            user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+            user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
+    "
+fi
 
 AT_M4DIR=( m4 )
 
@@ -293,11 +311,16 @@ configure_one_multibuild() {
         $(option_enable python python-devel)
         $(option_enable qrencode)
         $(option_enable seccomp)
-        $(option_enable xattr)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
+
+    if ! ever at_least 214; then
+        local myconfig+=(
+            $(option_enable xattr)
+        )
+    fi
 
     edo mkdir -p src/gudev
 
