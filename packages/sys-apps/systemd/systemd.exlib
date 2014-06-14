@@ -204,6 +204,7 @@ systemd_src_prepare() {
             -e "/^systemunitdir=/s:lib:${LIBDIR}:" \
             -e "/^userunitdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^tmpfilesdir=/s:/lib/:/${LIBDIR}/:" \
+            -e "/^sysusersdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^sysctldir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^networkdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^usergeneratordir=/s:/lib/:/${LIBDIR}/:" \
