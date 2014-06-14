@@ -155,6 +155,9 @@ if ! ever at_least 214; then
 else
     DEPENDENCIES+="
         run:
+            group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+            group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+            group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
             user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
             user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
             user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
