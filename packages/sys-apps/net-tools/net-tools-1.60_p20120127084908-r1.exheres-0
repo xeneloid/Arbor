@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge
+require sourceforge alternatives
 
 SUMMARY="Collection of Basic Networking Tools"
 DOWNLOADS="http://dev.exherbo.org/~tgurr/distfiles/${PN}/${PNV}.tar.xz"
@@ -32,6 +32,11 @@ src_install() {
     for i in {dns,yp,nis}domainname; do
         dosym domainname /bin/${i}
     done
-    edo rm "${IMAGE}"/usr/share/man/man1/hostname.1
+    edo mv "${IMAGE}/usr/share/man/man1/hostname.1" "${IMAGE}/usr/share/man/man1/hostname.net-tools.1"
+
+    alternatives_for hostname net-tools 100 \
+                     /usr/bin/hostname /bin/domainname \
+                     /usr/share/man/man1/hostname.1 /usr/share/man/man1/hostname.net-tools.1
+
 }
 
