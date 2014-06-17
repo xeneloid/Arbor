@@ -33,6 +33,6 @@ src_unpack() {
 src_test() {
     # Remove test requiring Internet connection.
     edo rm t/hostname.t
-    default
+    perl-module_src_test
 }
 
