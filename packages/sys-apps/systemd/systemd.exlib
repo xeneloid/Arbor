@@ -205,6 +205,7 @@ systemd_src_prepare() {
             -e "/^rootlibexecdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^udevlibexecdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^systemunitdir=/s:lib:${LIBDIR}:" \
+            -e "/^systempresetdir=/s:lib:${LIBDIR}:" \
             -e "/^userunitdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^tmpfilesdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^sysusersdir=/s:/lib/:/${LIBDIR}/:" \
@@ -564,6 +565,9 @@ systemd_pkg_postinst() {
         nonfatal edo /usr/bin/systemd-machine-id-setup || ewarn "systemd-machine-id-setup failed"
         nonfatal edo mkdir -p /var/lib/dbus || ewarn "mkdir /var/lib/dbus failed"
         nonfatal edo ln -snf /etc/machine-id /var/lib/dbus/machine-id || ewarn "creating machine-id symlink failed"
+
+        # systemd >= 215 expects /usr to be touched at install phase
+        nonfatal edo touch /usr
 
         # if the root of init does not match our root, we are in a chroot and should not perform the
         # restart of the udev process
