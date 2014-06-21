@@ -7,12 +7,16 @@ SUMMARY="Libraries/utilities to handle ELF objects"
 HOMEPAGE="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}"
 DOWNLOADS="${HOMEPAGE}/${PV}/${PNV}.tar.bz2"
 
+BUGS_TO="philantrop@exherbo.org"
+
 LICENCES="GPL-3 || ( GPL-2 LGPL-3 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     multibuild_c: 32 64
 "
+
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
