@@ -164,6 +164,13 @@ else
     "
 fi
 
+if ever is_scm; then
+    DEPENDENCIES+="
+        build+run:
+            dev-util/elfutils[>=158]
+    "
+fi
+
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
