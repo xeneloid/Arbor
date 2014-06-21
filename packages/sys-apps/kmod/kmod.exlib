@@ -3,11 +3,8 @@
 
 # kmod has python bindings. Since we have fucked up our python crap so much, though,
 # I can't get both multibuild C and python to work together.
-# Fuck those who added this python crap without properly documenting it.
-# I feel like I should just retire.
+# zlin did some work on this. Status unknown.
 require alternatives easy-multibuild
-
-
 
 export_exlib_phases src_install
 
