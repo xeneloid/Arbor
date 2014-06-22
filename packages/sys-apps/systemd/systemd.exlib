@@ -167,7 +167,7 @@ fi
 if ever is_scm; then
     DEPENDENCIES+="
         build+run:
-            dev-util/elfutils[>=158]
+            dev-util/elfutils[>=0.158]
     "
 fi
 
