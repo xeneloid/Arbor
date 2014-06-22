@@ -2,10 +2,10 @@ Source: written by Johannes Nixdorf, updated by Arne Janbu
 Upstream: No, see http://llvm.org/bugs/show_bug.cgi?id=9136
 Reason: Without this patch, llvm-config returns a wrong path with multilib
 
-From 149dafe2cfa9b40366b0e7411d8ef1a1e18c0fb5 Mon Sep 17 00:00:00 2001
+From 096027b9612040b5cf515cb23b83c3d177a9b794 Mon Sep 17 00:00:00 2001
 From: Johannes Nixdorf <mixi@exherbo.org>
 Date: Sat, 9 Mar 2013 22:39:26 +0100
-Subject: [PATCH] llvm-config: don't use the executable path if not in a
+Subject: [PATCH 2/2] llvm-config: don't use the executable path if not in a
  development tree
 
 There is no reason to use the current path to guess the library install
@@ -22,12 +22,21 @@ tree.
 Arne Janbu: Added the re-inclusion of LLVM_LIBDIR. It was removed
 upsteam and we need it to specify /usr/lib{32,64}.
 ---
+ CMakeLists.txt                          | 6 ++++++
+ autoconf/configure.ac                   | 6 +++++-
+ cmake/config-ix.cmake                   | 2 --
+ configure                               | 8 +++++++-
+ include/llvm/Config/llvm-config.h.cmake | 3 +++
+ include/llvm/Config/llvm-config.h.in    | 3 +++
+ tools/llvm-config/llvm-config.cpp       | 8 ++++----
+ 7 files changed, 28 insertions(+), 8 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ef8906c..aceb817 100644
+index 36e6ed8..42330b7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -96,6 +96,12 @@ set(LLVM_TOOLS_BINARY_DIR ${LLVM_BINARY_DIR}/bin)
- set(LLVM_EXAMPLES_BINARY_DIR ${LLVM_BINARY_DIR}/examples)
+@@ -126,6 +126,12 @@ set(LLVM_EXAMPLES_BINARY_DIR ${LLVM_BINARY_DIR}/examples)
+ set(LLVM_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
  set(LLVM_LIBDIR_SUFFIX "" CACHE STRING "Define suffix of library directory name (32/64)" )
  
 +# set LLVM_*DIR for include/llvm/Config/llvm-config.h
@@ -40,10 +49,10 @@ index ef8906c..aceb817 100644
    AArch64
    ARM
 diff --git a/autoconf/configure.ac b/autoconf/configure.ac
-index f9c365c..c2b8195 100644
+index a1c2ac5..7557dd0 100644
 --- a/autoconf/configure.ac
 +++ b/autoconf/configure.ac
-@@ -1794,6 +1794,7 @@ if test "${prefix}" = "NONE" ; then
+@@ -1860,6 +1860,7 @@ if test "${prefix}" = "NONE" ; then
  fi
  eval LLVM_PREFIX="${prefix}";
  eval LLVM_BINDIR="${prefix}/bin";
@@ -51,7 +60,7 @@ index f9c365c..c2b8195 100644
  eval LLVM_DATADIR="${prefix}/share/llvm";
  eval LLVM_DOCSDIR="${prefix}/share/doc/llvm";
  eval LLVM_ETCDIR="${prefix}/etc/llvm";
-@@ -1803,6 +1804,7 @@ eval LLVM_MANDIR="${prefix}/man";
+@@ -1869,6 +1870,7 @@ eval LLVM_MANDIR="${prefix}/man";
  LLVM_CONFIGTIME=`date`
  AC_SUBST(LLVM_PREFIX)
  AC_SUBST(LLVM_BINDIR)
@@ -59,7 +68,7 @@ index f9c365c..c2b8195 100644
  AC_SUBST(LLVM_DATADIR)
  AC_SUBST(LLVM_DOCSDIR)
  AC_SUBST(LLVM_ETCDIR)
-@@ -1822,6 +1824,8 @@ AC_DEFINE_UNQUOTED(LLVM_PREFIX,"$LLVM_PREFIX",
+@@ -1888,6 +1890,8 @@ AC_DEFINE_UNQUOTED(LLVM_PREFIX,"$LLVM_PREFIX",
                     [Installation prefix directory])
  AC_DEFINE_UNQUOTED(LLVM_BINDIR, "$LLVM_BINDIR",
                     [Installation directory for binary executables])
@@ -68,7 +77,7 @@ index f9c365c..c2b8195 100644
  AC_DEFINE_UNQUOTED(LLVM_DATADIR, "$LLVM_DATADIR",
                     [Installation directory for data files])
  AC_DEFINE_UNQUOTED(LLVM_DOCSDIR, "$LLVM_DOCSDIR",
-@@ -1881,7 +1885,7 @@ for a_binding in $BINDINGS_TO_BUILD ; do
+@@ -1947,7 +1951,7 @@ for a_binding in $BINDINGS_TO_BUILD ; do
          AC_SUBST(OCAML_LIBDIR,$ocaml_stdlib)
        else
          # ocaml stdlib is outside our prefix; use libdir/ocaml
@@ -78,10 +87,10 @@ index f9c365c..c2b8195 100644
      fi
      ;;
 diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
-index 57725f8..83cd0d4 100755
+index b862ceb..d109054 100755
 --- a/cmake/config-ix.cmake
 +++ b/cmake/config-ix.cmake
-@@ -474,8 +474,6 @@ if (LLVM_ENABLE_ZLIB )
+@@ -457,8 +457,6 @@ if (LLVM_ENABLE_ZLIB )
    endif()
  endif()
  
@@ -89,20 +98,20 @@ index 57725f8..83cd0d4 100755
 -
  if (LLVM_ENABLE_DOXYGEN)
    message(STATUS "Doxygen enabled.")
-   find_package(Doxygen)
+   find_package(Doxygen REQUIRED)
 diff --git a/configure b/configure
-index f3a6594..9e88d89 100755
+index e9aba06..0ce9ac2 100755
 --- a/configure
 +++ b/configure
-@@ -786,6 +786,7 @@ SHLIBEXT
- SHLIBPATH_VAR
+@@ -790,6 +790,7 @@ MMAP_FILE
+ SHLIBEXT
  LLVM_PREFIX
  LLVM_BINDIR
 +LLVM_LIBDIR
  LLVM_DATADIR
  LLVM_DOCSDIR
  LLVM_ETCDIR
-@@ -21947,6 +21948,7 @@ if test "${prefix}" = "NONE" ; then
+@@ -19154,6 +19155,7 @@ if test "${prefix}" = "NONE" ; then
  fi
  eval LLVM_PREFIX="${prefix}";
  eval LLVM_BINDIR="${prefix}/bin";
@@ -110,7 +119,7 @@ index f3a6594..9e88d89 100755
  eval LLVM_DATADIR="${prefix}/share/llvm";
  eval LLVM_DOCSDIR="${prefix}/share/doc/llvm";
  eval LLVM_ETCDIR="${prefix}/etc/llvm";
-@@ -21978,6 +21980,9 @@ cat >>confdefs.h <<_ACEOF
+@@ -19185,6 +19187,9 @@ cat >>confdefs.h <<_ACEOF
  #define LLVM_BINDIR "$LLVM_BINDIR"
  _ACEOF
  
@@ -120,7 +129,7 @@ index f3a6594..9e88d89 100755
  
  cat >>confdefs.h <<_ACEOF
  #define LLVM_DATADIR "$LLVM_DATADIR"
-@@ -22066,7 +22071,7 @@ echo "$as_me: WARNING: --enable-bindings=ocaml specified, but ocamlopt not found
+@@ -19273,7 +19278,7 @@ echo "$as_me: WARNING: --enable-bindings=ocaml specified, but ocamlopt not found
  
        else
          # ocaml stdlib is outside our prefix; use libdir/ocaml
@@ -129,47 +138,19 @@ index f3a6594..9e88d89 100755
  
        fi
      fi
-@@ -23150,6 +23155,7 @@ SHLIBEXT!$SHLIBEXT$ac_delim
- SHLIBPATH_VAR!$SHLIBPATH_VAR$ac_delim
+@@ -20343,6 +20348,7 @@ MMAP_FILE!$MMAP_FILE$ac_delim
+ SHLIBEXT!$SHLIBEXT$ac_delim
  LLVM_PREFIX!$LLVM_PREFIX$ac_delim
  LLVM_BINDIR!$LLVM_BINDIR$ac_delim
 +LLVM_LIBDIR!$LLVM_LIBDIR$ac_delim
  LLVM_DATADIR!$LLVM_DATADIR$ac_delim
  LLVM_DOCSDIR!$LLVM_DOCSDIR$ac_delim
  LLVM_ETCDIR!$LLVM_ETCDIR$ac_delim
-diff --git a/include/llvm/Config/config.h.cmake b/include/llvm/Config/config.h.cmake
-index 77de967..d103a57 100644
---- a/include/llvm/Config/config.h.cmake
-+++ b/include/llvm/Config/config.h.cmake
-@@ -528,6 +528,9 @@
- /* Installation directory for .info files */
- #cmakedefine LLVM_INFODIR "${LLVM_INFODIR}"
- 
-+/* Installation directory for libraries */
-+#cmakedefine LLVM_LIBDIR "${LLVM_LIBDIR}"
-+
- /* Installation directory for man pages */
- #cmakedefine LLVM_MANDIR "${LLVM_MANDIR}"
- 
-diff --git a/include/llvm/Config/config.h.in b/include/llvm/Config/config.h.in
-index 860bccb..f006cf3 100644
---- a/include/llvm/Config/config.h.in
-+++ b/include/llvm/Config/config.h.in
-@@ -563,6 +563,9 @@
- /* Installation directory for .info files */
- #undef LLVM_INFODIR
- 
-+/* Installation directory for libraries */
-+#undef LLVM_LIBDIR
-+
- /* Installation directory for man pages */
- #undef LLVM_MANDIR
- 
 diff --git a/include/llvm/Config/llvm-config.h.cmake b/include/llvm/Config/llvm-config.h.cmake
-index 80616ef..c6f2bef 100644
+index 5811164..023e7ba 100644
 --- a/include/llvm/Config/llvm-config.h.cmake
 +++ b/include/llvm/Config/llvm-config.h.cmake
-@@ -49,6 +49,9 @@
+@@ -47,6 +47,9 @@
  /* Installation directory for .info files */
  #cmakedefine LLVM_INFODIR "${LLVM_INFODIR}"
  
@@ -180,10 +161,10 @@ index 80616ef..c6f2bef 100644
  #cmakedefine LLVM_MANDIR "${LLVM_MANDIR}"
  
 diff --git a/include/llvm/Config/llvm-config.h.in b/include/llvm/Config/llvm-config.h.in
-index a4fae55..a5209fa 100644
+index 5656240..948f925 100644
 --- a/include/llvm/Config/llvm-config.h.in
 +++ b/include/llvm/Config/llvm-config.h.in
-@@ -49,6 +49,9 @@
+@@ -47,6 +47,9 @@
  /* Installation directory for .info files */
  #undef LLVM_INFODIR
  
@@ -194,10 +175,10 @@ index a4fae55..a5209fa 100644
  #undef LLVM_MANDIR
  
 diff --git a/tools/llvm-config/llvm-config.cpp b/tools/llvm-config/llvm-config.cpp
-index 3924e2e..d89de38 100644
+index ed1c8c3..2948b79 100644
 --- a/tools/llvm-config/llvm-config.cpp
 +++ b/tools/llvm-config/llvm-config.cpp
-@@ -247,10 +247,10 @@ int main(int argc, char **argv) {
+@@ -260,10 +260,10 @@ int main(int argc, char **argv) {
      ActiveIncludeOption = ("-I" + ActiveIncludeDir + " " +
                             "-I" + ActiveObjRoot + "/include");
    } else {
@@ -212,3 +193,6 @@ index 3924e2e..d89de38 100644
      ActiveIncludeOption = "-I" + ActiveIncludeDir;
    }
  
+-- 
+2.0.0
+
