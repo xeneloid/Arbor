@@ -32,7 +32,7 @@ MYOPTIONS="
     systemd [[
         description = [ Install systemd service file for name service cache daemon (nscd) ]
     ]]
-
+    ( platform: amd64 arm x86 )
     ( linguas:
         be bg ca cs da de el en_GB eo es fi fr gl hr hu id it ja ko lt nb nl pl pt_BR ru rw sk sv tr
         vi zh_CN zh_TW
@@ -164,7 +164,13 @@ ac_cv_cpp_asm_debuginfo=yes
 EOF
         fi
 
-        BUILD_CC=${CC} CC="${GCC} -m${multibuild_c_target}"                 \
+        if option platform:amd64 || platform:x86; then
+            PLATFORM_CC="${GCC} -m${multibuild_c_target}"
+        else
+            PLATFORM_CC="${GCC}"
+        fi
+
+        BUILD_CC=${CC} CC="${PLATFORM_CC} "                                 \
             econf --cache-file=config.cache                                 \
                   --libdir="/usr/${LIBDIR}"                                 \
                   --with-add-ons                                            \
