@@ -3,7 +3,7 @@
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 ] ] cyrus-sasl
 
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-2.1.25-headers.patch

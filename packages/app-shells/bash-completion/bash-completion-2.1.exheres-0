@@ -7,7 +7,7 @@ require bash-completion autotools [ supported_autoconf=[ 2.5 ] supported_automak
 
 DOWNLOADS="http://bash-completion.alioth.debian.org/files/${PNV}.tar.bz2"
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~arm"
 
 RESTRICT="test"
 

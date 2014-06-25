@@ -11,7 +11,7 @@ HOMEPAGE="http://www.mutt.org/"
 
 LICENCES="GPL-2"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="debug gpgme idn sasl
     (
         gdbm [[ description = [ use gdbm for header caching ] ]]
