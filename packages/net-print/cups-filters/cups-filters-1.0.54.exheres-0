@@ -38,7 +38,7 @@ DEPENDENCIES="
         media-libs/lcms2[multibuild_c:*(-)?]
         media-libs/libpng:=[multibuild_c:*(-)?]
         media-libs/tiff[multibuild_c:*(-)?]
-        net-print/cups[>=1.6][multibuild_c:*(-)?]
+        net-print/cups[>=1.7.3][multibuild_c:*(-)?]
         avahi? (
             net-dns/avahi[multibuild_c:*(-)?]
             net-print/cups[>=1.6][avahi][multibuild_c:*(-)?]
