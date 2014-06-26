@@ -17,7 +17,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.17]
         doc? ( sys-apps/texinfo )
     build+run:
         app-arch/bzip2
