@@ -1,7 +1,7 @@
 # Copyright 2008, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-MY_PNV="${PNV/_alpha/a}"
+require sourceforge [ pnv=${PNV/_alpha/a} ]
 
 SUMMARY="Highly portable CD/DVD/BluRay command line recording software"
 DESCRIPTION="
@@ -17,12 +17,8 @@ isoinfo     A program to analyse/verify ISO/9660/Joliet/Rock-Ridge Filesystems
 isovfy      A program to verify the ISO-9660 structures
 rscsi       A Remote SCSI enabling daemon
 "
-HOMEPAGE="http://cdrecord.berlios.de/private/cdrecord.html"
-DOWNLOADS="ftp://ftp.berlios.de/pub/cdrecord/$([[ -z ${PV/*_alpha*} ]] && echo 'alpha/')/${MY_PNV}.tar.bz2"
 
-REMOTE_IDS="freecode:${PN}"
-
-UPSTREAM_RELEASE_NOTES="http://cdrecord.berlios.de/private/AN-$(ever major).0.html [[ lang = en ]]"
+REMOTE_IDS+=" freecode:${PN}"
 
 # COPYING has detailed licence info for each subpart of the project
 LICENCES="
