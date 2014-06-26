@@ -20,7 +20,7 @@ UPSTREAM_RELEASE_NOTES="${UPSTREAM_DOCUMENTATION}/whatsnew.html"
 
 LICENCES="GPL-2"
 SLOT="0"
-LANGS="ca cs es fr it ja ru"
+LANGS="ca cs de es fr it ja pt_BR ru"
 MYOPTIONS="
     baselayout dbus debug gnutls kerberos pam perl python xinetd
     acl [[ description = [ Support POSIX ACL when authenticating with the CUPS daemon ] ]]
