@@ -14,7 +14,7 @@ MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.17]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
