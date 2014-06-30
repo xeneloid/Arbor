@@ -3,7 +3,7 @@
 
 MY_PNV=${PN}-r${PV}
 
-require googlecode [ suffix='tar.gz' ]
+require github [ user=Cyan4973 rev=r${PV} ]
 
 SUMMARY="Very fast lossless compression algorithm"
 
@@ -18,9 +18,4 @@ MYOPTIONS=""
 DEPENDENCIES=""
 
 WORK=${WORKBASE}/${MY_PNV}
-
-src_prepare() {
-    # fix hardcoded libdir
-    edo sed -i -e "s:^LIBDIR=\$(PREFIX)/lib:LIBDIR=\$(PREFIX)/$LIBDIR:" Makefile
-}
 
