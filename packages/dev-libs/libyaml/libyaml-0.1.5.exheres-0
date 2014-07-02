@@ -9,7 +9,7 @@ DOWNLOADS="http://pyyaml.org/download/${PN}/${MY_PNV}.tar.gz"
 
 LICENCES="MIT"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="doc examples"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
