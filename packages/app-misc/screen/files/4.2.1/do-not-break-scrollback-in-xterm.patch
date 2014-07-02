@@ -1,0 +1,40 @@
+From f7a858489dba2951a343edc0b0f490cc3aba4111 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>
+Date: Tue, 8 Jul 2014 14:53:32 +0200
+Subject: [PATCH] Do not break xterm scrollback.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+screen's default etcscreenrc confuses xterm's scrollback feature so adjust
+temcap a little
+
+http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-misc/screen/files/screenrc?revision=1.13&view=markup&sortby=date
+lines 147-148 (gentoo)
+https://bugs.gentoo.org/show_bug.cgi?id=61195
+https://galileo.mailstation.de/gerrit/#/c/1275/ (exherbo)
+
+From: Ivan Diorditsa <ivan.diorditsa@gmail.com>
+Signed-off-by: Amadeusz Sławiński <amade@asmblr.net>
+---
+ src/etc/etcscreenrc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/etc/etcscreenrc b/src/etc/etcscreenrc
+index 3fc9c37..a51d64a 100644
+--- a/src/etc/etcscreenrc
++++ b/src/etc/etcscreenrc
+@@ -68,8 +68,8 @@ terminfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+ #
+ # Do not use xterms alternate window buffer. 
+ # This one would not add lines to the scrollback buffer.
+-#termcap xterm|xterms|xs ti=\E7\E[?47l
+-#terminfo xterm|xterms|xs ti=\E7\E[?47l
++termcap xterm|xterms|xs ti=\E7\E[?47l
++terminfo xterm|xterms|xs ti=\E7\E[?47l
+ 
+ #make hp700 termcap/info better
+ termcap  hp700 'Z0=\E[?3h:Z1=\E[?3l:hs:ts=\E[62"p\E[0$~\E[2$~\E[1$}:fs=\E[0}\E[61"p:ds=\E[62"p\E[1$~\E[61"p:ic@'
+-- 
+2.0.0
+
