@@ -3,7 +3,7 @@
 # Copyright 2011-2012 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require googlecode easy-multibuild
+require googlecode easy-multibuild [ multiunpack=true ]
 
 SUMMARY="Userland utilities for dm-crypt"
 DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
@@ -34,9 +34,9 @@ DEPENDENCIES="
         sys-fs/lvm2[multibuild_c:*(-)?] [[ note = [ cryptsetup needs device-mapper from the LVM2 package ] ]]
         gcrypt? ( dev-libs/libgcrypt[>=1.6.1][multibuild_c:*(-)?]
                   dev-libs/libgpg-error[multibuild_c:*(-)?] )
-        nettle? ( dev-libs/nettle[>=2.4][multibuild_c:*(-)?] )
+        nettle? ( dev-libs/nettle[>=2.6][multibuild_c:*(-)?] )
         openssl? ( dev-libs/openssl[>=0.9.8][multibuild_c:*(-)?] )
-        python? ( dev-lang/python:=[>=2.4][multibuild_c:*(-)?] )
+        python? ( dev-lang/python:=[>=2.6][multibuild_c:*(-)?] )
 "
 
 # static cryptsetup must be disabled because lvm2 can't be linked statically anymore.
