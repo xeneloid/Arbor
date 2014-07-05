@@ -49,6 +49,8 @@ pkg_pretend() {
 src_install() {
     insinto /etc
     doins "${FILES}"/exherbo-release
+
+    insinto /usr/${LIBDIR}
     doins "${FILES}"/os-release
 
     if [[ ${LIBDIR} != lib ]]; then
