@@ -66,12 +66,6 @@ MYOPTIONS="
     ( linguas: ${LANGUAGES[@]} )
 "
 
-if ! ever at_least 214; then
-    MYOPTIONS+="
-        xattr
-    "
-fi
-
 DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
@@ -92,6 +86,7 @@ DEPENDENCIES="
     build+run:
         app-arch/xz[multibuild_c:*(-)?]
         dev-libs/glib:2[>=2.26][multibuild_c:*(-)?]
+        dev-util/elfutils[>=0.158][multibuild_c:*(-)?]
         sys-apps/kmod[>=15][multibuild_c:*(-)?]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
@@ -127,8 +122,14 @@ DEPENDENCIES="
         sys-apps/kbd[>=1.15.2-r1]
         group/dialout
         group/lock [[ note = [ Required for var-lock service ] ]]
+        group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
+        group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+        group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
+        user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+        user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
     suggestion:
         app-admin/systemd-ui [[ description = [ Optional (G)UI tools for systemd ] ]]
@@ -146,30 +147,6 @@ DEPENDENCIES="
             ]]
         )
 "
-
-if ! ever at_least 214; then
-    DEPENDENCIES+="
-        build+run:
-            xattr? ( sys-apps/attr[multibuild_c:*(-)?] )
-    "
-else
-    DEPENDENCIES+="
-        run:
-            group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
-            group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
-            group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
-            user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
-            user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
-            user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
-    "
-fi
-
-if ever is_scm; then
-    DEPENDENCIES+="
-        build+run:
-            dev-util/elfutils[>=0.158]
-    "
-fi
 
 AT_M4DIR=( m4 )
 
@@ -268,6 +245,7 @@ configure_one_multibuild() {
         --enable-compat-libs
         --enable-coredump
         --enable-dbus
+        --enable-elfutils
         --enable-gudev
         --enable-hostnamed
         --enable-kmod
@@ -286,6 +264,7 @@ configure_one_multibuild() {
         --enable-rfkill
         # This adds /sbin and /bin to PATH for systemd units again.
         --enable-split-usr
+        --enable-sysusers
         --enable-tmpfiles
         --enable-timedated
         --enable-timesyncd
@@ -327,12 +306,6 @@ configure_one_multibuild() {
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
-
-    if ! ever at_least 214; then
-        local myconfig+=(
-            $(option_enable xattr)
-        )
-    fi
 
     edo mkdir -p src/gudev
 
