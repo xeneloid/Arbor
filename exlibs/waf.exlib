@@ -25,7 +25,7 @@ ewaf() {
     done
 
     for i in \
-        --verbose --verbose \
+        --verbose \
         --nocache \
         "${ewaf_args[@]}" ; do
         j=${i%%=*}
