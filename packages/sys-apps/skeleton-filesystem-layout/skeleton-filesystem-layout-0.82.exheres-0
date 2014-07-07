@@ -47,11 +47,11 @@ pkg_pretend() {
 }
 
 src_install() {
-    insinto /etc
-    doins "${FILES}"/exherbo-release
-
     insinto /usr/${LIBDIR}
     doins "${FILES}"/os-release
+
+    insinto /etc
+    doins "${FILES}"/exherbo-release
 
     if [[ ${LIBDIR} != lib ]]; then
         local multibuild_c_target ldpath=()
