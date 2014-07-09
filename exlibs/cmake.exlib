@@ -128,6 +128,13 @@ cmake_option() {
     _cmake_option '' "$@"
 }
 
+#   `cmake_use Foo          -> foo     ? -DUSE_Foo:BOOL=TRUE   : -DUSE_Foo:BOOL=FALSE
+cmake_use() {
+    illegal_in_global_scope
+
+    _cmake_option USE "$@"
+}
+
 #   `cmake_want Foo          -> foo     ? -DWANT_Foo:BOOL=TRUE   : -DWANT_Foo:BOOL=FALSE
 cmake_want() {
     illegal_in_global_scope
@@ -152,6 +159,7 @@ cmake_with() {
 #    CMAKE_SRC_CONFIGURE_OPTION_ENABLES
 #    CMAKE_SRC_CONFIGURE_OPTION_HAVES
 #    CMAKE_SRC_CONFIGURE_OPTIONS
+#    CMAKE_SRC_CONFIGURE_OPTION_USES
 #    CMAKE_SRC_CONFIGURE_OPTION_WANTS
 #    CMAKE_SRC_CONFIGURE_OPTION_WITHS
 #    CMAKE_SRC_CONFIGURE_TESTS
@@ -222,6 +230,9 @@ cmake_src_configure() {
         done ) \
         $(for s in "${CMAKE_SRC_CONFIGURE_OPTIONS[@]}" ; do
             cmake_option ${s}
+        done ) \
+        $(for s in "${CMAKE_SRC_CONFIGURE_OPTION_USES[@]}" ; do
+            cmake_use ${s}
         done ) \
         $(for s in "${CMAKE_SRC_CONFIGURE_OPTION_WANTS[@]}" ; do
             cmake_want ${s}
