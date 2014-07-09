@@ -21,8 +21,6 @@ DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/70f48182fd0e17258bfd018525c07611bdafd66
 src_configure() {
     yes "" | edo ./configure.sh config.in
     edo sed -i -e 's:I18N 0:I18N 1:' config.h
-    #Token Ring has been removed from >=linux-3.5
-    edo sed -i -e 's:HAVE_HWTR 1:HAVE_HWTR 0:' config.h
 }
 
 src_install() {
