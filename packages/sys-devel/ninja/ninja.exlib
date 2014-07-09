@@ -1,13 +1,15 @@
 # Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user="martine" ] elisp-optional [ source_directory=misc ]
+require github [ user="martine" ] elisp-optional [ source_directory=misc ] \
+    bash-completion \
+    zsh-completion
 
 SUMMARY="A small build system with a focus on speed"
 
 LICENCES="Apache-2.0"
 SLOT="0"
-MYOPTIONS="vim-syntax"
+MYOPTIONS="bash-completion vim-syntax zsh-completion"
 
 DEPENDENCIES="
     build:
@@ -34,11 +36,19 @@ src_test() {
 src_install() {
     dobin ninja
     dodoc doc/manual.html
-    dodoc COPYING HACKING.md README
+    dodoc HACKING.md README
+
+    if option bash-completion; then
+        dobashcompletion misc/bash-completion ninja
+    fi
 
     if option vim-syntax; then
         insinto /usr/share/vim/vimfiles/syntax/
         doins misc/ninja.vim
+    fi
+
+    if option zsh-completion; then
+        dozshcompletion misc/zsh-completion _ninja
     fi
 
     elisp-optional_src_install
