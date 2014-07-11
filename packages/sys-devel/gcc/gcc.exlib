@@ -47,6 +47,12 @@ if ever at_least 4.7 ; then
     "
 fi
 
+if ever at_least 4.9 ; then
+    MYOPTIONS+="
+        cilk            [[ description = [ build CILK and CILK+ runtime and support ] ]]
+    "
+fi
+
 DEPENDENCIES="
     build:
         sys-devel/gettext
@@ -210,7 +216,6 @@ EOF
     # point in rebuilding and rebuilding again just to verify that GCC is able to self-host for most
     # people.
 
-    # TODO(compnerd) until someone wants or needs cilk, disable it.
     # TODO(compnerd) make transactional memory support optional; it requires explicit hardware
     # support and adds langugae extensions
     # TODO(compnerd) make vtv an optional feature; it is not free and everything built against it
@@ -230,9 +235,6 @@ EOF
           --enable-lto $(! ever at_least 4.6 && echo --with-libelf) \
           ${enable_multilib}                                        \
           --enable-nls                                              \
-          $(if ever at_least 4.7.2 ; then
-                echo --enable-serial-configure
-            fi)                                                     \
           $(option_enable fortran libquadmath)                      \
           $(option_enable fortran libquadmath-support)              \
           $(option_with graphite cloog)                             \
@@ -259,7 +261,7 @@ EOF
                 option_enable sanitizers libsanitizer
             fi)                                                     \
           $(if ever at_least 4.9 ; then
-                echo --disable-libcilkrts
+                option_enable cilk libcilkrts
                 echo --disable-libvtv --disable-vtable-verify
                 echo --disable-install-libiberty
             fi)                                                     \
