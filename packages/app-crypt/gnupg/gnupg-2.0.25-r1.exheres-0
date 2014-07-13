@@ -38,6 +38,8 @@ DEPENDENCIES="
         ] ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gnupg-trust.patch )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --enable-gpg
