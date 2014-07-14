@@ -18,9 +18,8 @@ documented so it is easy to start writing your own application using PoDoFo.
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS+="freecode:${PN}"
 
-UPSTREAM_CHANGELOG="http://${PN}.svn.sourceforge.net/viewvc/${PN}/${PN}/tags/RELEASE_$(ever replace_all _)/ChangeLog [[ lang = en ]]"
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/html/index.html [[ lang = en ]]"
-UPSTREAM_RELEASE_NOTES="http://sourceforge.net/mailarchive/forum.php?thread_name=200812311642.02912.domseichter%40web.de&forum_name=podofo-users [[ lang = en ]]"
+UPSTREAM_RELEASE_NOTES="http://sourceforge.net/p/podofo/mailman/message/32576719 [[ lang = en ]]"
 
 LICENCES="GPL-2 LGPL-2"
 SLOT="0"
@@ -51,7 +50,10 @@ DEPENDENCIES="
 # CRITICAL: No path was found for the specified fontname: Arial Unicode MS
 RESTRICT="test"
 
-CMAKE_SRC_CONFIGURE_PARAMS=( -DPODOFO_BUILD_SHARED:BOOL=TRUE -DWANT_FONTCONFIG:BOOL=TRUE)
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DPODOFO_BUILD_SHARED:BOOL=TRUE
+    -DWANT_FONTCONFIG:BOOL=TRUE
+)
 CMAKE_SRC_CONFIGURE_OPTION_WANTS=(
     "graph BOOST"
     "platform:amd64 LIB64"

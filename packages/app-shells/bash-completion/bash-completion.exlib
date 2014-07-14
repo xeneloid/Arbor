@@ -16,6 +16,10 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        !net-apps/NetworkManager[<0.9.8.10-r2] [[
+            description = [ net-apps/NetworkManager 0.9.8.10-r2 installs nmcli previously provided by this package ]
+            resolution = uninstall-blocked-after
+        ]]
         !sys-apps/util-linux[<2.23] [[
             description = [ sys-apps/util-linux 2.23 installs chsh,rtcwake,util-linux previously provided by this package ]
             resolution = uninstall-blocked-after
@@ -45,7 +49,7 @@ bash-completion_src_install() {
     edo rm "${IMAGE}"/usr/share/bash-completion/completions/{chsh,rtcwake}
 
     if ever at_least 2.1; then
-        edo rm "${IMAGE}"/usr/share/bash-completion/completions/{cal,dmesg,eject,hexdump,hwclock,ionice,look,newgrp,renice,su,xxd}
+        edo rm "${IMAGE}"/usr/share/bash-completion/completions/{cal,dmesg,eject,hexdump,hwclock,ionice,look,newgrp,nmcli,renice,su,xxd}
     else
         edo rm "${IMAGE}"/usr/share/bash-completion/completions/util-linux
     fi

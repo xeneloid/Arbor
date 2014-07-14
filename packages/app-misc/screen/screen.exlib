@@ -1,0 +1,45 @@
+# Copyright 2007 David Leverton
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'screen-4.0.3.ebuild' from Gentoo, which is:
+#     Copyright 1999-2007 Gentoo Foundation
+
+require pam autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ]
+
+SUMMARY="A full-screen terminal multiplexer/window manager"
+
+LICENCES="GPL-2"
+SLOT="0"
+MYOPTIONS="
+    setuid [[ description = [ Install screen setuid root, allowing you to share screen sessions between multiple users ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/ncurses
+        sys-libs/pam
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --hates=docdir
+    --enable-colors256
+    --enable-pam
+    --enable-telnet
+    --enable-rxvt_osc
+    --enable-use-locale
+    --with-sys-screenrc=/etc/screenrc
+)
+
+src_install() {
+    default
+
+    insinto /etc
+    newins etc/etcscreenrc screenrc
+
+    if ! option 'setuid'; then
+        edo chown root:utmp "${IMAGE}"/usr/bin/${PN}
+        edo chmod 2755 "${IMAGE}"/usr/bin/${PN}
+    fi
+
+    pamd_mimic_system screen auth auth
+}
+

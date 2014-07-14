@@ -31,8 +31,12 @@ DEPENDENCIES="
     build+run:
         dev-libs/gmp
         net-libs/libmnl
-        net-libs/libnftnl[>=1.0.1]
+        net-libs/libnftnl[>=1.0.2]
 "
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    CONFIG_PDF=n
+)
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     debug

@@ -102,6 +102,8 @@ d /var/lib/nfs/rpc_pipefs 0755 root root
 d /var/lib/nfs/v4recovery 0755 root root
 d /var/lib/nfs/v4root 0755 root root
 EOF
+        insinto /etc/conf.d
+        doins "${FILES}"/systemd/nfs-server.conf
     fi
 
     # Don't overwrite existing xtab/etab, install the original

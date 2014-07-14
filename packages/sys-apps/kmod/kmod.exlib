@@ -3,12 +3,9 @@
 
 # kmod has python bindings. Since we have fucked up our python crap so much, though,
 # I can't get both multibuild C and python to work together.
-# Fuck those who added this python crap without properly documenting it.
-# I feel like I should just retire.
+# zlin did some work on this. Status unknown.
 #NOTE(moben): on cross this should not pose a problem and we can re-enable the python bindings
 require alternatives
-
-
 
 export_exlib_phases src_test src_install
 

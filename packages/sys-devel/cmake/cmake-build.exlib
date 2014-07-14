@@ -7,7 +7,7 @@
 
 require bash-completion
 
-if ever at_least 3.0.0-rc1 ; then
+if ever at_least 3.0.0 ; then
     require elisp-optional [ source_directory=Auxiliary ]
 else
     require elisp-optional [ source_directory=Docs ]
@@ -39,7 +39,7 @@ DEPENDENCIES="
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
-if ever at_least 3.0.0-rc1 ; then
+if ever at_least 3.0.0 ; then
     DEPENDENCIES+="
         build:
             dev-python/Sphinx[>=1.2.2][python_abis:2.7]

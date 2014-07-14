@@ -1,0 +1,45 @@
+Title: systemd 213: simple-net/static-net
+Author: Wulf C. Krueger <philantrop@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-05-29
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: sys-apps/systemd[<213]
+
+The options simple-net and static-net have been removed from
+systemd[>=213].
+
+Both simple-net and static-net provided a way to configure your network
+interface(s) statically. If you need this functionality, you should now
+switch to systemd-networkd which provides this and DHCP functionality
+as well.
+
+You can find more details about this at
+
+http://coreos.com/blog/intro-to-systemd-networkd/
+
+and
+
+http://www.freedesktop.org/software/systemd/man/systemd-networkd.service.html
+
+Here's a simple example from my own configuration
+/etc/systemd/network/enp3s0.network:
+
+----
+[Match]
+Name=enp3s0
+
+[Network]
+DNS=192.168.168.1
+
+[Address]
+Address=192.168.168.113/24
+
+[Route]
+Gateway=192.168.168.1
+----
+
+Furthermore, systemd-timesyncd (NTP client) and systemd-resolvd
+(resolv.conf handling) are installed but are *not* configured to
+replace whatever you might currently be using.
+If you want to use them (both work very well), read their man pages.

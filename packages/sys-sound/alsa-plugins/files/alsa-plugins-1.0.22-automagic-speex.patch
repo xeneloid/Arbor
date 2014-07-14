@@ -8,13 +8,13 @@ Date: Tue, 26 May 2009 19:05:06 +0200
 Subject: [PATCH] Allow opt-out from speex dependency
 
 ---
- configure.in |    8 +++++---
+ configure.ac |    8 +++++---
  1 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/configure.in b/configure.in
+diff --git a/configure.ac b/configure.ac
 index 36740e9..36d0d2a 100644
---- a/configure.in
-+++ b/configure.in
+--- a/configure.ac
++++ b/configure.ac
 @@ -106,14 +106,16 @@ AC_SUBST(AVCODEC_CFLAGS)
  AC_SUBST(AVCODEC_LIBS)
  AC_SUBST(AVCODEC_HEADER)

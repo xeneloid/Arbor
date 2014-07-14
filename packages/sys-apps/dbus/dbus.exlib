@@ -83,7 +83,6 @@ dbus_src_configure() {
         --with-session-socket-dir=/tmp                   \
         --with-system-pid-file=/run/dbus.pid             \
         --with-system-socket=/run/dbus/system_bus_socket \
-        --with-xml=expat                                 \
         --disable-libaudit                               \
         --disable-selinux                                \
         --disable-tests                                  \

@@ -25,7 +25,7 @@ ewaf() {
     done
 
     for i in \
-        --verbose --verbose \
+        --verbose \
         --nocache \
         "${ewaf_args[@]}" ; do
         j=${i%%=*}
@@ -50,6 +50,7 @@ waf_src_configure() {
         --libdir=/usr/${LIBDIR}/ \
         --datadir=/usr/share/ \
         ${WAF_SRC_CONFIGURE_HTMLDIR---htmldir=/usr/share/doc/${PNVR}/html/} \
+        "${WAF_DEFAULT_PARAMS[@]}" \
         "${WAF_SRC_CONFIGURE_PARAMS[@]}" \
         $(for s in "${WAF_SRC_CONFIGURE_OPTIONS[@]}" ; do option ${s} ; done) \
         $(for s in "${WAF_SRC_CONFIGURE_OPTION_ENABLES[@]}" ; do option_enable ${s} ; done) \
@@ -58,15 +59,15 @@ waf_src_configure() {
 }
 
 waf_src_compile() {
-    ewaf --jobs=${EXJOBS:-1} build
+    ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_COMPILE_PARAMS[@]}" build
 }
 
 wafsamba_src_test() {
-    ewaf --jobs=${EXJOBS:-1} -v test
+    ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_TEST_PARAMS[@]}" -v test
 }
 
 waf_src_install() {
-    ewaf --jobs=1 install --destdir="${IMAGE}"
+    ewaf --jobs=1 install "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_INSTALL_PARAMS[@]}" --destdir="${IMAGE}"
     emagicdocs
 }
 

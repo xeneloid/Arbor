@@ -9,7 +9,11 @@ HOMEPAGE="http://llvm.org/"
 
 LICENCES="UoI-NCSA"
 SLOT="0"
-MYOPTIONS="multibuild_c: 32 64"
+MYOPTIONS="
+    asserts [[ description = [ Enable assertions ] ]]
+    shared-libs [[ description = [ Build libraries dynamically ] ]]
+    multibuild_c: 32 64
+"
 
 DEPENDENCIES="
     build:
@@ -51,10 +55,10 @@ configure_one_multibuild() {
     # wrong LLVM_DEFAULT_TARGET_TRIPLE which happens on x86_64
     local args=(
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
-        -DLLVM_ENABLE_ASSERTIONS:BOOL=FALSE
+        -DLLVM_ENABLE_ASSERTIONS:BOOL=$(option asserts TRUE FALSE)
         -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=${CHOST}
         -DLLVM_BINUTILS_INCDIR:STRING=/usr/include
-        -DBUILD_SHARED_LIBS:BOOL=TRUE
+        -DBUILD_SHARED_LIBS:BOOL=$(option shared-libs TRUE FALSE)
     )
     if ever at_least 3.2; then
         args+=( -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD:STRING=R600 )

@@ -1,0 +1,12 @@
+# Copyright 2014 Ivan Diorditsa <ivan.diorditsa@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require gnu [ suffix=gz ] screen
+
+PLATFORMS="~amd64 ~arm ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p2 "${FILES}/${PV}/do-not-break-scrollback-in-xterm.patch"
+    -p2 "${FILES}/${PV}/do-not-link-against-libelf.patch"
+)
+

@@ -8,8 +8,9 @@ After=network.target rpcmountd.service rpcbind.service rpcstatd.service rpcidmap
 
 [Service]
 Type=oneshot
+EnvironmentFile=/etc/conf.d/nfs-server.conf
 ExecStartPre=/usr/sbin/exportfs -ra
-ExecStart=/usr/sbin/rpc.nfsd --syslog 8
+ExecStart=/usr/sbin/rpc.nfsd $RPC_NFSD_OPTS
 ExecStop=/usr/sbin/exportfs -ua
 ExecStop=/usr/sbin/rpc.nfsd 0
 RemainAfterExit=yes

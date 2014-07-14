@@ -1,0 +1,24 @@
+Upstream: yes
+From 5ed6fb00a4f1bd7896e80f384cac5519d1932a92 Mon Sep 17 00:00:00 2001
+From: Werner LEMBERG <wl@gnu.org>
+Date: Tue, 02 Jul 2013 11:35:17 +0000
+Subject: * doc/groff.texinfo: Fix syntax error in documentation of `\z'.
+
+---
+(limited to 'doc/groff.texinfo')
+
+diff --git a/doc/groff.texinfo b/doc/groff.texinfo
+index b9e2efa..99cdb4d 100644
+--- a/doc/groff.texinfo
++++ b/doc/groff.texinfo
+@@ -11934,7 +11934,7 @@ centered, and the resulting spacing is the largest width of the affected
+ glyphs.
+ @endDefesc
+ 
+-@Defesc {\\z, , g, , }
++@Defesc {\\z, , g, }
+ @cindex zero-width printing (@code{\z}, @code{\Z})
+ @cindex printing, zero-width (@code{\z}, @code{\Z})
+ Print glyph @var{g} with zero width, i.e., without spacing.  Use this to
+--
+cgit v0.9.0.2

@@ -40,6 +40,7 @@ LICENCES="
     public-domain   [[ note = [ src/shared/MurmurHash2.c, src/shared/siphash24.c, src/journal/lookup3.c ] ]]
 "
 SLOT="0"
+LANGUAGES=( el fr it pl ru )
 MYOPTIONS="
     acl
     bash-completion
@@ -50,41 +51,28 @@ MYOPTIONS="
         note = [ Needs (U)EFI compatible hardware and a fairly recent kernel with proper configuration ]
     ]]
     gcrypt [[ description = [ Enable cryptographically secured journal files ] ]]
+    gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     gobject-introspection
     gtk-doc
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
+    kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
-    simple-net [[ description = [ Include an extremely simple service for static networking ] ]]
-    static-net [[ description = [ Include a simple service for static networking ] ]]
-    xattr
+    seccomp [[ description = [ System call filtering support via seccomp ] ]]
     zsh-completion
-"
-
-if ever at_least 209; then
-    MYOPTIONS+="
-        kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
-        seccomp [[ description = [ System call filtering support via seccomp ] ]]
-    "
-fi
-
-if ever at_least 212; then
-    MYOPTIONS+="
-        gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
-    "
-fi
-
-MYOPTIONS+="
-    ( linguas: fr it pl ru )
+    ( linguas: ${LANGUAGES[@]} )
 "
 
 DEPENDENCIES="
     build:
+        app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
         dev-util/gperf[>=3.0.4] [[ note = [ for keymap ] ]]
         dev-util/intltool[>=0.40.0]
+        sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
+        sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
         gtk-doc? (
             app-doc/gtk-doc-autotools[>=1.18]
@@ -96,6 +84,7 @@ DEPENDENCIES="
     build+run:
         app-arch/xz
         dev-libs/glib:2[>=2.26]
+        dev-util/elfutils[>=0.158]
         sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
@@ -115,6 +104,7 @@ DEPENDENCIES="
         acl? ( sys-apps/acl )
         cryptsetup? ( sys-fs/cryptsetup[>=1.6.0] )
         gcrypt? ( dev-libs/libgcrypt )
+        gnutls? ( dev-libs/gnutls[>=3.1.4] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         journal-gateway? (
             net-libs/libmicrohttpd[>=0.9.33]
@@ -123,15 +113,22 @@ DEPENDENCIES="
         )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
-        xattr? ( sys-apps/attr )
+        seccomp? ( sys-libs/libseccomp[>=1.0.0] )
     run:
         sys-apps/coreutils
+        sys-apps/dbus[>=1.4.0]
         sys-apps/kbd[>=1.15.2-r1]
         group/dialout
         group/lock [[ note = [ Required for var-lock service ] ]]
+        group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
-        simple-net? ( sys-apps/net-tools[>=1.60_p20120127084908] )
-        static-net? ( sys-apps/iproute2 )
+        group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+        group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
+        group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
+        user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+        user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
+        user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
     suggestion:
         app-admin/systemd-ui [[ description = [ Optional (G)UI tools for systemd ] ]]
         (
@@ -148,34 +145,6 @@ DEPENDENCIES="
             ]]
         )
 "
-
-if ever at_least 209; then
-    DEPENDENCIES+="
-        build:
-            app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
-            sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
-        build+run:
-            seccomp? ( sys-libs/libseccomp[>=1.0.0] )
-        run:
-            sys-apps/dbus[>=1.4.0]
-    "
-fi
-
-if ever at_least 212; then
-    DEPENDENCIES+="
-        build:
-            sys-kernel/linux-headers[>=3.7]
-        build+run:
-        gnutls? ( dev-libs/gnutls[>=3.1.4] )
-    "
-fi
-
-if ! ever at_least 209; then
-    DEPENDENCIES+="
-        build+run:
-            sys-apps/dbus[>=1.4.0]
-    "
-fi
 
 AT_M4DIR=( m4 )
 
@@ -248,7 +217,10 @@ systemd_src_configure() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        --enable-compat-libs
         --enable-coredump
+        --enable-dbus
+        --enable-elfutils
         --enable-gudev
         --enable-hostnamed
         --enable-kmod
@@ -256,13 +228,19 @@ systemd_src_configure() {
         --enable-logind
         --enable-machined
         --enable-manpages
+        --enable-multi-seat-x
         --enable-myhostname
+        --enable-networkd
         --enable-pam
         --enable-quotacheck
         --enable-randomseed
         --enable-readahead
+        --enable-resolved
+        --enable-rfkill
+        --enable-sysusers
         --enable-tmpfiles
         --enable-timedated
+        --enable-timesyncd
         --enable-vconsole
         --enable-xz
         --disable-audit
@@ -288,44 +266,21 @@ systemd_src_configure() {
         $(option_enable cryptsetup libcryptsetup)
         $(option_enable efi)
         $(option_enable gcrypt)
+        $(option_enable gnutls)
         $(option_enable gobject-introspection introspection)
         $(option_enable gtk-doc)
         $(option_enable journal-gateway microhttpd)
+        $(option_enable kdbus)
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
-        $(option_enable xattr)
+        $(option_enable seccomp)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
 
-    if ever at_least 209; then
-        myconfig+=(
-            --enable-compat-libs
-            --enable-dbus
-            --enable-multi-seat-x
-            --enable-networkd
-            --enable-rfkill
-            $(option_enable kdbus)
-            $(option_enable seccomp)
-        )
-    fi
-
-    if ever at_least 212; then
-        myconfig+=(
-            $(option_enable gnutls)
-        )
-    fi
-
     edo mkdir -p src/gudev
-
-    if ever at_least 209; then
-        if option simple-net || option static-net ; then
-            ewarn "WARNING: Both the simple-net and the static-net options will be removed in favour"
-            ewarn "of systemd-networkd in a few releases."
-        fi
-    fi
 
     econf "${myconfig[@]}"
 }
@@ -404,26 +359,6 @@ systemd_src_install() {
 
     if [[ -d "${IMAGE}"/usr/${host}/lib/rpm ]]; then
         edo rm -r "${IMAGE}"/usr/${host}/lib/rpm
-    fi
-
-    # Install simple-net if requested
-    if option simple-net; then
-        insinto /usr/${host}/lib/systemd/system
-        doins "${FILES}"/network.service
-        insinto /etc/conf.d
-        doins "${FILES}"/network.conf
-    fi
-
-    if option static-net; then
-        insinto /usr/${host}/lib/systemd/system
-        doins "${FILES}"/network4@.service
-        doins "${FILES}"/gateway4.service
-        doins "${FILES}"/network6@.service
-        doins "${FILES}"/gateway6.service
-        insinto /etc/conf.d
-        doins "${FILES}"/network-gateway.conf
-        doins "${FILES}"/network-lo.conf
-        doins "${FILES}"/network-eth0.conf
     fi
 
     if [[ -d "${IMAGE}"/no ]]; then
@@ -555,6 +490,22 @@ EOT
     # Exclude /var/tmp/paludis/build from cleaning
     edo echo "x /var/tmp/paludis/build" >> "${IMAGE}"/usr/${host}/lib/tmpfiles.d/tmp.conf
 
+    # Remove unselected languages
+    for i in "${LANGUAGES[@]}"; do
+        local objects=()
+        objects=(
+            "${IMAGE}"/usr/${host}/lib/systemd/catalog/systemd.${i}.catalog
+            "${IMAGE}"/usr/share/locale/${i}
+        )
+        if ! option "linguas:${i}"; then
+            for o in "${objects[@]}"; do
+                [[ -e ${o} ]] && edo rm -r "${o}"
+            done
+            # Remove the mortal remains, empty shells of their former glory... ;-)
+            edo find "${IMAGE}"/usr/share/locale -type d -empty -delete
+        fi
+    done
+
     if option python ; then
         python_bytecompile
     fi
@@ -567,6 +518,9 @@ systemd_pkg_postinst() {
         nonfatal edo /usr/${CHOST}/bin/systemd-machine-id-setup || ewarn "systemd-machine-id-setup failed"
         nonfatal edo mkdir -p /var/lib/dbus || ewarn "mkdir /var/lib/dbus failed"
         nonfatal edo ln -snf /etc/machine-id /var/lib/dbus/machine-id || ewarn "creating machine-id symlink failed"
+
+        # systemd >= 215 expects /usr to be touched at install phase
+        nonfatal edo touch /usr
 
         # if the root of init does not match our root, we are in a chroot and should not perform the
         # restart of the udev process

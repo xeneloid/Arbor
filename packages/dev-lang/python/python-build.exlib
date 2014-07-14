@@ -120,7 +120,6 @@ python-build_src_configure() {
     # -fwrapv: http://bugs.python.org/issue11149
     export OPT="-fwrapv"
     export CPPFLAGS="$($(exhost --tool-prefix)pkg-config --cflags-only-I libffi) ${CPPFLAGS}"
-    export LDFLAGS="${LDFLAGS} -L/usr/$(exhost --target)/lib"
 
     default
 }

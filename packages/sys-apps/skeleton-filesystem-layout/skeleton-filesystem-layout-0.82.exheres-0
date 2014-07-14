@@ -47,9 +47,11 @@ pkg_pretend() {
 }
 
 src_install() {
+    insinto /usr/${LIBDIR}
+    doins "${FILES}"/os-release
+
     insinto /etc
     doins "${FILES}"/exherbo-release
-    doins "${FILES}"/os-release
 
     if [[ ${LIBDIR} != lib ]]; then
         local multibuild_c_target ldpath=()
@@ -89,7 +91,10 @@ pkg_postinst() {
         edo mkdir -p "${ROOT}"/sys
     fi
 
-    edo chmod 0640 "${ROOT}"/etc/sysctl.conf
+    # sysctl.conf can be in /etc but defaults to being in /usr/${LIBDIR} nowadays
+    [[ -f ${ROOT}/etc/sysctl.conf ]] && edo chmod 0640 "${ROOT}"/etc/sysctl.conf
+    [[ -f ${ROOT}/usr/${LIBDIR}/sysctl.conf ]] && edo chmod 0640 "${ROOT}"/usr/${LIBDIR}/sysctl.conf
+
     edo chmod 0600 "${ROOT}"/etc/shadow
 
     # create device nodes
