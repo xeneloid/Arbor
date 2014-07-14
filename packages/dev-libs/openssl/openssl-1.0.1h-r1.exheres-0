@@ -18,7 +18,13 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="multibuild_c: 32 64 platform: amd64 arm x86"
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build+run:
+        !dev-libs/libressl [[
+            description = [ LibreSSL is a drop-in replacement for OpenSSL with same library name ]
+            resolution = uninstall-blocked-after
+        ]]
+"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-0.9.8o-CFLAGS.patch

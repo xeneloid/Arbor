@@ -1,0 +1,32 @@
+# Copyright 2014 William Orr <will@worrbase.com>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="OpenBSD's portable fork of OpenSSL"
+DESCRIPTION="
+An SSL/TLS library with more ciphers, fewer bugs and much less bloat
+"
+HOMEPAGE="http://www.libressl.org/"
+DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PNV}.tar.gz"
+
+LICENCES="openssl"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="multibuild_c: 32 64 platform: amd64"
+
+DEPENDENCIES="
+    build+run:
+        !dev-libs/openssl [[
+            description = [ LibreSSL is a drop-in replacement for OpenSSL with same library name ]
+            resolution = uninstall-blocked-after
+        ]]
+"
+
+BUGS_TO="will@worrbase.com"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PNV}-rand-egd.patch" )
+
+install_one_multibuild() {
+    default
+    keepdir /etc/ssl/{certs,private}
+    emagicdocs
+}
