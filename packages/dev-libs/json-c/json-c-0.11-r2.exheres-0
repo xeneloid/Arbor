@@ -11,7 +11,7 @@ HOMEPAGE="https://github.com/${PN}/${PN}/wiki"
 
 LICENCES="MIT"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="multibuild_c: 32 64"
 
 # tests break because of autofoo
