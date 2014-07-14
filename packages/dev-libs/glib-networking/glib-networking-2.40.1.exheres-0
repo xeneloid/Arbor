@@ -36,7 +36,7 @@ DEPENDENCIES="
         gnome-proxy? ( gnome-desktop/gsettings-desktop-schemas )
         gnutls? ( dev-libs/gnutls[>=2.12.8] )
         libproxy? ( net-libs/libproxy:1[>=0.3.1] )
-        pkcs11? ( dev-libs/p11-kit:1[>=0.8][multibuild_c:*(-)?] )
+        pkcs11? ( dev-libs/p11-kit:1[>=0.8] )
 "
 
 AT_M4DIR=( m4 )
