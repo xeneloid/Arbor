@@ -1,10 +1,8 @@
 # Copyright 2009 Timothy Redaelli <timothy@redaelli.eu>
-# Copyright 2013 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2013-2014 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'mdadm-3.0.ebuild', which is:
 #     Copyright 1999-2009 Gentoo Foundation
-
-DEB_REV=2
 
 require systemd-service udev-rules
 
@@ -19,7 +17,7 @@ file can be used to help with some common tasks.
 HOMEPAGE="http://neil.brown.name/blog/${PN}"
 DOWNLOADS="
     mirror://kernel/linux/utils/raid/${PN}/${PNV}.tar.xz
-    mirror://debian/pool/main/m/${PN}/${PN}_${PV}-${DEB_REV}.debian.tar.gz
+    mirror://debian/pool/main/m/${PN}/${PN}_3.3-2.debian.tar.gz
 "
 
 LICENCES="
@@ -43,12 +41,16 @@ DEPENDENCIES="
 # they mess with values in /proc and run on the system mdraid devices.
 RESTRICT="test"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/616f197f9d6d044afb9e27ddc9cd087d21d610f0.patch
+    "${FILES}"/e339dba2a1744dc6860a58e286ded39fc993c2db.patch
+)
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC="${CC}"
     CWFLAGS="-Wall"
     CXFLAGS="${CFLAGS}"
     MAP_DIR=/run/mdadm
-    mdassemble
     all
 )
 DEFAULT_SRC_INSTALL_PARAMS=(
@@ -58,8 +60,6 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 
 src_install() {
     default
-
-    dosbin mdassemble
 
     insinto /etc
     newins mdadm.conf-example mdadm.conf
@@ -73,8 +73,6 @@ src_install() {
         newinitd "${FILES}"/mdraid.rc mdraid
         newconfd "${FILES}"/mdraid.confd mdraid
     fi
-
-    install_systemd_files
 
     if option systemd ; then
             insinto /usr/${LIBDIR}/tmpfiles.d
