@@ -1,7 +1,7 @@
 # Copyright 2008, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require easy-multibuild
+require easy-multibuild autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="A portable foreign function interface library"
 DESCRIPTION="
@@ -40,6 +40,12 @@ DEPENDENCIES="
         dev-util/dejagnu
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/cbc5a3c0200aa6c2cf8d6798d69a21501557c83f.patch
+    "${FILES}"/978c9540154d320525488db1b7049277122f736d.patch
+    "${FILES}"/ad0d1d239afc7ad09203847793dcc020856d1035.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
 
@@ -48,7 +54,9 @@ src_prepare() {
     # pass the correct libdir to configure, so this is unnecessary.
     #
     # libffi issue: https://github.com/atgreen/libffi/issues/55
-    edo sed -e "/multi_os_directory=/,+4d" -i configure
+    edo sed -e "/multi_os_directory=/,+4d" -i configure.ac
+
+    autotools_src_prepare
 }
 
 test_one_multibuild() {
