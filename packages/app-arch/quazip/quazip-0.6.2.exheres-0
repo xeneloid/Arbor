@@ -1,0 +1,29 @@
+# Copyright 2012-2014 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=tar.gz ] cmake [ api=2 ]
+
+SUMMARY="Simple C++ wrapper over Gilles Vollant's ZIP/UNZIP package"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    qt5 [[ description = [ Build against Qt5 instead of Qt4 ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/zlib
+        qt5? ( x11-libs/qtbase:5 )
+        !qt5? ( x11-libs/qt:4[>=4.5.0] )
+"
+
+src_configure() {
+    local cmakeargs+=(
+        -DBUILD_WITH_QT4:BOOL=$(option qt5 && echo FALSE || echo TRUE)
+    )
+
+    ecmake "${cmakeargs[@]}"
+}
+
