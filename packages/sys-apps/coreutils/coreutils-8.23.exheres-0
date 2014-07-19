@@ -8,5 +8,6 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 # random failures for some tests (with sydbox), at least:
 # test-fchownat test-fdutimensat test-getaddrinfo test-getlogin test-linkat test-symlinkat test-unlinkat test-utimensat
+# last checked: 8.23
 RESTRICT="test"
 
