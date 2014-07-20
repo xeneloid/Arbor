@@ -70,6 +70,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
+    -p1 "${FILES}/${PNV}-arc4random-libressl.patch"
 )
 
 WORK=${WORKBASE}/${MY_PNV}
