@@ -307,6 +307,11 @@ configure_one_multibuild() {
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
 
+    if ever at_least 215 && ! ever at_least scm; then
+        # workaround 215 build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
+        myconfig+=( --enable-dependency-tracking )
+    fi
+
     edo mkdir -p src/gudev
 
     econf "${myconfig[@]}"
