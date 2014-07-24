@@ -27,17 +27,16 @@ SLOT="0"
 MYOPTIONS="
     kerberos
     ldap
-    ssl
     multibuild_c: 32 64
 "
 
 DEPENDENCIES="
     build+run:
+        dev-libs/openssl[multibuild_c:*(-)?]
         sys-libs/gdbm
         sys-libs/pam
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap[multibuild_c:*(-)?] )
-        ssl? ( dev-libs/openssl[multibuild_c:*(-)?] )
 "
 
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( saslauthd )
@@ -77,13 +76,15 @@ configure_one_multibuild() {
         "--enable-login"
         "--enable-ntlm"
         "--disable-static"
-        "--with-dblib=gdbm"
         "--disable-krb4"
         "--disable-otp"
         "--disable-ntlm"
         "--disable-srp"
         "--disable-java"
         "--disable-sql"
+        "--with-dblib=gdbm"
+        "--with-des"
+        "--with-openssl"
         "--with-saslauthd=/var/lib/sasl2"
         "--with-pwcheck=/var/lib/sasl2"
         "--with-configdir=/etc/sasl2"
@@ -92,8 +93,6 @@ configure_one_multibuild() {
         "$(option_enable kerberos gssapi)"
         "$(option_enable ldap ldapdb)"
         "$(option_with ldap ldap "/usr/${LIBDIR}")"
-        "$(option_with ssl openssl)"
-        "$(option_with ssl des)"
     )
 
     econf "${myconf[@]}"
