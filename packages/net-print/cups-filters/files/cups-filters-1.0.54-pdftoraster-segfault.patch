@@ -1,0 +1,28 @@
+Source: http://bzr.linuxfoundation.org/loggerhead/openprinting/cups-filters/revision/7219
+Upstream: Fixed in bzr
+Reason: Fix segfault
+
+=== modified file 'filter/pdftoraster.cxx'
+--- a/filter/pdftoraster.cxx	2014-06-06 10:44:22 +0000
++++ b/filter/pdftoraster.cxx	2014-06-11 08:55:52 +0000
+@@ -444,7 +444,7 @@
+       }
+     }
+     /* support the "no-color-management" option */
+-    if (cupsGetOption("no-color-management", num_options, options) == NULL)
++    if (cupsGetOption("no-color-management", num_options, options) != NULL)
+       cm_off = true;
+     if (!cm_off) {
+       if (getColorProfilePath(ppd,&profilePath)) {
+@@ -1998,9 +1998,7 @@
+         pdfError(-1,const_cast<char *>("Can't open raster stream"));
+ 	exit(1);
+   }
+-  if (!cm_off) {
+-    selectConvertFunc(raster);
+-  }
++  selectConvertFunc(raster);
+   for (i = 1;i <= npages;i++) {
+     outPage(doc,catalog,i,out,raster);
+   }
+
