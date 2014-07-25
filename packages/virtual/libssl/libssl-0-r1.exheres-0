@@ -7,6 +7,7 @@ HOMEPAGE=""
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
+    multibuild_c: 32 64
     ( providers:
         openssl
         libressl
@@ -17,7 +18,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:openssl? ( dev-libs/openssl )
-    providers:libressl? ( dev-libs/libressl )
+    providers:openssl? ( dev-libs/openssl[multibuild_c:*(-)?] )
+    providers:libressl? ( dev-libs/libressl[multibuild_c:*(-)?] )
 "
 
