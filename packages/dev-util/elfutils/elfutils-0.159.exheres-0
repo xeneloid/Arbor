@@ -1,7 +1,7 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require flag-o-matic
 
 SUMMARY="Libraries/utilities to handle ELF objects"
 HOMEPAGE="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}"
@@ -27,8 +27,6 @@ DEPENDENCIES="
             description = [ installs the same headers, but the libraries are ABI incompatible ]
         ]]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-check-for-prefixed-ar-readelf-and-nm.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=eu-
