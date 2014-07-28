@@ -20,7 +20,7 @@ BUGS_TO="flocke@shadowice.org"
 
 # Tests fail to generate documentation without ldoc already being installed
 # and even after successful generation the reference to which it should be
-# compared is missing
+# compared is missing (last checked: 1.4.2)
 RESTRICT="test"
 
 src_install() {
