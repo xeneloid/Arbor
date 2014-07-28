@@ -30,7 +30,7 @@ DEPENDENCIES="
         !gcrypt? ( dev-libs/nss )
         gcrypt?  ( dev-libs/libgcrypt )
         gpg?     ( app-crypt/gpgme )
-        openssl? ( dev-libs/openssl )
+        openssl? ( virtual/libssl )
         pkcs11?  ( dev-libs/pkcs11-helper )
 "
 

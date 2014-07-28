@@ -15,8 +15,8 @@ MYOPTIONS="caps idn"
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
         sys-fs/sysfsutils
+        virtual/libssl
         caps? ( sys-libs/libcap )
         idn? ( net-dns/libidn )
 "

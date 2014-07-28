@@ -20,7 +20,7 @@ DEPENDENCIES="
         net-libs/libssh2[>=1.2.8][multibuild_c:*(-)?]
         sys-libs/zlib[multibuild_c:*(-)?]
         ares? ( net-dns/c-ares[>=1.6.0][multibuild_c:*(-)?] )
-       !gnutls? ( dev-libs/openssl[>=1.0.1][multibuild_c:*(-)?] )
+       !gnutls? ( virtual/libssl[multibuild_c:*(-)?] )
         gnutls? (
             dev-libs/gnutls[>=2.12.14][multibuild_c:*(-)?]
             dev-libs/nettle[multibuild_c:*(-)?]

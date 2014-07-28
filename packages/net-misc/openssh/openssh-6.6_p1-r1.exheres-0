@@ -56,9 +56,9 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         user/sshd
-        dev-libs/openssl[>=0.9.8g]
         sys-apps/shadow
         sys-libs/zlib[>=1.2.3]
+        virtual/libssl
         gtk? ( x11-libs/gtk+:2 )
         kerberos? ( app-crypt/heimdal )
         ldns? ( net-libs/ldns )

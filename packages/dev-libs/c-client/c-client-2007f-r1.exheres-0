@@ -19,8 +19,8 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl[>=0.9.8j]
         sys-libs/pam[>=0.72]
+        virtual/libssl
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

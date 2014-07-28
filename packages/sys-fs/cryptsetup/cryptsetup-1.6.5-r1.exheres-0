@@ -35,7 +35,7 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt[>=1.6.1][multibuild_c:*(-)?]
                   dev-libs/libgpg-error[multibuild_c:*(-)?] )
         nettle? ( dev-libs/nettle[>=2.6][multibuild_c:*(-)?] )
-        openssl? ( dev-libs/openssl[>=0.9.8][multibuild_c:*(-)?] )
+        openssl? ( virtual/libssl[multibuild_c:*(-)?] )
         python? ( dev-lang/python:=[>=2.6][multibuild_c:*(-)?] )
 "
 

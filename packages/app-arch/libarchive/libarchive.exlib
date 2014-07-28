@@ -45,7 +45,7 @@ DEPENDENCIES="
         dev-libs/libxml2:=
         acl? ( sys-apps/acl )
         nettle? ( dev-libs/nettle )
-        openssl? ( dev-libs/openssl )
+        openssl? ( virtual/libssl )
         xattr? ( sys-apps/attr )
 "
 

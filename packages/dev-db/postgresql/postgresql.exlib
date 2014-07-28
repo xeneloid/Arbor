@@ -147,7 +147,7 @@ DEPENDENCIES="
         perl? ( dev-lang/perl:= )
         python? ( dev-lang/python:= )
         readline? ( sys-libs/readline )
-        ssl? ( dev-libs/openssl )
+        ssl? ( virtual/libssl )
         tcl? ( dev-lang/tcl:= )
         xml? (
             dev-libs/libxml2:=[>=2.6.23]

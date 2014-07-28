@@ -27,7 +27,7 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        dev-libs/openssl[>=0.9.8]
+        virtual/libssl
         doc? ( app-doc/doxygen[>=1.4.7] )
         gnutls? ( dev-libs/gnutls[>=2.5.4] )
         nss? ( dev-libs/nss[>=3.12-r1] )

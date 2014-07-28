@@ -31,7 +31,7 @@ DEPENDENCIES="
         pam? ( sys-libs/pam )
         embedded-perl? ( dev-lang/perl:= )
         sasl? ( net-libs/cyrus-sasl )
-        ssl? ( dev-libs/openssl )
+        ssl? ( virtual/libssl )
         tcpd? ( sys-apps/tcp-wrappers )
         group/mail
         user/mail

@@ -57,7 +57,7 @@ DEPENDENCIES="
     build+run:
         dbus? ( sys-apps/dbus )
         gnutls? ( dev-libs/gnutls )
-       !gnutls? ( dev-libs/openssl[>=1.0.0] )
+       !gnutls? ( virtual/libssl[>=1.0.0] )
         pcap? (
             dev-libs/libdnet
             dev-libs/libpcap

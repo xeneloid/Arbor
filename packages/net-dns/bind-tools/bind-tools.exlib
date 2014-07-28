@@ -29,8 +29,8 @@ DEPENDENCIES="
     build+run:
         dev-libs/json-c
         dev-libs/libxml2:2.0
-        dev-libs/openssl
         sys-libs/readline
+        virtual/libssl
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         kerberos? ( virtual/kerberos )

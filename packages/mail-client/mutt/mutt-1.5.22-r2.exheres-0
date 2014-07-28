@@ -28,6 +28,7 @@ DEPENDENCIES="
         dev-libs/libxslt
         sys-devel/gettext
     build+run:
+        virtual/libssl
         gdbm? ( sys-libs/gdbm )
         gpgme? ( app-crypt/gpgme )
         idn? ( net-dns/libidn )

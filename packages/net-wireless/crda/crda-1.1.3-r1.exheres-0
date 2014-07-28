@@ -33,7 +33,7 @@ DEPENDENCIES="
     build+run:
         net-libs/libnl:1
         crypt? ( dev-libs/libgcrypt )
-        ssl? ( dev-libs/openssl )
+        ssl? ( virtual/libssl )
 "
 
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}"

@@ -16,7 +16,7 @@ MYOPTIONS="baselayout"
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
+        virtual/libssl
         group/ntp
         user/ntp
 "

@@ -19,7 +19,7 @@ DEPENDENCIES="
     build+run:
         sys-apps/coreutils[>=6.10]
     run:
-        dev-libs/openssl[>=1.0.0]
+        virtual/libssl
     install+run:
         sys-apps/debianutils [[ note = [ update-ca-certificates needs run-parts from debianutils ] ]]
 "

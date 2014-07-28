@@ -14,7 +14,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
+        virtual/libssl
     test:
         dev-perl/Test-Exception
         dev-perl/Test-NoWarnings

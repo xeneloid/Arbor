@@ -26,9 +26,9 @@ DEPENDENCIES="
         dev-lang/perl:*
     build+run:
         dev-libs/gmp:=
-        dev-libs/openssl[>=0.9.6]
         net-libs/cyrus-sasl
         sys-libs/gdbm
+        virtual/libssl
         ldap? ( net-directory/openldap )
         mysql? ( dev-db/mysql )
         postgres? ( dev-db/postgresql )

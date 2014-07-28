@@ -29,7 +29,7 @@ DEPENDENCIES="
         mysql? ( virtual/mysql )
         postgresql? ( dev-db/postgresql )
         sqlite? ( dev-db/sqlite:3 )
-        ssl? ( dev-libs/openssl )
+        ssl? ( virtual/libssl )
         virtuoso? (
             dev-db/libiodbc
             dev-db/virtuoso-opensource

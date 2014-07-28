@@ -37,6 +37,7 @@ DEPENDENCIES="
         sys-libs/pam
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap[multibuild_c:*(-)?] )
+        virtual/libssl
 "
 
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( saslauthd )

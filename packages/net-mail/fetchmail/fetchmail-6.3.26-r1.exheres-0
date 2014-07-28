@@ -16,7 +16,7 @@ DEPENDENCIES="
     build:
         sys-devel/gettext
     build+run:
-        dev-libs/openssl
+        virtual/libssl
         tk? ( dev-lang/python:=[tk] )"
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FEATURES )

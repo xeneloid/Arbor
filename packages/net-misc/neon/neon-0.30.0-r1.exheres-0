@@ -25,11 +25,11 @@ DEPENDENCIES="
         sys-libs/zlib
        !expat? ( dev-libs/libxml2:2.0 )
         expat? ( dev-libs/expat )
-       !gnutls? ( dev-libs/openssl[>=0.9.7] )
+       !gnutls? ( virtual/libssl )
         gnutls? ( dev-libs/gnutls )
         libproxy? ( net-libs/libproxy:1 )
     test:
-        dev-libs/openssl
+        virtual/libssl
 "
 
 

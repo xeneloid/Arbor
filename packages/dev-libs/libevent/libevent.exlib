@@ -17,7 +17,7 @@ MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl[multibuild_c:*(-)?]
+        virtual/libssl[multibuild_c:*(-)?]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-2.0.10-test.patch )

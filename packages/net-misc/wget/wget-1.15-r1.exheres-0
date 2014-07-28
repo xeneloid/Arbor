@@ -22,7 +22,7 @@ DEPENDENCIES="
         dev-libs/pcre
         sys-apps/util-linux [[ note = [ for libuuid ] ]]
         sys-libs/zlib
-       !gnutls? ( dev-libs/openssl )
+       !gnutls? ( virtual/libssl )
         gnutls? (
             dev-libs/gmp:=
             dev-libs/gnutls

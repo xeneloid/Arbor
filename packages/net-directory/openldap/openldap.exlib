@@ -37,11 +37,11 @@ DEPENDENCIES="
     build+run:
         dev-libs/gmp:=[multibuild_c:*(-)?]
         dev-libs/icu[multibuild_c:*(-)?]
-        dev-libs/openssl[>=0.9.7][multibuild_c:*(-)?]
         group/ldap
         net-libs/cyrus-sasl[>=2.1.21][multibuild_c:*(-)?]
         sys-libs/db:=[multibuild_c:*(-)?]
         user/ldap
+        virtual/libssl[multibuild_c:*(-)?]
         virtual/syslog
 "
 

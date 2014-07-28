@@ -43,8 +43,8 @@ DEPENDENCIES="
         group/${PN}
         user/${PN}
         dev-libs/libaio[multibuild_c:*(-)?]
-        dev-libs/openssl[>=0.9.7][multibuild_c:*(-)?]
         sys-libs/zlib[>=1.2.3][multibuild_c:*(-)?]
+        virtual/libssl[multibuild_c:*(-)?]
         tcpd? ( sys-apps/tcp-wrappers[multibuild_c:*(-)?] )
         !dev-db/mariadb [[
             description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]

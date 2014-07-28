@@ -17,7 +17,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
+        virtual/libssl
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=(

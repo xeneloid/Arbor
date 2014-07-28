@@ -44,7 +44,7 @@ DEPENDENCIES="
         acl? ( sys-apps/acl[multibuild_c:*(-)?] )
         avahi? ( net-dns/avahi[dns_sd][multibuild_c:*(-)?] )
         dbus? ( sys-apps/dbus[multibuild_c:*(-)?] )
-       !gnutls? ( dev-libs/openssl[multibuild_c:*(-)?] )
+       !gnutls? ( virtual/libssl[multibuild_c:*(-)?] )
         gnutls? (
             dev-libs/gnutls[multibuild_c:*(-)?]
             dev-libs/libgcrypt[multibuild_c:*(-)?]

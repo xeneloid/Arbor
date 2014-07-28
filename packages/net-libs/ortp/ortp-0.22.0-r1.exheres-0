@@ -17,7 +17,7 @@ DEPENDENCIES="
     build:
         doc? ( app-doc/doxygen )
     build+run:
-        dev-libs/openssl
+        virtual/libssl
 "
 #        srtp? ( net-libs/libsrtp )
 
