@@ -90,7 +90,6 @@ DEPENDENCIES="
         sys-apps/kmod[>=15][multibuild_c:*(-)?]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
-        sys-apps/usbutils[>=0.82]
         sys-apps/util-linux[>=2.22][multibuild_c:*(-)?]
         sys-kernel/linux-headers[>=2.6.39]
         sys-libs/libcap[multibuild_c:*(-)?]
