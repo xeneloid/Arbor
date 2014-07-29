@@ -13,7 +13,7 @@ The suite includes:
 * libraries implementing the LDAP protocol
 * utilities, tools, and sample clients
 "
-HOMEPAGE="http://www.openldap.org/"
+HOMEPAGE="http://www.openldap.org"
 DOWNLOADS="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PNV}.tgz"
 
 LICENCES="OpenLDAP-2.8"
@@ -49,6 +49,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --libexecdir=/usr/libexec/openldap
     --localstatedir=/var
+    --disable-static
 
     --enable-dynamic
     --enable-ipv6
