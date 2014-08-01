@@ -24,7 +24,11 @@ DEPENDENCIES="
         sys-libs/pam [[ note = [ required for vlock ] ]]
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--bindir=/bin' '--enable-nls' )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --bindir=/bin
+    --enable-nls
+    --disable-static
+)
 
 src_install() {
     default
