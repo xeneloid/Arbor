@@ -2,8 +2,12 @@
 # Copyright 2010 Sterling X. Winter <replica@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-myexparam -b checkout=false
-exparam -v CHECKOUT checkout
+if ever is_scm ; then
+    SCM_REPOSITORY="git://w1.fi/srv/git/hostap.git"
+    require scm-git
+else
+    DOWNLOADS="http://hostap.epitest.fi/releases/${PNV}.tar.gz"
+fi
 
 require qmake systemd-service
 
@@ -21,27 +25,21 @@ and acts as the backend component controlling the wireless connection.
 wpa_supplicant supports separate frontend programs and a text-based frontend
 (wpa_cli) and a GUI (wpa_gui) are included with wpa_supplicant.
 "
-HOMEPAGE="http://hostap.epitest.fi/${PN}/"
-
-if ! ${CHECKOUT}; then
-    DOWNLOADS="http://hostap.epitest.fi/releases/${PNV}.tar.gz"
-fi
+HOMEPAGE="http://hostap.epitest.fi/${PN}"
 
 LICENCES="|| ( BSD-3 GPL-2 )"
 SLOT="0"
 
 MYOPTIONS="
-    ap       [[ description = [ Support Access Point mode                            ] ]]
+    ap       [[ description = [ Support Access Point mode ] ]]
     baselayout
-    dbus     [[ description = [ Enable the DBus control interface                    ] ]]
+    dbus     [[ description = [ Enable the DBus control interface ] ]]
     eap-fast [[
-        description = [
-            Enable EAP-FAST using either OpenSSL >=1.0.0 (requires 'openssl' option) or internal
-            implementation
-        ]
+        description = [ Enable EAP-FAST authentication method ]
         requires = -gnutls
     ]]
-    nl80211  [[ description = [ Support the new 802.11 netlink interface             ] ]]
+    gnutls   [[ description = [ Use GnuTLS for TLS connections instead of OpenSSL ] ]]
+    nl80211  [[ description = [ Support the new 802.11 netlink interface ] ]]
     pcap     [[ description = [
         Use libdnet/libpcap for Layer 2 processing instead of Linux packet sockets
     ] ]]
@@ -51,51 +49,34 @@ MYOPTIONS="
     qt4      [[ description = [ Build the Qt4-based wpa_gui program                  ] ]]
     readline [[ description = [ Use readline for line editing and history in wpa_cli ] ]]
     systemd  [[ requires = dbus ]]
-
-    (
-        gnutls [[ description = [
-            Use GnuTLS for TLS connections instead of internal implementation
-        ] ]]
-        openssl [[ description = [
-            Use OpenSSL for TLS connections instead of internal implementation
-        ] ]]
-    ) [[ number-selected = at-most-one ]]
 "
 
 DEPENDENCIES="
     build:
         dbus? ( virtual/pkg-config )
-
     build+run:
-        dbus?     ( sys-apps/dbus )
-        eap-fast? (
-            openssl? ( dev-libs/openssl[>=0.9.9] )
-        )
-        gnutls?  ( dev-libs/gnutls )
-        pcap?    (
+        dbus? ( sys-apps/dbus )
+        gnutls? ( dev-libs/gnutls )
+       !gnutls? ( dev-libs/openssl[>=1.0.0] )
+        pcap? (
             dev-libs/libdnet
             dev-libs/libpcap
         )
-        pcsc?     ( sys-apps/pcsc-lite )
-        qt4?      ( x11-libs/qt:4      )
+        pcsc? ( sys-apps/pcsc-lite )
+        qt4? ( x11-libs/qt:4 )
         readline? (
             sys-libs/ncurses
             sys-libs/readline
         )
         nl80211? ( net-libs/libnl:3.0 )
-        openssl? ( dev-libs/openssl )
-
-        !gnutls? (
-            !openssl? ( dev-libs/libtommath )
-        )
 "
 
-if ${CHECKOUT}; then
-DEPENDENCIES+="
-    build:
-        app-text/docbook-sgml-dtd:4.1
-        app-text/docbook-utils
-"
+if ever is_scm ; then
+    DEPENDENCIES+="
+        build:
+            app-text/docbook-sgml-dtd:4.1
+            app-text/docbook-utils
+    "
 fi
 
 # FIXME: Tests don't seem to get along with external crypto -- needs further
@@ -136,11 +117,9 @@ config_enable_eap() {
 
 src_prepare() {
     default
-    edo sed -i -e 's:/usr/local/sbin/:/usr/bin/:g' Makefile
 
     # FILES is a reserved exheres-0 variable
-    ${CHECKOUT} && edo sed -i -e 's:FILES:DOC_FILES:g' doc/docbook/Makefile
-
+    ever is_scm && edo sed -i -e 's:FILES:DOC_FILES:g' doc/docbook/Makefile
 }
 
 src_configure() {
@@ -149,6 +128,7 @@ src_configure() {
         CTRL_IFACE=unix \
         DEBUG_FILE \
         ELOOP=eloop \
+        CONFIG_IBSS_RSN \
         IEEE80211N \
         IEEE80211R \
         IEEE8021X_EAPOL \
@@ -186,18 +166,15 @@ src_configure() {
 #    fi
 
     # EAP_FAST requires EAP_TLS (which is always enabled), and only works with
-    # OpenSSL-0.9.9 or internal TLS implementation
+    # OpenSSL-0.9.9 (or internal TLS implementation)
     if option gnutls ; then
         config_enable \
             TLS=gnutls \
             GNUTLS_EXTRA
-    elif option openssl ; then
+    elif ! option gnutls ; then
         config_enable \
             TLS=openssl \
             SMARTCARD
-        option eap-fast && config_enable_eap FAST
-    else
-        config_enable TLS=internal
         option eap-fast && config_enable_eap FAST
     fi
 
@@ -208,15 +185,13 @@ src_configure() {
         ROBOSWITCH \
         WEXT \
         WIRED
-        #HERMES # Requires additional files not included in the distribution.
-                # http://www.agere.com/support/drivers/
-                # See wpa_supplicant/README
 
     option nl80211 && config_enable_driver NL80211 && \
         config_enable LIBNL32
 
     # EAP_PEAP, EAP_TLS, and EAP_TTLS require TLS (which is always enabled)
     config_enable_eap \
+        EXE \
         GPSK \
         GPSK_SHA256 \
         GTC \
@@ -244,13 +219,17 @@ src_configure() {
     # seconds.
     #config_enable DELAYED_MIC_ERROR_REPORT
 
+    # Background scanning
+    config_enable BGSCAN_LEARN
+    config_enable BGSCAN_SIMPLE
+
     option qt4 && eqmake -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
 }
 
 src_compile() {
     default
     option qt4 && emake -C wpa_gui-qt4
-    ${CHECKOUT} && emake -C doc/docbook man
+    ever is_scm && emake -C doc/docbook man
 }
 
 #src_test() {
