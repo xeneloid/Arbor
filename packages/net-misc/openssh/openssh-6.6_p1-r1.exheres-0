@@ -89,7 +89,7 @@ src_prepare() {
 
     # TODO: Get rid of this workaround which is needed because the patch below
     # doesn't work with openssl.
-    has_version 'virtual/libssl[libressl]' \
+    has_version --root 'virtual/libssl[providers:libressl]' \
         && expatch "${FILES}/${PNV}-arc4random-libressl.patch"
 
 
