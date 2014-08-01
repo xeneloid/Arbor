@@ -70,7 +70,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
-    -p1 "${FILES}/${PNV}-arc4random-libressl.patch"
 )
 
 WORK=${WORKBASE}/${MY_PNV}
@@ -87,6 +86,12 @@ src_prepare() {
     if [[ -n ${X509_VERSION} ]]; then
         option X509 && expatch -p1 "${WORKBASE}/${X509_PATCH%.gz}"
     fi
+
+    # TODO: Get rid of this workaround which is needed because the patch below
+    # doesn't work with openssl.
+    has_version 'virtual/libssl[libressl]' \
+        && expatch "${FILES}/${PNV}-arc4random-libressl.patch"
+
 
     edo sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h
     edo sed -i -e "s:-lcrypto:$(pkg-config --libs openssl):" configure.ac
