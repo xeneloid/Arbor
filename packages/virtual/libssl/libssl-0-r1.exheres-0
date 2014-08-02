@@ -5,7 +5,7 @@ SUMMARY="Virtual: libssl providers"
 HOMEPAGE=""
 
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     multibuild_c: 32 64
     ( providers:
