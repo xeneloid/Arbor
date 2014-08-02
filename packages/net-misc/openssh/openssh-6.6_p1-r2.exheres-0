@@ -39,6 +39,13 @@ MYOPTIONS="
     pam
     tcpd
     X
+    ( providers:
+        openssl
+        libressl
+    ) [[
+        *description = [ libssl provider ]
+        number-selected = exactly-one
+    ]]
 "
 
 if [[ -n ${X509_VERSION} ]]; then
@@ -58,7 +65,7 @@ DEPENDENCIES="
         user/sshd
         sys-apps/shadow
         sys-libs/zlib[>=1.2.3]
-        virtual/libssl
+        virtual/libssl[providers:*(-)?]
         gtk? ( x11-libs/gtk+:2 )
         kerberos? ( app-crypt/heimdal )
         ldns? ( net-libs/ldns )
@@ -89,7 +96,7 @@ src_prepare() {
 
     # TODO: Get rid of this workaround which is needed because the patch below
     # doesn't work with openssl.
-    has_version --root 'virtual/libssl[providers:libressl]' \
+    option providers:libressl \
         && expatch "${FILES}/${PNV}-arc4random-libressl.patch"
 
 
