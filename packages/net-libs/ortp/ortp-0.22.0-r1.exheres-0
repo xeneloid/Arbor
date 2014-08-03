@@ -40,6 +40,7 @@ src_install() {
     # There's no option to disable building apidocs, so remove them if not requested
     if option !doc; then
         edo rm -rf "${IMAGE}"/usr/share/doc/${PNV}/html
+        [[ "${PR}" != "r0" ]] && edo rmdir "${IMAGE}"/usr/share/doc/${PNV}
     fi
 }
 
