@@ -1,11 +1,11 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 ]
+require gnu [ suffix=xz ]
 
 SUMMARY="Tar archiver"
 
-LICENCES="( GPL-3 ) [[ last-checked = 1.27 ]]"
+LICENCES="( GPL-3 ) [[ last-checked = 1.28 ]]"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="acl"
@@ -22,30 +22,12 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --bindir=/bin )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'acl posix-acls' )
-DEFAULT_SRC_INSTALL_EXTRA_DOCS=( PORTS )
-
-src_configure() {
-    # Configuration takes a million years without this hack.
-    esandbox hack_toolong
-    default
-    esandbox nohack_toolong
-}
-
-src_compile() {
-    default
-    edo perl "${FILES}"/tarman > tar.1
-}
 
 src_test() {
-    emake check TESTSUITEFLAGS='-k !sparse03'
+    emake check TESTSUITEFLAGS='-k !sparse03,!remfiles08a,!remfiles08c'
 }
 
 src_test_expensive() {
     emake check TESTSUITEFLAGS='-k sparse03'
-}
-
-src_install() {
-    default
-    doman tar.1
 }
 
