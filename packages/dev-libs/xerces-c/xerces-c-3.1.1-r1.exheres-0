@@ -18,7 +18,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        net-misc/curl
+        net-misc/curl[multibuild_c:*(-)?]
 "
 
 RESTRICT="test"
