@@ -1,6 +1,8 @@
 # Copyright 2008 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require easy-multibuild
+
 SUMMARY="An implementation of the Unicode Bidirectional Algorithm (bidi)"
 DESCRIPTION="
 A free software library that claims to implement a completly standard-compatible Unicode
@@ -12,13 +14,13 @@ DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
 LICENCES="LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build:
         virtual/pkg-config[>=0.9.0]
     build+run:
-        dev-libs/glib:2
+        dev-libs/glib:2[multibuild_c:*(-)?]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --with-glib=yes )
