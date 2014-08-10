@@ -22,8 +22,8 @@ DEPENDENCIES="
         dev-lang/python:*[<3.0]
     build+run:
         dev-libs/libpthread-stubs
-        dev-libs/openssl
         sys-libs/zlib
+        virtual/libssl
     npm? ( run: !dev-node/npm )
 "
 
