@@ -43,8 +43,8 @@ DEPENDENCIES="
         tk? ( dev-lang/tk )
         dev-libs/libffi
         dev-libs/libyaml
-        dev-libs/openssl
         sys-libs/zlib
+        virtual/libssl
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=( EXTLDFLAGS="${LDFLAGS}" )

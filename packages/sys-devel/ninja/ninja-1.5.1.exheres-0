@@ -1,0 +1,9 @@
+# Copyright 2011 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+GITHUB_REVISION="85e13c163d0129216fb382df6a53d11393c4c0c2"
+
+require ninja
+
+PLATFORMS="~amd64 ~x86"
+

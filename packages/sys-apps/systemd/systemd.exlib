@@ -88,7 +88,6 @@ DEPENDENCIES="
         sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
-        sys-apps/usbutils[>=0.82]
         sys-apps/util-linux[>=2.22]
         sys-kernel/linux-headers[>=2.6.39]
         sys-libs/libcap
@@ -279,6 +278,11 @@ systemd_src_configure() {
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
+
+    if ever at_least 215 && ! ever at_least scm; then
+        # workaround 215 build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
+        myconfig+=( --enable-dependency-tracking )
+    fi
 
     edo mkdir -p src/gudev
 

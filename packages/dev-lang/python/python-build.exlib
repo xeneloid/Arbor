@@ -39,8 +39,8 @@ DEPENDENCIES="
         app-arch/bzip2
         dev-libs/libffi
         sys-libs/ncurses
-        dev-libs/openssl
         sys-libs/zlib[>=1.1.3]
+        virtual/libssl
         berkdb? ( sys-libs/db:=[>=4.6.21&<4.8] [[ note = [ python:2.7 also supports 4.8 ] ]] )
         gdbm? ( sys-libs/gdbm )
         readline? ( sys-libs/readline[>=4.1] )

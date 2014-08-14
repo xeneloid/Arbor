@@ -49,8 +49,8 @@ ever at_least 2.0.0 || MYOPTIONS+="
 DEPENDENCIES="
     build+run:
         dev-lang/perl:=[>=5.7.3]
-        dev-libs/openssl
         sys-libs/zlib
+        virtual/libssl
         curl? ( net-misc/curl )
         tk? (
           dev-lang/tcl[>=8.4]

@@ -1,0 +1,80 @@
+# Copyright 2008 Stephen Bennett
+# Copyright 2009 Mike Kelly
+# Copyright 2011-2012 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require googlecode easy-multibuild [ multiunpack=true ]
+
+SUMMARY="Userland utilities for dm-crypt"
+DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    python
+    (
+        gcrypt [[ description = [ Use libgcrypt library as crypto backend ] ]]
+        kernel [[ description = [ Use kernel as crypto backend, needs at least the kernel userspace
+                                  crypto interface ] ]]
+        nettle [[ description = [ Use nettle library as crypto backend ] ]]
+        openssl [[ description = [ Use openssl library as crypto backend ] ]]
+    ) [[ number-selected = exactly-one ]]
+    multibuild_c: 32 64
+"
+
+# nss backend needs static lib
+DEPENDENCIES="
+    build:
+        sys-devel/gettext[>=0.15]
+        virtual/pkg-config
+    build+run:
+        dev-libs/popt[>=1.7][multibuild_c:*(-)?]
+        sys-apps/util-linux [[ note = [ cryptsetup needs libuuid ] ]]
+        sys-fs/lvm2[multibuild_c:*(-)?] [[ note = [ cryptsetup needs device-mapper from the LVM2 package ] ]]
+        gcrypt? ( dev-libs/libgcrypt[>=1.6.1][multibuild_c:*(-)?]
+                  dev-libs/libgpg-error[multibuild_c:*(-)?] )
+        nettle? ( dev-libs/nettle[>=2.6][multibuild_c:*(-)?] )
+        openssl? ( virtual/libssl[multibuild_c:*(-)?] )
+        python? ( dev-lang/python:=[>=2.6][multibuild_c:*(-)?] )
+"
+
+# static cryptsetup must be disabled because lvm2 can't be linked statically anymore.
+# FIPS (requires dev-libs/libgcrypt[>=1.4.5]) is probably not interesting for us, so hard disable it
+configure_one_multibuild() {
+    econf --prefix=/ \
+        --includedir=/usr/include \
+        --enable-cryptsetup-reencrypt \
+        --enable-dev-random \
+        --enable-nls \
+        --enable-udev \
+        --disable-fips \
+        --disable-pwquality \
+        --disable-selinux \
+        --disable-static-cryptsetup \
+        $(option_enable gcrypt gcrypt-pbkdf2) \
+        $(option_enable python) \
+        --with-crypto_backend=$(
+        if option gcrypt; then
+            echo 'gcrypt'
+        elif option kernel; then
+            echo 'kernel'
+        elif option nettle; then
+            echo 'nettle'
+        elif option openssl; then
+            echo 'openssl'
+        fi)
+}
+
+test_one_multibuild() {
+    multibuild_default_target C && default
+}
+
+install_one_multibuild() {
+    default
+
+    # Move the pkg-config file into the correct dir.
+    dodir /usr/${LIBDIR}
+    edo mv "${IMAGE}"/{,usr/}${LIBDIR}/pkgconfig
+}
+

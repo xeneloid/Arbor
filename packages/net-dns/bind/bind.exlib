@@ -43,7 +43,7 @@ DEPENDENCIES="
     build+run:
         dev-libs/json-c
         dev-libs/libxml2:2.0
-        dev-libs/openssl
+        virtual/libssl
         berkdb? ( sys-libs/db:= )
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )

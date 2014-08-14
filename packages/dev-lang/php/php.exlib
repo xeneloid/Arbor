@@ -83,7 +83,7 @@ DEPENDENCIES="
         apache? ( www-servers/apache[>=2.2.11] )
         php_extensions:curl? ( net-misc/curl[>=7.19.4] )
         php_extensions:berkdb? ( sys-libs/db:=[>=4.6.21] )
-        php_extensions:ftp? ( dev-libs/openssl[>=0.9.6] )
+        php_extensions:ftp? ( virtual/libssl )
         php_extensions:gd? (
             media-libs/freetype:2
             media-libs/jpeg[>=6b]
@@ -119,7 +119,7 @@ DEPENDENCIES="
         php_extensions:readline? ( sys-libs/readline[>=5.2_p12] )
         php_extensions:recode? ( app-text/recode[>=3.6] )
         php_extensions:ssl? (
-            dev-libs/openssl[>=0.9.6]
+            virtual/libssl
             php_extensions:imap? (
                 dev-libs/c-client[>=2007e][ssl(+)]
             )

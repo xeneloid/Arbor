@@ -147,7 +147,7 @@ DEPENDENCIES="
         perl? ( dev-lang/perl:= )
         python? ( dev-lang/python:= )
         readline? ( sys-libs/readline )
-        ssl? ( dev-libs/openssl )
+        ssl? ( virtual/libssl )
         tcl? ( dev-lang/tcl:= )
         xml? (
             dev-libs/libxml2:=[>=2.6.23]
@@ -248,18 +248,18 @@ EOF
 }
 
 postgresql_src_test() {
-    esandbox allow_net 'unix:/tmp/.s.PGSQL.*'
-    esandbox allow_net --connect 'unix:/tmp/.s.PGSQL.*'
+    esandbox allow_net "unix:${TEMP}/.s.PGSQL.*"
+    esandbox allow_net --connect "unix:${TEMP}/.s.PGSQL.*"
 
-    default
+    PG_REGRESS_SOCK_DIR="${TEMP}" default
 
     esandbox allow_net "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
     esandbox allow_net --connect "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
-    postgresql_src_emake_contrib check
+    PG_REGRESS_SOCK_DIR="${TEMP}" postgresql_src_emake_contrib check
     esandbox disallow_net "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
     esandbox disallow_net --connect "unix:${WORK}/contrib/pg_upgrade/.s.PGSQL.*"
 
-    esandbox disallow_net 'unix:/tmp/.s.PGSQL.*'
-    esandbox disallow_net --connect 'unix:/tmp/.s.PGSQL.*'
+    esandbox disallow_net "unix:${TEMP}/.s.PGSQL.*"
+    esandbox disallow_net --connect "unix:${TEMP}/.s.PGSQL.*"
 }
 

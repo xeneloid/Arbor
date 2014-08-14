@@ -1,0 +1,33 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require gnu [ suffix=xz ]
+
+SUMMARY="Tar archiver"
+
+LICENCES="( GPL-3 ) [[ last-checked = 1.28 ]]"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="acl"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+    build+run:
+        acl? (
+            sys-apps/acl
+            sys-apps/attr
+        )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-look-for-host-prefixed-ar.patch )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'acl posix-acls' )
+
+src_test() {
+    emake check TESTSUITEFLAGS='-k !sparse03,!remfiles08a,!remfiles08c'
+}
+
+src_test_expensive() {
+    emake check TESTSUITEFLAGS='-k sparse03'
+}
+

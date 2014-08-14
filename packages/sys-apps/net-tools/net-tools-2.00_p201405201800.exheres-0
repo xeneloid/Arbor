@@ -18,26 +18,22 @@ DEPENDENCIES="
 
 src_configure() {
     yes "" | edo ./configure.sh config.in
-
     edo sed -i -e 's:I18N 0:I18N 1:' config.h
 }
 
 src_install() {
-    local prefix=
+    default
 
-    emake -j1 BASEDIR="${IMAGE}/usr/$(exhost --target)" installbin
-    emake -j1 BASEDIR="${IMAGE}" installdata
-
-    dodir /usr/$(exhost --target)/sbin
-    dosym /usr/$(exhost --target)/bin/route /usr/$(exhost --target)/sbin/route
+    dodir /usr/$(exhost --target)/bin
+    dosym ../bin/route /usr/$(exhost --target)/sbin/route
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{hostname,domainname}
-    for prefix in {dns,yp,nis}domainname; do
-        dosym domainname /usr/$(exhost --target)/bin/${prefix}
+    for i in {dns,yp,nis}domainname; do
+        dosym domainname /usr/$(exhost --target)/bin/${i}
     done
 
     alternatives_for hostname net-tools 100 \
-                     /usr/$(exhost --target)/bin/hostname /usr/$(exhost --target)/bin/domainname \
-                     /usr/share/man/man1/hostname.1 /usr/share/man/man1/hostname.net-tools.1
+        /usr/$(exhost --target)/bin/hostname /usr/$(exhost --target)/bin/domainname \
+        /usr/share/man/man1/hostname.1 /usr/share/man/man1/hostname.net-tools.1
 }
 

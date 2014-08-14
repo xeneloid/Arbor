@@ -5,7 +5,7 @@
 
 require sourceforge [ suffix=tar.gz ]
 
-export_exlib_phases src_configure src_compile src_test src_install
+export_exlib_phases src_configure src_test src_install
 
 SUMMARY="Utilities for managing ext2/ext3/ext4 filesystems"
 
@@ -15,7 +15,7 @@ LICENCES="
     MIT [[ note = [ et and ss libraries ] ]]
 "
 SLOT="0"
-MYOPTIONS="static"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build:
@@ -25,14 +25,12 @@ DEPENDENCIES="
         sys-apps/util-linux[>=2.16.2] [[ note = [ to ensure that libblkid and libuuid from util-linux-ng is used ] ]]
 "
 
+# TODO: Find out why most tests are failing under sydbox since 1.42.10
+# 33 tests succeeded / 102 tests failed (last checked: 1.42.11)
+RESTRICT="test"
+
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( RELEASE-NOTES )
 DEFAULT_SRC_INSTALL_PARAMS=( install-libs )
-
-STATIC_BINARIES=(
-    misc/{mke2fs,tune2fs,blkid}.static
-    e2fsck/e2fsck.static
-    resize/resize2fs.static
-)
 
 e2fsprogs_src_configure() {
     # Keep the package from doing silly things
@@ -50,15 +48,6 @@ e2fsprogs_src_configure() {
         --disable-libblkid \
         --disable-libuuid \
         --without-included-gettext
-}
-
-e2fsprogs_src_compile() {
-    default
-    if option static ; then
-        for bin in "${STATIC_BINARIES[@]}" ; do
-            emake -C $(dirname ${bin}) $(basename ${bin})
-        done
-    fi
 }
 
 e2fsprogs_src_test() {
@@ -79,11 +68,5 @@ e2fsprogs_src_install() {
         "${IMAGE}"/usr/$(exhost --target)/bin/compile_et
     edo sed -i -e '/^SS_DIR=/s:=.*:=/usr/share/ss:' \
         "${IMAGE}"/usr/$(exhost --target)/bin/mk_cmds
-
-    if option static ; then
-        for bin in "${STATIC_BINARIES[@]}" ; do
-            dosbin "${WORK}/usr/$(exhost --target)/${bin}"
-        done
-    fi
 }
 

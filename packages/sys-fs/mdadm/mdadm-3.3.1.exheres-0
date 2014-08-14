@@ -1,0 +1,88 @@
+# Copyright 2009 Timothy Redaelli <timothy@redaelli.eu>
+# Copyright 2013-2014 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'mdadm-3.0.ebuild', which is:
+#     Copyright 1999-2009 Gentoo Foundation
+
+require systemd-service udev-rules
+
+SUMMARY="The mdadm program controls Linux md devices (software RAID arrays)"
+DESCRIPTION="
+The mdadm program is used to create, manage, and monitor Linux MD (software
+RAID) devices.  As such, it provides similar functionality to the raidtools
+package.  However, mdadm is a single program, and it can perform
+almost all functions without a configuration file, though a configuration
+file can be used to help with some common tasks.
+"
+HOMEPAGE="http://neil.brown.name/blog/${PN}"
+DOWNLOADS="
+    mirror://kernel/linux/utils/raid/${PN}/${PNV}.tar.xz
+    mirror://debian/pool/main/m/${PN}/${PN}_3.3-2.debian.tar.gz
+"
+
+LICENCES="
+    Artistic-2.0 [[ note = [ checkarray ] ]]
+    GPL-2
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="baselayout"
+
+DEPENDENCIES="
+    build:
+        virtual/pkg-config
+    run:
+        sys-apps/util-linux[>=2.16]
+    suggestion:
+        virtual/mta [[ description = [ Send reports via email ] ]]
+"
+
+# Tests shouldn't be run on systems with active mdraid devices, since
+# they mess with values in /proc and run on the system mdraid devices.
+RESTRICT="test"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/616f197f9d6d044afb9e27ddc9cd087d21d610f0.patch
+    "${FILES}"/e339dba2a1744dc6860a58e286ded39fc993c2db.patch
+)
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    CC="${CC}"
+    CWFLAGS="-Wall"
+    CXFLAGS="${CFLAGS}"
+    MAP_DIR=/run/mdadm
+    all
+)
+DEFAULT_SRC_INSTALL_PARAMS=(
+    SYSTEMD_DIR=${SYSTEMDSYSTEMUNITDIR}
+    install-systemd
+)
+
+src_install() {
+    default
+
+    insinto /etc
+    newins mdadm.conf-example mdadm.conf
+
+    if option baselayout ; then
+        exeinto /${LIBDIR}/rcscripts/addons
+        doexe "${FILES}"/raid-start.sh
+        doexe "${FILES}"/raid-stop.sh
+        newinitd "${FILES}"/mdadm.rc mdadm
+        newconfd "${FILES}"/mdadm.confd mdadm
+        newinitd "${FILES}"/mdraid.rc mdraid
+        newconfd "${FILES}"/mdraid.confd mdraid
+    fi
+
+    if option systemd ; then
+            insinto /usr/${LIBDIR}/tmpfiles.d
+            hereins ${PN}.conf <<EOF
+d /run/mdadm 0710 root root -
+EOF
+    fi
+
+    # Debian checkarray script
+    dosbin ${WORKBASE}/debian/checkarray
+    dodoc ${WORKBASE}/debian/README.checkarray
+}
+

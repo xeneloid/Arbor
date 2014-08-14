@@ -32,7 +32,7 @@ MYOPTIONS="
     systemd [[
         description = [ Install systemd service file for name service cache daemon (nscd) ]
     ]]
-
+    ( platform: amd64 arm x86 )
     ( linguas:
         be bg ca cs da de el en_GB eo es fi fr gl hr hu id it ja ko lt nb nl pl pt_BR ru rw sk sv tr
         vi zh_CN zh_TW
@@ -144,6 +144,13 @@ libc_cv_prog_ld_gnu=yes
 EOF
     fi
 
+    PLATFORM_CC="/usr/{build}/bin/${target}-static-gcc"
+    if option platform:amd64; then
+        PLATFORM_CC="${PLATFORM_CC} -m64"
+    elif option platform:x86; then
+        PLATFORM_CC="${PLATFORM_CC} -m32"
+    fi
+
     # TODO(compnerd) determine how to handle non-gcc compilers
     # NOTE(compnerd) export readelf and NM explicitly because the immensely dumb configure
     # script does not bother to check for the prefixed tools!
@@ -151,8 +158,8 @@ EOF
     READELF="${target}-readelf"                                     \
     NM="${target}-nm"                                               \
     BUILD_CC="${build}-gcc -B/usr/${build}/${build}/bin"            \
-    CC="/usr/${build}/bin/${target}-static-gcc"                     \
-    CPP=/usr/${build}/bin/${target}-static-cpp                      \
+    CC="${PLATFORM_CC}"                                             \
+    CPP="/usr/${build}/bin/${target}-static-cpp "                   \
     CXX="/usr/${build}/bin/${target}-static-g++"                    \
         "${WORKBASE}/${PNV}/configure"                              \
             --cache-file=config.cache                               \

@@ -37,7 +37,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-build-man-local.mk-Don-t-regenerate-the-man-pages.patch
     "${FILES}"/0001-Disable-tests-that-fail-with-sydbox.patch
     "${FILES}"/0001-Disable-test-bind-and-test-connect-which-both-want-t.patch
     "${FILES}"/b469fa044a81762a9eb0da92b4fb47467154c4f1.patch
@@ -64,11 +63,12 @@ coreutils_src_prepare() {
     # The help2man step loves to fail if done during cross-compiles and for chroots.
     # Don't try rebuilding the man pages which we pre-generate and put into a
     # separate tarball. Preparing the man pages tarball works like this:
-    # 1. cave resolve coreutils -z1x --abort-at-phase install
-    # 2. From ${WORK}, take the .1 files in the man sub-directory
-    # 3. Add all .1 files to coreutils-${PV}-man-pages.tar.xz, preserving the paths, e. g.
+    # 1. Comment out the man-pages download above.
+    # 2. cave resolve coreutils -z1x --abort-at-phase install
+    # 3. From ${WORK}, take the .1 files in the man sub-directory
+    # 4. Add all .1 files to coreutils-${PV}-man-pages.tar.xz, preserving the paths, e. g.
     #    coreutils-8.22/man.
-    # 4. Upload it to dev.exherbo.org:/srv/www/dev.exherbo.org/distfiles/
+    # 5. Upload it to dev.exherbo.org:/srv/www/dev.exherbo.org/distfiles/
 
     # Touch the man pages to prevent rebuilding.
     set -- man/*.x

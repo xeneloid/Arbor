@@ -34,7 +34,7 @@ DEPENDENCIES="
         dev-db/mysql
         sys-libs/zlib
     )
-    ssl? ( dev-libs/openssl )
+    ssl? ( virtual/libssl )
 "
 
 BUGS_TO="mixi@exherbo.org"

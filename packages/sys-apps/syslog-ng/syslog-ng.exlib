@@ -37,9 +37,9 @@ DEPENDENCIES="
     build+run:
         dev-libs/glib:2[>=2.10.1]
         dev-libs/ivykis[>=0.36.1]
-        dev-libs/openssl[>=0.9.8]
         sys-apps/eventlog[>=0.2.12]
         sys-devel/bison
+        virtual/libssl
         caps? ( sys-libs/libcap )
         json? ( dev-libs/json-c[>=0.9] )
         mongodb? ( net-libs/libmongo-client[>=0.1.6] )

@@ -1,0 +1,16 @@
+# Copyright 2009 Fernando J. Pereda
+# Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 ] ] cyrus-sasl
+
+PLATFORMS="~amd64 ~arm ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-2.1.25-headers.patch
+    "${FILES}"/${PN}-2.1.22-libsasldb.patch
+    "${FILES}"/${PN}-2.1.25-fpic.patch
+    "${FILES}"/${PN}-2.1.26-stddef.patch
+    "${FILES}"/${PN}-2.1.26-keytab.patch
+    "${FILES}"/${PN}-2.1.26-CVE-2013-4122.patch
+)
+

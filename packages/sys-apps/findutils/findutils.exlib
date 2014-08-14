@@ -37,7 +37,13 @@ src_configure() {
 
 findutils_src_test_expensive() {
     if exhost --is-native -q; then
+        esandbox allow_net --bind "inet:127.0.0.1@80"
+        esandbox allow_net --connect "inet:127.0.0.1@80"
+
         emake "${DEFAULT_SRC_TEST_PARAMS[@]}" check
+
+        esandbox disallow_net --connect "inet:127.0.0.1@80"
+        esandbox disallow_net --bind "inet:127.0.0.1@80"
     else
         echo "cross compiled host, skipping tests"
     fi

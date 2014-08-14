@@ -1,0 +1,24 @@
+# Copyright 2014 William Orr <will@worrbase.com>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: libssl providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="
+    multibuild_c: 32 64
+    ( providers:
+        openssl
+        libressl
+    ) [[
+        *description = [ libssl provider ]
+        number-selected = exactly-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:openssl? ( dev-libs/openssl[multibuild_c:*(-)?] )
+    providers:libressl? ( dev-libs/libressl[multibuild_c:*(-)?] )
+"
+
