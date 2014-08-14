@@ -506,7 +506,7 @@ EOT
                 [[ -e ${o} ]] && edo rm -r "${o}"
             done
             # Remove the mortal remains, empty shells of their former glory... ;-)
-            edo find "${IMAGE}"/usr/share/locale -type d -empty -delete
+            edo find "${IMAGE}"/usr/$(exhost --target)/share/locale -type d -empty -delete
         fi
     done
 
