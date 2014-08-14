@@ -1,4 +1,4 @@
-# Copyright 2010 Timo Gurr <tgurr@gentoo.org>
+# Copyright 2010-2014 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge
@@ -13,21 +13,26 @@ LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
-    gss [[ description = [ Ability to use the Generic Security Services Application Program Interface  ] ]]
+    kerberos
 "
 
 DEPENDENCIES="
     build+run:
-        gss? ( net-libs/libgssglue )
+        kerberos? ( virtual/kerberos )
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( gss )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-ipv6
+    --disable-static
+)
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'kerberos gssapi'
+)
 
 src_install() {
     default
 
     insinto /etc
-    newins "${WORK}"/doc/etc_netconfig netconfig
+    doins doc/netconfig
 }
 

@@ -1,6 +1,8 @@
 # Copyright 2010 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require easy-multibuild [ multiunpack=true ]
+
 SUMMARY="Tools for controlling the key management system in the Linux kernel"
 HOMEPAGE="http://people.redhat.com/~dhowells/${PN}"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.bz2"
@@ -11,7 +13,9 @@ LICENCES="
 "
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    multibuild_c: 32 64
+"
 
 DEPENDENCIES=""
 
@@ -21,10 +25,12 @@ RESTRICT="test"
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.5.5-makefile-fixup.patch
 )
+PREFIX=/usr/$(exhost --target)/
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}"
+    LIBDIR=${PREFIX}lib USRLIBDIR=${PREFIX}lib
+    NO_ARLIB=1
 )
-PREFIX=/usr/$(exhost --target)/
 DEFAULT_SRC_INSTALL_PARAMS=(
     BINDIR=${PREFIX}bin SBINDIR=${PREFIX}sbin
     INCLUDEDIR=${PREFIX}include
@@ -34,6 +40,8 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 
 src_install() {
     default
+
+    emagicdocs
 
     keepdir /etc/request-key.d
 }

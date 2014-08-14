@@ -23,7 +23,7 @@ DEPENDENCIES="
 
 BUGS_TO="will@worrbase.com"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PNV}-rand-egd.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PN}-rand-egd.patch" )
 
 install_one_multibuild() {
     default
