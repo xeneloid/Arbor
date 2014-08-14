@@ -24,6 +24,7 @@ MYOPTIONS="
     cyrus      [[ description = [ Support using Cyrus SASL for SASL support (SASL support using dovecot is built unconditionally) ] ]]
     ldap       [[ description = [ Support using LDAP as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
     mysql      [[ description = [ Support using a MySQL database as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
+    postgresql [[ description = [ Support using a PostgreSQL database as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
     ssl        [[ description = [ Support making SSL connections to remote servers and clients ] ]]
 "
 
@@ -41,6 +42,7 @@ DEPENDENCIES="
             dev-db/mysql
             sys-libs/zlib
         )
+        postgresql? ( dev-db/postgresql )
         ssl? ( virtual/libssl )
     suggestion:
         net-mail/dovecot [[ description = [ Used for SASL support without cyrus-sasl ] ]]
@@ -76,6 +78,11 @@ postfix_src_configure() {
     if option mysql; then
         ccargs+=( -DHAS_MYSQL -I/usr/include/mysql )
         auxlibs+=( -L/usr/${LIBDIR}/mysql/ -lmysqlclient -lz -lm )
+    fi
+
+    if option postgresql; then
+        ccargs+=( -DHAS_PGSQL )
+        auxlibs+=( -lpq )
     fi
 
     emake CC="${CC}" OPT="${CFLAGS}" \
