@@ -164,7 +164,6 @@ python-build_src_install() {
     fi
     popd
 
-<<<<<<< HEAD
     edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)
     edo rm "${IMAGE}"/usr/${target}/bin/python$(ever major)-config
     edo rm "${IMAGE}"/usr/${target}/lib/pkgconfig/python$(ever major).pc
