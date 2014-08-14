@@ -19,7 +19,7 @@ DEPENDENCIES="
         net-libs/libssh2[>=1.2.8]
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
-       !gnutls? ( virtual/libssl[>=1.0.1] )
+       !gnutls? ( virtual/libssl )
         gnutls? (
             dev-libs/gnutls[>=2.12.14]
             dev-libs/nettle
