@@ -145,6 +145,8 @@ DEPENDENCIES="
         )
 "
 
+DEFAULT_SRC_INSTALL_PARAMS=( itlocaledir=/usr/share/locale )
+
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
@@ -506,7 +508,7 @@ EOT
                 [[ -e ${o} ]] && edo rm -r "${o}"
             done
             # Remove the mortal remains, empty shells of their former glory... ;-)
-            edo find "${IMAGE}"/usr/$(exhost --target)/share/locale -type d -empty -delete
+            edo find "${IMAGE}"/usr/share/locale -type d -empty -delete
         fi
     done
 
