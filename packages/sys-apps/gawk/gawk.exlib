@@ -22,7 +22,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --bindir=/bin
     --enable-nls
     --with-mpfr
     --with-readline
