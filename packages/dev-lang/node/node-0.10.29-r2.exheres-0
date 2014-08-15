@@ -59,9 +59,10 @@ src_configure() {
 src_install() {
     default
 
-    option npm && \
-        [[ $LIBDIR != lib ]] && \
+    if option npm && [[ $LIBDIR != lib ]]; then
         edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
+        dosym "/usr/${LIBDIR}/node_modules/npm/bin/npm-cli.js" "/usr/bin/npm"
+    fi
 }
 
 src_test() {
