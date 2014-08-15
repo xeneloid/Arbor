@@ -9,6 +9,8 @@ fi
 
 require alternatives
 
+export_exlib_phases src_test src_install
+
 SUMMARY="An interpreter for the Scheme programming language -- Project GNU's extension language"
 DESCRIPTION="
 Guile is a library designed to help programmers create flexible applications.
@@ -29,7 +31,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-threads
 )
 
-src_test() {
+guile_src_test() {
     esandbox allow_net "unix:${TEMP%/}/guile-test-socket-*"
     esandbox allow_net --connect "inet:0.0.0.0/0@53"
     default
@@ -37,7 +39,7 @@ src_test() {
     esandbox disallow_net --connect "inet:0.0.0.0/0@53"
 }
 
-src_install() {
+guile_src_install() {
     default
 
     if ! ever at_least 1.9.13; then

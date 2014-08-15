@@ -11,6 +11,8 @@ fi
 
 require qmake systemd-service
 
+export_exlib_phases src_prepare src_configure src_compile src_install
+
 SUMMARY="Linux WPA/WPA2/IEEE 802.1X Supplicant"
 DESCRIPTION="
 wpa_supplicant is a WPA Supplicant for Linux, BSD, Mac OS X, and Windows with
@@ -115,14 +117,14 @@ config_enable_eap() {
     done
 }
 
-src_prepare() {
+wpa_supplicant_src_prepare() {
     default
 
     # FILES is a reserved exheres-0 variable
     ever is_scm && edo sed -i -e 's:FILES:DOC_FILES:g' doc/docbook/Makefile
 }
 
-src_configure() {
+wpa_supplicant_src_configure() {
     config_enable \
         BACKEND=file \
         CTRL_IFACE=unix \
@@ -226,7 +228,7 @@ src_configure() {
     option qt4 && eqmake -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
 }
 
-src_compile() {
+wpa_supplicant_src_compile() {
     default
     option qt4 && emake -C wpa_gui-qt4
     ever is_scm && emake -C doc/docbook man
@@ -236,7 +238,7 @@ src_compile() {
 #    emake tests
 #}
 
-src_install() {
+wpa_supplicant_src_install() {
     dobin wpa_cli wpa_passphrase wpa_supplicant
 
     # Symlinks for compatibility with baselayout-1

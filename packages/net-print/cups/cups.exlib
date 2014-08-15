@@ -6,7 +6,7 @@
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 require pam easy-multibuild [ multiunpack=true ] systemd-service freedesktop-desktop gtk-icon-cache
 
-export_exlib_phases src_test
+export_exlib_phases src_test pkg_postinst pkg_postrm
 
 SUMMARY="Common UNIX Printing System"
 DESCRIPTION="A portable printing layer for UNIX®-based operating systems."
@@ -181,12 +181,12 @@ install_one_multibuild() {
     edo rm -r "${IMAGE}"/run
 }
 
-pkg_postinst() {
+cups_pkg_postinst() {
     freedesktop-desktop_pkg_postinst
     gtk-icon-cache_pkg_postinst
 }
 
-pkg_postrm() {
+cups_pkg_postrm() {
     freedesktop-desktop_pkg_postrm
     gtk-icon-cache_pkg_postrm
 }

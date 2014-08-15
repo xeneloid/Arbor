@@ -13,6 +13,8 @@ else
     require elisp-optional [ source_directory=Docs ]
 fi
 
+export_exlib_phases src_configure src_compile
+
 SUMMARY="Cross platform Make"
 HOMEPAGE="http://www.cmake.org"
 DOWNLOADS="${HOMEPAGE}/files/v$(ever range 1-2)/${PNV}.tar.gz"
@@ -64,7 +66,7 @@ DEFAULT_SRC_PREPARE_PATCHES+=(
 )
 DEFAULT_SRC_TEST_PARAMS=( ARGS=--verbose )
 
-src_configure() {
+cmake-build_src_configure() {
     edo ./bootstrap \
         --parallel=${EXJOBS:-1} \
         --$(option qt5 || option qt4 || echo "no-")qt-gui \
@@ -78,7 +80,7 @@ src_configure() {
         $(option qt4 && echo " -- -DCMAKE_DISABLE_FIND_PACKAGE_Qt5Core:BOOL=TRUE")
 }
 
-src_compile() {
+cmake-build_src_compile() {
     default
     elisp-optional_src_compile
 }

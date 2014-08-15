@@ -4,6 +4,8 @@
 # Not checked against an older version of python
 require cmake [ api=2 ] distutils [ has_lib=true has_bin=true python_dep=2.7 ] easy-multibuild
 
+export_exlib_phases src_prepare src_compile src_install
+
 SUMMARY="The LLVM Compiler Infrastructure"
 HOMEPAGE="http://llvm.org/"
 
@@ -24,7 +26,7 @@ DEPENDENCIES="
         dev-lang/python:*
 "
 
-src_prepare() {
+llvm_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
 
     # Fix the use of dot
@@ -72,7 +74,7 @@ configure_one_multibuild() {
     ecmake "${args[@]}"
 }
 
-src_compile() {
+llvm_src_compile() {
     easy-multibuild_run_phase
 
     edo pushd "${CMAKE_SOURCE}"/utils/lit
@@ -99,7 +101,7 @@ install_one_multibuild() {
     doexe bin/FileCheck bin/not bin/count
 }
 
-src_install() {
+llvm_src_install() {
     easy-multibuild_run_phase
 
     edo pushd "${CMAKE_SOURCE}"/utils/lit

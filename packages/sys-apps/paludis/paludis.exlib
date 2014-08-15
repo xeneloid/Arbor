@@ -4,6 +4,8 @@
 
 require python bash-completion flag-o-matic zsh-completion
 
+export_exlib_phases pkg_setup src_configure src_compile src_test src_install
+
 SUMMARY="Paludis, the one true package mangler"
 HOMEPAGE="http://paludis.exherbo.org"
 DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
@@ -61,11 +63,11 @@ DEPENDENCIES="
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )
 "
 
-pkg_setup() {
+paludis_pkg_setup() {
     replace-flags -Os -O2
 }
 
-src_configure() {
+paludis_src_configure() {
     local repositories=$(echo default accounts $(optionv gemcutter) repository | tr -s \  ,)
 
     econf \
@@ -90,13 +92,13 @@ src_configure() {
         --hates=disable-silent-rules
 }
 
-src_compile() {
+paludis_src_compile() {
     # zsh and libtool hate each other
     unset path
     default
 }
 
-src_test() {
+paludis_src_test() {
     # 'make --dry-run check' fails so don't use default here.
     if ! nonfatal emake check ; then
         eerror "Tests failed. Looking for files for you to add to your bug report..."
@@ -111,7 +113,7 @@ src_test() {
     fi
 }
 
-src_install() {
+paludis_src_install() {
     default
 
     option python && python_bytecompile

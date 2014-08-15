@@ -4,6 +4,8 @@
 
 require bash-completion easy-multibuild systemd-service
 
+export_exlib_phases src_prepare src_install
+
 SUMMARY="Common linux utilities"
 HOMEPAGE="http://git.kernel.org/?p=utils/${PN}/${PN}.git"
 DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
@@ -78,7 +80,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
-src_prepare() {
+util-linux_src_prepare() {
     # disable failing tests
     edo rm tests/ts/fdisk/{gpt,mbr-{non,}dos-mode,sunlabel}
     edo rm tests/ts/ipcs/limits2
@@ -149,7 +151,7 @@ configure_one_multibuild() {
         $(option_with udev)
 }
 
-src_install() {
+util-linux_src_install() {
     easy-multibuild_src_install
 
     edo rm -rf "${IMAGE}"/usr/share/bash-completion

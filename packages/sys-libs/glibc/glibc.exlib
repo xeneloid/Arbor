@@ -2,8 +2,6 @@
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases pkg_pretend src_unpack src_prepare src_configure src_compile src_install
-
 myexparam source_uri="mirror://gnu/${PN}/${PNV}.tar.bz2"
 if ! ever at_least 2.17; then
     myexparam ports_uri="mirror://gnu/${PN}/${PN}-ports-${PV}.tar.bz2"
@@ -12,6 +10,9 @@ else
 fi
 
 require multibuild flag-o-matic systemd-service [ systemd_files=[ nscd.service ] ] kernel
+
+export_exlib_phases pkg_pretend src_unpack src_prepare src_configure src_compile src_install pkg_postinst
+
 # TODO(compnerd) add exparam to run eautoconf
 
 SUMMARY="GNU C library"
@@ -267,7 +268,7 @@ EOF
     fi
 }
 
-pkg_postinst() {
+glibc_pkg_postinst() {
     local locales=( en_US.UTF-8 en_GB.UTF-8 )
     local localedef="${ROOT}usr/bin/localedef"
     local locale=
