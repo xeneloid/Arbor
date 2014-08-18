@@ -67,7 +67,7 @@ perl-5_src_prepare() {
     default
 
     # find errno.h on multiarch
-    edo sed -e "s#/usr/include/errno.h#/usr/$(exhost --target)/include/errno.h#g" \
+    edo sed -e "s#/usr/include#/usr/$(exhost --target)/include#g" \
             -i ext/Errno/Errno_pm.PL
 
     # TODO(moben) try using the build's perl as miniperl.
@@ -115,9 +115,7 @@ perl-5_src_configure() {
         $(define vendorlib  "${perllibdir}/vendor_perl/${SLOT}-pure")
         $(define vendorarch "${perllibdir}/vendor_perl/${SLOT}-arch")
         $(define perlpath "${perlbindir}/${PN}${SLOT}")
-        $(define libperl libperl.so.1.${SLOT})
         $(define sharedir /usr/share)
-        -Duseshrplib
         -Dusevendorprefix
         -Duselargefiles
         -Uinstallusrbinperl
@@ -126,14 +124,29 @@ perl-5_src_configure() {
         $(option_define gdbm)i_gdbm
         $(option_define berkdb)i_db
     )
+    if ever at_least 0.9.1 ${CROSS_PERL_VER[0]}; then
+        myconf+=(
+            -Dusesoname
+        )
+    else
+        myconf+=(
+            $(define libperl libperl.so.1.${SLOT})
+            -Duseshrplib
+        )
+    fi
 
     edo ./configure "${myconf[@]}" "${PERL5_CONFIGURE_PARAMS[@]}"
 }
 
 perl-5_src_test() {
     # This is necessary for the ExtUtils::Embed tests
-    edo ln -s libperl.so.1{.${SLOT},}
-    edo ln -s libperl.so{.1,}
+    if ever at_least 0.9.1 ${CROSS_PERL_VER[0]}; then
+        edo ln -s libperl.so.${PV} libperl.so.${SLOT}
+        edo ln -s libperl.so.${PV} libperl.so
+    else
+        edo ln -s libperl.so.1{.${SLOT},}
+        edo ln -s libperl.so{.1,}
+    fi
 
     # This is necessary for t/cachepropagate-unix.t
     esandbox allow_net "unix:${TEMP}/**"
@@ -164,8 +177,13 @@ perl-5_src_install() {
 
     # Library symlinks
     local corelibdir=${perllibdir}/core_perl/${SLOT}-arch/CORE
-    dosym libperl.so.1.${SLOT} ${corelibdir}/libperl.so.1
-    dosym libperl.so.1         ${corelibdir}/libperl.so
+    if ever at_least 0.9.1 ${CROSS_PERL_VER[0]}; then
+        dosym libperl.so.${PV} ${corelibdir}/libperl.so.${SLOT}
+        dosym libperl.so.${PV} ${corelibdir}/libperl.so
+    else
+        dosym libperl.so.1.${SLOT} ${corelibdir}/libperl.so.1
+        dosym libperl.so.1         ${corelibdir}/libperl.so
+    fi
 
     # We only want /usr/$(exhost --target)/bin/perl5.8.8, not /usr/$(exhost --target)/bin/perl (without the dash, standard across distros)
     # The former gets stripped by the buildsystem, so move the other one over it instead of removing
