@@ -144,7 +144,7 @@ libc_cv_prog_ld_gnu=yes
 EOF
     fi
 
-    PLATFORM_CC="/usr/{build}/bin/${target}-static-gcc"
+    PLATFORM_CC="/usr/${build}/bin/${target}-static-gcc"
     if option platform:amd64; then
         PLATFORM_CC="${PLATFORM_CC} -m64"
     elif option platform:x86; then
