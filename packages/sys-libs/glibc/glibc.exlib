@@ -145,11 +145,10 @@ EOF
     fi
 
     PLATFORM_CC="/usr/${build}/bin/${target}-static-gcc"
-    if option platform:amd64; then
-        PLATFORM_CC="${PLATFORM_CC} -m64"
-    elif option platform:x86; then
-        PLATFORM_CC="${PLATFORM_CC} -m32"
-    fi
+    case $(exhost --target) in
+        x86_64-pc-linux-gnu) PLATFORM_CC="${PLATFORM_CC} -m64";;
+        i686-pc-linux-gnu)   PLATFORM_CC="${PLATFORM_CC} -m32";;
+    esac
 
     # TODO(compnerd) determine how to handle non-gcc compilers
     # NOTE(compnerd) export readelf and NM explicitly because the immensely dumb configure
