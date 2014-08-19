@@ -7,7 +7,7 @@ WORK="${WORKBASE}/${MY_PNV}"
 
 require gnu [ suffix=gz ]
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_prepare src_install pkg_preinst
 
 if [[ ${PV} == *_p* ]] ; then
     PATCH_LEVEL=${PNV##*_p}
@@ -95,7 +95,7 @@ EOF
     expart documentation /usr/share/{doc,info,man}
 }
 
-pkg_preinst() {
+bash_pkg_preinst() {
     if exhost --is-native -q && [[ $(readlink -f "${ROOT##/}"/bin) == ${ROOT##/}/bin ]] ; then
         # NOTE(compnerd) preserve legacy paths for paludis
         nonfatal edo rm "${ROOT}"/bin/{bash,sh} &&

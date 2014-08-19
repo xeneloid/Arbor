@@ -6,6 +6,8 @@
 MY_PNV="${PNV}-stable"
 require sourceforge [ project=levent pnv=${MY_PNV} suffix=tar.gz ]
 
+export_exlib_phases src_test
+
 SUMMARY="A library to execute a function when a specific event occurs on a file descriptor"
 HOMEPAGE="http://${PN}.org"
 
@@ -25,7 +27,7 @@ WORK="${WORKBASE}"/${MY_PNV}
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-2.0.10-test.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-openssl --disable-static )
 
-src_test() {
+libevent_src_test() {
     pushd test
     edo ./test.sh > "${TEMP}"/tests
     cat "${TEMP}"/tests

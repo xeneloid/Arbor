@@ -5,7 +5,7 @@
 require bash-completion systemd-service
 require autotools [ supported_automake=[ 1.13 ] supported_autoconf=[ 2.5 ] ]
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_prepare src_configure src_install
 
 SUMMARY="Common linux utilities"
 HOMEPAGE="http://git.kernel.org/?p=utils/${PN}/${PN}.git"
@@ -97,7 +97,7 @@ util-linux_src_prepare() {
     autotools_src_prepare
 }
 
-src_configure() {
+util-linux_src_configure() {
     # Conflict Resolution:
     # - coreutils
     #   * kill

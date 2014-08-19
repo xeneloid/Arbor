@@ -8,7 +8,7 @@ else
 fi
 require alternatives
 
-export_exlib_phases src_test_expensive
+export_exlib_phases src_configure src_test_expensive src_install
 
 SUMMARY="Basic directory searching utilities"
 
@@ -25,7 +25,7 @@ DEPENDENCIES="
         dev-util/dejagnu
 "
 
-src_configure() {
+findutils_src_configure() {
     econf \
         --enable-d_type-optimisation \
         --enable-leaf-optimisation \
@@ -49,7 +49,7 @@ findutils_src_test_expensive() {
     fi
 }
 
-src_install() {
+findutils_src_install() {
     local alternatives=(
         locate ${PN} 10
 
