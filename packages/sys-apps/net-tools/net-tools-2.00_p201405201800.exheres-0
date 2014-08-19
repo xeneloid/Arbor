@@ -16,6 +16,11 @@ DEPENDENCIES="
         sys-devel/gettext
 "
 
+DEFAULT_SRC_INSTALL_PARAMS=(
+    BINDIR=/usr/$(exhost --target)/bin
+    SBINDIR=/usr/$(exhost --target)/sbin
+)
+
 src_configure() {
     yes "" | edo ./configure.sh config.in
     edo sed -i -e 's:I18N 0:I18N 1:' config.h
@@ -24,7 +29,6 @@ src_configure() {
 src_install() {
     default
 
-    dodir /usr/$(exhost --target)/bin
     dosym ../bin/route /usr/$(exhost --target)/sbin/route
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{hostname,domainname}
