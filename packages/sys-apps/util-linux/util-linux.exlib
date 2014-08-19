@@ -5,6 +5,8 @@
 require bash-completion systemd-service
 require autotools [ supported_automake=[ 1.13 ] supported_autoconf=[ 2.5 ] ]
 
+export_exlib_phases src_prepare src_install
+
 SUMMARY="Common linux utilities"
 HOMEPAGE="http://git.kernel.org/?p=utils/${PN}/${PN}.git"
 DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
@@ -78,7 +80,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
-src_prepare() {
+util-linux_src_prepare() {
     edo sed -i "s:CPPFLAGS =:& -I/usr/$(exhost --target)/include/ncurses:" Makefile.am
 
     # disable failing tests
@@ -150,7 +152,7 @@ src_configure() {
         $(option_with udev)
 }
 
-src_install() {
+util-linux_src_install() {
     default
 
     edo rm -rf "${IMAGE}"/usr/share/bash-completion

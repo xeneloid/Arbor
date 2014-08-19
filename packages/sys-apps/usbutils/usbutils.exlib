@@ -1,6 +1,8 @@
 # Copyright 2009 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+export_exlib_phases src_prepare src_install
+
 SUMMARY="USB enumeration utilities"
 DESCRIPTION="
 usbutils is a utility for displaying information
@@ -31,13 +33,13 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-zlib
 )
 
-src_prepare() {
+usbutils_src_prepare() {
     default
 
     edo sed -i -e '/^usbids/s:/usr/share:/usr/share/misc:' lsusb.py
 }
 
-src_install() {
+usbutils_src_install() {
     default
 
     option python || edo rm -f "${IMAGE}"/usr/bin/lsusb.py

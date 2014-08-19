@@ -9,6 +9,8 @@ MY_PN=${PN#bootstrap-}
 require alternatives gnu [ pn=${MY_PN} suffix=bz2 ]
 require flag-o-matic
 
+export_exlib_phases pkg_setup src_unpack src_configure src_install
+
 SUMMARY="Bootstrap multilib GNU Compiler Collection"
 
 LICENCES="GPL-2"
@@ -96,26 +98,26 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 DEFAULT_SRC_COMPILE_PARAMS=( bootstrap )
 
-pkg_setup() {
+bootstrap-gcc_pkg_setup() {
     if [[ ! -e /usr/include/gnu/stubs-32.h ]] ; then
         ewarn "/usr/include/gnu/stubs-32.h not found. Creating it."
         edo touch "/usr/include/gnu/stubs-32.h"
     fi
 }
 
-src_unpack() {
+bootstrap-gcc_src_unpack() {
     default
     edo mkdir "${WORK}"
 }
 
-src_configure() {
+bootstrap-gcc_src_configure() {
     # NOTE(compnerd) LTO support is disabled, remove -flto from CFLAGS
     filter-flags -flto
     filter-flags -fuse-linker-plugin
     default
 }
 
-src_install() {
+bootstrap-gcc_src_install() {
     default
 
     edo rm -rf "${IMAGE}"/usr/share/{man,info}/

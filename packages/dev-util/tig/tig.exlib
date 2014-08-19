@@ -5,6 +5,8 @@
 
 require bash-completion
 
+export_exlib_phases src_install
+
 SUMMARY="Text mode interface for git"
 HOMEPAGE="http://jonas.nitro.dk/${PN}/"
 DOWNLOADS="${HOMEPAGE}/releases/${PNV}.tar.gz"
@@ -26,7 +28,7 @@ DEPENDENCIES="
 DEFAULT_SRC_INSTALL_PARAMS=( install-doc )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( contrib/tigrc )
 
-src_install() {
+tig_src_install() {
     default
 
     dobashcompletion contrib/${PN}-completion.bash

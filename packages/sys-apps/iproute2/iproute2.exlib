@@ -4,6 +4,8 @@
 # Based in part upon 'iproute2-2.6.26-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
+export_exlib_phases src_prepare src_configure src_install
+
 if [[ $(ever major) -lt 3 ]]; then
     myexparam headers_version="[>=$(ever range -3)]"
     SUFFIX=bz2
@@ -54,7 +56,7 @@ DEFAULT_SRC_INSTALL_PARAMS+=(
     MANDIR=/usr/share/man
 )
 
-src_prepare() {
+iproute2_src_prepare() {
     # apply version-specific patches
     default
 
@@ -74,7 +76,7 @@ src_prepare() {
     fi
 }
 
-src_configure() {
+iproute2_src_configure() {
     edo ./configure
     if option atm ; then
         edo echo 'TC_CONFIG_ATM=y' >> Config
@@ -83,7 +85,7 @@ src_configure() {
     fi
 }
 
-src_install() {
+iproute2_src_install() {
     default
 
     if optionq berkdb ; then

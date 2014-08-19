@@ -4,6 +4,8 @@
 
 require alternatives gnu [ suffix=xz ]
 
+export_exlib_phases src_prepare src_compile src_install
+
 SUMMARY="GNU awk implementation"
 
 LICENCES="GPL-3"
@@ -30,7 +32,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FUTURES LIMITATIONS POSIX.STD )
 
-src_prepare() {
+gawk_src_prepare() {
     default
     option baselayout && edo cp -R "${FILES}"/filefuncs-$(ever major) "${WORKBASE}"/filefuncs
 
@@ -41,7 +43,7 @@ src_prepare() {
     fi
 }
 
-src_compile() {
+gawk_src_compile() {
     default
 
     if option baselayout; then
@@ -50,7 +52,7 @@ src_compile() {
     fi
 }
 
-src_install() {
+gawk_src_install() {
     default
 
     if option baselayout; then

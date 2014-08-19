@@ -1,6 +1,8 @@
 # Copyright 2008 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
+export_exlib_phases src_prepare src_install
+
 SUMMARY="Utilities to create and check MS-DOS filesystems under Linux"
 DESCRIPTION="MS-DOS filesystem programs mkfs.fat, fatlabel and fsck.fat."
 HOMEPAGE="http://daniel-baumann.ch/software/${PN}"
@@ -19,7 +21,7 @@ DEPENDENCIES=""
 
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
 
-src_prepare() {
+dosfstools_src_prepare() {
     default
 
     edo sed -e "/^PREFIX/s:=.*:= /usr:" \
@@ -28,7 +30,7 @@ src_prepare() {
             -i Makefile
 }
 
-src_install() {
+dosfstools_src_install() {
     default
 
     edo mv "${IMAGE}"/usr/share/doc/{${PN}/*,${PNVR}}

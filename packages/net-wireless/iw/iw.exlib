@@ -2,6 +2,8 @@
 # Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
+export_exlib_phases src_prepare
+
 SUMMARY="A new nl80211 based CLI configuration utility for wireless devices"
 DESCRIPTION="
 The future replacement for wireless-tools. It contains an utility to configure
@@ -23,7 +25,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_COMPILE_PARAMS+=( V=1 )
 
-src_prepare() {
+iw_src_prepare() {
     default
 
     # don't install a compressed manfile

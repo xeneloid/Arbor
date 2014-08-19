@@ -3,6 +3,8 @@
 
 require cmake [ api=2 ]
 
+export_exlib_phases src_compile src_install
+
 FILE_ID=37
 
 SUMMARY="An elegant unit testing framework for C"
@@ -34,12 +36,12 @@ CMAKE_SRC_CONFIGURE_TESTS+=(
     '-DUNIT_TESTING:BOOL=TRUE DUNIT_TESTING:BOOL=FALSE'
 )
 
-src_compile() {
+cmocka_src_compile() {
     default
     option doc && emake doc
 }
 
-src_install() {
+cmocka_src_install() {
     cmake_src_install
 
     if option doc ; then

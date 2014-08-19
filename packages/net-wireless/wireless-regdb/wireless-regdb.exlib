@@ -1,6 +1,8 @@
 # Copyright 2009 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
+export_exlib_phases src_prepare src_configure src_compile
+
 SUMMARY="Regulatory domain database"
 DESCRIPTION="
 Provides 'regulatory.bin'. A signed newly maintained regulatory database
@@ -20,18 +22,18 @@ UPSTREAM_DOCUMENTATION="http://wireless.kernel.org/en/developers/Regulatory#Ther
 
 DEFAULT_SRC_INSTALL_PARAMS+=( CRDA_PATH=/usr/${LIBDIR}/crda )
 
-src_prepare() {
+wireless-regdb_src_prepare() {
     default
 
 #   sed "/^install: /s:regulatory.bin.5.gz::"
     edo sed -i -e "/regulatory.bin.5.gz/s:.gz::g" Makefile
 }
 
-src_configure() {
+wireless-regdb_src_configure() {
     :
 }
 
-src_compile() {
+wireless-regdb_src_compile() {
     :
 }
 
