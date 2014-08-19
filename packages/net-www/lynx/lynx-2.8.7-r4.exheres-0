@@ -15,8 +15,8 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl
         sys-libs/ncurses
+        virtual/libssl
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-cgi-links
