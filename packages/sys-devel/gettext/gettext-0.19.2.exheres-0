@@ -4,6 +4,7 @@
 
 require gnu [ suffix=gz ]
 require elisp-optional
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="GNU localization utilties"
 
@@ -49,6 +50,29 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     openmp
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( emacs )
+
+src_prepare() {
+    default
+
+    edo cat > build-aux/git-version-gen << EOF
+#!/bin/bash
+cat "${WORK}"/.tarball-version | tr -d '\n'
+EOF
+    edo chmod +x build-aux/git-version-gen
+
+    # disable a failing test.
+    # patch to fix it is submitted upstream here: http://savannah.gnu.org/bugs/?43037
+    # however, we would need to also rebuild archive.dir.tar manually, which is a PITA
+    # and then regenerate autotools for any packages that use non-external gettext.
+    # However, there should be no packages that do that (and I couldn't find any when I checked)
+    edo pushd gettext-tools
+        edo sed -i -e 's#autopoint-3##g' tests/Makefile.am
+
+        AT_M4DIR=( m4 ../gettext-runtime/m4 ../m4 gnulib-m4 libgrep/gnulib-m4 libgettextpo/gnulib-m4 )
+        AT_NO_RECURSIVE=1
+        eautoreconf
+    edo popd
+}
 
 src_install() {
     default
