@@ -93,6 +93,7 @@ src_prepare() {
             -e '/\tappinfo\t/d'            \
             -e '/\tdesktop-app-info\t/d'            \
             -e '/gdbus-connection-loss/d' \
+            -e '/gdbus-serialization/d' \
             -e '/gdbus-threading/d' \
             -e '/gdbus-proxy-threads/d' \
             -i gio/tests/Makefile.am
