@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=bz2 ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="GNU tool which simplifies the build process for users"
 DESCRIPTION="
@@ -24,9 +25,12 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-9d58570c77240fed53d1f88217877f8e778f4bb2.patch
+    "${FILES}"/${PNV}-use-host-prefixed-ar-in-archive-test.patch
 )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --without-guile
 )
+
+AT_M4DIR=( config )
 
