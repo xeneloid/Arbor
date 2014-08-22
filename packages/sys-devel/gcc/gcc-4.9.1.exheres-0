@@ -5,5 +5,8 @@ require gcc
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PN}-java-unwinder.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-java-unwinder.patch
+    "${FILES}"/${PNV}-2014-07-17-Richard-Biener-rguenther-suse.de.patch
+)
 
