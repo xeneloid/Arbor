@@ -1,0 +1,102 @@
+Upstream: submitted via email, though the project seems stalled
+          wanted to send to the ml, but was unable to subscribe
+
+From 4b9633802ad59da4d06485fe8619e4288aa2a8d8 Mon Sep 17 00:00:00 2001
+From: Benedikt Morbach <benedikt.morbach@googlemail.com>
+Date: Fri, 22 Aug 2014 15:02:29 +0200
+Subject: [PATCH] addr_reverse test: accept fqdn
+Organization: Exherbo
+
+the test failed here because the reverse lookup returned a fqdn,
+while gethostname() only returns the hostname.
+
+Also check against the fqdn from getaddrinfo
+---
+ macros/neon-test.m4 |  2 +-
+ test/socket.c       | 41 +++++++++++++++++++++++++++++++----------
+ 2 files changed, 32 insertions(+), 11 deletions(-)
+
+diff --git a/macros/neon-test.m4 b/macros/neon-test.m4
+index 3abd406..7b2521e 100644
+--- a/macros/neon-test.m4
++++ b/macros/neon-test.m4
+@@ -39,7 +39,7 @@ AC_BEFORE([$0], [NEON_XML_PARSER])
+ 
+ AC_CHECK_HEADERS(sys/time.h signal.h stdint.h locale.h)
+ 
+-AC_CHECK_FUNCS(pipe isatty usleep shutdown setlocale gethostname)
++AC_CHECK_FUNCS(pipe isatty usleep shutdown setlocale gethostname getaddrinfo)
+ 
+ AC_REQUIRE([NE_FIND_AR])
+ 
+diff --git a/test/socket.c b/test/socket.c
+index 94b67eb..bf491fd 100644
+--- a/test/socket.c
++++ b/test/socket.c
+@@ -35,6 +35,9 @@
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h> /* for gethostname() */
+ #endif
++#ifdef HAVE_NETDB_H
++#include <netdb.h> /* for getaddrinfo() */
++#endif
+ #include <time.h> /* for time() */
+ 
+ #include "ne_socket.h"
+@@ -373,25 +376,43 @@ static int addr_compare(void)
+ static int addr_reverse(void)
+ {
+     ne_inet_addr *ia = ne_iaddr_make(ne_iaddr_ipv4, raw_127);
+-    char buf[128], *syshost = NULL;
++    char buf[128];
++    int equal = 0;
++
++    ONN("ne_iaddr_make returned NULL", ia == NULL);
++
++    ONN("reverse lookup for 127.0.0.1 failed",
++        ne_iaddr_reverse(ia, buf, sizeof buf) != 0);
++
++    equal = equal || (strcmp(buf, "localhost.localdomain") == 0);
++    equal = equal || (strcmp(buf, "localhost") == 0);
+ 
+ #ifdef HAVE_GETHOSTNAME
+     char host[128];
+ 
+     if (gethostname(host, sizeof host) == 0) {
+-        syshost = host;
++        equal = equal || (strcmp(buf, host) == 0);
+     }
+-#endif
+ 
+-    ONN("ne_iaddr_make returned NULL", ia == NULL);
++#ifdef HAVE_GETADDRINFO
++    struct addrinfo hints, *info, *p;
++
++    memset(&hints, 0, sizeof hints);
++    hints.ai_family = AF_UNSPEC; /*either IPV4 or IPV6*/
++    hints.ai_socktype = SOCK_STREAM;
++    hints.ai_flags = AI_CANONNAME;
++
++    if (getaddrinfo(host, "http", &hints, &info) == 0) {
++        for(p = info; p != NULL; p = p->ai_next) {
++            equal = equal || (strcmp(buf, p->ai_canonname) == 0);
++        }
++    }
+ 
+-    ONN("reverse lookup for 127.0.0.1 failed",
+-        ne_iaddr_reverse(ia, buf, sizeof buf) != 0);
++    freeaddrinfo(info);
++#endif
++#endif
+ 
+-    ONV(!(strcmp(buf, "localhost.localdomain") == 0
+-          || strcmp(buf, "localhost") == 0
+-          || (syshost && strcmp(buf, syshost) == 0)),
+-        ("reverse lookup for 127.0.0.1 got %s", buf));
++    ONV(!equal, ("reverse lookup for 127.0.0.1 got %s", buf));
+ 
+     ne_iaddr_free(ia);
+ 
+-- 
+2.0.4
+

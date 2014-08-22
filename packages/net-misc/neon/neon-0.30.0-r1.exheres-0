@@ -1,6 +1,8 @@
 # Copyright (c) 2007 Bryan Østergaard <bryan.ostergaard@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
 SUMMARY="neon is an HTTP and WebDAV client library"
 HOMEPAGE="http://www.webdav.org/${PN}"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
@@ -32,9 +34,14 @@ DEPENDENCIES="
         virtual/libssl
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-0.29.4-sydbox.patch
+    "${FILES}"/${PNV}-addr_reverse-test-accept-fqdn.patch
+)
+AT_M4DIR=( macros )
 
 src_prepare() {
-    expatch "${FILES}"/${PN}-0.29.4-sydbox.patch
+    autotools_src_prepare
 
     # Disable a test that fails under sydbox
     edo sed -e '/T(session_cache)/d' -i test/ssl.c
