@@ -143,10 +143,5 @@ dbus_src_install() {
             /usr/share/dbus-1/system-services   \
             /var/lib/dbus
 
-    if option doc; then
-        insinto /usr/share/doc/${PNVR}/html/
-        doins -r doc/*.html
-    fi
-
     edo rmdir "${IMAGE}"/var/run/{dbus,}
 }
