@@ -1,0 +1,79 @@
+# Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2009 Mike Kelly
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'lua-5.1.3.ebuild' from Gentoo, which is:
+#     Copyright 1999-2008 Gentoo Foundation.
+
+export_exlib_phases src_prepare src_compile src_install
+
+V=$(ever range 1-2)
+
+SUMMARY="An Extensible Extension Language"
+HOMEPAGE="http://www.lua.org/"
+DOWNLOADS="http://www.lua.org/ftp/${PNV}.tar.gz"
+
+LICENCES="MIT"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+UPSTREAM_DOCUMENTATION="
+http://www.lua.org/manual/${V}/        [[ description = [ Reference documentation, HTML ] ]]
+"
+
+lua-build_src_prepare() {
+    # Doing this here instead of passing relevant options in src_{compile,install} is cleaner
+    # Set install paths, don't create empty directories.
+    edo sed -e "/^INSTALL_TOP/s:= .*:= ${IMAGE}/usr:" \
+            -e "/^INSTALL_INC/s:= .*:= ${IMAGE}/usr/include/${PN}$(ever range 1-2):" \
+            -e "/^INSTALL_MAN/s:= .*:= ${IMAGE}/usr/share/man/man1:" \
+            -e "/^INSTALL/s:lib:${LIBDIR}:" \
+            -e '/MKDIR/s:$(INSTALL_LMOD) $(INSTALL_CMOD)::' \
+            -i Makefile
+
+    edo sed -e "/^prefix/s:/.*$:/usr:" \
+            -e "/^includedir/s:$:/${PN}$(ever range 1-2):" \
+            -e "/^Libs/s:-llua:&$(ever range 1-2):" \
+            -e "s:/lib:/${LIBDIR}:" \
+            -i etc/${PN}.pc
+
+    edo sed -e 's:/usr/local/:/usr/:' \
+            -e "s:lib/:${LIBDIR}/:" \
+            -i src/luaconf.h
+
+    default
+}
+
+lua-build_src_compile() {
+    ARGS=(
+        CC="${CC}"
+        PLAT="linux"
+        RPATH="/usr/${LIBDIR}"
+    )
+
+    emake "${ARGS[@]}" echo
+    emake "${ARGS[@]}" exherbo_linux
+}
+
+lua-build_src_install() {
+    emake "${ARGS[@]}" exherbo_install
+
+    for executable in lua{,c}${V} ; do
+        echo mv "${IMAGE}"/usr/bin/{${executable},${executable/${V}}}
+        edo mv "${IMAGE}"/usr/bin/{${executable},${executable/${V}}}
+    done
+
+    insinto /usr/${LIBDIR}/pkgconfig
+    doins etc/${PN}.pc
+
+    insinto /usr/share/pixmaps
+    doins etc/${PN}.ico
+
+    emagicdocs
+    insinto /usr/share/doc/${PNVR}/html
+    doins doc/*{css,html,gif,png}
+
+    doman doc/*.?
+}
+
