@@ -6,37 +6,41 @@
 
 export_exlib_phases src_prepare src_compile src_install
 
-V=$(ever range 1-2)
-
 SUMMARY="An Extensible Extension Language"
 HOMEPAGE="http://www.lua.org/"
 DOWNLOADS="http://www.lua.org/ftp/${PNV}.tar.gz"
 
 LICENCES="MIT"
-SLOT="0"
+SLOT=$(ever range 1-2)
 MYOPTIONS=""
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build+run:
+        !dev-lang/lua:0 [[
+            description = [ Uninstall media-libs/libpng:0 after switching to the slotted version ]
+            resolution = uninstall-blocked-after ]]
+"
 
 UPSTREAM_DOCUMENTATION="
-http://www.lua.org/manual/${V}/        [[ description = [ Reference documentation, HTML ] ]]
+http://www.lua.org/manual/${SLOT}/     [[ description = [ Reference documentation, HTML ] ]]
 "
 
 lua-build_src_prepare() {
     # Doing this here instead of passing relevant options in src_{compile,install} is cleaner
     # Set install paths, don't create empty directories.
     edo sed -e "/^INSTALL_TOP/s:= .*:= ${IMAGE}/usr:" \
-            -e "/^INSTALL_INC/s:= .*:= ${IMAGE}/usr/include/${PN}$(ever range 1-2):" \
+            -e "/^INSTALL_INC/s:= .*:= ${IMAGE}/usr/include/${PN}${SLOT}:" \
             -e "/^INSTALL_MAN/s:= .*:= ${IMAGE}/usr/share/man/man1:" \
             -e "/^INSTALL/s:lib:${LIBDIR}:" \
             -e '/MKDIR/s:$(INSTALL_LMOD) $(INSTALL_CMOD)::' \
             -i Makefile
 
+    edo mv etc/{${PN},${PN}-${SLOT}}.pc
     edo sed -e "/^prefix/s:/.*$:/usr:" \
-            -e "/^includedir/s:$:/${PN}$(ever range 1-2):" \
-            -e "/^Libs/s:-llua:&$(ever range 1-2):" \
+            -e "/^includedir/s:$:/${PN}${SLOT}:" \
+            -e "/^Libs/s:-llua:&${SLOT}:" \
             -e "s:/lib:/${LIBDIR}:" \
-            -i etc/${PN}.pc
+            -i etc/${PN}-${SLOT}.pc
 
     edo sed -e 's:/usr/local/:/usr/:' \
             -e "s:lib/:${LIBDIR}/:" \
@@ -48,6 +52,7 @@ lua-build_src_prepare() {
 lua-build_src_compile() {
     ARGS=(
         CC="${CC}"
+        CFLAGS="-DLUA_USE_LINUX ${CFLAGS}"
         PLAT="linux"
         RPATH="/usr/${LIBDIR}"
     )
@@ -59,13 +64,8 @@ lua-build_src_compile() {
 lua-build_src_install() {
     emake "${ARGS[@]}" exherbo_install
 
-    for executable in lua{,c}${V} ; do
-        echo mv "${IMAGE}"/usr/bin/{${executable},${executable/${V}}}
-        edo mv "${IMAGE}"/usr/bin/{${executable},${executable/${V}}}
-    done
-
     insinto /usr/${LIBDIR}/pkgconfig
-    doins etc/${PN}.pc
+    doins etc/${PN}-${SLOT}.pc
 
     insinto /usr/share/pixmaps
     doins etc/${PN}.ico
@@ -74,6 +74,8 @@ lua-build_src_install() {
     insinto /usr/share/doc/${PNVR}/html
     doins doc/*{css,html,gif,png}
 
-    doman doc/*.?
+    for manpage in lua{,c} ; do
+        newman doc/${manpage}.1 ${manpage}${SLOT}.1
+    done
 }
 
