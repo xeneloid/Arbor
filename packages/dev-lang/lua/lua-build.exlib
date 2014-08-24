@@ -35,7 +35,14 @@ lua-build_src_prepare() {
             -e '/MKDIR/s:$(INSTALL_LMOD) $(INSTALL_CMOD)::' \
             -i Makefile
 
-    edo mv etc/{${PN},${PN}-${SLOT}}.pc
+    # Upstream doesn't provide a pkg-config file with 5.2.x anymore
+    if ever at_least 5.2.0 ; then
+        edo mkdir etc
+        edo cp "${FILES}"/${PN}-${SLOT}.pc etc
+    else
+        edo mv etc/{${PN},${PN}-${SLOT}}.pc
+    fi
+
     edo sed -e "/^prefix/s:/.*$:/usr:" \
             -e "/^includedir/s:$:/${PN}${SLOT}:" \
             -e "/^Libs/s:-llua:&${SLOT}:" \
@@ -67,8 +74,10 @@ lua-build_src_install() {
     insinto /usr/${LIBDIR}/pkgconfig
     doins etc/${PN}-${SLOT}.pc
 
-    insinto /usr/share/pixmaps
-    doins etc/${PN}.ico
+    if ! ever at_least 5.2.2 ; then
+        insinto /usr/share/pixmaps
+        doins etc/${PN}.ico
+    fi
 
     emagicdocs
     insinto /usr/share/doc/${PNVR}/html
