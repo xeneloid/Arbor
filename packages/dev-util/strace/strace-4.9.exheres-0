@@ -4,11 +4,10 @@
 # Copyright 2010-2013 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-AT_M4DIR=( m4 )
-require sourceforge [ suffix=tar.xz ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require sourceforge [ suffix=tar.xz ]
 
 SUMMARY="System call trace utility"
-HOMEPAGE="http://sourceforge.net/projects/${PN}/"
+HOMEPAGE="http://sourceforge.net/projects/${PN}"
 LICENCES="BSD-3"
 
 BUGS_TO="philantrop@exherbo.org"
@@ -29,16 +28,14 @@ DEPENDENCIES="
 # RESTRICT="userpriv" due to the usage of ptrace.
 RESTRICT="test"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Work-around-conflict-between-sys-ptrace.h-and-linux-.patch )
-
 src_prepare() {
-    # tarball ships without git-version-gen
-    edo sed -i -e "s|m4_esyscmd(\[./git-version-gen .tarball-version\])|${PV}|" configure.ac
-    autotools_src_prepare
+    default
 
     # /usr/bin/time might not exist but busybox does and is needed for the tests.
-    edo sed -i -e 's:/usr/bin/\(time\):"/bin/busybox \1":' tests/strace-f
-    edo sed -i -e '/check_prog $time/d' tests/strace-f
+    edo sed \
+        -e 's:/usr/bin/\(time\):"/bin/busybox \1":' \
+        -e '/check_prog $time/d' \
+        -i tests/strace-f.test
 }
 
 
