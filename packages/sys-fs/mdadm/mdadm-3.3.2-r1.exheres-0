@@ -41,6 +41,10 @@ DEPENDENCIES="
 # they mess with values in /proc and run on the system mdraid devices.
 RESTRICT="test"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-3.3.2-mdmonitor-service.patch
+)
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC="${CC}"
     CWFLAGS="-Wall"
