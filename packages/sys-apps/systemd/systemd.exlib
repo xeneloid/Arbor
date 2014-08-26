@@ -369,12 +369,12 @@ systemd_src_install() {
     dodir /usr/${host}/sbin
     local a
     for a in halt poweroff reboot runlevel shutdown telinit; do
-        dosym /usr/${host}/bin/systemctl /usr/${host}/sbin/${a}
+        dosym ../bin/systemctl /usr/${host}/sbin/${a}
         alternatives+=(
             /usr/${host}/sbin/${a} ${PN}.${a}
         )
     done
-    dosym /usr/${host}/lib/systemd/systemd /usr/${host}/sbin/init
+    dosym ../lib/systemd/systemd /usr/${host}/sbin/init
     alternatives+=(
         /usr/${host}/sbin/init ${PN}.init
     )
@@ -526,8 +526,8 @@ CONFIG_PROTECT_MASK="${UDEVRULESDIR}"
 EOT
 
     # Create compatibility symlinks
-    dosym /usr/${host}/lib/systemd/systemd-udevd /usr/${host}/sbin/udevd
-    dosym /usr/${host}/bin/udevadm /usr/${host}/sbin/udevadm
+    dosym ../lib/systemd/systemd-udevd /usr/${host}/sbin/udevd
+    dosym ../bin/udevadm /usr/${host}/sbin/udevadm
 
     # Exclude /var/tmp/paludis/build from cleaning
     edo echo "x /var/tmp/paludis/build" >> "${IMAGE}"/usr/${host}/lib/tmpfiles.d/tmp.conf
