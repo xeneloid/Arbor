@@ -32,12 +32,11 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        dev-libs/openssl[multibuild_c:*(-)?]
         sys-libs/gdbm
         sys-libs/pam
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap[multibuild_c:*(-)?] )
-        virtual/libssl
+        virtual/libssl[multibuild_c:*(-)?]
 "
 
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( saslauthd )
