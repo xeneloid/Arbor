@@ -16,6 +16,8 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-fix-TwoDigitYear-test.patch )
+
 WORK=${WORKBASE}/${PN}/source
 
 src_test() {

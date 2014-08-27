@@ -7,7 +7,7 @@ export_exlib_phases src_test_expensive src_install
 
 SUMMARY="The GNU Project Debugger"
 HOMEPAGE="http://sourceware.org/${PN}"
-DOWNLOADS="mirror://sourceware/${PN}/releases/${PNV}.tar.bz2"
+DOWNLOADS="mirror://sourceware/${PN}/releases/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
@@ -32,9 +32,9 @@ DEPENDENCIES="
         dev-util/dejagnu
     build+run:
         dev-libs/expat
-        dev-libs/gmp:=[>=4.2]
-        dev-libs/mpc:=[>=0.8.0]
-        dev-libs/mpfr:=[>=2.4.0]
+        dev-libs/gmp:=[>=4.3.2]
+        dev-libs/mpc:=[>=0.8.1]
+        dev-libs/mpfr:=[>=2.4.2]
         sys-libs/ncurses[>=5.2]
         sys-libs/readline
         python? ( dev-lang/python:= )

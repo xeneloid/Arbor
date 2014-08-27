@@ -42,8 +42,7 @@ DEPENDENCIES="
 RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/616f197f9d6d044afb9e27ddc9cd087d21d610f0.patch
-    "${FILES}"/e339dba2a1744dc6860a58e286ded39fc993c2db.patch
+    "${FILES}"/${PN}-3.3.2-mdmonitor-service.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(

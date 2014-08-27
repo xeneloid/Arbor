@@ -74,7 +74,7 @@ bash_src_install() {
     dosym bash /usr/$(exhost --target)/bin/sh
 
     insinto /etc/bash
-    doins "${FILES}/bashrc"
+    doins "${FILES}"/bashrc
 
     insinto /etc/skel
     hereins .bashrc <<'EOF'

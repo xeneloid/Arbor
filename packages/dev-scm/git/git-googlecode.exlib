@@ -199,12 +199,6 @@ git-googlecode_src_install() {
     option git_remote_helpers:mercurial && dobin contrib/remote-helpers/git-remote-hg
     fi
 
-    if ! ever at_least 1.8.5 ; then
-        if option python ; then
-            python_bytecompile
-        fi
-    fi
-
     exeinto /usr/$(exhost --target)/libexec/${PN}
     newexe contrib/fast-import/import-tars.perl git-import-tars
 
