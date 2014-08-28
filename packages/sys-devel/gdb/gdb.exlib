@@ -49,6 +49,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-curses
     --with-expat
     --with-system-readline
+    --without-guile
 )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( gdb sim )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( CONTRIBUTE )
