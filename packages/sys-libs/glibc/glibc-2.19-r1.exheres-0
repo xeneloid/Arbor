@@ -8,6 +8,7 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/glibc-2.18-xattr-compat-hack.patch
+    "${FILES}"/a1a6a401ab0a3c9f15fb7eaebbdcee24192254e8.patch
 )
 
 src_prepare() {
