@@ -83,7 +83,7 @@ paludis_src_configure() {
         $(option_enable vim-syntax vim ) \
         $(option_enable xml) \
         --with-vim-install-dir=/usr/share/vim/vimfiles \
-        --enable-visibility \
+        $(ever at_least 2.0.1 || echo '--enable-visibility') \
         --with-clients=default,cave \
         --with-environments=default \
         --with-repositories=${repositories} \
