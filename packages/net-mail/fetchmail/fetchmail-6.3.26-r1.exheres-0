@@ -3,9 +3,10 @@
 # Based in part upon 'fetchmail-6.3.8.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
+require sourceforge [ suffix=tar.xz ]
+
 SUMMARY="The legendary remote-mail retrieval and forwarding utility"
-HOMEPAGE="http://fetchmail.berlios.de"
-DOWNLOADS="mirror://berlios/${PN}/${PNV}.tar.xz"
+HOMEPAGE="http://www.${PN}.info/"
 
 LICENCES="GPL-2 public-domain"
 SLOT="0"
