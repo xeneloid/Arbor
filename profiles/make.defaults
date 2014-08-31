@@ -22,5 +22,8 @@ MULTIBUILD_PYTHON_ABIS_3_3_PROFILE_PYTHON="python3.3"
 MULTIBUILD_PYTHON_ABIS_3_2_PROFILE_PYTHON="python3.2"
 MULTIBUILD_PYTHON_ABIS_2_7_PROFILE_PYTHON="python2.7"
 
+# this is kept around to ensure old env can be sourced when replacing packages
+MULTIBUILD_PYTHON_ABIS_3_1_PROFILE_PYTHON="python3.1"
+
 XDG_RUNTIME_DIR=${TEMP}
 
