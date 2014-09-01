@@ -115,11 +115,7 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt[multibuild_c:*(-)?] )
         gnutls? ( dev-libs/gnutls[>=3.1.4][multibuild_c:*(-)?] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
-        journal-gateway? (
-            net-libs/libmicrohttpd[>=0.9.33][multibuild_c:*(-)?]
-            user/systemd-journal-gateway
-            group/systemd-journal-gateway
-        )
+        journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33][multibuild_c:*(-)?] )
         polkit? ( sys-auth/polkit:1[multibuild_c:*(-)?] )
         qrencode? ( media-libs/qrencode[multibuild_c:*(-)?] )
         seccomp? ( sys-libs/libseccomp[>=1.0.0][multibuild_c:*(-)?] )
@@ -132,9 +128,11 @@ DEPENDENCIES="
         group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
         group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
+        group/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
         user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        user/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
@@ -161,6 +159,11 @@ if ever at_least 216; then
             idn? ( net-dns/libidn[multibuild_c:*(-)?] )
             journal-push? ( net-misc/curl[multibuild_c:*(-)?] )
             lz4? ( app-arch/lz4[multibuild_c:*(-)?] )
+        run:
+            group/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+            group/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
+            user/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+            user/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
     "
 fi
 
