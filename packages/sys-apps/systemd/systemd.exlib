@@ -244,6 +244,7 @@ systemd_src_prepare() {
     edo sed -i -e '/test-bus-cleanup/s:test-bus-cleanup:$(NULL):' Makefile.am
     edo sed -i -e '/test-rtnl/s:test-rtnl.*:$(NULL):' Makefile.am
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask.*:$(NULL):' Makefile.am
+    edo sed -i -e '/test-engine/s:test-engine.*:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -477,11 +478,7 @@ EOF
     nonfatal edo mv "${IMAGE}"/var/${LIBDIR} "${IMAGE}"/var/lib
 
     # Don't create /var/log/journal, the user should do that
-    if ever at_least 216; then
-        edo rmdir "${IMAGE}"/var/log/{journal{/remote,},}
-    else
-        edo rmdir "${IMAGE}"/var/log/{journal,}
-    fi
+    edo rm -r "${IMAGE}"/var/log/{journal,}
 
     # keepdir some stuff
     keepdir /etc/systemd/session
