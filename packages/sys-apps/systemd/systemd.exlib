@@ -66,6 +66,14 @@ MYOPTIONS="
     ( linguas: ${LANGUAGES[@]} )
 "
 
+if ever at_least 216; then
+    MYOPTIONS+="
+        idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
+        journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
+        lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
+    "
+fi
+
 DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
@@ -147,6 +155,15 @@ DEPENDENCIES="
         )
 "
 
+if ever at_least 216; then
+    DEPENDENCIES+="
+        build+run:
+            idn? ( net-dns/libidn[multibuild_c:*(-)?] )
+            journal-push? ( net-misc/curl[multibuild_c:*(-)?] )
+            lz4? ( app-arch/lz4[multibuild_c:*(-)?] )
+    "
+fi
+
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
@@ -226,6 +243,7 @@ systemd_src_prepare() {
     edo sed -i -e '/test-bus-gvariant/s:test-bus-gvariant:$(NULL):' Makefile.am
     edo sed -i -e '/test-bus-cleanup/s:test-bus-cleanup:$(NULL):' Makefile.am
     edo sed -i -e '/test-rtnl/s:test-rtnl.*:$(NULL):' Makefile.am
+    edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask.*:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -309,6 +327,18 @@ configure_one_multibuild() {
     if ever at_least 215 && ! ever at_least scm; then
         # workaround 215 build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
         myconfig+=( --enable-dependency-tracking )
+    fi
+
+    if ever at_least 216; then
+        myconfig+=(
+            --enable-firstboot
+            --enable-ldconfig
+            --disable-terminal
+            --with-certificate-root=/etc/ssl
+            $(option_enable idn libidn)
+            $(option_enable journal-push libcurl)
+            $(option_enable lz4)
+        )
     fi
 
     edo mkdir -p src/gudev
@@ -447,7 +477,11 @@ EOF
     nonfatal edo mv "${IMAGE}"/var/${LIBDIR} "${IMAGE}"/var/lib
 
     # Don't create /var/log/journal, the user should do that
-    edo rmdir "${IMAGE}"/var/log/{journal,}
+    if ever at_least 216; then
+        edo rmdir "${IMAGE}"/var/log/{journal{/remote,},}
+    else
+        edo rmdir "${IMAGE}"/var/log/{journal,}
+    fi
 
     # keepdir some stuff
     keepdir /etc/systemd/session
