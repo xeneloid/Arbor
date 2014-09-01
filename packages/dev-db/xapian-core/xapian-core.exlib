@@ -13,27 +13,30 @@ advanced indexing and search facilities to their own applications. It supports
 the Probabilistic Information Retrieval model and also supports a rich set of
 boolean query operators.
 "
-HOMEPAGE="http://www.xapian.org/"
+HOMEPAGE="http://www.xapian.org"
 DOWNLOADS="http://oligarchy.co.uk/xapian/${PV}/${PNV}.tar.xz"
+
+UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/docs/${PNV}/NEWS"
 
 LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="debug"
 
-UPSTREAM_RELEASE_NOTES="http://svn.xapian.org/*checkout*/tags/${PV}/${PN}/NEWS"
-
 # The thousands (!) of tests are very, very expensive in terms of runtime.
 RESTRICT="test"
 
-DEPENDENCIES="
-    build:
-        app-arch/xz
-"
+DEPENDENCIES=""
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     # Don\'t run tests under valgrind if present, takes ages
     VALGRIND=
+    --enable-backend-brass
+    --enable-backend-chert
+    --enable-backend-flint
+    --enable-backend-inmemory
+    --enable-backend-remote
     --disable-documentation
+    --disable-static
 )
 # This regenerates the documentation
 # 'doc documentation'
