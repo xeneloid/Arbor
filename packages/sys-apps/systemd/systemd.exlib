@@ -167,8 +167,8 @@ fi
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
-    if ! kernel_version_at_least 3.0 ; then
-        ewarn "You MUST install a kernel >= 3.0 to use systemd."
+    if ! kernel_version_at_least 3.7 ; then
+        ewarn "You MUST install a kernel >= 3.7 to use systemd."
         ewarn "This check is based upon the kernel currently running, thus, if you already"
         ewarn "installed a suitable kernel and just need to boot it, you can disregard this."
     fi
