@@ -14,13 +14,13 @@ using Curses library, Ispell pipe interface, OpenOffice.org UNO module.
 LICENCES="|| ( MPL-1.1 GPL-2 LGPL-2.1 )"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="ncurses"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
     build+run:
-        ncurses? ( sys-libs/ncurses )
+        sys-libs/ncurses
     suggestion:
         app-arch/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
@@ -29,8 +29,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
     --with-readline
+    --with-ui
 )
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'ncurses ui' )
 
 src_install() {
     default
