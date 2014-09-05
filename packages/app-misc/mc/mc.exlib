@@ -7,7 +7,7 @@ require flag-o-matic
 
 export_exlib_phases src_install
 
-SUMMARY="GNU Midnight Commander is a s-lang based file manager."
+SUMMARY="GNU Midnight Commander is a s-lang based file manager"
 DESCRIPTION="
 GNU Midnight Commander is a text-mode full-screen file manager. It uses a two panel
 interface and a subshell for command execution. It includes an internal editor
