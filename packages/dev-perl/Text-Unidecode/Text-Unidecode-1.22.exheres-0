@@ -3,7 +3,7 @@
 
 require perl-module [ module_author=SBURKE ]
 
-SUMMARY="US-ASCII transliterations of Unicode text"
+SUMMARY="Provide plain ASCII transliterations of Unicode text"
 DESCRIPTION="
 It often happens that you have non-Roman text data in Unicode, but you can't display
 it - usually because you're trying to show it via an application that doesn't support
