@@ -3,7 +3,7 @@
 
 require perl-module [ module_author=GUIDO ]
 
-SUMMARY="Uniforum message translation for Perl"
+SUMMARY="High-Level Interface to Uniforum Message Translation"
 DESCRIPTION="
 libintl-perl provides Uniforum message translation for Perl. It is the de-facto
 standard for internationalization (i18n) and localization (l10n) of software
@@ -16,7 +16,7 @@ written in Perl. Its main features are:
   * utility functions for locale settings in server applications
   * extensive documentation including a sample application
 "
-HOMEPAGE="http://guido-flohr.net/projects/libintl-perl/ ${HOMEPAGE}"
+HOMEPAGE="http://guido-flohr.net/projects/${PN} ${HOMEPAGE}"
 
 LICENCES="LGPL-2.1"
 SLOT="0"
