@@ -86,8 +86,6 @@ src_prepare() {
 }
 
 src_configure() {
-    option qt4 && eqmake addon/doxywizard/doxywizard.pro -o addon/doxywizard/Makefile.doxywizard
-
     # Custom configure file hates --without-* and most standard econf options
     edo ./configure \
         --docdir "${DOXYGEN_DOC_DIR}" \
@@ -97,6 +95,8 @@ src_configure() {
         $(option examples && echo "--with-doxyapp") \
         $(option examples && echo "--with-doxmlparser") \
     #   $(option sqlite && echo "--with-sqlite3")
+
+    option qt4 && eqmake addon/doxywizard/doxywizard.pro -o addon/doxywizard/Makefile.doxywizard
 }
 
 src_compile() {
