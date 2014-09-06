@@ -180,6 +180,7 @@ EOF
                   $(ever at_least 2.18  && echo --enable-lock-elision)      \
                   $(ever at_least 2.18  && echo --enable-pt_chown)          \
                   --enable-stackguard-randomization                         \
+                  --enable-lock-elision=no                                  \
                   --with-headers=/usr/include                               \
                   --with-crypt                                              \
                   --without-gd                                              \
