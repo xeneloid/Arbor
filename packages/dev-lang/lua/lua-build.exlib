@@ -20,7 +20,7 @@ MYOPTIONS=""
 DEPENDENCIES="
     build+run:
         !dev-lang/lua:0 [[
-            description = [ Uninstall media-libs/libpng:0 after switching to the slotted version ]
+            description = [ Uninstall dev-lang/lua:0 after switching to the slotted version ]
             resolution = uninstall-blocked-after ]]
 "
 
