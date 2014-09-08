@@ -16,6 +16,6 @@ Fullwidth and Wide) and InHalfwidth (union of Halfwidth, Narrow and Neutral).
 
 LICENCES="CC0"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 

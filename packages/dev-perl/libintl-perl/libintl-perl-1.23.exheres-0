@@ -20,7 +20,7 @@ HOMEPAGE="http://guido-flohr.net/projects/${PN} ${HOMEPAGE}"
 
 LICENCES="LGPL-2.1"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
 
 REMOTE_IDS="freecode:${PN}"
 
