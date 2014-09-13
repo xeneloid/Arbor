@@ -24,7 +24,7 @@ DEPENDENCIES="
         doc? ( dev-doc/gtk-doc[>=1.1] )
     build+run:
         dev-libs/libtasn1[>=3.1]
-        dev-libs/nettle[>=2.7]
+        dev-libs/nettle[>=2.7&<3.0]
         sys-libs/zlib[>=1.2.3]
         dane? ( net-dns/unbound )
         pkcs11? ( dev-libs/p11-kit[>=0.20.0] )

@@ -1,7 +1,7 @@
 # Copyright 2009 Mike Kelly
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic
+require flag-o-matic lua
 
 SUMMARY="a lua filesystem library"
 DESCRIPTION="
@@ -24,14 +24,16 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        dev-lang/lua
+        dev-lang/lua:=
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
 
 src_prepare() {
+    lua_version
     append-flags $(pkg-config --cflags lua)
     edo sed -e "s:\(CFLAGS=\):\1 ${CFLAGS}:" \
+            -e "s:^\(LUA_LIBDIR=\).*:\1 \$(PREFIX)\/${LIBDIR}\/lua\/${LUAVER}:" \
             -e "s|/usr/local|${IMAGE}/usr|" \
             -e "s,/lib/,/${LIBDIR}/," \
             -i "${WORK}"/config

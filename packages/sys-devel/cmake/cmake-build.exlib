@@ -35,9 +35,9 @@ DEPENDENCIES="
     build+run:
         app-arch/bzip2
         app-arch/libarchive
-        net-misc/curl[>=7.16.4][ssl(+)]
         dev-libs/expat[>=2.0.1]
         dev-libs/libxml2:2.0[>=2.6.28]
+        net-misc/curl[>=7.16.4][ssl(+)]
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "

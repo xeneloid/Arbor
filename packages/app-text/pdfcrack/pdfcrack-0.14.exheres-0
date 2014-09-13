@@ -19,19 +19,10 @@ PLATFORMS="~amd64"
 MYOPTIONS=""
 DEPENDENCIES=""
 
-src_prepare() {
-    default
-
-    # Don't overwrite ${CFLAGS}
-    edo sed -i -e "/^CFLAGS=/d" Makefile
-
-    # Don't hardcode gcc
-    edo sed -i -e "s:gcc:${CC}:" Makefile
-}
-
 src_install() {
     emagicdocs
 
     dobin pdfcrack
+    doman pdfcrack.1
 }
 

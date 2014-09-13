@@ -11,17 +11,19 @@ export_exlib_phases src_prepare src_install src_test_expensive
 
 SUMMARY="Berkeley DB embeddable database engine"
 HOMEPAGE="http://www.oracle.com/us/products/database/berkeley-${PN}/overview/index.html"
-
 DOWNLOADS="http://download.oracle.com/berkeley-${PN}/${PN}-${MY_PV}.tar.gz
     $(for ((i=1 ; i<=PATCH_LEVEL ; i++ )) ; do
         echo "http://download.oracle.com/berkeley-${PN}/patches/${PN}/${MY_PV}/patch.${MY_PV}.${i} -> ${PN}-${MY_PV}.${i}.patch"
-      done)"
+    done)
+"
 
 LICENCES="as-is"
 SLOT="$(ever range 1-2)"
-MYOPTIONS="doc
+MYOPTIONS="
+    doc
     tcl [[ description = [ Build tcl bindings. Should be enabled if you want to run expensive tests ] ]]
-    multibuild_c: 32 64"
+    multibuild_c: 32 64
+"
 
 DEPENDENCIES="
     test-expensive:
@@ -34,6 +36,7 @@ DEPENDENCIES="
 WORK="${WORKBASE}/${PN}-${MY_PV}/dist"
 
 AT_M4DIR=( aclocal aclocal_java )
+
 DEFAULT_SRC_INSTALL_PARAMS=( STRIP=: )
 
 db_src_prepare() {

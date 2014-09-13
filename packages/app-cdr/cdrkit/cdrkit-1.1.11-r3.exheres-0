@@ -5,8 +5,8 @@ require cmake [ api=2 ]
 
 SUMMARY="Portable command-line CD/DVD recorder software"
 DESCRIPTION="cdrkit is a suite of programs for recording CDs and DVDs, blanking CD-RW media, creating ISO-9660 filesystem images, extracting audio CD data, and more. The programs included in the cdrkit package were originally derived from several sources, most notably mkisofs by Eric Youngdale and others, cdda2wav by Heiko Eissfeldt, and cdrecord by Jörg Schilling. However, cdrkit is not affiliated with any of these authors; it is now an independent project."
-HOMEPAGE="http://www.cdrkit.org/"
-DOWNLOADS="http://cdrkit.org/releases/${PNV}.tar.gz"
+HOMEPAGE="https://packages.debian.org/source/sid/${PN}"
+DOWNLOADS="mirror://debian/pool/main/c/${PN}/${PN}_${PV}.orig.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -17,10 +17,16 @@ DEPENDENCIES="
     build:
         sys-libs/libcap
     build+run:
+        dev-libs/libcdio-paranoia
         !app-cdr/cdrtools  [[ description = [ Various file collisions: /usr/bin/{devdump,isodebug,isodump,isoinfo,isovfy} ] ]]
     post:
         app-cdr/genisoimage
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-1.1.11-paranoiacdda.patch
+    "${FILES}"/${PN}-1.1.11-paranoiacdio.patch
+)
 
 src_install() {
     default

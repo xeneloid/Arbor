@@ -13,7 +13,7 @@ fi
 
 require systemd-service
 
-export_exlib_phases src_install
+export_exlib_phases src_test src_install
 
 SUMMARY="Support utilities for handling btrfs filesystems"
 HOMEPAGE="https://btrfs.wiki.kernel.org"
@@ -36,6 +36,9 @@ DEPENDENCIES="
     suggestion:
         dev-python/matplotlib [[ description = [ for btrfs-show-blocks & other debugging tools ] ]]
 "
+
+# The tests are broken. Last checked: 3.16
+RESTRICT=test
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     AR="${AR}"
@@ -61,6 +64,14 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
     INSTALL
     show-blocks
 )
+
+btrfs-progs_src_test() {
+    edo mkdir "${TEMP}"/{dev,mnt}
+    edo sed -i -e "/TEST_DEV=/s:$:${TEMP}/dev:" tests/fsck-tests.sh
+    edo sed -i -e "/TEST_MNT=/s:$:${TEMP}/mnt:" tests/fsck-tests.sh
+
+    emake -j1 test
+}
 
 btrfs-progs_src_install() {
     default

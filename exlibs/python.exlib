@@ -184,7 +184,7 @@ case ${PYTHON_EXLIB_API} in
         exparam -v PYTHON_BLACKLIST blacklist
         exparam -v PYTHON_MIN_VERSIONS min_versions
 
-        PYTHON_AVAILABLE_ABIS="2.7 3.1 3.2 3.3 3.4"
+        PYTHON_AVAILABLE_ABIS="2.7 3.2 3.3 3.4"
 
         if [[ ${PYTHON_BLACKLIST} == none ]]; then
             PYTHON_FILTERED_ABIS="${PYTHON_AVAILABLE_ABIS}"

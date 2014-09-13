@@ -5,7 +5,7 @@ require cmake [ api=2 ]
 
 export_exlib_phases src_compile src_install
 
-FILE_ID=37
+FILE_ID=42
 
 SUMMARY="An elegant unit testing framework for C"
 DESCRIPTION="It supports mock objects and only requires the standard C

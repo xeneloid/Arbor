@@ -62,7 +62,7 @@ if [[ ${PN} != vim-runtime ]]; then
     DEPENDENCIES+="
         build+run:
             gpm?     ( sys-libs/gpm[>=1.19.3] )
-            lua?     ( dev-lang/lua )
+            lua?     ( dev-lang/lua:= )
             !minimal? ( app-editors/vim-runtime[=${PV}] )
             perl?    ( dev-lang/perl:* )
             ruby?    ( dev-lang/ruby:* )

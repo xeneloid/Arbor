@@ -1,8 +1,8 @@
 # Copyright 2010 Timothy Redaelli <timothy@redaelli.eu>
-# Copyright 2012-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2012-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require debian-upstream
+require debian-upstream [ suffix=.tar.xz ]
 
 SUMMARY="Utility to detect other OSs on a set of drives"
 DESCRIPTION="
@@ -32,6 +32,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/0001-Change-libdir-all-over-the-place.patch
     "${FILES}"/0002-Add-detection-of-Exherbo-Linux.patch
 )
+
+WORK=${WORKBASE}/${PN}
 
 src_prepare() {
     default

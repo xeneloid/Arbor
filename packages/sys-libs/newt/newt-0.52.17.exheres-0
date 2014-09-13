@@ -1,0 +1,36 @@
+# Copyright 2010 Maxime Coste
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Programming library for color text mode, widget based user interfaces"
+HOMEPAGE="https://fedorahosted.org/${PN}"
+DOWNLOADS="https://fedorahosted.org/releases/n/e/${PN}/${PNV}.tar.gz"
+
+LICENCES="LGPL-2"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    python
+    tcl
+"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+    build+run:
+        dev-libs/popt
+        sys-libs/slang
+        python? ( dev-lang/python:= )
+        tcl? ( dev-lang/tcl )
+    suggestion:
+        sys-libs/gpm [[ description = [ Console-based mouse input support via sys-libs/gpm ] ]]
+"
+
+BUGS_TO="frrrwww@gmail.com"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --with-gpm-support
+)
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( python tcl )
+DEFAULT_SRC_COMPILE_PARAMS=( "CPP=${CC} -E" )
+

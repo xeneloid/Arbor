@@ -40,7 +40,7 @@ DEPENDENCIES="
         net-dns/libidn
         virtual/libssl
         graph? ( dev-libs/boost[>=1.38.0] )
-        lua? ( dev-lang/lua[>=5.1.4] )
+        lua? ( dev-lang/lua:5.1[>=5.1.4] ) [[ note = [ The :5.1 is probably only cmake's fault ] ]]
 "
 #    test:
 #        dev-cpp/cppunit[>=1.12.1]

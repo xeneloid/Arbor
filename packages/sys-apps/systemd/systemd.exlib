@@ -64,6 +64,14 @@ MYOPTIONS="
     ( linguas: ${LANGUAGES[@]} )
 "
 
+if ever at_least 216; then
+    MYOPTIONS+="
+        idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
+        journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
+        lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
+    "
+fi
+
 DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
@@ -105,11 +113,7 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt )
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
-        journal-gateway? (
-            net-libs/libmicrohttpd[>=0.9.33]
-            user/systemd-journal-gateway
-            group/systemd-journal-gateway
-        )
+        journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
         seccomp? ( sys-libs/libseccomp[>=1.0.0] )
@@ -121,10 +125,12 @@ DEPENDENCIES="
         group/lock [[ note = [ Required for var-lock service ] ]]
         group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
+        group/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
         user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        user/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
@@ -147,11 +153,25 @@ DEPENDENCIES="
 
 DEFAULT_SRC_INSTALL_PARAMS=( itlocaledir=/usr/share/locale )
 
+if ever at_least 216; then
+    DEPENDENCIES+="
+        build+run:
+            idn? ( net-dns/libidn )
+            journal-push? ( net-misc/curl )
+            lz4? ( app-arch/lz4 )
+        run:
+            group/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+            group/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
+            user/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+            user/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
+    "
+fi
+
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
-    if ! kernel_version_at_least 3.0 ; then
-        ewarn "You MUST install a kernel >= 3.0 to use systemd."
+    if ! kernel_version_at_least 3.7 ; then
+        ewarn "You MUST install a kernel >= 3.7 to use systemd."
         ewarn "This check is based upon the kernel currently running, thus, if you already"
         ewarn "installed a suitable kernel and just need to boot it, you can disregard this."
     fi
@@ -204,7 +224,9 @@ systemd_src_prepare() {
     edo sed -i -e '/test-util/s:test-util:$(NULL):' Makefile.am
     edo sed -i -e '/test-bus-gvariant/s:test-bus-gvariant:$(NULL):' Makefile.am
     edo sed -i -e '/test-bus-cleanup/s:test-bus-cleanup:$(NULL):' Makefile.am
-    edo sed -i -e '/test-rtnl/s:test-rtnl.*:$(NULL):' Makefile.am
+    edo sed -i -e '/test-rtnl/s:test-rtnl[^ ]*:$(NULL):' Makefile.am
+    edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
+    edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -284,6 +306,18 @@ systemd_src_configure() {
     if ever at_least 215 && ! ever at_least scm; then
         # workaround 215 build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
         myconfig+=( --enable-dependency-tracking )
+    fi
+
+    if ever at_least 216; then
+        myconfig+=(
+            --enable-firstboot
+            --enable-ldconfig
+            --disable-terminal
+            --with-certificate-root=/etc/ssl
+            $(option_enable idn libidn)
+            $(option_enable journal-push libcurl)
+            $(option_enable lz4)
+        )
     fi
 
     edo mkdir -p src/gudev
@@ -432,7 +466,7 @@ LC_IDENTIFICATION=C
 EOF
 
     # Don't create /var/log/journal, the user should do that
-    edo rmdir "${IMAGE}"/var/log/{journal,}
+    edo rm -r "${IMAGE}"/var/log/{journal,}
 
     # keepdir some stuff
     keepdir /etc/systemd/session

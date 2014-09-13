@@ -40,6 +40,7 @@ MYOPTIONS="
     openmp [[ description = [ Support for Open Multi-Processing ] ]]
     tiff
     truetype
+    webp [[ description = [ Support for the WebP image format ] ]]
     wmf [[ description = [ Support for the Windows Metafile image format ] ]]
 "
 
@@ -70,6 +71,7 @@ DEPENDENCIES="
             fonts/urw-fonts
             media-libs/freetype:2
         )
+        webp? ( media-libs/libwebp )
         wmf? ( media-libs/libwmf )
     suggestion:
         sci-apps/gnuplot [[ description = [ Support for reading GNUPlot files ] ]]
@@ -114,6 +116,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'tiff'
     'truetype ttf'
     'truetype windows-font-dir /usr/share/fonts/X11/corefonts'
+    'webp'
     'wmf'
 )
 
