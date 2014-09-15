@@ -23,15 +23,12 @@ DEPENDENCIES="
         dev-libs/glib:2[multibuild_c:*(-)?]
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --with-glib=yes )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/fribidi-test-ignore-COLUMNS.patch )
 
-src_prepare() {
-    default
-
-    # Fix compability with dev-libs/glib:2[>=2.31]
-    edo sed \
-        -e '/include/s:<glib/gstrfuncs.h>:<glib.h>:' \
-        -e '/include/s:<glib/gmem.h>:<glib.h>:' \
-        -i charset/fribidi-char-sets.c lib/mem.h
-}
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-glib=yes
+    # make fribidi thread-safe
+    # see https://bugs.freedesktop.org/show_bug.cgi?id=79385
+    --enable-malloc
+)
 
