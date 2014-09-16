@@ -5,3 +5,8 @@ require common-metadata
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Copy-lastmessage-to-the-newly-created-context.patch
+    "${FILES}"/0001-Fix-pass-opdata-when-sending-message-fragment.patch
+)
+
