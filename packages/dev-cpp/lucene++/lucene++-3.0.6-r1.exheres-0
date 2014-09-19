@@ -1,7 +1,7 @@
 # Copyright 2014 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-MY_PN=${PN//++/plusplus}
+MY_PN=${PN//lucene++/LucenePlusPlus}
 MY_PV=rel_${PV}
 require github [ tag=${MY_PV} ] cmake [ api=2 ]
 
@@ -18,13 +18,14 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/994f03cf736229044a168835ae7387696041658f.patch
+    "${FILES}"/c5ed014df578f2be4c48ac8e6f09d6450d1a2a03.patch
+    "${FILES}"/fcdcf1945f0325c8dfdcdfa03ae8af5247602e6e.patch
+    "${FILES}"/ab10671fb28b6b8ebf6813f9f6e609bacff6a5c3.patch
     "${FILES}"/de2318120e24719f89a1db467f04fc76208b3f0e.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
-    -DLIB_DESTINATION:PATH=/usr/${LIBDIR}
     -DENABLE_TEST:BOOL=FALSE
 )
-
-CMAKE_SOURCE=${WORKBASE}/LucenePlusPlus-${MY_PV}
 
