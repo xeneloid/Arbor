@@ -1,0 +1,30 @@
+# Copyright 2014 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PN=${PN//++/plusplus}
+MY_PV=rel_${PV}
+require github [ tag=${MY_PV} ] cmake [ api=2 ]
+
+SUMMARY="High-performance, full-featured text search engine based off of Lucene in C++"
+
+LICENCES="|| ( Apache-2.0 LGPL-3 )"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/boost
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/de2318120e24719f89a1db467f04fc76208b3f0e.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DLIB_DESTINATION:PATH=/usr/${LIBDIR}
+    -DENABLE_TEST:BOOL=FALSE
+)
+
+CMAKE_SOURCE=${WORKBASE}/LucenePlusPlus-${MY_PV}
+

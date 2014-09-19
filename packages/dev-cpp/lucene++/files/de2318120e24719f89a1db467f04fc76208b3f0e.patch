@@ -1,0 +1,46 @@
+Source: https://github.com/luceneplusplus/LucenePlusPlus/pull/74
+
+From de2318120e24719f89a1db467f04fc76208b3f0e Mon Sep 17 00:00:00 2001
+From: Patrick von Reth <vonreth@kde.org>
+Date: Tue, 16 Sep 2014 11:33:39 +0200
+Subject: [PATCH] make test optional
+
+---
+ CMakeLists.txt | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96183e3..01f6e17 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,6 +44,10 @@
+   "Enable cyclic checking"
+   OFF
+ )
++option(ENABLE_TEST
++  "Enable the tests"
++  ON
++)
+ 
+ ####################################
+ # bootstrap
+@@ -113,13 +117,15 @@
+   ${CMAKE_CURRENT_BINARY_DIR}/include
+ )
+ 
+-include(CMakeExternal.txt)
+-enable_testing()
+-
+ add_subdirectory(src/core)
+ add_subdirectory(src/contrib)
+ add_subdirectory(src/demo)
+-add_subdirectory(src/test)
++
++if(ENABLE_TEST)
++  include(CMakeExternal.txt)
++  enable_testing()
++  add_subdirectory(src/test)
++endif()
+ 
+ #################################
+ # install pkg-config file
