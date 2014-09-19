@@ -248,6 +248,7 @@ systemd_src_prepare() {
     edo sed -i -e '/test-rtnl/s:test-rtnl[^ ]*:$(NULL):' Makefile.am
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
     edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am
+    edo sed -i -e '/test-resolve/s:test-resolve:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
