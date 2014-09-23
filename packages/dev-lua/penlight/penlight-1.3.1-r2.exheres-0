@@ -1,7 +1,7 @@
 # Copyright 2013 Jakob Nixdorf <flocke@shadowice.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=stevedonovan pn=Penlight ] lua
+require github [ user=stevedonovan pn=Penlight ] lua [ whitelist="5.1 5.2" ]
 
 SUMMARY="Lua libraries focusing on input data handling"
 
@@ -12,19 +12,21 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-lang/lua:=
-        dev-lua/luafilesystem
+        dev-lua/luafilesystem[lua_abis:*(-)?]
 "
 
 BUGS_TO="flocke@shadowice.org"
 
-src_install() {
-    lua_version
+install_one_multibuild() {
+    insinto /usr/share/lua/$(lua_get_abi)/pl
+    doins "${WORK}"/lua/pl/*.lua
+}
 
-    insinto /usr/share/lua/${LUAVER}/pl
-    doins lua/pl/*.lua
+src_install() {
+    easy-multibuild_src_install
 
     dodoc README.md CHANGES.md
     docinto manual
     dodoc doc/manual/*
 }
+
