@@ -50,8 +50,6 @@ DEPENDENCIES="
         fonts/urw-fonts [[ note = [ PostScript standard fonts ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-9.12-sys-zlib.patch )
-
 prepare_one_multibuild() {
     edo rm -r ./{cups/libs,expat,freetype,jbig2dec,jpeg{,xr},lcms{,2},libpng,tiff,zlib}
     edo rm -r ./Resource/{CMap,Font}
