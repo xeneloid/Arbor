@@ -1,7 +1,7 @@
 # Copyright 2013 Jakob Nixdorf <flocke@shadowice.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=stevedonovan pn=LDoc ] lua
+require github [ user=stevedonovan pn=LDoc ] lua [ whitelist="5.1 5.2" ]
 
 SUMMARY="A LuaDoc-compatible documentation generation system"
 
@@ -12,8 +12,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        dev-lang/lua:=
-        dev-lua/penlight
+        dev-lua/penlight[lua_abis:*(-)?]
 "
 
 BUGS_TO="flocke@shadowice.org"
@@ -23,20 +22,23 @@ BUGS_TO="flocke@shadowice.org"
 # compared is missing (last checked: 1.4.2)
 RESTRICT="test"
 
+install_one_multibuild() {
+    insinto /usr/share/lua/$(lua_get_abi)/ldoc
+    doins "${WORK}"/ldoc/*.lua
+
+    insinto /usr/share/lua/$(lua_get_abi)/ldoc/html
+    doins "${WORK}"/ldoc/html/*.lua
+
+    insinto /usr/share/lua/$(lua_get_abi)/ldoc/builtin
+    doins "${WORK}"/ldoc/builtin/*.lua
+
+    dobin "${WORK}"/ldoc.lua
+}
+
 src_install() {
-    lua_version
+    easy-multibuild_src_install
 
-    insinto /usr/share/lua/${LUAVER}/ldoc
-    doins ldoc/*.lua
-
-    insinto /usr/share/lua/${LUAVER}/ldoc/html
-    doins ldoc/html/*.lua
-
-    insinto /usr/share/lua/${LUAVER}/ldoc/builtin
-    doins ldoc/builtin/*.lua
-
-    dobin ldoc.lua
-    ln -s ldoc.lua ${IMAGE}/${DESTTREE}/bin/ldoc
-
+    edo ln -s ldoc.lua "${IMAGE}"/${DESTTREE}/bin/ldoc
     dodoc readme.md doc/doc.md
 }
+
