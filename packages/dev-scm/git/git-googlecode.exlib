@@ -32,6 +32,7 @@ MYOPTIONS="
     baselayout
     curl
     emacs [[ description = [ Install various Emacs libraries: git.el, git-blame.el and vc-git.el ] ]]
+    keyring [[ description = [ Install GNOME keyring credential helper ] ]]
     python [[ description = [ Install helper scripts for git remote helpers, a compatibility layer with other SCMs ] ]]
     tk
     webdav [[ requires = curl description = [ Adds support for pushing using http:// and https:// transports ] ]]
@@ -52,6 +53,7 @@ DEPENDENCIES="
         sys-libs/zlib
         virtual/libssl
         curl? ( net-misc/curl )
+        keyring? ( gnome-desktop/libgnome-keyring:1 )
         tk? (
           dev-lang/tcl[>=8.4]
           dev-lang/tk[>=8.4]
@@ -156,6 +158,7 @@ git-googlecode_src_compile() {
     perlinfo
     myemake V=1 all
     elisp-optional_src_compile
+    option keyring && myemake -C contrib/credential/gnome-keyring
 }
 
 git-googlecode_src_test() {
@@ -199,6 +202,7 @@ git-googlecode_src_install() {
 
     exeinto /usr/libexec/${PN}
     newexe contrib/fast-import/import-tars.perl git-import-tars
+    option keyring && doexe contrib/credential/gnome-keyring/git-credential-gnome-keyring
 
     docinto /gitweb/
     dodoc gitweb/{INSTALL,README}
