@@ -3,11 +3,11 @@
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
-    SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/mason/btrfs-progs.git"
+    SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git"
     DOWNLOADS=""
     require scm-git
 else
-    DOWNLOADS="mirror://kernel/linux/kernel/people/mason/btrfs-progs/${PN}-v${PV}.tar.xz"
+    DOWNLOADS="mirror://kernel/linux/kernel/people/kdave/btrfs-progs/${PN}-v${PV}.tar.xz"
     WORK="${WORKBASE}/${PN}-v${PV}"
 fi
 
@@ -37,7 +37,7 @@ DEPENDENCIES="
         dev-python/matplotlib [[ description = [ for btrfs-show-blocks & other debugging tools ] ]]
 "
 
-# The tests are broken. Last checked: 3.16
+# The tests are broken. Last checked: 3.16.1
 RESTRICT=test
 
 DEFAULT_SRC_COMPILE_PARAMS=(
