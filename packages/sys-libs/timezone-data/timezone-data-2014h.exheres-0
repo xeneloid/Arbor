@@ -36,17 +36,17 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( Theory )
 
-src_test() {
-    # Don't validate webpages as that requires dependencies on open{jade,sp}
-    edo sed -i -e '/^check:/ s/ check_web//' Makefile
-
-    emake AWK=awk check
-}
-
 pkg_preinst() {
     if [[ -d ${ROOT}/usr/share/zoneinfo/posix ]]; then
         edo rm -r "${ROOT}"/usr/share/zoneinfo/posix
     fi
+}
+
+src_test() {
+    # Don't validate webpages as that requires dependencies on open{jade,sp}
+    edo sed -i -e 's: check_web::' Makefile
+
+    emake AWK=awk check
 }
 
 src_install() {
