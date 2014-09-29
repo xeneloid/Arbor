@@ -1,6 +1,8 @@
 # Copyright 2014 William Orr <will@worrbase.com>
 # Distributed under the terms of the GNU General Public License v2
 
+require easy-multibuild
+
 SUMMARY="OpenBSD's portable fork of OpenSSL"
 DESCRIPTION="
 An SSL/TLS library with more ciphers, fewer bugs and much less bloat
