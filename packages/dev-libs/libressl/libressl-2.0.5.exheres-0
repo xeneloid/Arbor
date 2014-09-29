@@ -11,7 +11,7 @@ DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PNV}.tar.gz"
 LICENCES="openssl"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS="multibuild_c: 32 64 platform: amd64"
+MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build+run:
@@ -30,3 +30,4 @@ install_one_multibuild() {
     keepdir /etc/ssl/{certs,private}
     emagicdocs
 }
+
