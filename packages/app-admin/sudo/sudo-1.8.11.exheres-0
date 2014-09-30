@@ -26,7 +26,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     pam
-    ( linguas: ca cs da de eo es eu fi fr gl hr it ja nl pl pt_BR ru sl sr sv tr uk vi zh_CN )
+    ( linguas: ca cs da de eo es eu fi fr gl hr it ja nb nl pl pt_BR ru sl sr sv tr uk vi zh_CN )
 "
 
 DEPENDENCIES="
