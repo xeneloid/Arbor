@@ -24,11 +24,7 @@ UPSTREAM_RELEASE_NOTES="${UPSTREAM_DOCUMENTATION}/whatsnew.html"
 
 LICENCES="GPL-2"
 SLOT="0"
-if ever at_least 2.0_beta1; then
-    LANGS="ca cs es fr it ja ru"
-else
-    LANGS="ca cs de es fr it ja pt_BR ru"
-fi
+LANGS="ca cs es fr it ja ru"
 MYOPTIONS="
     baselayout
     dbus
@@ -41,6 +37,8 @@ MYOPTIONS="
     acl [[ description = [ Support POSIX ACL when authenticating with the CUPS daemon ] ]]
     avahi [[ description = [ Enable DNS Service Discovery (DNS_SD) support (printer sharing using Avahi) ] ]]
     tcpd [[ description = [ Use TCP Wrappers to restrict access to cupsd ] ]]
+    linguas: ( ${LANGS} )
+    multibuild_c: 32 64
 "
 
 # testsuite has lots of FAILs for now, will check into those next version
@@ -51,6 +49,8 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         group/lpadmin
+        dev-libs/gnutls[multibuild_c:*(-)?]
+        dev-libs/libgcrypt[multibuild_c:*(-)?]
         dev-libs/libpaper
         sys-libs/zlib[multibuild_c:*(-)?]
         virtual/usb:1[multibuild_c:*(-)?]
@@ -61,6 +61,7 @@ DEPENDENCIES="
         pam? ( sys-libs/pam[multibuild_c:*(-)?] )
         perl? ( dev-lang/perl:= )
         python? ( dev-lang/python:*[multibuild_c:*(-)?] )
+        systemd? ( sys-apps/systemd[multibuild_c:*(-)?] )
         tcpd? ( sys-apps/tcp-wrappers[multibuild_c:*(-)?] )
     run:
         xinetd? ( sys-apps/xinetd )
@@ -68,30 +69,6 @@ DEPENDENCIES="
         net-print/cups-filters [[ description = [ Common filters required by most printer drivers on Linux ] ]]
     suggestion:
         sys-apps/colord [[ description = [ ICC profiles referenced by PPD files are registered utilizing colord ] ]]
-"
-
-if ever at_least 2.0_beta1; then
-    DEPENDENCIES+="
-        build+run:
-            dev-libs/gnutls[multibuild_c:*(-)?]
-            dev-libs/libgcrypt[multibuild_c:*(-)?]
-    "
-else
-    MYOPTIONS+=" gnutls"
-
-    DEPENDENCIES+="
-        build+run:
-           !gnutls? ( virtual/libssl[multibuild_c:*(-)?] )
-            gnutls? (
-                dev-libs/gnutls[multibuild_c:*(-)?]
-                dev-libs/libgcrypt[multibuild_c:*(-)?]
-            )
-    "
-fi
-
-MYOPTIONS+="
-    linguas: ( ${LANGS} )
-    multibuild_c: 32 64
 "
 
 AT_M4DIR=( config-scripts )
@@ -128,6 +105,7 @@ configure_one_multibuild() {
 
     myconf+=(
         --localstatedir=/var
+        --enable-gnutls
         --enable-libpaper
         --enable-libusb
         --enable-raw-printing
@@ -151,25 +129,14 @@ configure_one_multibuild() {
         $(option_enable debug debug-printfs)
         $(option_enable kerberos gssapi)
         $(option_enable pam)
+        $(option_enable systemd)
         $(option_enable tcpd tcp-wrappers)
         $(option_with perl)
         $(option_with python)
+        $(option_with systemd systemd ${SYSTEMDSYSTEMUNITDIR})
         $(option_with xinetd xinetd /etc/xinetd.d)
         DSOFLAGS="${CFLAGS}" LDFLAGS="${CFLAGS} ${LDFLAGS}"
     )
-
-    if ever at_least 2.0_beta1; then
-        option systemd && export SYSTEMD_DIR=${SYSTEMDSYSTEMUNITDIR}
-        myconf+=(
-            --enable-gnutls
-            $(option_enable systemd)
-        )
-    else
-        myconf+=(
-            $(option_enable !gnutls openssl)
-            $(option_enable gnutls gnutls)
-        )
-    fi
 
     econf "${myconf[@]}"
 }
@@ -225,9 +192,7 @@ install_one_multibuild() {
     # directories are created automatically on startup
     edo rm -r "${IMAGE}"/run
 
-    if ever at_least 2.0_beta1 && ! option xinetd; then
-        edo rm -r "${IMAGE}"/no
-    fi
+    ! option xinetd && edo rm -r "${IMAGE}"/no
 }
 
 cups_pkg_postinst() {
