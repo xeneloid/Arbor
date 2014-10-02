@@ -1,0 +1,16 @@
+Title: CUPS 2.0.0 update
+Author: Timo Gurr <tgurr@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-10-02
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: net-print/cups[<2.0.0-r1]
+
+CUPS 2.0.0 now provides its own systemd unit files and we don't install our
+custom cups.service file anymore.
+
+To transition to the upstream provided systemd units issue the following
+commands:
+
+systemctl disable cups.service
+systemctl enable org.cups.cupsd.service

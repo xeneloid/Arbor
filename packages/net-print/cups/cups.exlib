@@ -180,8 +180,6 @@ install_one_multibuild() {
         edo sed "s:\$neededservices:$neededservices:" -i "${IMAGE}"/etc/init.d/cupsd
     fi
 
-    install_systemd_files
-
     echo "ServerName /run/cups/cups.sock" >> "${IMAGE}"/etc/cups/client.conf
 
     # cups-filters now provides these
