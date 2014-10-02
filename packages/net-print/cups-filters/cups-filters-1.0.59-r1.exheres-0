@@ -89,6 +89,11 @@ install_one_multibuild() {
 
     install_systemd_files
 
+    if option systemd ; then
+        edo sed -e 's:cups.service:org.cups.cupsd.service:g' \
+                -i "${IMAGE}"/usr/${LIBDIR}/systemd/system/cups-browsed.service
+    fi
+
     if option systemd && ! option avahi ; then
         multibuild_default_target C && edo sed -i -e 's: avahi-daemon.service::g' "${IMAGE}"/usr/${LIBDIR}/systemd/system/cups-browsed.service
     fi
