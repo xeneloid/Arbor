@@ -7,7 +7,7 @@ DOWNLOADS="https://fedorahosted.org/releases/n/e/${PN}/${PNV}.tar.gz"
 
 LICENCES="LGPL-2"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     python
     tcl

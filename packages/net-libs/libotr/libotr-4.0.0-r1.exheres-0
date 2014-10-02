@@ -1,0 +1,12 @@
+# Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require common-metadata
+
+PLATFORMS="~amd64 ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Copy-lastmessage-to-the-newly-created-context.patch
+    "${FILES}"/0001-Fix-pass-opdata-when-sending-message-fragment.patch
+)
+

@@ -1,0 +1,28 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=tar.gz ]
+
+SUMMARY="Utility to get and set ATA/SATA drive parameters"
+
+REMOTE_IDS+="freecode:${PN}"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+DEFAULT_SRC_COMPILE_PARAMS=( STRIP=: CC="${CC}" )
+DEFAULT_SRC_INSTALL_PARAMS=( exec_prefix=/usr/$(exhost --target)/ )
+
+src_prepare() {
+    default
+
+    edo sed \
+        -e "/^CFLAGS/ s:-O2:${CFLAGS}:" \
+        -e "/^LDFLAGS/ s:-s:${LDFLAGS}:" \
+        -i Makefile
+}
+

@@ -1,0 +1,33 @@
+From ab10671fb28b6b8ebf6813f9f6e609bacff6a5c3 Mon Sep 17 00:00:00 2001
+From: Gianfranco Costamagna <costamagnagianfranco@yahoo.it>
+Date: Thu, 3 Jul 2014 10:45:28 +0200
+Subject: [PATCH] Moved Subversion requirement outside CMakeLists
+
+---
+ CMakeExternal.txt | 1 +
+ CMakeLists.txt    | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeExternal.txt b/CMakeExternal.txt
+index 6ad53dc..c7c1c1b 100644
+--- a/CMakeExternal.txt
++++ b/CMakeExternal.txt
+@@ -1,5 +1,6 @@
+ # Enable ExternalProject CMake module
+ include(ExternalProject)
++find_package(Subversion REQUIRED)
+ 
+ # main directory for external projects
+ set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4b74427..8a7e725 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,7 +49,6 @@ option(ENABLE_CYCLIC_CHECK
+ # bootstrap
+ ####################################
+ 
+-find_package(Subversion REQUIRED)
+ find_package(Threads REQUIRED)
+ find_package(Boost COMPONENTS
+   date_time

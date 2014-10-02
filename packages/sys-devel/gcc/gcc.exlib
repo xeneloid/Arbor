@@ -108,7 +108,7 @@ if ever at_least 4.8 ; then
         build+run:
             graphite? (
                 dev-libs/cloog[>=0.17&<0.19]
-                dev-libs/isl[>=0.10&<0.12]
+                dev-libs/isl[>=0.10&<0.13]
             )
     "
 elif ever at_least 4.7 ; then

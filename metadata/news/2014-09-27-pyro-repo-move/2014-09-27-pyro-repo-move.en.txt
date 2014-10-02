@@ -1,0 +1,13 @@
+Title: repository/pyro move
+Author: Thomas Witt <pyromaniac@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-09-27
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: repository/pyro
+
+The ::pyro repository has been moved to the exherbo git server. The old server
+will not be available after 2014-09-28.
+Please change the sync line in /etc/paludis/repositories/pyro.conf to:
+
+sync = git://git.exherbo.org/dev/pyro.git

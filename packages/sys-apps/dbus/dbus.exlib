@@ -47,7 +47,7 @@ DEPENDENCIES="
         group/messagebus
         group/plugdev
         user/messagebus
-        systemd? ( sys-apps/systemd[>=32] )
+        systemd? ( sys-apps/systemd[>=209] )
         X? (
             x11-libs/libICE
             x11-libs/libSM
