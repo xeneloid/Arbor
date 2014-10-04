@@ -36,10 +36,10 @@ DEPENDENCIES="
         user/mail
         user/postmaster
         user/smmsp
+    run:
+        mail-filter/libmilter
     post:
         !mbox? ( mail-filter/procmail )
-    run:
-        mail-libs/libmilter
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}"/sendmail-delivered_hdr.patch )
