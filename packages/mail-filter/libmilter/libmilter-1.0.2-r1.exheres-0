@@ -32,7 +32,10 @@ DEFAULT_SRC_INSTALL_PARAMS=(
     "LIBDIR=/usr/${LIBDIR}"
 )
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/sharedlib.m4.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/sharedlib.m4.patch"
+    "${FILES}/${PNV}-linkage.patch"
+)
 
 WORK=${WORKBASE}/${SENDMAIL_PNV}
 
