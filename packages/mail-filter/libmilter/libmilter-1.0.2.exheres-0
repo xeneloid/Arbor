@@ -19,7 +19,7 @@ DOWNLOADS="ftp://ftp.sendmail.org/pub/sendmail/${SENDMAIL_PNV/-/.}.tar.gz"
 
 LICENCES="Sendmail"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
