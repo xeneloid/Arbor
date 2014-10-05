@@ -177,6 +177,8 @@ case ${PYTHON_EXLIB_API} in
         exparam -v PYTHON_BLACKLIST blacklist
         exparam -v PYTHON_MIN_VERSIONS min_versions
 
+        # PYTHON_AVAILABLE_ABIS below need to be in sync with
+        # MULTIBUILD_PYTHON_ABIS_TARGETS in profiles/make.defaults.
         PYTHON_AVAILABLE_ABIS="2.7 3.2 3.3 3.4"
 
         if [[ ${PYTHON_BLACKLIST} == none ]]; then
