@@ -52,7 +52,7 @@ zsh_src_configure() {
         --bindir=/bin \
         --libdir=/usr/${LIBDIR} \
         --htmldir=/usr/share/doc/${PNVR}/html \
-        $(ever at_least 5.0.6 && echo '--disable-zsh-valgrind') \
+        --disable-zsh-valgrind \
         --enable-etcdir=/etc/zsh \
         --enable-fndir=/usr/share/zsh/${PV%_*}/functions \
         --enable-runhelpdir=/usr/share/zsh/${PV%_*}/help \
