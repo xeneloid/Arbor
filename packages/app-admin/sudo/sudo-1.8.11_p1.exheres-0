@@ -3,7 +3,7 @@
 # Based in part upon 'sudo-1.6.9_p12.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require pam autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require pam
 
 MY_PNV="${PNV/_p/p}"
 
@@ -38,7 +38,6 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${MY_PNV}
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/fdf06757f25d.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --with-all-insults
