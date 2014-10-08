@@ -1,8 +1,7 @@
 # Copyright 2014 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-MY_PNV=${PN}-$(ever replace_all _)
-require github [ user=ivmai tag=${MY_PNV} ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require github [ user=ivmai ]
 
 SUMMARY="Library providing atomic memory update operations"
 DESCRIPTION="
@@ -16,6 +15,7 @@ architectures. These might allow you to write code:
   large performance win.
 * To experiment with new and much better thread programming paradigms, etc.
 "
+DOWNLOADS="http://www.ivmaisoft.com/_bin/atomic_ops/${PNV}.tar.gz"
 
 LICENCES="GPL-2 MIT"
 SLOT="0"
