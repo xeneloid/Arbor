@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Small utility displaying info about file formats"
-HOMEPAGE="ftp://ftp.astron.com/pub/${PN}"
-DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
+HOMEPAGE="http://www.darwinsys.com/${PN}/"
+DOWNLOADS="ftp://ftp.astron.com/pub/${PN}/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
