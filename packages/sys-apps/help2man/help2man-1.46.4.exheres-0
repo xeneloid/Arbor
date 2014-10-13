@@ -11,7 +11,7 @@ LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
-    ( linguas: de el eo fi fr hr hu it ja nb pl pt_BR ru sr sv uk vi )
+    ( linguas: de el eo es fi fr hr hu it ja nb pl pt_BR ru sr sv uk vi )
 "
 
 DEPENDENCIES="
@@ -24,7 +24,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p1 "${FILES}"/${PN}-linguas.patch
-    -p0 "${FILES}"/${PN}-respect-LDFLAGS.patch
     -p1 "${FILES}"/0001-Avoid-a-rare-but-annoying-race-condition.patch
 )
 
