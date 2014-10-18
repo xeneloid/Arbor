@@ -14,7 +14,7 @@ libmilter provides library functions necessary for creating mail filters. MTAs
 like postfix and sendmail can use milters to filter mail on ingress from remote
 mail servers.
 "
-HOMEPAGE="http://www.sendmail.com/"
+HOMEPAGE="http://www.sendmail.com/sm/open_source"
 DOWNLOADS="ftp://ftp.sendmail.org/pub/sendmail/${SENDMAIL_PNV/-/.}.tar.gz"
 
 LICENCES="Sendmail"
