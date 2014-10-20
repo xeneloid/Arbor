@@ -3,8 +3,8 @@ Upstream: no
 Reason: fix Python paths for multibuild
 this patch also allows configure to figure out what the value of 
 PYTHON_INCLUDES should be.
---- libxml2-2.9.1.orig/configure.in	2013-04-19 03:25:20.000000000 -0400
-+++ libxml2-2.9.1/configure.in	2013-04-28 15:06:03.000000000 -0400
+--- libxml2-2.9.1.orig/configure.ac	2013-04-19 03:25:20.000000000 -0400
++++ libxml2-2.9.1/configure.ac	2013-04-28 15:06:03.000000000 -0400
 @@ -776,7 +776,7 @@
      if test "$PYTHON" != ""
      then
