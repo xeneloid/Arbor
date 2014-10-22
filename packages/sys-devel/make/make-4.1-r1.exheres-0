@@ -22,7 +22,10 @@ DEPENDENCIES="
         sys-devel/gettext[>=0.18.1]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-tests-scripts-features-archives-pass-correct-AR.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-tests-scripts-features-archives-pass-correct-AR.patch
+    "${FILES}"/292da6f6867b75a5af7ddbb639a1feae022f438f.patch
+)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls

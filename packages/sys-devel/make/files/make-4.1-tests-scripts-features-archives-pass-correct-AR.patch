@@ -1,4 +1,4 @@
-Upstream: submitted, https://savannah.gnu.org/bugs/index.php?43405
+Upstream: Fixed in master, commit 3c487e7ed54bcfe9c83cb4cbb66549c5d42692fe
 
 From 48db572a33777a6324d8dc6d50513b8118ec06ff Mon Sep 17 00:00:00 2001
 From: Benedikt Morbach <benedikt.morbach@googlemail.com>
