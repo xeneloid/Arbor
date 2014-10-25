@@ -22,6 +22,9 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 DEPENDENCIES=""
 
+# The tests are broken as of 4.88
+RESTRICT="test"
+
 WORK=${WORKBASE}/${MY_PNV}_src
 
 DEFAULT_SRC_PREPARE_PATCHES=(
