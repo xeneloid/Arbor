@@ -44,7 +44,7 @@ DEPENDENCIES="
         dev-libs/icu[multibuild_c:*(-)?]
         net-libs/cyrus-sasl[>=2.1.21][multibuild_c:*(-)?]
         sys-apps/util-linux[multibuild_c:*(-)?] [[ note = [ for libuuid ] ]]
-        sys-libs/db:=[multibuild_c:*(-)?]
+        sys-libs/db:=[<6.0.20][multibuild_c:*(-)?] [[ note = [ incompatible licence ] ]]
         virtual/libssl[multibuild_c:*(-)?]
         virtual/syslog
 "
