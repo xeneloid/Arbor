@@ -17,7 +17,12 @@ DOWNLOADS="http://download.oracle.com/berkeley-${PN}/${PN}-${MY_PV}.tar.gz
     done)
 "
 
-LICENCES="as-is"
+if ever at_least 6.0.20 ; then
+    LICENCES="AGPL-3"
+else
+    LICENCES="as-is"
+fi
+
 SLOT="$(ever range 1-2)"
 MYOPTIONS="
     doc
@@ -26,11 +31,11 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    test-expensive:
-        dev-lang/tcl[multibuild_c:*(-)?]
     build+run:
         !sys-libs/db:0 [[ description = [ Uninstall sys-libs/db:0 before installing slotted versions of Berkely DB ] ]]
         tcl? ( dev-lang/tcl[multibuild_c:*(-)?] )
+    test-expensive:
+        dev-lang/tcl[multibuild_c:*(-)?]
 "
 
 WORK="${WORKBASE}/${PN}-${MY_PV}/dist"
