@@ -5,7 +5,8 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] 
 require isl
 
 LICENCES="LGPL-2.1"
-SLOT="0"
+# Change the SLOT for a version bump if it breaks ABI
+SLOT="0.9"
 PLATFORMS="~amd64"
 MYOPTIONS=""
 

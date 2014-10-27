@@ -4,7 +4,8 @@
 require isl autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 LICENCES="MIT"
-SLOT="0"
+# Change the SLOT for a version bump if it breaks ABI
+SLOT="0.13"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
