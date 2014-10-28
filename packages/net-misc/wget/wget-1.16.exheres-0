@@ -15,6 +15,10 @@ MYOPTIONS="
     idn  [[ description = [ Enable support for internationalized domain names ] ]]
 "
 
+# restrict the tests until an upstream patch is available
+# https://savannah.gnu.org/bugs/index.php?43486
+RESTRICT="test"
+
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
@@ -44,6 +48,7 @@ src_configure() {
         $(option_enable idn iri)
         --with-ssl=$(optionv gnutls || echo openssl)
         --with-zlib
+        --without-libpsl
     )
     econf ${myconf[@]}
 }
