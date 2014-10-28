@@ -2,7 +2,7 @@
 # Copyright 2008 Richard Brown
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz alpha=true ] easy-multibuild
+require gnu [ suffix=xz ] easy-multibuild
 
 SUMMARY="Generic library support script"
 
@@ -13,7 +13,8 @@ MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build+run:
-        sys-devel/gnuconfig"
+        sys-devel/gnuconfig
+"
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( docs/PLATFORMS )
 
@@ -26,11 +27,11 @@ src_prepare() {
 }
 
 test_one_multibuild() {
-    emake TESTSUITEFLAGS="-k !expensive -j${EXJOBS:-1}" check-local
+    multibuild_default_target C && emake TESTSUITEFLAGS="-k !expensive -j${EXJOBS:-1}" check-local
 }
 
 test_expensive_one_multibuild() {
-    emake TESTSUITEFLAGS="-k expensive -j${EXJOBS:-1}" check-local
+    multibuild_default_target C && emake TESTSUITEFLAGS="-k expensive -j${EXJOBS:-1}" check-local
 }
 
 src_test_expensive() {
