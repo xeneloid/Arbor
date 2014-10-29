@@ -18,13 +18,24 @@ MYOPTIONS=""
 DEPENDENCIES="
     build+run:
         dev-libs/gmp:=
-        dev-libs/isl:=[<0.11]
         !dev-libs/cloog:0 [[
             description = [ Uninstall dev-libs/cloog:0 after switching to the slotted version ]
             resolution = uninstall-blocked-after
         ]]
         !dev-libs/cloog-ppl [[ description = [ File collision ] ]]
 "
+
+if ever at_least 0.18.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/isl:=[>=0.11]
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/isl:=[<0.11]
+    "
+fi
 
 # with psl the tests fail
 DEFAULT_SRC_CONFIGURE_PARAMS=( --with-isl=system --with-gmp=system --with-osl=no )
