@@ -3,5 +3,7 @@
 
 require cloog
 
+SLOT="0.17"
+
 PLATFORMS="~amd64 ~x86"
 
