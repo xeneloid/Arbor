@@ -19,5 +19,9 @@ DEPENDENCIES+="
         dev-libs/libunistring
 "
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-build-Honor-program-name-transformation-in-guild.patch
+    "${FILES}"/${PNV}-build-Clean-up-rules-for-meta-guild-guile-config.patch
+)
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
