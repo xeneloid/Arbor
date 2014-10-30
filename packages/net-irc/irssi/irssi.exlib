@@ -1,8 +1,6 @@
 # Copyright (c) 2007 Alexander Færøy <ahf@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases src_install
-
 SUMMARY="Irssi is a terminal based IRC client for UNIX systems"
 HOMEPAGE="http://www.irssi.org/"
 DOWNLOADS="http://www.irssi.org/files/${PNV}.tar.gz"
@@ -11,8 +9,8 @@ LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="perl proxy socks
     bot [[ description = [ Run an irssi module, such as a bot, without a UI ] ]]
+    dane [[ description = [ DNSSEC DANE support for validating certificates ] ]]
 "
-ever at_least 0.8.16-rc1 && MYOPTIONS+="dane [[ description = [ DNSSEC DANE support for validating certificates ] ]]"
 
 DEPENDENCIES="
     build:
@@ -25,13 +23,13 @@ DEPENDENCIES="
         socks? ( net-proxy/dante )
 "
 
-ever at_least 0.8.16-rc1 && DEFAULT_SRC_CONFIGURE_OPTION_ENABLES+=( dane )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( dane )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( bot perl proxy socks )
-DEFAULT_SRC_CONFIGURE_PARAMS=( --with-ncurses --with-perl-lib=vendor --enable-ipv6 --enable-ssl )
-DEFAULT_SRC_INSTALL_PARAMS=( docdir=/usr/share/doc/${PNVR}/ )
-
-irssi_src_install() {
-    default
-    edo find "${IMAGE}" -type d -empty -delete
-}
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-ssl
+    --enable-true-color
+    --enable-ipv6
+    --with-ncurses
+    --with-perl-lib=vendor
+)
 
