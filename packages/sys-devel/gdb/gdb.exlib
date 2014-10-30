@@ -17,6 +17,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/ANNOUNCEMENT [[ lang = en ]]"
 LICENCES="GPL-3 LGPL-3"
 SLOT="0"
 MYOPTIONS="
+    guile [[ description = [ Extend gdb with guile, an implementation of the Scheme language ] ]]
     python
     ( linguas:
         da de es fi fr ga id it ja nl pt_BR ro ru rw sv tr uk vi zh_CN
@@ -37,10 +38,14 @@ DEPENDENCIES="
         dev-libs/mpfr:=[>=2.4.2]
         sys-libs/ncurses[>=5.2]
         sys-libs/readline
+        guile? ( dev-lang/guile:=[>=2.0] )
         python? ( dev-lang/python:= )
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( python )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    guile
+    python
+)
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --enable-tui
@@ -49,7 +54,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-curses
     --with-expat
     --with-system-readline
-    --without-guile
 )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( gdb sim )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( CONTRIBUTE )

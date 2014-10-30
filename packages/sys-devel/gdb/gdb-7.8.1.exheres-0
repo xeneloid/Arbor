@@ -5,7 +5,3 @@ require gdb
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-17347-Regression-GDB-stopped-on-run-with-attache.patch
-)
-
