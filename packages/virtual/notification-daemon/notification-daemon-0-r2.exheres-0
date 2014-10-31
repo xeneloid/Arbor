@@ -9,14 +9,14 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     ( providers:
-        notification-daemon
-        notify-osd
+        awesome
         dunst
         eventd
-        awesome
-        notification-daemon-xfce
         gnome-shell
         kde-runtime
+        notification-daemon
+        notification-daemon-xfce
+        notify-osd
         plasma
     ) [[
         *description = [ Freedesktop notifications provider ]
@@ -25,14 +25,14 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:notification-daemon? ( x11-apps/notification-daemon )
-    providers:notify-osd? ( x11-apps/notify-osd )
+    providers:awesome? ( x11-wm/awesome[>=3.1] [[ description = [ with the naughty library ] ]] )
     providers:dunst? ( x11-apps/dunst )
     providers:eventd? ( net/eventd[dbus] )
-    providers:awesome? ( x11-wm/awesome[>=3.1] [[ description = [ with the naughty library ] ]] )
-    providers:notification-daemon-xfce? ( xfce-extra/notification-daemon-xfce )
     providers:gnome-shell? ( gnome-desktop/gnome-shell )
     providers:kde-runtime? ( kde/kde-runtime [[ description = [ with knotify ] ]] )
+    providers:notification-daemon? ( x11-apps/notification-daemon )
+    providers:notification-daemon-xfce? ( xfce-extra/notification-daemon-xfce )
+    providers:notify-osd? ( x11-apps/notify-osd )
     providers:plasma? ( kde/plasma-workspace [[ description = [ Use Plasma 5 as notification daemon ] ]] )
 "
 
