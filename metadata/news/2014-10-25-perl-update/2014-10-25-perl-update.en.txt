@@ -1,0 +1,28 @@
+Title: Perl 5.20.1 update
+Author: Thomas Witt <pyromaniac@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-10-25
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/perl[<5.20.0]
+
+perl has been bumped to 5.20.1
+
+To switch to that version run:
+
+eclectic perl set 5.20
+
+As always after changing perl slots, you need to rebuild all packages that
+install perl modules. To do this you can run:
+
+cave resolve -1x $(cave print-owners -f '%c/%p:%s ' /usr/LIBDIR/perl5/vendor_perl/5.18-arch )
+cave resolve -1x $(cave print-owners -f '%c/%p:%s ' /usr/LIBDIR/perl5/vendor_perl/5.18-pure )
+
+where LIBDIR is 'lib' if you are on a 32bit arch and 'lib64' if you are on 64bit.
+
+If you installed any site-modules manually, you have to reinstall those as well.
+
+If you still have perl versions <5.18, you have to rebuild everything in the
+/usr/LIBDIR/perl5/vendor_perl directory. Please remove these Versions, as they
+are no longer supported.
+

@@ -1,0 +1,25 @@
+From 7cfb9356ec8378300ace36f5ec7058fb0f9f936c Mon Sep 17 00:00:00 2001
+From: "Wulf C. Krueger" <philantrop@exherbo.org>
+Date: Sat, 25 Oct 2014 14:37:13 +0200
+Subject: [PATCH] dracut.sh: Remove RedHat-specific gzip switch
+
+---
+ dracut.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dracut.sh b/dracut.sh
+index 1c7e208..6d30f11 100755
+--- a/dracut.sh
++++ b/dracut.sh
+@@ -822,7 +822,7 @@ case $compress in
+     bzip2) compress="bzip2 -9";;
+     lzma)  compress="lzma -9 -T0";;
+     xz)    compress="xz --check=crc32 --lzma2=dict=1MiB -T0";;
+-    gzip)  compress="gzip -n -9 --rsyncable"; command -v pigz > /dev/null 2>&1 && compress="pigz -9 -n -T -R";;
++    gzip)  compress="gzip -n -9"; command -v pigz > /dev/null 2>&1 && compress="pigz -9 -n -T -R";;
+     lzo)   compress="lzop -9";;
+     lz4)   compress="lz4 -l -9";;
+ esac
+-- 
+2.1.2
+

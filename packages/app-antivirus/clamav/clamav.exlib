@@ -8,26 +8,40 @@ require sourceforge [ suffix=tar.gz ]
 export_exlib_phases src_install
 
 SUMMARY="Clam Anti-Virus Scanner"
-HOMEPAGE="http://www.clamav.net/"
-
-UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/press/${PV}-WhatsNew.pdf [[ ]]"
+HOMEPAGE="http://www.${PN}.net"
+UPSTREAM_RELEASE_NOTES="https://github.com/vrtadmin/${PN}-devel/blob/master/README"
+UPSTREAM_DOCUMENTATION="
+    https://github.com/vrtadmin/${PN}-faq [[ lang = en description = [ Official FAQs ] ]]
+"
 REMOTE_IDS+=" freecode:${PN}"
 
-LICENCES="GPL-2"
+LICENCES="
+    || ( GPL-2 ( GPL-2 unRAR ) [ [[ note = [ libclamunrar uses code under unRAR licence ] ]] )
+"
 SLOT="0"
-MYOPTIONS="baselayout milter unrar"
+MYOPTIONS="
+    baselayout
+    milter [[ description = [ antivirus scanner using mail-filter/libmilter ] ]]
+    unrar [[ description = [ build libclamunrar to enable scanning rar archives ] ]]
+"
 
-# Sydbox violations, failures
+# Sydbox violations, failures (last checked: 0.98.4)
+# unit tests likely need to use a clamav socket in /var/run/ or /run/, etc.
+# many tests also need valgrind (those are disabled by default)
 RESTRICT="test"
 
 DEPENDENCIES="
-    test:
-        dev-libs/check
     build+run:
-        dev-libs/gmp:=
-        milter? ( mail-mta/sendmail )
+        dev-libs/gmp:= [[ note = [ optional; for digital signatures ] ]]
+        virtual/libssl [[ note = [ required as of 0.98.2 ] ]]
+        milter? (
+            mail-filter/libmilter
+            net-misc/curl [[ note = [ for following mail URLs ] ]]
+        )
         group/clamav
         user/clamav
+    test:
+        dev-libs/check
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( milter unrar )
@@ -35,7 +49,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-check
     --enable-bzip2
     --enable-dns-fix
-    --enable-clamuko        # On-access scanning
     --enable-id-check       # Use id utility instead of /etc/passwd parsing (Gentoo #72540)
     --enable-ipv6
     --with-dbdir=/var/lib/clamav
@@ -43,7 +56,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-experimental
     --disable-llvm
 )
-DEFAULT_SRC_TEST_PARAMS=( VALGRIND=no )
 
 clamav_src_install() {
     default
@@ -70,25 +82,17 @@ EOF
     keepdir /var/log/${PN}
     edo chown clamav:clamav "${IMAGE}"/var/log/${PN}
 
-    # XXX Use patches
     # Set up some default configs
-    sed -e "s:^\(Example\):\# \1:" \
-        -e "s:.*\(PidFile\) .*:\1 /run/clamav/clamd.pid:" \
-        -e "s:.*\(LocalSocket\) .*:\1 /run/clamav/clamd.sock:" \
-        -e "s:.*\(User\) .*:\1 clamav:" \
-        -e "s:^\#\(LogFile\) .*:\1 /var/log/clamav/clamd.log:" \
-        -e "s:^\#\(LogTime\).*:\1 yes:" \
-        -e "s:^\#\(AllowSupplementaryGroups\).*:\1 yes:" \
-        -i "${IMAGE}"/etc/clamd.conf
+    edo sed -e "s:.*\(PidFile\) .*:\1 /run/clamav/clamd.pid:" \
+            -e "s:.*\(LocalSocket\) .*:\1 /run/clamav/clamd.sock:" \
+            -e "s:.*\(User\) .*:\1 clamav:" \
+            -e "s:^\#\(LogFile\) .*:\1 /var/log/clamav/clamd.log:" \
+            -i "${IMAGE}"/etc/clamd.conf.sample
 
-    # Do the same for /etc/freshclam.conf
-    sed -e "s:^\(Example\):\# \1:" \
-        -e "s:.*\(PidFile\) .*:\1 /run/clamav/freshclam.pid:" \
-        -e "s:.*\(DatabaseOwner\) .*:\1 clamav:" \
-        -e "s:^\#\(UpdateLogFile\) .*:\1 /var/log/clamav/freshclam.log:" \
-        -e "s:^\#\(NotifyClamd\).*:\1 /etc/clamd.conf:" \
-        -e "s:^\#\(ScriptedUpdates\).*:\1 yes:" \
-        -e "s:^\#\(AllowSupplementaryGroups\).*:\1 yes:" \
-        -i "${IMAGE}"/etc/freshclam.conf
+    edo sed -e "s:.*\(PidFile\) .*:\1 /run/clamav/freshclam.pid:" \
+            -e "s:.*\(DatabaseOwner\) .*:\1 clamav:" \
+            -e "s:^\#\(UpdateLogFile\) .*:\1 /var/log/clamav/freshclam.log:" \
+            -e "s:^\#\(NotifyClamd\).*:\1 /etc/clamd.conf:" \
+            -i "${IMAGE}"/etc/freshclam.conf.sample
 }
 

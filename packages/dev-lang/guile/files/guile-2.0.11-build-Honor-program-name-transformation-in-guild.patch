@@ -1,0 +1,97 @@
+Upstream: yes
+Reason: Allow gdb (and possibly other packages) to find guild
+
+From 4a81f5b5d3800aafbc25452e50459c1ba6e29fea Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ludovic=20Court=C3=A8s?= <ludo@gnu.org>
+Date: Thu, 24 Apr 2014 11:16:21 +0200
+Subject: [PATCH 1/2] build: Honor program name transformation in 'guild'.
+
+* configure.ac: Remove erroneous 'guile_program_name' substitute; see
+  <https://lists.gnu.org/archive/html/autoconf/2014-04/msg00010.html>
+  for details.  Remove 'meta/guild' config file.
+* meta/Makefile.am (guild): New target.
+  (CLEANFILES): Add 'guild'.
+* meta/guild.in: Remove 'prefix' and 'exec_prefix' definitions; use
+  @installed_guile@.
+---
+ configure.ac     |  5 -----
+ meta/Makefile.am | 14 ++++++++++++--
+ meta/guild.in    |  6 ++----
+ 3 files changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 3969929..9f87809 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1644,10 +1644,6 @@ pkgdatadir="$datadir/$PACKAGE_TARNAME"
+ sitedir="$pkgdatadir/site/$GUILE_EFFECTIVE_VERSION"
+ AC_SUBST([sitedir])
+ 
+-dnl Name of the `guile' program.
+-guile_program_name="`echo guile | "$SED" "$program_transform_name"`"
+-AC_SUBST([guile_program_name])
+-
+ # Additional SCM_I_GSC definitions are above.
+ AC_SUBST([SCM_I_GSC_GUILE_DEBUG])
+ AC_SUBST([SCM_I_GSC_ENABLE_DEPRECATED])
+@@ -1684,7 +1680,6 @@ GUILE_CONFIG_SCRIPT([benchmark-guile])
+ GUILE_CONFIG_SCRIPT([meta/guile])
+ GUILE_CONFIG_SCRIPT([meta/uninstalled-env])
+ GUILE_CONFIG_SCRIPT([meta/gdb-uninstalled-guile])
+-GUILE_CONFIG_SCRIPT([meta/guild])
+ GUILE_CONFIG_SCRIPT([libguile/guile-snarf])
+ GUILE_CONFIG_SCRIPT([libguile/guile-snarf-docs])
+ GUILE_CONFIG_SCRIPT([test-suite/standalone/test-use-srfi])
+diff --git a/meta/Makefile.am b/meta/Makefile.am
+index 2d3c462..102b797 100644
+--- a/meta/Makefile.am
++++ b/meta/Makefile.am
+@@ -2,7 +2,7 @@
+ ## Jim Blandy <jimb@red-bean.com> --- September 1997
+ ##
+ ##  	Copyright (C) 1998, 1999, 2001, 2006, 2007, 2008, 2009, 2011,
+-##        2012, 2013 Free Software Foundation, Inc.
++##        2012, 2013, 2014 Free Software Foundation, Inc.
+ ##
+ ##   This file is part of GUILE.
+ ##   
+@@ -54,4 +54,14 @@ guile-config: $(srcdir)/guile-config.in $(top_builddir)/config.status
+ 	mv guile-config.out guile-config
+ 	chmod +x guile-config
+ 
+-CLEANFILES = guile-config
++guild: $(srcdir)/guild.in $(top_builddir)/config.status
++	guile="@bindir@/`echo guile | $(SED) -e '$(program_transform_name)'`" ;	\
++	cat $(srcdir)/guild.in							\
++	| $(SED) -e "s,@installed_guile@,$$guile,g"				\
++	         -e "s,[@]PACKAGE_NAME[@],$(PACKAGE_NAME),g"			\
++	         -e "s,[@]PACKAGE_BUGREPORT[@],$(PACKAGE_BUGREPORT),g"		\
++	> "$@.out"
++	chmod +x "$@.out"
++	mv "$@.out" "$@"
++
++CLEANFILES = guile-config guild
+diff --git a/meta/guild.in b/meta/guild.in
+index d501a0d..a68e0ff 100755
+--- a/meta/guild.in
++++ b/meta/guild.in
+@@ -1,14 +1,12 @@
+ #!/bin/sh
+ # -*- scheme -*-
+-prefix="@prefix@"
+-exec_prefix="@exec_prefix@"
+-exec ${GUILE:-@bindir@/@guile_program_name@} $GUILE_FLAGS -e '(@@ (guild) main)' -s "$0" "$@"
++exec ${GUILE:-@installed_guile@} $GUILE_FLAGS -e '(@@ (guild) main)' -s "$0" "$@"
+ !#
+ 
+ ;;;; guild --- running scripts bundled with Guile
+ ;;;; Andy Wingo <wingo@pobox.com> --- April 2009
+ ;;;; 
+-;;;; 	Copyright (C) 2009, 2010, 2011, 2013 Free Software Foundation, Inc.
++;;;; 	Copyright (C) 2009, 2010, 2011, 2013, 2014 Free Software Foundation, Inc.
+ ;;;; 
+ ;;;; This library is free software; you can redistribute it and/or
+ ;;;; modify it under the terms of the GNU Lesser General Public
+-- 
+2.1.2
+

@@ -36,6 +36,8 @@ DEPENDENCIES="
         user/mail
         user/postmaster
         user/smmsp
+    run:
+        mail-filter/libmilter
     post:
         !mbox? ( mail-filter/procmail )
 "
@@ -109,9 +111,6 @@ sendmail_src_prepare() {
 
 sendmail_src_compile() {
     edo sh Build || die "compilation failed in main build script"
-    edo pushd libmilter >/dev/null
-    edo sh Build || die "libmilter compilation failed"
-    edo popd >/dev/null
 }
 
 sendmail_src_install() {
@@ -143,9 +142,6 @@ sendmail_src_install() {
         emake -j1 "${COMMON_SENDMAIL_INSTALL_PARAMS[@]}" force-install -C ${OBJDIR}/${dir}
     done
 
-    dodir /usr/include/libmilter
-    emake -j1 "${COMMON_SENDMAIL_INSTALL_PARAMS[@]}" install -C ${OBJDIR}/libmilter
-
     edo chown root:smmsp "${IMAGE}"/usr/sbin/sendmail
     edo chmod 2555 "${IMAGE}"/usr/sbin/sendmail
     edo chown smmsp:smmsp "${IMAGE}"/var/spool/clientmqueue
@@ -156,10 +152,7 @@ sendmail_src_install() {
     emagicdocs
     dodoc KNOWNBUGS doc/op/op.{me,ps}
     edo cp -pPR contrib "${IMAGE}"/usr/share/doc/${PNVR}/
-    dodir /usr/share/doc/${PNVR}/libmilter
-    edo cp -pPR libmilter/docs "${IMAGE}"/usr/share/doc/${PNVR}/libmilter/
 
-    newdoc libmilter/README README.libmilter
     newdoc libsm/README README.libsm
     newdoc sendmail/README README.sendmail
     newdoc sendmail/SECURITY SECURITY

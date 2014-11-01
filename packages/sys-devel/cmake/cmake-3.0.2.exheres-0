@@ -23,7 +23,7 @@ src_prepare() {
 }
 
 src_test() {
-    edo bin/ctest -V -E Qt4And5AutomocReverse
+    edo bin/ctest -V -E "Qt4And5AutomocReverse|CTestTestFailedSubmit"
 }
 
 src_install() {

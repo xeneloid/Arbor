@@ -34,6 +34,17 @@ DEFAULT_SRC_CONFIGURE_OPTIONS=(
 libpng_src_install() {
     default
 
+    # Also install libpng-config for targets other than the default
+    if ! multibuild_default_target C; then
+        dodir /usr/${CHOST}/bin
+        edo mv "${IMAGE}"/usr/bin/${PN}${MY_PV}-config "${IMAGE}"/usr/${CHOST}/bin
+
+        local binaries=( libpng-config libpng${MY_PV}-config )
+        for (( i = 0; i < ${#binaries[@]}; i++ )); do
+            alternatives_for _libpng ${SLOT} ${SLOT} /usr/${CHOST}/bin/${binaries[i]} /usr/${CHOST}/bin/${binaries[++i]}
+        done
+    fi
+
     # Remove symlinks and replace them with targets
     # <symlink to remove, alternative's source> <alternative's target>
     local libraries=(

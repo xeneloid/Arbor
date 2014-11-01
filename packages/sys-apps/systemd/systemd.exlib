@@ -224,6 +224,7 @@ systemd_src_prepare() {
     edo sed -i -e '/test-util/s:test-util:$(NULL):' Makefile.am
     edo sed -i -e '/test-bus-gvariant/s:test-bus-gvariant:$(NULL):' Makefile.am
     edo sed -i -e '/test-bus-cleanup/s:test-bus-cleanup:$(NULL):' Makefile.am
+    edo sed -i -e '/test-compress/s:test-compress[^ ]*:$(NULL):' Makefile.am
     edo sed -i -e '/test-rtnl/s:test-rtnl[^ ]*:$(NULL):' Makefile.am
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
     edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am

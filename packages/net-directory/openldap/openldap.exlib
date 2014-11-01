@@ -18,8 +18,11 @@ DOWNLOADS="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PNV}.tgz"
 
 LICENCES="OpenLDAP-2.8"
 SLOT="0"
-MYOPTIONS="baselayout debug
-    multibuild_c: 32 64"
+MYOPTIONS="
+    baselayout
+    debug
+    multibuild_c: 32 64
+"
 
 # Expensive tests
 RESTRICT="test"
@@ -35,12 +38,13 @@ ${HOMEPAGE}/software/man.cgi    [[ lang = en description = [ Manual pages ] ]]
 
 DEPENDENCIES="
     build+run:
+        user/ldap
+        group/ldap
         dev-libs/gmp:=[multibuild_c:*(-)?]
         dev-libs/icu[multibuild_c:*(-)?]
-        group/ldap
         net-libs/cyrus-sasl[>=2.1.21][multibuild_c:*(-)?]
-        sys-libs/db:=[multibuild_c:*(-)?]
-        user/ldap
+        sys-apps/util-linux[multibuild_c:*(-)?] [[ note = [ for libuuid ] ]]
+        sys-libs/db:=[<6.0.20][multibuild_c:*(-)?] [[ note = [ incompatible licence ] ]]
         virtual/libssl[multibuild_c:*(-)?]
         virtual/syslog
 "

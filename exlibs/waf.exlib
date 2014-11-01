@@ -24,9 +24,12 @@ ewaf() {
         ewaf_args+=( "${i}" )
     done
 
+    # don't pass nocache to newer waf, as the functionality it disables was removed
+    local wafver=$(edo ${WAF_EXECUTABLE} --version | cut -d' ' -f2)
+
     for i in \
         --verbose \
-        --nocache \
+        $(ever at_least 1.8 ${wafver} || echo "--nocache") \
         "${ewaf_args[@]}" ; do
         j=${i%%=*}
         has ${j#--} ${hates} || args+=( "${i}" )
