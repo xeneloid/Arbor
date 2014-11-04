@@ -1,0 +1,26 @@
+Title: isl/cloog updates
+Author: Heiko Becker <heirecka@exherbo.org>
+Content-Type: text/plain
+Posted: 2014-11-04
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: sys-devel/gcc[graphite]
+
+isl and cloog have been updated and slotted with alternatives light to allow
+safer updates in the future.
+
+If you have the 'graphite' option enabled for sys-devel/gcc, you need to be
+careful when updating in order to avoid breaking gcc.
+You have to install the corresponding versions of the newly slotted isl and
+cloog first regardless of a possibly newer version.
+
+For example if you have isl:0[=0.09] and cloog:0[=0.17.0] installed, make sure
+to install isl:0.9[=0.09-r1] and cloog:0.17[=0.17.0-r1] first:
+
+# cave resolve -1 -D isl:0 -D cloog:0 isl:0.9 cloog:0.17 gcc
+
+Afterwards you can freely update isl and cloog.
+
+Another possibility is to temporarily disable the 'graphite' option of at
+least one gcc slot and use that slot to update, fix linkage and re-enable
+'graphite'.
