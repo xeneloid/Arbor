@@ -21,11 +21,11 @@ DEPENDENCIES="
         doc? ( sys-apps/texinfo )
     build+run:
         app-arch/bzip2
-        dev-libs/libassuan[>=2.0.0]
-        dev-libs/libgcrypt[>=1.4.0]
-        dev-libs/libgpg-error[>=1.11]
-        dev-libs/libksba[>=1.0.7]
-        dev-libs/pth
+        dev-libs/libassuan[>=2.1.0]
+        dev-libs/libgcrypt[>=1.6.2]
+        dev-libs/libgpg-error[>=1.15]
+        dev-libs/libksba[>=1.2.0]
+        dev-libs/npth
         net-misc/curl[>=7.10]
         sys-libs/readline
         smartcard? ( dev-libs/libusb:0.1 )
@@ -64,9 +64,9 @@ src_compile() {
 
 src_test() {
     # Allow the tests to run its own instance of gpg-agent
-    esandbox allow_net 'unix:/tmp/gpg-*/S.gpg-agent'
+    esandbox allow_net    "unix:${WORK}/tests/openpgp/S.gpg-agent"
     default
-    esandbox allow_net 'unix:/tmp/gpg-*/S.gpg-agent'
+    esandbox disallow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
 }
 
 src_install() {
