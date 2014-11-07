@@ -10,8 +10,8 @@ machines do, but can also execute code at arbitrary points in the
 recognition of a regular language. Code embedding is done using inline
 operators that do not disrupt the regular language syntax.
 "
-HOMEPAGE="http://www.complang.org/ragel/"
-DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
+HOMEPAGE="http://www.colm.net/ragel/"
+DOWNLOADS="http://www.colm.net/wp-content/uploads/2014/10/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
