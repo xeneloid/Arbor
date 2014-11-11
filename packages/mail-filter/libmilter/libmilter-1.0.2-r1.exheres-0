@@ -35,6 +35,7 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/sharedlib.m4.patch"
     "${FILES}/${PNV}-linkage.patch"
+    "${FILES}/${PNV}-install-fail.patch"
 )
 
 WORK=${WORKBASE}/${SENDMAIL_PNV}
