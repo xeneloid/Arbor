@@ -12,6 +12,8 @@ PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
+    build:
+        sys-apps/help2man
     build+run:
         sys-devel/gnuconfig
 "
