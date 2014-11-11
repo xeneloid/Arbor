@@ -16,8 +16,9 @@ MYOPTIONS="
     ]]
 "
 
+# For equivalent pkgconf version: PKG_PKGCONFIG_VERSION_EQUIV in pkg.h
 DEPENDENCIES="
-    providers:pkg-config? ( dev-util/pkg-config[>=0.24] )
+    providers:pkg-config? ( dev-util/pkg-config[>=${PV}] )
     providers:pkgconf? ( dev-util/pkgconf[>=0.8.9] )
 "
 
