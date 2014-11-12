@@ -22,7 +22,7 @@ A foreign function interface is the popular name for the interface that allows c
 The libffi library really only provides the lowest, machine dependent layer of a fully featured foreign function interface.
 A layer must exist above libffi that handles type conversions for values passed between the two languages.
 "
-HOMEPAGE="http://sourceware.org/${PN}/"
+HOMEPAGE="https://sourceware.org/${PN}"
 DOWNLOADS="mirror://sourceware/${PN}/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
@@ -39,12 +39,6 @@ DEPENDENCIES="
     test:
         dev-util/dejagnu
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/cbc5a3c0200aa6c2cf8d6798d69a21501557c83f.patch
-    "${FILES}"/978c9540154d320525488db1b7049277122f736d.patch
-    "${FILES}"/ad0d1d239afc7ad09203847793dcc020856d1035.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
