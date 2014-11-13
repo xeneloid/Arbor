@@ -1,13 +1,24 @@
-# Copyright 2012 Benedikt Morbach <benedikt.morbach@googlemail.com>
+# Copyright 2012, 2014 Benedikt Morbach <benedikt.morbach@googlemail.com>
 # Distributed under the terms of the GNU General Public License v2
 
+# Exlib for projects hosted on github
+# 
+# Many of the exparams can be set using variables as well.
+# However, you should pass them explicitely whenever possible!
+
+
+# Name of the repository on github
 myexparam pn=${MY_PN:-${PN}}
+# Name of the user/project that owns the repository on github
 myexparam user=$(exparam pn)
 
-myexparam rev=${GITHUB_REVISION}
+# Name of a tag. Use this if you are packaging a release!
+# You often want something like  tag=v${PV}
 myexparam tag=${GITHUB_TAG:-${MY_PV:-${PV}}}
+# Short git revision. Use this if you want to package an unreleased snapshot
+myexparam rev=${GITHUB_REVISION}
 
-# branch can only be used for scm versions
+# Name of a git branch. Can only be used for scm versions
 myexparam branch=${GITHUB_BRANCH}
 
 # For manually generated tarballs that can be uploaded.
