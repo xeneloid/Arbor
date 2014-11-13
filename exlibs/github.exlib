@@ -4,7 +4,7 @@
 # Exlib for projects hosted on github
 # 
 # Many of the exparams can be set using variables as well.
-# However, you should pass them explicitely whenever possible!
+# However, you should pass them explicitly whenever possible!
 
 
 # Name of the repository on github
