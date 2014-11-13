@@ -10,7 +10,7 @@ It is similar to pkg-config, but was written from scratch in the summer of 2011 
 pkg-config.
 "
 HOMEPAGE="https://github.com/pkgconf/pkgconf"
-DOWNLOADS="http://tortois.es/~nenolod/distfiles/${PNV}.tar.bz2"
+DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.bz2"
 
 LICENCES="as-is"
 SLOT="0"
