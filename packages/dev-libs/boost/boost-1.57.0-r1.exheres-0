@@ -21,6 +21,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="debug doc"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/06ccdfee76fe487a141b95848d1c866890f15d88.patch
+)
+
 DEPENDENCIES="
     build+run:
         dev-lang/python:=
