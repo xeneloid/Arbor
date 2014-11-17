@@ -12,7 +12,7 @@ myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 HOMEPAGE="http://launchpad.net/$(exparam project)/"
 WORK="${WORKBASE}/$(exparam pnv)"
 
-if !ever is_scm; then
+if ! ever is_scm; then
     DOWNLOADS="${HOMEPAGE}$(exparam branch)/$(exparam pv)/+download/$(exparam pnv).$(exparam suffix)"
 fi
 
