@@ -37,6 +37,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-2.9.2-fix_python_paths.patch
+    "${FILES}"/${PN}-2.9.2-catalog-revert.patch
 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( README.tests TODO_SCHEMAS )
 
