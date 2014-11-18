@@ -23,7 +23,10 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static --without-lcms )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'lcms lcms2' )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( README.examples doc/{${PN}.txt,doc.readme} )
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-stdio.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-stdio.patch
+    "${FILES}"/${PNV}-jpeg-9a.patch
+)
 
 src_prepare() {
     default
