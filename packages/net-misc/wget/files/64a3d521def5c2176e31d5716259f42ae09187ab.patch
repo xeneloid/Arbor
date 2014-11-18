@@ -1,0 +1,21 @@
+From 64a3d521def5c2176e31d5716259f42ae09187ab Mon Sep 17 00:00:00 2001
+From: Tim Rühsen <tim.ruehsen@gmx.de>
+Date: Thu, 30 Oct 2014 14:41:07 +0000
+Subject: fix skip exit code 77
+
+---
+diff --git a/tests/WgetFeature.pm b/tests/WgetFeature.pm
+index 0762314..118e79c 100644
+--- a/tests/WgetFeature.pm
++++ b/tests/WgetFeature.pm
+@@ -22,7 +22,7 @@ sub import
+ 
+     unless ($have_features{$feature}) {
+         print $skip_messages{$feature}, "\n";
+-        exit 2; # skip
++        exit 77; # skip
+     }
+ }
+ 
+--
+cgit v0.9.0.2

@@ -15,10 +15,6 @@ MYOPTIONS="
     idn  [[ description = [ Enable support for internationalized domain names ] ]]
 "
 
-# restrict the tests until an upstream patch is available
-# https://savannah.gnu.org/bugs/index.php?43486
-RESTRICT="test"
-
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
@@ -38,6 +34,10 @@ DEPENDENCIES="
         dev-perl/HTTP-Daemon
         dev-perl/IO-Socket-SSL
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/64a3d521def5c2176e31d5716259f42ae09187ab.patch
+)
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
 
