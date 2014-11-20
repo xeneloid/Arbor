@@ -5,3 +5,8 @@ require cups
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-2.0.1-fix-compilation-without-avahi.patch
+    "${FILES}"/${PN}-2.0.1-xinetd-installation-fix.patch
+)
+
