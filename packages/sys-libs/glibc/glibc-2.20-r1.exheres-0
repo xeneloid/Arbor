@@ -10,6 +10,15 @@ MYOPTIONS+="
     ( linguas: ia sl uk )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-Handle-zero-prefix-length-in-getifaddrs-BZ-17371.patch
+    "${FILES}"/${PNV}-Revert-to-defining-__extern_inline-only-for-gcc-4.3-.patch
+    "${FILES}"/${PNV}-Fix-memory-leak-in-libio-wfileops.c-do_ftell_wide-BZ.patch
+    "${FILES}"/${PNV}-Fix-memory-leak-in-error-path-of-do_ftell_wide-BZ-17.patch
+    "${FILES}"/${PNV}-BZ-17460-Fix-buffer-overrun-in-nscd-help.patch
+    "${FILES}"/${PNV}-CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch
+)
+
 src_prepare() {
     edo cd "${ECONF_SOURCE}"
 
