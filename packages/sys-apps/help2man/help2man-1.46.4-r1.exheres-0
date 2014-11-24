@@ -16,10 +16,10 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        dev-perl/Locale-gettext
         sys-devel/gettext
     build+run:
         dev-lang/perl:*[>=5.8]
+        dev-perl/Locale-gettext
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
