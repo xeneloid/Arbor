@@ -24,8 +24,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-fallback-curses
     --enable-pinentry-curses
     --enable-pinentry-tty
-    --disable-pinentry-gtk
-    --disable-pinentry-qt
     --without-x
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
