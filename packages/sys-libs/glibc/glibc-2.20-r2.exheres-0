@@ -17,6 +17,7 @@ DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PNV}-Fix-memory-leak-in-error-path-of-do_ftell_wide-BZ-17.patch
     "${FILES}"/${PNV}-BZ-17460-Fix-buffer-overrun-in-nscd-help.patch
     "${FILES}"/${PNV}-CVE-2014-7817-wordexp-fails-to-honour-WRDE_NOCMD.patch
+    "${FILES}"/${PNV}-Make-__extern_always_inline-usable-on-clang-again.patch
 )
 
 src_prepare() {
