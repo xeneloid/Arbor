@@ -1,0 +1,27 @@
+# Copyright 2014, Kylie McClain <somasissounds@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="git://git.kitenet.net/moreutils.git"
+SCM_TAG="${PV}"
+require scm-git
+
+SUMMARY="A growing collection of unix tools no one thought to write of long ago"
+SLOT="0"
+LICENCES="GPL-2"
+
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build:
+        app-text/docbook-xsl-stylesheets
+        dev-libs/libxml2
+        dev-libs/libxslt
+    build+run:
+        dev-lang/perl
+"
+
+src_prepare() {
+    # the Makefile references an incorrect path for manpages/docbook.xsl
+    # it also tries to strip symbols with `install`
+    sed -i 's#/usr/share/xml/.*docbook.xsl#/usr/share/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl#;s/install -s/install/' Makefile
+}
