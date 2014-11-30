@@ -23,7 +23,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         app-arch/xz[multibuild_c:*(-)?]
-        media-libs/jpeg[multibuild_c:*(-)?]
+        media-libs/jpeg:=[multibuild_c:*(-)?]
         sys-libs/zlib[multibuild_c:*(-)?]
         opengl? ( x11-dri/freeglut
                   x11-dri/mesa[multibuild_c:*(-)?]

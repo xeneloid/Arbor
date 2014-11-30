@@ -15,7 +15,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        media-libs/jpeg[multibuild_c:*(-)?]
+        media-libs/jpeg:=[multibuild_c:*(-)?]
         sys-libs/zlib[multibuild_c:*(-)?]
         lcms? ( media-libs/lcms2[multibuild_c:*(-)?] )
 "

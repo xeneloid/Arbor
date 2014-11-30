@@ -86,7 +86,7 @@ DEPENDENCIES="
         php_extensions:ftp? ( virtual/libssl )
         php_extensions:gd? (
             media-libs/freetype:2
-            media-libs/jpeg[>=6b]
+            media-libs/jpeg:=[>=6b]
             media-libs/libpng:=[>=1.2.35]
             media-libs/libvpx
             media-libs/t1lib[>=5.1.2]

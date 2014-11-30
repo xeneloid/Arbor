@@ -18,7 +18,7 @@ MYOPTIONS="fontconfig truetype xpm
 DEPENDENCIES="
     build+run:
         fontconfig? ( media-libs/fontconfig )
-        media-libs/jpeg
+        media-libs/jpeg:=
         media-libs/libpng:=
         truetype? ( media-libs/freetype:2 )
         xpm? (

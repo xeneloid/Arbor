@@ -53,7 +53,7 @@ DEPENDENCIES="
         sys-libs/ncurses
         alsa? ( sys-sound/alsa-lib[>=1.0.0] )
         X? (
-            media-libs/jpeg
+            media-libs/jpeg:=
             media-libs/libpng:=
             x11-data/xbitmaps
             x11-libs/libICE

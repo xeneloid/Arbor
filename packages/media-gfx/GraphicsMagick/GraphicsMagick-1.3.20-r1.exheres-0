@@ -47,7 +47,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         dev-libs/libxml2:2.0[>=2.7.8]
-        media-libs/jpeg[>=6b]
+        media-libs/jpeg:=[>=6b]
         media-libs/libpng:=
         X?  (
             x11-libs/libSM

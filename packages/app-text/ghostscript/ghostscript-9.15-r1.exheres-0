@@ -32,7 +32,7 @@ DEPENDENCIES="
         media-libs/fontconfig[multibuild_c:*(-)?]
         media-libs/freetype:2[>=2.4.2][multibuild_c:*(-)?]
         media-libs/jbig2dec
-        media-libs/jpeg[multibuild_c:*(-)?]
+        media-libs/jpeg:=[multibuild_c:*(-)?]
         media-libs/lcms2[>=2.5][multibuild_c:*(-)?]
         media-libs/libpng:=[>=1.5.7][multibuild_c:*(-)?]
         media-libs/tiff[multibuild_c:*(-)?]

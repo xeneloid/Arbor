@@ -34,7 +34,7 @@ DEPENDENCIES="
         dev-libs/glib:2[>=2.30.2][multibuild_c:*(-)?]
         media-libs/fontconfig[>=2.0.0][multibuild_c:*(-)?]
         media-libs/freetype:2[multibuild_c:*(-)?]
-        media-libs/jpeg[multibuild_c:*(-)?]
+        media-libs/jpeg:=[multibuild_c:*(-)?]
         media-libs/lcms2[multibuild_c:*(-)?]
         media-libs/libpng:=[multibuild_c:*(-)?]
         media-libs/tiff[multibuild_c:*(-)?]

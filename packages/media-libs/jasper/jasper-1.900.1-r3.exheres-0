@@ -20,7 +20,7 @@ DEPENDENCIES="
     build:
         app-arch/unzip
     build+run:
-        media-libs/jpeg[multibuild_c:*(-)?]
+        media-libs/jpeg:=[multibuild_c:*(-)?]
         opengl? (
             x11-dri/freeglut
             x11-dri/mesa[multibuild_c:*(-)?]
