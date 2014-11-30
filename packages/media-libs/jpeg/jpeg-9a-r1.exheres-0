@@ -5,6 +5,8 @@ require jpeg
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+SLOT="9"
+
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/jpeg9-boolean.patch
 )
