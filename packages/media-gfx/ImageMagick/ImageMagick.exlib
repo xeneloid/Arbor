@@ -114,6 +114,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-dps
     --without-included-ltdl
     --without-jbig
+    --without-jemalloc
     --without-lcms
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'hdri' 'openmp' )
