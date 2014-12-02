@@ -14,10 +14,10 @@ PLATFORMS="~amd64"
 DEPENDENCIES="
     build:
         app-text/docbook-xsl-stylesheets
-        dev-libs/libxml2
+        dev-libs/libxml2:*
         dev-libs/libxslt
     build+run:
-        dev-lang/perl
+        dev-lang/perl:=
 "
 
 src_prepare() {
