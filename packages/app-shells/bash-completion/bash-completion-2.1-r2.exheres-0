@@ -11,3 +11,4 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 RESTRICT="test"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/0001-bash_completion-fix-bad-array-subscript.patch" )
