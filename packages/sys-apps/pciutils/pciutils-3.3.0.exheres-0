@@ -3,7 +3,7 @@
 # Based in part upon 'pciutils-2.2.9.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-SUMMARY="A collection of programs for inspecting and manipulating configuration of PCI devices"
+SUMMARY="Collection of programs for inspecting and manipulating configuration of PCI devices"
 HOMEPAGE="http://mj.ucw.cz/pciutils.shtml"
 DOWNLOADS="ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/${PNV}.tar.gz"
 
@@ -19,8 +19,9 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-apps/kmod
-    run:
-        sys-apps/pciutils-data
+        sys-apps/systemd[>=196] [[ note = [ for udev's hwdb support ] ]]
+    suggestion:
+        sys-apps/pciutils-data [[ description = [ Up-to-date pci.ids to complement udev's hwdb ] ]]
 "
 
 DEFAULT_SRC_INSTALL_EXCLUDE=( "README.Windows" )
@@ -38,6 +39,7 @@ src_compile() {
         IDSDIR=/usr/share/misc
         OPT="${CFLAGS} -fPIC"
         RANLIB="${RANLIB}"
+        HWDB="yes"
         LIBKMOD="yes"
         ZLIB="no"
     )
