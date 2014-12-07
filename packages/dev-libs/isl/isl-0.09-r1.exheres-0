@@ -7,7 +7,7 @@ require isl
 LICENCES="LGPL-2.1"
 # Change the SLOT for a version bump if it breaks ABI
 SLOT="0.9"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 # automagic for the docs: perl, pdflatex, pod2html
