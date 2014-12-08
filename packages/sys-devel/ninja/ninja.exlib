@@ -7,7 +7,7 @@ require github [ user="martine" ] elisp-optional [ source_directory=misc ] \
 
 export_exlib_phases src_compile src_test src_install
 
-SUMMARY="A small build system with a focus on speed"
+SUMMARY="Small build system with a focus on speed"
 
 LICENCES="Apache-2.0"
 SLOT="0"
