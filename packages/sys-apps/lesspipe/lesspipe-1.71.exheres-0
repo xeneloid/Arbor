@@ -46,7 +46,7 @@ DEPENDENCIES="
 
         sys-apps/groff           [[ description = [ Support for *roff documents of various kinds ] ]]
         sys-libs/glibc           [[ description = [ Support for some character encoding conversions on viewed files ] ]]
-        app-arch/rpm             [[ description = [ Support for RPM packages, together with app-arch/cpio ] ]] 
+        app-arch/rpm             [[ description = [ Support for RPM packages, together with app-arch/cpio ] ]]
 
         ( base/antiword app-doc/catdoc ) [[
             *description = [ Support for Microsoft Word documents ]

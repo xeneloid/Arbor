@@ -501,7 +501,7 @@ gcc_src_install() {
         # TODO(compnerd) figure out why this hack is needed
         cd "${WORK}"
         edo emake -j 1 DESTDIR="${IMAGE}" install
-    else 
+    else
         default
     fi
 
