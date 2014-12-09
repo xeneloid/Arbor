@@ -42,6 +42,8 @@ DEPENDENCIES="
         sys-apps/systemd
         sys-devel/gettext [[ note = [ required for grub-mkconfig, grep gettext in /etc/grub.d ] ]]
         !sys-boot/grub-static [[ description = [ /sbin/grub-install collides ] resolution = manual ]]
+    run:
+        efi? ( sys-boot/efibootmgr )
     suggestion:
         sys-boot/os-prober [[
             description = [ Ability to add other OSs automatically to grub.cfg via grub-mkconf ]
