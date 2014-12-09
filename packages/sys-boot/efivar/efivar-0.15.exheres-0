@@ -21,4 +21,10 @@ DEPENDENCIES="
     build+run:
         dev-libs/popt
 "
+src_prepare () {
+    default
+
+    edo sed  -e "/libdir/s:lib64:${LIBDIR}:" \
+        -i Make.defaults
+}
 
