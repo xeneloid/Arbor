@@ -18,6 +18,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
+        virtual/pkg-config[>=0.9.0]
     build+run:
         dev-libs/pcre
         sys-apps/util-linux [[ note = [ for libuuid ] ]]
@@ -35,20 +36,17 @@ DEPENDENCIES="
         dev-perl/IO-Socket-SSL
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/64a3d521def5c2176e31d5716259f42ae09187ab.patch
-)
-
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
 
 src_configure() {
     local myconf=(
         --enable-ipv6
         --enable-nls
-        $(option_enable idn iri)
+        --disable-assert
         --with-ssl=$(optionv gnutls || echo openssl)
         --with-zlib
         --without-libpsl
+        $(option_enable idn iri)
     )
     econf ${myconf[@]}
 }
