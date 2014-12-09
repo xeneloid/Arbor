@@ -5,8 +5,3 @@ require efibootmgr
 
 PLATFORMS="~amd64"
 
-DEPENDENCIES="
-    build+run:
-        sys-boot/efivar
-"
-

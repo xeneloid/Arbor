@@ -1,25 +1,30 @@
 # Copyright 2012 Quentin "Sardem FF7" Glidic <sardemff7+exherbo@sardemff7.net>
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases src_install
+export_exlib_phases src_prepare src_install
 
-require github [ user=vathpela tag=${PV} ]
+require github [ user=vathpela release=${PNV} suffix=tar.bz2 ]
 
-SUMMARY="A Linux user-space application to modify the Intel Extensible Firmware Interface (EFI) Boot Manager"
+SUMMARY="Linux user-space application to modify the Intel Extensible Firmware Interface (EFI) Boot Manager"
 
 LICENCES="GPL-2"
 SLOT="0"
-
 MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
         sys-apps/pciutils
+        sys-boot/efivar
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     EXTRA_CFLAGS="${CFLAGS}"
 )
+
+efibootmgr_src_prepare() {
+    edo sed -e s/-Werror// \
+            -i Makefile
+}
 
 efibootmgr_src_install() {
     dosbin src/${PN}/${PN}
