@@ -25,7 +25,7 @@ DEPENDENCIES="
     build+run:
         dev-lang/python:=
         dev-libs/expat
-        dev-libs/icu
+        dev-libs/icu:=
 "
 
 global_conf=(

@@ -1,5 +1,4 @@
 # Copyright 2008, 2009, 2010, 2012 Ingmar Vanhassel <ingmar@exherbo.org>
-# Copyright 2013 Wouter van Kesteren <woutershep@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV=${PN}_${PV//./_}
@@ -9,9 +8,9 @@ require sourceforge cmake [ api=2 ]
 
 SUMMARY="Boost Libraries for C++"
 HOMEPAGE="http://www.boost.org/"
-# From git://github.com/pocb/boost.git, "git archive --prefix=boost_1_53_0/ --verbose origin/cmake-release > boost_1_53_0.tar"
-DOWNLOADS="http://dev.exherbo.org/~philantrop/distfiles/${MY_PNV}.tar.xz"
-REMOTE_IDS+=" freecode:${PN}"
+# From git://github.com/pocb/boost.git, "git format-patch -1 --no-binary origin/cmake-1.50.0"
+DOWNLOADS+=" http://dev.exherbo.org/~ingmar/distfiles/boost/${PNV}-cmake.patch"
+REMOTE_IDS="freecode:${PN}"
 
 UPSTREAM_CHANGELOG="${HOMEPAGE}/users/history/version_${PV//./_}.html [[ lang = en ]]"
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/libs/${PV//./_} [[ lang = en ]]"
@@ -24,11 +23,6 @@ MYOPTIONS="debug doc"
 # All tests are slow, run only slow tests
 RESTRICT="test"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/formatter.int64.patch
-        "${FILES}"/${PNV}-fix-warnings-in-boost-spirit.patch
-)
-
 DEPENDENCIES="
     build:
         doc? (
@@ -36,24 +30,26 @@ DEPENDENCIES="
             app-doc/doxygen     [[ note = [ tools/build/CMake/BoostDocs.cmake ] ]]
             dev-libs/libxslt    [[ note = [ tools/build/CMake/BoostDocs.cmake ] ]]
         )   [[ note = [ tools/build/CMake/BoostDocs.cmake ] ]]
-    built-against:
-        sys-devel/cmake[>=2.8.6] [[ note = [ Contains boost cmake files ] ]]
     build+run:
         dev-lang/python:=
         dev-libs/expat
-        dev-libs/icu
+        dev-libs/icu:=
+    run:
+        sys-devel/cmake[>=2.8.6] [[ note = [ Contains boost cmake files ] ]]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FETCHEDDIR}"/${PNV}-cmake.patch
+)
 
 src_configure() {
     local conf=(
-        -DCMAKE_CXX_FLAGS_RELEASE:STRING="-DNDEBUG" # Avoid cmake's default -O3
         -DENABLE_MULTI_THREADED:BOOL=TRUE
-        -DENABLE_SHARED:BOOL=TRUE
         -DENABLE_SINGLE_THREADED:BOOL=TRUE
+        -DENABLE_SHARED:BOOL=TRUE
         -DENABLE_STATIC:BOOL=FALSE
         -DINSTALL_VERSIONED:BOOL=FALSE
-        # want to enable MPI? See https://svn.boost.org/trac/boost/ticket/4657
-        -DCMAKE_DISABLE_FIND_PACKAGE_MPI:BOOL=TRUE # Avoid automagic dependency
+        -DMPI_FOUND:BOOL=FALSE # Avoid automagic dependency
         -DWITH_VALGRIND:BOOL=FALSE # Run tests under valgrind
         $(cmake_enable DEBUG)
         $(cmake_option doc DOCUMENTATION)
