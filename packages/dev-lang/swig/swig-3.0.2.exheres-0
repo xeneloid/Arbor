@@ -16,7 +16,13 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/Release/RELEASENOTES [[ lang = en ]]"
 LICENCES="GPL-3 as-is"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="doc lua perl python ruby"
+MYOPTIONS="
+    doc
+    lua
+    perl
+    python
+    ruby
+"
 
 # TODO: python3 has an extra switch
 DEPENDENCIES="
@@ -28,13 +34,14 @@ DEPENDENCIES="
         ruby? ( dev-lang/ruby:= )
     test-expensive:
         dev-libs/boost[>=1.20.0]
+        perl? ( dev-perl/Test-Simple )
 "
 
 RESTRICT="test"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-pcre
-    --without-{allegrocl,chicken,clisp,csharp,d,gcj,go,guile,java,mono,mzscheme,ocaml,octave,php,pike,python3,r,tcl}
+    --without-{allegrocl,chicken,clisp,csharp,d,gcj,go,guile,java,javascript,mono,mzscheme,ocaml,octave,php,pike,python3,r,tcl}
     --without-doc
     # Breaks tests
     --disable-ccache
