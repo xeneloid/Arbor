@@ -73,7 +73,7 @@ jpeg_pkg_postinst() {
         local files=(
             "${ROOT}"/usr/bin/{{c,d}jpeg,jpegtran,{rd,wr}jpgcom}
             "${ROOT}"/usr/include/{jconfig,jerror,jmorecfg,jpeglib}.h
-            "${ROOT}"/usr/lib{32,64}/libjpeg.{a,la}
+            "${ROOT}"/usr/lib{,32,64}/libjpeg.{a,la}
             "${ROOT}"/usr/share/man/man1/{{c,d}jpeg,jpegtran,{rd,wr}jpgcom}.1
         )
         for f in "${files[@]}" ; do
