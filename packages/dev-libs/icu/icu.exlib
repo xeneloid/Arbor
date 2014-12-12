@@ -92,7 +92,7 @@ icu_pkg_postinst() {
             "${ROOT}"/usr/bin/{derb,genbrk,gencfu,gencnval,gendict,genrb,icu-config,icuinfo,makeconv,pkgdata,uconv}
             "${ROOT}"/usr/sbin/{genccode,gencmn,gennorm2,gensprep,icupkg}
             "${ROOT}"/usr/include/{layout,unicode}
-            "${ROOT}"/usr/lib{32,64}/pkgconfig/icu-{i18n,io,le,lx,uc}.pc
+            "${ROOT}"/usr/lib{,32,64}/pkgconfig/icu-{i18n,io,le,lx,uc}.pc
             "${ROOT}"/usr/share/man/man1/{derb,genbrk,gencfu,gencnval,gendict,genrb,icu-config,makeconv,pkgdata,uconv}.1
             "${ROOT}"/usr/share/man/man8/{genccode,gencmn,gensprep,icupkg}.8
         )
