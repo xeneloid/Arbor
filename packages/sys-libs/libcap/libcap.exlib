@@ -1,4 +1,4 @@
-# Copyright 2009-2013 Wulf C. Krueger
+# Copyright 2009-2014 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'libcap-2.08-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
@@ -34,6 +34,8 @@ libcap_src_unpack() {
 }
 
 prepare_one_multibuild() {
+    default
+
     edo sed -f - -i Make.Rules <<'EOF'
     /^\(AR\|CC\|CFLAGS\|LDFLAGS\|RANLIB\) :=/{
         s|:=|?=|;
