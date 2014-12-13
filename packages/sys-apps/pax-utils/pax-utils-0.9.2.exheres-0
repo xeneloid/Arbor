@@ -21,9 +21,3 @@ src_compile() {
     emake CC="${CC}" USE_CAP=$(option caps && echo yes || echo no)
 }
 
-src_install() {
-    default
-
-    edo rm -r "${IMAGE}"/usr/share/doc/${PN}
-}
-
