@@ -1,0 +1,9 @@
+# Copyright 2012 Paul Seidler
+# Distributed under the terms of the GNU General Public License v2
+
+require cloog
+
+SLOT="0.17"
+
+PLATFORMS="~amd64 ~x86"
+

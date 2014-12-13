@@ -7,7 +7,7 @@ WORK="${WORKBASE}/${MY_PNV}"
 require llvm
 
 # The patches below are for the R600 backend needed for mesa[>=9.1][radeon]
-# fedora, debian, ubuntu, linux from scratch use these too. more info/source: 
+# fedora, debian, ubuntu, linux from scratch use these too. more info/source:
 # http://lists.freedesktop.org/archives/mesa-dev/2013-March/035561.html
 
 # This work HAS been merged upstream: https://github.com/earl/llvm-mirror/commit/8abca2e1fee5dfbcab1ee0694b385c2f753a2eac

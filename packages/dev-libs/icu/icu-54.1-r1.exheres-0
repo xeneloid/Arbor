@@ -1,0 +1,9 @@
+# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require icu
+
+SLOT="54.1"
+
+PLATFORMS="~amd64 ~x86"
+

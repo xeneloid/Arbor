@@ -22,7 +22,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-pipealloc.patch"
     "${FILES}/${PN}-maildir.patch"
-    -p0 "${FILES}/${PN}-comsat-segfault.patch" 
+    -p0 "${FILES}/${PN}-comsat-segfault.patch"
     "${FILES}/${PN}-maxprocs-fix.patch"
     -p1 "${FILES}/${PN}-glibc-2.10.1.patch"
 )

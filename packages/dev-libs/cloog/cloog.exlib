@@ -1,0 +1,82 @@
+# Copyright 2012 Paul Seidler
+# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives
+
+export_exlib_phases src_install pkg_postinst
+
+SUMMARY="isl based loop generator for scanning polyhedra"
+HOMEPAGE="http://www.${PN}.org/"
+DOWNLOADS="http://www.bastoul.net/${PN}/pages/download/${PNV}.tar.gz"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+MYOPTIONS=""
+
+# automagic doc dependency: texi2dvi
+DEPENDENCIES="
+    build+run:
+        dev-libs/gmp:=
+        !dev-libs/cloog:0 [[
+            description = [ Uninstall dev-libs/cloog:0 after switching to the slotted version ]
+            resolution = uninstall-blocked-after
+        ]]
+        !dev-libs/cloog-ppl [[ description = [ File collision ] ]]
+"
+
+if ever at_least 0.18.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/isl:=[>=0.11]
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/isl:=[<0.11]
+    "
+fi
+
+# with psl the tests fail
+DEFAULT_SRC_CONFIGURE_PARAMS=( --with-isl=system --with-gmp=system --with-osl=no )
+
+cloog_src_install() {
+    default
+
+    # Move headers and pkg-config files to a slot compatibel location,...
+    edo mv "${IMAGE}"/usr/include/{cloog,cloog-${SLOT}}
+    edo mv "${IMAGE}"/usr/${LIBDIR}/pkgconfig/{cloog-isl,cloog-isl-${SLOT}}.pc
+    #edo mv "${IMAGE}"/usr/${LIBDIR}/cloog-isl/{cloog-isl-config,cloog-isl-${SLOT}-config}.cmake
+
+    # ... also prepare to rename the libraries ...
+    local libraries=(
+        libcloog-isl.a  libcloog-isl-${SLOT}.a
+        libcloog-isl.la libcloog-isl-${SLOT}.la
+        libcloog-isl.so libcloog-isl-${SLOT}.so
+    )
+
+    # ... and use alternatives light to get appropriate symlinks
+    alternatives=( _cloog ${SLOT} ${SLOT}
+        /usr/include/cloog cloog-${SLOT}
+        /usr/${LIBDIR}/pkgconfig/cloog-isl.pc cloog-isl-${SLOT}.pc
+    )
+
+    for (( i = 0; i < ${#libraries[@]}; i++ )); do
+        edo mv "${IMAGE}"/usr/${LIBDIR}/${libraries[i]} "${IMAGE}"/usr/${LIBDIR}/${libraries[i+1]}
+        alternatives+=( /usr/${LIBDIR}/${libraries[i]} ${libraries[++i]} )
+    done
+
+    alternatives_for "${alternatives[@]}"
+}
+
+cloog_pkg_postinst() {
+    # We can't force alternatives to overwrite files with symlinks
+    if has_version --root "dev-libs/cloog:0"; then
+        for f in "${ROOT}"/usr/{include/cloog,${LIBDIR}/{libcloog-isl.{,l}a,pkgconfig/cloog-isl.pc}}; do
+            [[ -e ${f} && ! -L ${f} ]] && nonfatal edo rm -r "${f}";
+        done
+    fi
+
+    alternatives_pkg_postinst
+}
+

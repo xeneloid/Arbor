@@ -1,0 +1,58 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require gnu [ suffix=xz ]
+
+SUMMARY="Wget is a package for retrieving files using HTTP, HTTPS and FTP"
+
+REMOTE_IDS="freecode:${PN}"
+
+LICENCES="GPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="
+    gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
+    idn  [[ description = [ Enable support for internationalized domain names ] ]]
+"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext[>=0.17]
+        virtual/pkg-config[>=0.9.0]
+    build+run:
+        dev-libs/pcre
+        sys-apps/util-linux [[ note = [ for libuuid ] ]]
+        sys-libs/zlib
+       !gnutls? ( virtual/libssl )
+        gnutls? (
+            dev-libs/gmp:=
+            dev-libs/gnutls
+            dev-libs/libtasn1
+            dev-libs/nettle
+        )
+        idn? ( net-dns/libidn )
+    test:
+        dev-perl/HTTP-Daemon
+        dev-perl/IO-Socket-SSL
+"
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
+
+src_configure() {
+    local myconf=(
+        --enable-ipv6
+        --enable-nls
+        --disable-assert
+        --with-ssl=$(optionv gnutls || echo openssl)
+        --with-zlib
+        --without-libpsl
+        $(option_enable idn iri)
+    )
+    econf ${myconf[@]}
+}
+
+src_test() {
+    unset http_proxy https_proxy ftp_proxy
+    default
+}
+

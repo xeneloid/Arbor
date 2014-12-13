@@ -16,40 +16,45 @@ SUMMARY="An object-oriented scripting language"
 DESCRIPTION="A dynamic, open source programming language with a focus on
 simplicity and productivity. It has an elegant syntax that is natural to
 read and easy to write."
-HOMEPAGE="http://www.ruby-lang.org/"
+HOMEPAGE="http://www.ruby-lang.org"
 DOWNLOADS="mirror://ruby/${SLOT}/${MY_PNV}.tar.bz2"
 
 MYOPTIONS="
-    berkdb gdbm ncurses readline tk
-    doc examples
+    berkdb
+    doc
+    examples
+    gdbm
+    ncurses
+    readline
+    tk
 "
 
 tag_number=$(ever replace_all '_' ${PV})
 UPSTREAM_CHANGELOG="http://svn.ruby-lang.org/repos/ruby/tags/v${tag_number/p}/ChangeLog"
-UPSTREAM_DOCUMENTATION="${HOMEPAGE}en/documentation/"
+UPSTREAM_DOCUMENTATION="${HOMEPAGE}/en/documentation [[ lang = en ]]"
 
 DEPENDENCIES="
     build:
+        virtual/pkg-config
         doc? (
             app-doc/doxygen
             media-gfx/graphviz
         )
-        virtual/pkg-config
     build+run:
+        dev-libs/libffi
+        dev-libs/libyaml
+        sys-libs/zlib
+        virtual/libssl
         berkdb? ( sys-libs/db:= )
         gdbm? ( sys-libs/gdbm )
         ncurses? ( sys-libs/ncurses )
         readline? ( sys-libs/readline )
         tk? ( dev-lang/tk )
-        dev-libs/libffi
-        dev-libs/libyaml
-        sys-libs/zlib
-        virtual/libssl
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=( EXTLDFLAGS="${LDFLAGS}" )
 
-WORK="${WORKBASE}"/${MY_PNV}
+WORK=${WORKBASE}/${MY_PNV}
 
 ruby-2_src_configure() {
     # picked up by ext/socket/extconf

@@ -1,6 +1,12 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+# This exlib updates the cache of mimetypes on the system after the exheres was (un)installed.
+# 
+# You MUST require this exlib if and only if your exheres installs a mimetype to /usr/share/mime
+# 
+# See also 'man 1 update-mime-database'
+
 export_exlib_phases pkg_postinst pkg_postrm
 
 [[ "${CATEGORY}/${PN}" == 'x11-misc/shared-mime-info' ]] || DEPENDENCIES="build: x11-misc/shared-mime-info"

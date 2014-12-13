@@ -1,0 +1,11 @@
+# Copyright 2009-2014 Wulf C. Krueger
+# Distributed under the terms of the GNU General Public License v2
+
+require libcap
+
+PLATFORMS="~amd64 ~arm ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Change-the-location-we-include-linux-xattr.h.patch
+)
+

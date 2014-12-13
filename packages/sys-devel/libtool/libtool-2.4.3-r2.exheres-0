@@ -1,0 +1,47 @@
+# Copyright 2007 Bryan Østergaard
+# Copyright 2008 Richard Brown
+# Distributed under the terms of the GNU General Public License v2
+
+require gnu [ suffix=xz ]
+
+SUMMARY="Generic library support script"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        sys-apps/help2man
+    build+run:
+        sys-devel/gnuconfig
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/2ed391b4a849b4daf7d38d7b1341accc1eceedfa.patch
+    "${FILES}"/50a2dc6a12f2a8e86f6c81d12ab66a29f911fffb.patch
+)
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( docs/PLATFORMS )
+
+WORK="${WORKBASE}/${PNV%a}"
+
+src_test() {
+    emake TESTSUITEFLAGS="-k !expensive -j${EXJOBS:-1}" check-local
+}
+
+src_test_expensive() {
+    emake TESTSUITEFLAGS="-k expensive -j${EXJOBS:-1}" check-local
+}
+
+src_install() {
+    default
+
+    edo cd "${IMAGE}"
+    for f in $(find . -type f -name config.guess -o -name config.sub); do
+        edo rm ${f}
+        edo ln -s /usr/share/gnuconfig/${f##*/} "${f}"
+    done
+}
+

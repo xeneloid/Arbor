@@ -1,0 +1,38 @@
+# Copyright 2008 Kim Højgaard-Hansen
+# Distributed under the terms of the GNU General Public License v2
+
+require easy-multibuild sourceforge [ suffix=tar.xz ]
+
+SUMMARY="The Multiple Network Graphics reference library"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    lcms
+    multibuild_c: 32 64
+"
+
+DEPENDENCIES="
+    build+run:
+        media-libs/jpeg:=[multibuild_c:*(-)?]
+        sys-libs/zlib[multibuild_c:*(-)?]
+        lcms? ( media-libs/lcms2[multibuild_c:*(-)?] )
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static --without-lcms )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'lcms lcms2' )
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( README.examples doc/{${PN}.txt,doc.readme} )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-stdio.patch
+    "${FILES}"/${PNV}-jpeg-9a.patch
+)
+
+src_prepare() {
+    default
+
+    # source directory already configured; run "make distclean" there first
+    edo rm config.status
+    edo rm config.h
+}
+

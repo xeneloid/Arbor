@@ -1,0 +1,17 @@
+Upstream: suggested below
+Source: https://savannah.gnu.org/bugs/index.php?43581
+Reason: fix parallel build
+
+diff --git a/Makefile.in b/Makefile.in
+index bc156ce..70c6f85 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -896,6 +896,8 @@ $(GNULIBDIRS): FORCE
+ 	  $(MAKE) ACLOCAL=: AUTOCONF=: AUTOHEADER=: AUTOMAKE=: $(do) ;; \
+ 	esac
+ 
++$(SHPROGDIRS): $(PROGDEPDIRS)
++
+ $(OTHERDIRS): $(PROGDEPDIRS) $(CCPROGDIRS) $(CPROGDIRS) $(SHPROGDIRS)
+ 
+ $(INCDIRS) $(PROGDEPDIRS) $(SHPROGDIRS) $(OTHERDIRS): FORCE

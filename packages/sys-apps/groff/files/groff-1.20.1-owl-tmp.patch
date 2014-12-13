@@ -48,47 +48,6 @@ diff -urp groff-1.20.1/contrib/grap2graph/grap2graph.sh groff-1.20.1/contrib/gra
  done;
  if test -z "$tmp"; then
      echo "$0: cannot create temporary directory" >&2
-diff -urp groff-1.20.1/contrib/groffer/perl/groffer.pl groff-1.20.1/contrib/groffer/perl/groffer.pl
---- groff-1.20.1/contrib/groffer/perl/groffer.pl	2009-01-09 14:25:52 +0000
-+++ groff-1.20.1/contrib/groffer/perl/groffer.pl	2009-08-14 10:31:42 +0000
-@@ -1380,7 +1380,7 @@ sub _check_prog_on_list {
- ########################################################################
- 
- sub main_temp {
--  my $template = 'groffer_' . "$$" . '_XXXX';
-+  my $template = 'groffer_' . "$$" . '_XXXXXXXXXX';
-   foreach ($ENV{'GROFF_TMPDIR'}, $ENV{'TMPDIR'}, $ENV{'TMP'}, $ENV{'TEMP'},
- 	   $ENV{'TEMPDIR'}, File::Spec->catfile($ENV{'HOME'}, 'tmp')) {
-     if ($_ && -d $_ && -w $_) {
-@@ -1411,12 +1411,12 @@ sub main_temp {
- 
-   # further argument: SUFFIX => '.sh'
-   if ($Debug{'KEEP'}) {
--    ($fh_cat, $tmp_cat) = tempfile(',cat_XXXX', DIR => $tmpdir);
--    ($fh_stdin, $tmp_stdin) = tempfile(',stdin_XXXX', DIR => $tmpdir);
-+    ($fh_cat, $tmp_cat) = tempfile(',cat_XXXXXXXXXX', DIR => $tmpdir);
-+    ($fh_stdin, $tmp_stdin) = tempfile(',stdin_XXXXXXXXXX', DIR => $tmpdir);
-   } else {
--    ($fh_cat, $tmp_cat) = tempfile(',cat_XXXX', UNLINK => 1,
-+    ($fh_cat, $tmp_cat) = tempfile(',cat_XXXXXXXXXX', UNLINK => 1,
- 				   DIR => $tmpdir);
--    ($fh_stdin, $tmp_stdin) = tempfile(',stdin_XXXX', UNLINK => 1,
-+    ($fh_stdin, $tmp_stdin) = tempfile(',stdin_XXXXXXXXXX', UNLINK => 1,
- 				       DIR => $tmpdir);
-   }
- }				# main_temp()
-diff -urp groff-1.20.1/contrib/groffer/perl/roff2.pl groff-1.20.1/contrib/groffer/perl/roff2.pl
---- groff-1.20.1/contrib/groffer/perl/roff2.pl	2009-01-09 14:25:52 +0000
-+++ groff-1.20.1/contrib/groffer/perl/roff2.pl	2009-08-14 10:31:14 +0000
-@@ -124,7 +124,7 @@ if ($Has_Groffer) {
- 	last;
-       }
-     }
--    my $template = $Name . '_XXXX';
-+    my $template = $Name . '_XXXXXXXXXX';
-     my ($fh, $stdin);
-     if ($tempdir) {
-       ($fh, $stdin) = tempfile($template, UNLINK => 1, DIR => $tempdir) ||
 diff -urp groff-1.20.1/contrib/pdfmark/pdfroff.man groff-1.20.1/contrib/pdfmark/pdfroff.man
 --- groff-1.20.1/contrib/pdfmark/pdfroff.man	2009-01-09 14:25:52 +0000
 +++ groff-1.20.1/contrib/pdfmark/pdfroff.man	2009-08-14 10:26:54 +0000
@@ -98,9 +57,9 @@ diff -urp groff-1.20.1/contrib/pdfmark/pdfroff.man groff-1.20.1/contrib/pdfmark/
  .B pdfroff
 -should create temporary files.
 +should create a subdirectory for its temporary files.
+ .
  If
  .B \%GROFF_TMPDIR
- is
 @@ -541,7 +541,8 @@ and
  .B TEMP
  are considered in turn, as possible temporary file repositories.

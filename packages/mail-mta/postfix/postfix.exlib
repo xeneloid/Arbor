@@ -39,8 +39,8 @@ DEPENDENCIES="
         cyrus? ( net-libs/cyrus-sasl )
         ldap? ( net-directory/openldap )
         mysql? (
-            dev-db/mysql
             sys-libs/zlib
+            virtual/mysql
         )
         postgresql? ( dev-db/postgresql )
         ssl? ( virtual/libssl )
