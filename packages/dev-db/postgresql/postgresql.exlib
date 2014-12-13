@@ -155,7 +155,7 @@ DEPENDENCIES="
         )
 "
 
-if ever at_least 9.4; then
+if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
     PG_WITH_UUID="uuid=e2fs"
 else
     DEPENDENCIES+="
