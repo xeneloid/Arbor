@@ -1,39 +1,6 @@
 Reason: Ensure correct flags are used
 Upstream: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59242
 
-From 640d8670d53038342abb5ebd835c1da29d05485d Mon Sep 17 00:00:00 2001
-From: Michael Forney <mforney@mforney.org>
-Date: Thu, 21 Nov 2013 19:32:54 -0800
-Subject: [PATCH 1/2] Use correct CXX/CXXFLAGS
-
-Signed-off-by: Michael Forney <mforney@mforney.org>
----
- gcc/configure | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/gcc/configure b/gcc/configure
-index c9bbd65..57d6818 100755
---- a/gcc/configure
-+++ b/gcc/configure
-@@ -11283,6 +11283,7 @@ else
- 	esac
- 	saved_CFLAGS="${CFLAGS}"
- 	CC="${CC_FOR_BUILD}" CFLAGS="${CFLAGS_FOR_BUILD}" \
-+	CXX="${CXX_FOR_BUILD}" CXXFLAGS="${CXXFLAGS_FOR_BUILD}" \
- 	LDFLAGS="${LDFLAGS_FOR_BUILD}" \
- 	${realsrcdir}/configure \
- 		--enable-languages=${enable_languages-all} \
-@@ -11782,6 +11783,7 @@ STMP_FIXINC=stmp-fixinc
- if test x$build != x$host || test "x$coverage_flags" != x
- then
-     BUILD_CFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CFLAGS_FOR_BUILD)'
-+    BUILD_CXXFLAGS='$(INTERNAL_CFLAGS) $(T_CFLAGS) $(CXXFLAGS_FOR_BUILD)'
-     BUILD_LDFLAGS='$(LDFLAGS_FOR_BUILD)'
- fi
- 
--- 
-1.8.4.3
-
 
 From 05265537136e9554631847c720c2dc8c8cdec60c Mon Sep 17 00:00:00 2001
 From: Michael Forney <mforney@mforney.org>
