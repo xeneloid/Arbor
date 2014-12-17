@@ -227,7 +227,7 @@ gcc_src_prepare() {
     # NOTE(tridactyla) gcc uses the value of $(ALL_CPPFLAGS) (which is $(INCLUDES) $(CPPFLAGS)) for
     # BUILD_CPPFLAGS. The build_configargs trick used in gcc_src_configure does not work here
     # because the gcc subdirectory is built for host, and uses the build toolchain explicitly.
-    edo sed -e "s,^\(BUILD_CPPFLAGS\)=.*,\1 = \$(INCLUDES) ${!build_cppflags_var}," \
+    edo sed -e "s,^\(BUILD_CPPFLAGS\) *=.*,\1 = \$(INCLUDES) ${!build_cppflags_var} \\\\," \
             -i "${WORK}/gcc/Makefile.in"
 
     # NOTE(tridactyla) When ${host} != ${build}, gcc's configure invokes itself with
