@@ -1,0 +1,66 @@
+Upstream: yes, cherry-picked from next
+
+From e8f24ff3eda765669fad4b38ee3481a608c7b50d Mon Sep 17 00:00:00 2001
+From: Junio C Hamano <gitster@pobox.com>
+Date: Fri, 12 Dec 2014 12:33:56 -0800
+Subject: [PATCH 4/4] tests: squelch noise from GPG machinery set-up
+
+It is distracting to let the GPG message while setting up the test
+gpghome leak into the test output, especially without running these
+tests with "-v" option.
+
+The splitting of RFC1991 prerequiste part is about future-proofing.
+When we want to define other kinds of specific prerequisites in the
+future, we'd prefer to see it done separately from the basic set-up
+code.
+
+Signed-off-by: Junio C Hamano <gitster@pobox.com>
+---
+ t/lib-gpg.sh | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/t/lib-gpg.sh b/t/lib-gpg.sh
+index b611b78..33de402 100755
+--- a/t/lib-gpg.sh
++++ b/t/lib-gpg.sh
+@@ -16,23 +16,25 @@ else
+ 		# Type DSA and Elgamal, size 2048 bits, no expiration date.
+ 		# Name and email: C O Mitter <committer@example.com>
+ 		# No password given, to enable non-interactive operation.
+-		mkdir ./gpghome
+-		chmod 0700 ./gpghome
+-		GNUPGHOME="$(pwd)/gpghome"
+-		export GNUPGHOME
+-		gpg --homedir "${GNUPGHOME}" --import \
+-			"$TEST_DIRECTORY"/lib-gpg/keyring.gpg
+-		gpg --homedir "${GNUPGHOME}" --import-ownertrust \
+-			"$TEST_DIRECTORY"/lib-gpg/ownertrust
++		mkdir ./gpghome &&
++		chmod 0700 ./gpghome &&
++		GNUPGHOME="$(pwd)/gpghome" &&
++		export GNUPGHOME &&
++		gpg --homedir "${GNUPGHOME}" 2>/dev/null --import \
++			"$TEST_DIRECTORY"/lib-gpg/keyring.gpg &&
++		gpg --homedir "${GNUPGHOME}" 2>/dev/null --import-ownertrust \
++			"$TEST_DIRECTORY"/lib-gpg/ownertrust &&
+ 		test_set_prereq GPG
+-		if echo | gpg --homedir "${GNUPGHOME}" -b --rfc1991 >/dev/null 2>&1
+-		then
+-			test_set_prereq RFC1991
+-		fi
+ 		;;
+ 	esac
+ fi
+ 
++if test_have_prereq GPG &&
++    echo | gpg --homedir "${GNUPGHOME}" -b --rfc1991 >/dev/null 2>&1
++then
++	test_set_prereq RFC1991
++fi
++
+ sanitize_pgp() {
+ 	perl -ne '
+ 		/^-----END PGP/ and $in_pgp = 0;
+-- 
+2.2.0
+
