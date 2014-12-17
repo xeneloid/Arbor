@@ -1,9 +1,9 @@
 # Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user="martine" ] elisp-optional [ source_directory=misc ] \
-    bash-completion \
-    zsh-completion
+require github [ user=martine tag=v${PV} ]
+require elisp-optional [ source_directory=misc ]
+require bash-completion zsh-completion
 
 export_exlib_phases src_compile src_test src_install
 

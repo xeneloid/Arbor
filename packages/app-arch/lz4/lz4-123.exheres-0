@@ -3,7 +3,7 @@
 
 MY_PNV=${PN}-r${PV}
 
-require github [ user=Cyan4973 rev=r${PV} ] easy-multibuild [ multiunpack=true work=${MY_PNV} ]
+require github [ user=Cyan4973 tag=r${PV} ] easy-multibuild [ multiunpack=true work=${MY_PNV} ]
 
 SUMMARY="Very fast lossless compression algorithm"
 

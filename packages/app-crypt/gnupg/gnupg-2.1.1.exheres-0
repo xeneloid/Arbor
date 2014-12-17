@@ -23,7 +23,7 @@ DEPENDENCIES="
         app-arch/bzip2
         dev-libs/libassuan[>=2.1.0]
         dev-libs/libgcrypt[>=1.6.2]
-        dev-libs/libgpg-error[>=1.15]
+        dev-libs/libgpg-error[>=1.17]
         dev-libs/libksba[>=1.2.0]
         dev-libs/npth
         net-misc/curl[>=7.10]
@@ -41,13 +41,15 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gnupg-trust.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --enable-nls
+    --enable-agent
+    --enable-bzip2
     --enable-gpg
     --enable-gpgsm
-    --enable-agent
-    --enable-tools
+    --enable-nls
+    --enable-ntbtls
     --enable-symcryptrun
-    --enable-bzip2
+    --enable-tools
+    --disable-gnutls
     --disable-ldap
     --without-capabilities # This option doesn't do anything.
     --without-adns # Requires GNU adns
