@@ -12,6 +12,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     doc
+    hkps [[ description = [ Enable support for HKPS protocol using GnuTLS ] ]]
     smartcard [[ description = [ Install the smartcard daemon ( includes CCID support ). ] ]]
 "
 
@@ -26,6 +27,7 @@ DEPENDENCIES="
         dev-libs/libgpg-error[>=1.17]
         dev-libs/libksba[>=1.2.0]
         dev-libs/npth
+        hkps? ( dev-libs/gnutls[>=3.0] )
         net-misc/curl[>=7.10]
         sys-libs/readline
         smartcard? ( dev-libs/libusb:0.1 )
@@ -46,15 +48,15 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-gpg
     --enable-gpgsm
     --enable-nls
-    --enable-ntbtls
     --enable-symcryptrun
     --enable-tools
-    --disable-gnutls
+    --disable-ntbtls
     --disable-ldap
     --without-capabilities # This option doesn't do anything.
     --without-adns # Requires GNU adns
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'hkps gnutls'
     'smartcard scdaemon'
     'smartcard ccid-driver'
 )

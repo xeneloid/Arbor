@@ -13,7 +13,7 @@ else
     require elisp-optional [ source_directory=Docs ]
 fi
 
-export_exlib_phases src_configure src_compile
+export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
 SUMMARY="Cross platform Make"
 HOMEPAGE="http://www.cmake.org"
@@ -32,6 +32,8 @@ MYOPTIONS="emacs qt4
     ( qt4 qt5 )  [[ number-selected = at-most-one ]]"
 
 DEPENDENCIES="
+    build:
+        dev-python/Sphinx[>=1.2.2][python_abis:2.7]
     build+run:
         app-arch/bzip2
         app-arch/libarchive
@@ -41,23 +43,19 @@ DEPENDENCIES="
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
-if ever at_least 3.0.0 ; then
+
+if ever at_least 3.1.0 ; then
     DEPENDENCIES+="
-        build:
-            dev-python/Sphinx[>=1.2.2][python_abis:2.7]
+        build+run:
+            app-arch/xz
     "
-    BASH_COMPLETIONS=(
-        Auxiliary/bash-completion/cmake
-        'Auxiliary/bash-completion/cpack cpack'
-        'Auxiliary/bash-completion/ctest ctest'
-    )
-else
-    BASH_COMPLETIONS=(
-        Docs/bash-completion/cmake
-        'Docs/bash-completion/cpack cpack'
-        'Docs/bash-completion/ctest ctest'
-    )
 fi
+
+BASH_COMPLETIONS=(
+    Auxiliary/bash-completion/cmake
+    'Auxiliary/bash-completion/cpack cpack'
+    'Auxiliary/bash-completion/ctest ctest'
+)
 
 VIMFILE="${PN}.vim"
 
@@ -66,6 +64,21 @@ DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-install-cmake.m4-to-usr-share-aclocal.patch
 )
 DEFAULT_SRC_TEST_PARAMS=( ARGS=--verbose )
+
+cmake-build_src_prepare() {
+    default
+
+    if option qt4; then
+        edo sed -i -e '/Icon/ s/\.png$//' Source/QtDialog/CMake.desktop
+    fi
+    # Don't install bash-completions, use bash-completion.exlib
+    edo sed -e '/^install(FILES cmake cpack/d' \
+            -i Auxiliary/bash-completion/CMakeLists.txt
+
+    # Does only work with python2, errors out because of "except UnicodeError, error"
+    edo sed -e "s/COMMAND \${SPHINX_EXECUTABLE}/COMMAND python2 \${SPHINX_EXECUTABLE\}/" \
+            -i Utilities/Sphinx/CMakeLists.txt
+}
 
 cmake-build_src_configure() {
     local host=$(exhost --target)
@@ -90,6 +103,7 @@ cmake-build_src_configure() {
         --datadir=/../share/${PN}                                               \
         --mandir=/../share/man                                                  \
         --verbose                                                               \
+        --sphinx-man                                                            \
         --                                                                      \
         -DCMAKE_C_COMPILER:PATH="${CC}"                                         \
         -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                      \
@@ -99,12 +113,33 @@ cmake-build_src_configure() {
         -DCMAKE_RANLIB:PATH="${RANLIB}"                                         \
         -DCMAKE_LIBRARY_PATH:STRING=/usr/${host}/lib                            \
         -DCMAKE_INCLUDE_PATH:STRING=/usr/${host}/include                        \
-        $(ever at_least 3.0.0-rc1 && echo "--sphinx-man")                       \
         $(option qt4 && echo "-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Core:BOOL=TRUE")
 }
 
 cmake-build_src_compile() {
     default
     elisp-optional_src_compile
+}
+
+cmake-build_src_test() {
+    edo bin/ctest -V -E "Qt4And5AutomocReverse|CTestTestFailedSubmit|Qt4And5AutomocReverse"
+}
+
+cmake-build_src_install() {
+    default
+
+    bash-completion_src_install
+    elisp-optional_src_install
+
+    if option vim-syntax; then
+        insinto /usr/share/vim/vimfiles/syntax
+        doins "${WORK}"/Auxiliary/cmake-syntax.vim
+
+        insinto /usr/share/vim/vimfiles/indent
+        doins "${WORK}"/Auxiliary/cmake-indent.vim
+
+        insinto /usr/share/vim/vimfiles/ftdetect
+        doins "${FILES}/${VIMFILE}"
+    fi
 }
 

@@ -48,8 +48,7 @@ MYOPTIONS="
     pcsc     [[ description = [
         Include GSM SIM/USIM interface for GSM/UMTS authentication algorithm (for EAP-SIM/EAP-AKA)
     ] ]]
-    qt4      [[ description = [ Build the Qt4-based wpa_gui program                  ] ]]
-    readline [[ description = [ Use readline for line editing and history in wpa_cli ] ]]
+    qt4      [[ description = [ Build the Qt4-based wpa_gui program ] ]]
     systemd  [[ requires = dbus ]]
 "
 
@@ -57,6 +56,8 @@ DEPENDENCIES="
     build:
         dbus? ( virtual/pkg-config )
     build+run:
+        sys-libs/ncurses
+        sys-libs/readline
         dbus? ( sys-apps/dbus )
         gnutls? ( dev-libs/gnutls )
        !gnutls? ( virtual/libssl )
@@ -66,10 +67,6 @@ DEPENDENCIES="
         )
         pcsc? ( sys-apps/pcsc-lite )
         qt4? ( x11-libs/qt:4 )
-        readline? (
-            sys-libs/ncurses
-            sys-libs/readline
-        )
         nl80211? ( net-libs/libnl:3.0 )
 "
 
@@ -130,21 +127,22 @@ wpa_supplicant_src_configure() {
         CTRL_IFACE=unix \
         DEBUG_FILE \
         ELOOP=eloop \
-        CONFIG_IBSS_RSN \
+        IBSS_RSN \
         IEEE80211N \
         IEEE80211R \
+        IEEE80211W \
         IEEE8021X_EAPOL \
         MAIN=main \
         OS=unix \
         PEERKEY \
         PKCS12 \
-        WPS
+        READLINE \
+        TDLS
 
     option ap       && config_enable AP
     option dbus     && config_enable CTRL_IFACE_DBUS{,_NEW,_INTRO}
     option pcap     && config_enable L2_PACKET=pcap ||
                        config_enable L2_PACKET=linux
-    option readline && config_enable READLINE
 
     # EAP_AKA, EAP_AKA_PRIME, and EAP_SIM require PCSC. USIM_SIMULATOR is used
     # by EAP_AKA.
@@ -193,6 +191,7 @@ wpa_supplicant_src_configure() {
 
     # EAP_PEAP, EAP_TLS, and EAP_TTLS require TLS (which is always enabled)
     config_enable_eap \
+        EKE \
         EXE \
         GPSK \
         GPSK_SHA256 \
@@ -224,6 +223,20 @@ wpa_supplicant_src_configure() {
     # Background scanning
     config_enable BGSCAN_LEARN
     config_enable BGSCAN_SIMPLE
+
+    # IEEE 802.11u Interworking and Wi-Fi Hotspot 2.0
+    config_enable HS20
+    config_enable INTERWORKING
+
+    # WPS
+    config_enable WPS
+    config_enable WPS_ER
+    config_enable WPS_UPNP
+    config_enable WPS_NFC
+
+    # P2P (Wi-Fi Direct)
+    config_enable P2P
+    config_enable WIFI_DISPLAY
 
     option qt4 && eqmake -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
 }

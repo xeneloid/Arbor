@@ -6,3 +6,10 @@ require git-googlecode
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/0001-tests-create-gpg-homedir-on-the-fly.patch
+    "${FILES}"/0002-tests-skip-RFC1991-tests-for-gnupg-2.1.patch
+    "${FILES}"/0003-tests-replace-binary-GPG-keyrings-with-ASCII-armored.patch
+    "${FILES}"/0004-tests-squelch-noise-from-GPG-machinery-set-up.patch
+)
+
