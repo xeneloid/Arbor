@@ -54,6 +54,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-curses
     --with-expat
     --with-system-readline
+    # These are already installed by binutils:
+    --disable-install-libbfd
+    --disable-install-libiberty
 )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( gdb sim )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( CONTRIBUTE )
