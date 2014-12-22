@@ -40,8 +40,15 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-autokey
     --enable-ipv6
+    --enable-shared
+    --enable-threads
+    # considered experimental
+    --disable-libseccomp
+    --disable-static
     --with-crypto
+    --with-sntp
     --without-net-snmp-config
     --without-ntpsnmpd
 )

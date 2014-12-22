@@ -40,13 +40,6 @@ MYOPTIONS="
 "
 exparam -b htmldocs && MYOPTIONS+=" doc"
 
-# The remote helpers' original home is http://felipec.wordpress.com/2012/11/13/git-remote-hg-bzr-2
-ever at_least 2.0.0 || MYOPTIONS+="
-    (
-        git_remote_helpers: ${GIT_REMOTE_HELPERS[*]}
-    ) [[ *requires = [ python ] ]]
-"
-
 DEPENDENCIES="
     build+run:
         dev-lang/perl:=[>=5.7.3]
@@ -65,6 +58,7 @@ DEPENDENCIES="
     suggestion:
         app-crypt/gnupg             [[ description = [ Needed for signing and verifying tags ] ]]
         dev-scm/cvsps               [[ description = [ Dependency for 'git cvsimport' ] ]]
+        dev-scm/git-remote-helpers  [[ description = [ Allows usage of mercuial and bazaar with git ] ]]
         dev-perl/DBI                [[ description = [ Dependency for 'git cvsserver' ] ]]
         dev-lang/python:*           [[ description = [ Dependency for 'git p4' ] ]]
         dev-perl/CGI                [[ description = [ Dependency for 'gitweb' ] ]]
@@ -85,31 +79,6 @@ DEPENDENCIES="
 
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
-
-if ever at_least 2.0.0 ; then
-    DEPENDENCIES+="
-        suggestion:
-            dev-scm/git-remote-helpers
-    "
-fi
-
-if ! ever at_least 2.0.0 ; then
-    DEPENDENCIES+="
-        run:
-            git_remote_helpers:bzr? (
-                dev-lang/python:=
-                dev-scm/bzr
-            )
-            git_remote_helpers:mercurial? (
-                dev-lang/python:=
-                dev-scm/mercurial
-            )
-            !dev-scm/git-remote-helpers [[
-                description = [ The remote helpers are included since git-1.8.2 until 1.9.x ]
-                resolution = uninstall-blocked-after
-            ]]
-    "
-fi
 
 WORK=${WORKBASE}/${PNV/_/.}
 
@@ -192,11 +161,6 @@ git-googlecode_src_install() {
     dozshcompletion contrib/completion/git-completion.zsh _git
     dozshcompletion contrib/completion/git-completion.bash
     elisp-optional_src_install
-
-    if ! ever at_least 2.0.0 ; then
-    option git_remote_helpers:bzr && dobin contrib/remote-helpers/git-remote-bzr
-    option git_remote_helpers:mercurial && dobin contrib/remote-helpers/git-remote-hg
-    fi
 
     exeinto /usr/$(exhost --target)/libexec/${PN}
     newexe contrib/fast-import/import-tars.perl git-import-tars
