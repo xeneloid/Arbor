@@ -1,0 +1,25 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require easy-multibuild
+
+SUMMARY="Command line parsing library"
+HOMEPAGE="http://www.rpm5.org"
+DOWNLOADS="${HOMEPAGE}/files/${PN}/${PNV}.tar.gz"
+
+REMOTE_IDS="freecode:${PN}"
+
+LICENCES="MIT"
+SLOT="0"
+MYOPTIONS="multibuild_c: 32 64"
+
+DEPENDENCIES="
+    build:
+        sys-devel/gettext
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --disable-static
+)
+
