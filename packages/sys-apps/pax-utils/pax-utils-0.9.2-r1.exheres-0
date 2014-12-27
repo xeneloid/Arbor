@@ -15,6 +15,8 @@ DEPENDENCIES="
         app-arch/xz
     build+run:
         caps? ( sys-libs/libcap )
+    test:
+        dev-python/pyelftools
 "
 
 src_compile() {
