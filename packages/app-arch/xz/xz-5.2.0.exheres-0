@@ -42,5 +42,11 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug doc )
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-nls' '--enable-shared' )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-nls
+    --enable-shared
+    --enable-threads=posix
+    --disable-small
+    --disable-werror
+)
 
