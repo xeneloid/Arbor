@@ -92,6 +92,8 @@ ruby-2_src_configure() {
         cfargs+=( $(IFS=,; echo "--with-out-ext=${disabled_opts[*]}") )
     fi
 
+    ever at_least 2.2.0 && cfargs+=( --without-jemalloc )
+
     econf "${cfargs[@]}"
 }
 
@@ -138,6 +140,9 @@ ruby-2_src_install() {
 
     # FIXME: I don't know what this is
     keepdir /usr/${LIBDIR}/ruby/${SLOT}/racc/rdoc
+
+    # remove empty directory
+    ever at_least 2.2.0 && edo rmdir "${IMAGE}"/usr/${LIBDIR}/ruby/${SLOT}/rake/lib
 
     # if dependencies are met, C API docs are installed
     edo find "${IMAGE}"/usr/share/doc/${PNVR} -empty -type d -delete
