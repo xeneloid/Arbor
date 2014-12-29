@@ -5,5 +5,5 @@ require binutils
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES+=( "${FILES}"/binutils-2.23-disable-failing-ld-ifunc-test-1b-test.patch )
+DEFAULT_SRC_PREPARE_PATCHES+=( "${FILES}"/${PN}-2.25-disable-failing-gold-test.patch )
 
