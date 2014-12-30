@@ -35,7 +35,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --sbindir=/sbin
-    --libdir=/${LIBDIR}
+    --libdir=/usr/${LIBDIR}
     --libexecdir=/${LIBDIR}
     --without-kernel
     --enable-bpf-compiler
