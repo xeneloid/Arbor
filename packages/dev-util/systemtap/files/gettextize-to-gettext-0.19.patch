@@ -1,0 +1,498 @@
+From 9004ac777d87097fa66b023ec293a8b310a1c02d Mon Sep 17 00:00:00 2001
+From: Ivan Diorditsa <ivan.diorditsa@gmail.com>
+Date: Sun, 4 Jan 2015 04:54:16 +0200
+Subject: [PATCH] gettextize to gettext 0.19
+
+---
+ config.rpath      | 18 ++++++----------
+ configure.ac      |  2 +-
+ m4/gettext.m4     |  2 +-
+ m4/iconv.m4       | 63 +++++++++++++++++++++++++++++--------------------------
+ m4/lib-ld.m4      |  2 +-
+ m4/lib-link.m4    |  2 +-
+ m4/lib-prefix.m4  |  2 +-
+ m4/nls.m4         |  2 +-
+ m4/po.m4          |  7 ++++---
+ m4/progtest.m4    |  2 +-
+ po/Makefile.in.in | 48 ++++++++++++++++++++++++++++++------------
+ po/Makevars       | 39 +++++++++++++++++++++++++++++++++-
+ po/Rules-quot     | 13 +++++++++++-
+ 13 files changed, 135 insertions(+), 67 deletions(-)
+
+diff --git a/config.rpath b/config.rpath
+index c38b914..b625621 100755
+--- a/config.rpath
++++ b/config.rpath
+@@ -2,7 +2,7 @@
+ # Output a system dependent set of variables, describing how to set the
+ # run time search path of shared libraries in an executable.
+ #
+-#   Copyright 1996-2013 Free Software Foundation, Inc.
++#   Copyright 1996-2014 Free Software Foundation, Inc.
+ #   Taken from GNU libtool, 2001
+ #   Originally by Gordon Matzigkeit <gord@gnu.ai.mit.edu>, 1996
+ #
+@@ -367,11 +367,7 @@ else
+     dgux*)
+       hardcode_libdir_flag_spec='-L$libdir'
+       ;;
+-    freebsd2.2*)
+-      hardcode_libdir_flag_spec='-R$libdir'
+-      hardcode_direct=yes
+-      ;;
+-    freebsd2*)
++    freebsd2.[01]*)
+       hardcode_direct=yes
+       hardcode_minus_L=yes
+       ;;
+@@ -548,13 +544,11 @@ case "$host_os" in
+   dgux*)
+     library_names_spec='$libname$shrext'
+     ;;
++  freebsd[23].*)
++    library_names_spec='$libname$shrext$versuffix'
++    ;;
+   freebsd* | dragonfly*)
+-    case "$host_os" in
+-      freebsd[123]*)
+-        library_names_spec='$libname$shrext$versuffix' ;;
+-      *)
+-        library_names_spec='$libname$shrext' ;;
+-    esac
++    library_names_spec='$libname$shrext'
+     ;;
+   gnu*)
+     library_names_spec='$libname$shrext'
+diff --git a/configure.ac b/configure.ac
+index c8790e8..d6b2e1d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -35,7 +35,7 @@ AC_SYS_LARGEFILE
+ AC_CHECK_FUNCS(ppoll)
+ AC_CHECK_FUNCS(openat)
+ AM_GNU_GETTEXT(external)
+-AM_GNU_GETTEXT_VERSION([0.18.2])
++AM_GNU_GETTEXT_VERSION([0.19.4])
+ 
+ if test "x$GMSGFMT" = "x:"; then
+    AC_MSG_ERROR([missing gnu /usr/bin/msgfmt])
+diff --git a/m4/gettext.m4 b/m4/gettext.m4
+index 8d1f066..be247bf 100644
+--- a/m4/gettext.m4
++++ b/m4/gettext.m4
+@@ -1,5 +1,5 @@
+ # gettext.m4 serial 66 (gettext-0.18.2)
+-dnl Copyright (C) 1995-2013 Free Software Foundation, Inc.
++dnl Copyright (C) 1995-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+diff --git a/m4/iconv.m4 b/m4/iconv.m4
+index a503646..4e37363 100644
+--- a/m4/iconv.m4
++++ b/m4/iconv.m4
+@@ -1,5 +1,5 @@
+-# iconv.m4 serial 18 (gettext-0.18.2)
+-dnl Copyright (C) 2000-2002, 2007-2013 Free Software Foundation, Inc.
++# iconv.m4 serial 19 (gettext-0.18.2)
++dnl Copyright (C) 2000-2002, 2007-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+@@ -72,27 +72,33 @@ AC_DEFUN([AM_ICONV_LINK],
+       if test $am_cv_lib_iconv = yes; then
+         LIBS="$LIBS $LIBICONV"
+       fi
+-      AC_RUN_IFELSE(
+-        [AC_LANG_SOURCE([[
++      am_cv_func_iconv_works=no
++      for ac_iconv_const in '' 'const'; do
++        AC_RUN_IFELSE(
++          [AC_LANG_PROGRAM(
++             [[
+ #include <iconv.h>
+ #include <string.h>
+-int main ()
+-{
+-  int result = 0;
++
++#ifndef ICONV_CONST
++# define ICONV_CONST $ac_iconv_const
++#endif
++             ]],
++             [[int result = 0;
+   /* Test against AIX 5.1 bug: Failures are not distinguishable from successful
+      returns.  */
+   {
+     iconv_t cd_utf8_to_88591 = iconv_open ("ISO8859-1", "UTF-8");
+     if (cd_utf8_to_88591 != (iconv_t)(-1))
+       {
+-        static const char input[] = "\342\202\254"; /* EURO SIGN */
++        static ICONV_CONST char input[] = "\342\202\254"; /* EURO SIGN */
+         char buf[10];
+-        const char *inptr = input;
++        ICONV_CONST char *inptr = input;
+         size_t inbytesleft = strlen (input);
+         char *outptr = buf;
+         size_t outbytesleft = sizeof (buf);
+         size_t res = iconv (cd_utf8_to_88591,
+-                            (char **) &inptr, &inbytesleft,
++                            &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
+         if (res == 0)
+           result |= 1;
+@@ -105,14 +111,14 @@ int main ()
+     iconv_t cd_ascii_to_88591 = iconv_open ("ISO8859-1", "646");
+     if (cd_ascii_to_88591 != (iconv_t)(-1))
+       {
+-        static const char input[] = "\263";
++        static ICONV_CONST char input[] = "\263";
+         char buf[10];
+-        const char *inptr = input;
++        ICONV_CONST char *inptr = input;
+         size_t inbytesleft = strlen (input);
+         char *outptr = buf;
+         size_t outbytesleft = sizeof (buf);
+         size_t res = iconv (cd_ascii_to_88591,
+-                            (char **) &inptr, &inbytesleft,
++                            &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
+         if (res == 0)
+           result |= 2;
+@@ -124,14 +130,14 @@ int main ()
+     iconv_t cd_88591_to_utf8 = iconv_open ("UTF-8", "ISO-8859-1");
+     if (cd_88591_to_utf8 != (iconv_t)(-1))
+       {
+-        static const char input[] = "\304";
++        static ICONV_CONST char input[] = "\304";
+         static char buf[2] = { (char)0xDE, (char)0xAD };
+-        const char *inptr = input;
++        ICONV_CONST char *inptr = input;
+         size_t inbytesleft = 1;
+         char *outptr = buf;
+         size_t outbytesleft = 1;
+         size_t res = iconv (cd_88591_to_utf8,
+-                            (char **) &inptr, &inbytesleft,
++                            &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
+         if (res != (size_t)(-1) || outptr - buf > 1 || buf[1] != (char)0xAD)
+           result |= 4;
+@@ -144,14 +150,14 @@ int main ()
+     iconv_t cd_88591_to_utf8 = iconv_open ("utf8", "iso88591");
+     if (cd_88591_to_utf8 != (iconv_t)(-1))
+       {
+-        static const char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
++        static ICONV_CONST char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
+         char buf[50];
+-        const char *inptr = input;
++        ICONV_CONST char *inptr = input;
+         size_t inbytesleft = strlen (input);
+         char *outptr = buf;
+         size_t outbytesleft = sizeof (buf);
+         size_t res = iconv (cd_88591_to_utf8,
+-                            (char **) &inptr, &inbytesleft,
++                            &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
+         if ((int)res > 0)
+           result |= 8;
+@@ -171,17 +177,14 @@ int main ()
+       && iconv_open ("utf8", "eucJP") == (iconv_t)(-1))
+     result |= 16;
+   return result;
+-}]])],
+-        [am_cv_func_iconv_works=yes],
+-        [am_cv_func_iconv_works=no],
+-        [
+-changequote(,)dnl
+-         case "$host_os" in
+-           aix* | hpux*) am_cv_func_iconv_works="guessing no" ;;
+-           *)            am_cv_func_iconv_works="guessing yes" ;;
+-         esac
+-changequote([,])dnl
+-        ])
++]])],
++          [am_cv_func_iconv_works=yes], ,
++          [case "$host_os" in
++             aix* | hpux*) am_cv_func_iconv_works="guessing no" ;;
++             *)            am_cv_func_iconv_works="guessing yes" ;;
++           esac])
++        test "$am_cv_func_iconv_works" = no || break
++      done
+       LIBS="$am_save_LIBS"
+     ])
+     case "$am_cv_func_iconv_works" in
+diff --git a/m4/lib-ld.m4 b/m4/lib-ld.m4
+index c145e47..ddc569f 100644
+--- a/m4/lib-ld.m4
++++ b/m4/lib-ld.m4
+@@ -1,5 +1,5 @@
+ # lib-ld.m4 serial 6
+-dnl Copyright (C) 1996-2003, 2009-2013 Free Software Foundation, Inc.
++dnl Copyright (C) 1996-2003, 2009-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+diff --git a/m4/lib-link.m4 b/m4/lib-link.m4
+index 073f040..3522d99 100644
+--- a/m4/lib-link.m4
++++ b/m4/lib-link.m4
+@@ -1,5 +1,5 @@
+ # lib-link.m4 serial 26 (gettext-0.18.2)
+-dnl Copyright (C) 2001-2013 Free Software Foundation, Inc.
++dnl Copyright (C) 2001-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+diff --git a/m4/lib-prefix.m4 b/m4/lib-prefix.m4
+index 60908e8..31f49e4 100644
+--- a/m4/lib-prefix.m4
++++ b/m4/lib-prefix.m4
+@@ -1,5 +1,5 @@
+ # lib-prefix.m4 serial 7 (gettext-0.18)
+-dnl Copyright (C) 2001-2005, 2008-2013 Free Software Foundation, Inc.
++dnl Copyright (C) 2001-2005, 2008-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+diff --git a/m4/nls.m4 b/m4/nls.m4
+index 8f8a147..53cdc8b 100644
+--- a/m4/nls.m4
++++ b/m4/nls.m4
+@@ -1,5 +1,5 @@
+ # nls.m4 serial 5 (gettext-0.18)
+-dnl Copyright (C) 1995-2003, 2005-2006, 2008-2013 Free Software Foundation,
++dnl Copyright (C) 1995-2003, 2005-2006, 2008-2014 Free Software Foundation,
+ dnl Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+diff --git a/m4/po.m4 b/m4/po.m4
+index f395723..43012dc 100644
+--- a/m4/po.m4
++++ b/m4/po.m4
+@@ -1,5 +1,5 @@
+-# po.m4 serial 20 (gettext-0.18.2)
+-dnl Copyright (C) 1995-2013 Free Software Foundation, Inc.
++# po.m4 serial 24 (gettext-0.19)
++dnl Copyright (C) 1995-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+@@ -25,11 +25,12 @@ AC_DEFUN([AM_PO_SUBDIRS],
+   AC_REQUIRE([AC_PROG_MAKE_SET])dnl
+   AC_REQUIRE([AC_PROG_INSTALL])dnl
+   AC_REQUIRE([AC_PROG_MKDIR_P])dnl
++  AC_REQUIRE([AC_PROG_SED])dnl
+   AC_REQUIRE([AM_NLS])dnl
+ 
+   dnl Release version of the gettext macros. This is used to ensure that
+   dnl the gettext macros and po/Makefile.in.in are in sync.
+-  AC_SUBST([GETTEXT_MACRO_VERSION], [0.18])
++  AC_SUBST([GETTEXT_MACRO_VERSION], [0.19])
+ 
+   dnl Perform the following tests also if --disable-nls has been given,
+   dnl because they are needed for "make dist" to work.
+diff --git a/m4/progtest.m4 b/m4/progtest.m4
+index 7b39123..b499f79 100644
+--- a/m4/progtest.m4
++++ b/m4/progtest.m4
+@@ -1,5 +1,5 @@
+ # progtest.m4 serial 7 (gettext-0.18.2)
+-dnl Copyright (C) 1996-2003, 2005, 2008-2013 Free Software Foundation, Inc.
++dnl Copyright (C) 1996-2003, 2005, 2008-2014 Free Software Foundation, Inc.
+ dnl This file is free software; the Free Software Foundation
+ dnl gives unlimited permission to copy and/or distribute it,
+ dnl with or without modifications, as long as this notice is preserved.
+diff --git a/po/Makefile.in.in b/po/Makefile.in.in
+index fce63a6..65184f6 100644
+--- a/po/Makefile.in.in
++++ b/po/Makefile.in.in
+@@ -8,13 +8,14 @@
+ # Please note that the actual code of GNU gettext is covered by the GNU
+ # General Public License and is *not* in the public domain.
+ #
+-# Origin: gettext-0.18.2
+-GETTEXT_MACRO_VERSION = 0.18
++# Origin: gettext-0.19
++GETTEXT_MACRO_VERSION = 0.19
+ 
+ PACKAGE = @PACKAGE@
+ VERSION = @VERSION@
+ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
+ 
++SED = @SED@
+ SHELL = /bin/sh
+ @SET_MAKE@
+ 
+@@ -76,6 +77,16 @@ POTFILES = \
+ 
+ CATALOGS = @CATALOGS@
+ 
++POFILESDEPS_ = $(srcdir)/$(DOMAIN).pot
++POFILESDEPS_yes = $(POFILESDEPS_)
++POFILESDEPS_no =
++POFILESDEPS = $(POFILESDEPS_$(PO_DEPENDS_ON_POT))
++
++DISTFILESDEPS_ = update-po
++DISTFILESDEPS_yes = $(DISTFILESDEPS_)
++DISTFILESDEPS_no =
++DISTFILESDEPS = $(DISTFILESDEPS_$(DIST_DEPENDS_ON_UPDATE_PO))
++
+ # Makevars gets inserted here. (Don't remove this line!)
+ 
+ .SUFFIXES:
+@@ -142,15 +153,25 @@ stamp-po: $(srcdir)/$(DOMAIN).pot
+ # heuristic whether some file in the top level directory mentions "GNU xyz".
+ # If GNU 'find' is available, we avoid grepping through monster files.
+ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
+-	if { if (LC_ALL=C find --version) 2>/dev/null | grep GNU >/dev/null; then \
+-	       LC_ALL=C find -L $(top_srcdir) -maxdepth 1 -type f -size -10000000c -exec grep 'GNU @PACKAGE@' /dev/null '{}' ';' 2>/dev/null; \
+-	     else \
+-	       LC_ALL=C grep 'GNU @PACKAGE@' $(top_srcdir)/* 2>/dev/null; \
+-	     fi; \
+-	   } | grep -v 'libtool:' >/dev/null; then \
+-	  package_gnu='GNU '; \
++	package_gnu="$(PACKAGE_GNU)"; \
++	test -n "$$package_gnu" || { \
++	  if { if (LC_ALL=C find --version) 2>/dev/null | grep GNU >/dev/null; then \
++		 LC_ALL=C find -L $(top_srcdir) -maxdepth 1 -type f \
++			       -size -10000000c -exec grep 'GNU @PACKAGE@' \
++			       /dev/null '{}' ';' 2>/dev/null; \
++	       else \
++		 LC_ALL=C grep 'GNU @PACKAGE@' $(top_srcdir)/* 2>/dev/null; \
++	       fi; \
++	     } | grep -v 'libtool:' >/dev/null; then \
++	     package_gnu=yes; \
++	   else \
++	     package_gnu=no; \
++	   fi; \
++	}; \
++	if test "$$package_gnu" = "yes"; then \
++	  package_prefix='GNU '; \
+ 	else \
+-	  package_gnu=''; \
++	  package_prefix=''; \
+ 	fi; \
+ 	if test -n '$(MSGID_BUGS_ADDRESS)' || test '$(PACKAGE_BUGREPORT)' = '@'PACKAGE_BUGREPORT'@'; then \
+ 	  msgid_bugs_address='$(MSGID_BUGS_ADDRESS)'; \
+@@ -170,7 +191,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
+ 	      --add-comments=TRANSLATORS: $(XGETTEXT_OPTIONS) @XGETTEXT_EXTRA_OPTIONS@ \
+ 	      --files-from=$(srcdir)/POTFILES.in \
+ 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
+-	      --package-name="$${package_gnu}@PACKAGE@" \
++	      --package-name="$${package_prefix}@PACKAGE@" \
+ 	      --package-version='@VERSION@' \
+ 	      --msgid-bugs-address="$$msgid_bugs_address" \
+ 	    ;; \
+@@ -198,9 +219,10 @@ $(srcdir)/$(DOMAIN).pot:
+ 
+ # This target rebuilds a PO file if $(DOMAIN).pot has changed.
+ # Note that a PO file is not touched if it doesn't need to be changed.
+-$(POFILES): $(srcdir)/$(DOMAIN).pot
++$(POFILES): $(POFILESDEPS)
+ 	@lang=`echo $@ | sed -e 's,.*/,,' -e 's/\.po$$//'`; \
+ 	if test -f "$(srcdir)/$${lang}.po"; then \
++	  test -f $(srcdir)/$(DOMAIN).pot || $(MAKE) $(srcdir)/$(DOMAIN).pot; \
+ 	  test "$(srcdir)" = . && cdcmd="" || cdcmd="cd $(srcdir) && "; \
+ 	  echo "$${cdcmd}$(MSGMERGE_UPDATE) $(MSGMERGE_OPTIONS) --lang=$${lang} $${lang}.po $(DOMAIN).pot"; \
+ 	  cd $(srcdir) \
+@@ -361,7 +383,7 @@ maintainer-clean: distclean
+ 
+ distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+ dist distdir:
+-	$(MAKE) update-po
++	test -z "$(DISTFILESDEPS)" || $(MAKE) $(DISTFILESDEPS)
+ 	@$(MAKE) dist2
+ # This is a separate target because 'update-po' must be executed before.
+ dist2: stamp-po $(DISTFILES)
+diff --git a/po/Makevars b/po/Makevars
+index 09ad17b..38ec551 100644
+--- a/po/Makevars
++++ b/po/Makevars
+@@ -8,7 +8,7 @@ subdir = po
+ top_builddir = ..
+ 
+ # These options get passed to xgettext.
+-XGETTEXT_OPTIONS = --keyword=_ --keyword=N_ --keyword=_F --keyword=_NF --keyword=_N
++XGETTEXT_OPTIONS = --keyword=_ --keyword=N_
+ 
+ # This is the copyright holder that gets inserted into the header of the
+ # $(DOMAIN).pot file.  Set this to the copyright holder of the surrounding
+@@ -20,6 +20,13 @@ XGETTEXT_OPTIONS = --keyword=_ --keyword=N_ --keyword=_F --keyword=_NF --keyword
+ # their copyright.
+ COPYRIGHT_HOLDER = Red Hat Inc., and others
+ 
++# This tells whether or not to prepend "GNU " prefix to the package
++# name that gets inserted into the header of the $(DOMAIN).pot file.
++# Possible values are "yes", "no", or empty.  If it is empty, try to
++# detect it automatically by scanning the files in $(top_srcdir) for
++# "GNU packagename" string.
++PACKAGE_GNU =
++
+ # This is the email address or URL to which the translators shall report
+ # bugs in the untranslated strings:
+ # - Strings which are not entire sentences, see the maintainer guidelines
+@@ -39,3 +46,33 @@ MSGID_BUGS_ADDRESS =
+ # This is the list of locale categories, beyond LC_MESSAGES, for which the
+ # message catalogs shall be used.  It is usually empty.
+ EXTRA_LOCALE_CATEGORIES =
++
++# This tells whether the $(DOMAIN).pot file contains messages with an 'msgctxt'
++# context.  Possible values are "yes" and "no".  Set this to yes if the
++# package uses functions taking also a message context, like pgettext(), or
++# if in $(XGETTEXT_OPTIONS) you define keywords with a context argument.
++USE_MSGCTXT = no
++
++# These options get passed to msgmerge.
++# Useful options are in particular:
++#   --previous            to keep previous msgids of translated messages,
++#   --quiet               to reduce the verbosity.
++MSGMERGE_OPTIONS =
++
++# These options get passed to msginit.
++# If you want to disable line wrapping when writing PO files, add
++# --no-wrap to MSGMERGE_OPTIONS, XGETTEXT_OPTIONS, and
++# MSGINIT_OPTIONS.
++MSGINIT_OPTIONS =
++
++# This tells whether or not to regenerate a PO file when $(DOMAIN).pot
++# has changed.  Possible values are "yes" and "no".  Set this to no if
++# the POT file is checked in the repository and the version control
++# program ignores timestamps.
++PO_DEPENDS_ON_POT = yes
++
++# This tells whether or not to forcibly update $(DOMAIN).pot and
++# regenerate PO files on "make dist".  Possible values are "yes" and
++# "no".  Set this to no if the POT file and PO files are maintained
++# externally.
++DIST_DEPENDS_ON_UPDATE_PO = yes
+diff --git a/po/Rules-quot b/po/Rules-quot
+index d2ac20d..9dc9630 100644
+--- a/po/Rules-quot
++++ b/po/Rules-quot
+@@ -1,3 +1,4 @@
++# This file, Rules-quot, can be copied and used freely without restrictions.
+ # Special Makefile rules for English message catalogs with quotation marks.
+ 
+ DISTFILES.common.extra1 = quot.sed boldquot.sed en@quot.header en@boldquot.header insert-header.sin Rules-quot
+@@ -20,7 +21,17 @@ en@boldquot.po-update: en@boldquot.po-update-en
+ 	ll=`echo $$lang | sed -e 's/@.*//'`; \
+ 	LC_ALL=C; export LC_ALL; \
+ 	cd $(srcdir); \
+-	if $(MSGINIT) -i $(DOMAIN).pot --no-translator -l $$lang -o - 2>/dev/null | sed -f $$tmpdir/$$lang.insert-header | $(MSGCONV) -t UTF-8 | $(MSGFILTER) sed -f `echo $$lang | sed -e 's/.*@//'`.sed 2>/dev/null > $$tmpdir/$$lang.new.po; then \
++	if $(MSGINIT) $(MSGINIT_OPTIONS) -i $(DOMAIN).pot --no-translator -l $$lang -o - 2>/dev/null \
++	   | $(SED) -f $$tmpdir/$$lang.insert-header | $(MSGCONV) -t UTF-8 | \
++	   { case `$(MSGFILTER) --version | sed 1q | sed -e 's,^[^0-9]*,,'` in \
++	     '' | 0.[0-9] | 0.[0-9].* | 0.1[0-8] | 0.1[0-8].*) \
++	       $(MSGFILTER) $(SED) -f `echo $$lang | sed -e 's/.*@//'`.sed \
++	       ;; \
++	     *) \
++	       $(MSGFILTER) `echo $$lang | sed -e 's/.*@//'` \
++	       ;; \
++	     esac } 2>/dev/null > $$tmpdir/$$lang.new.po \
++	     ; then \
+ 	  if cmp $$lang.po $$tmpdir/$$lang.new.po >/dev/null 2>&1; then \
+ 	    rm -f $$tmpdir/$$lang.new.po; \
+ 	  else \
+-- 
+2.2.1
+

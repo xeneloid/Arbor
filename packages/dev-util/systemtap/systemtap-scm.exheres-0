@@ -5,5 +5,7 @@ SCM_REPOSITORY="git://sourceware.org/git/${PN}.git"
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ] scm-git systemtap
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gettextize-to-gettext-0.19.patch )
+
 PLATFORMS="~amd64"
 
