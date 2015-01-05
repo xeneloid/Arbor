@@ -8,7 +8,7 @@
 
 # If your gem does not support all our Ruby slots, you have to list
 # all supported slots yourself
-myexparam ruby_abis=[ 2.0 2.1 ]
+myexparam ruby_abis=[ 2.0 2.1 2.2 ]
 
 # Hide the ruby_abis:* options and the dependencies behind an option
 # If you specify one, you have to call gem_src_install by yourself
