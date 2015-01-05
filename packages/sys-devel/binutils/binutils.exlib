@@ -20,6 +20,11 @@ MYOPTIONS="
 RESTRICT="test"
 
 DEPENDENCIES="
+    build+run:
+        !sys-devel/gdb[<=7.8.1] [[
+            description = [ gdb and binutils both installed libbfd and libiberty ]
+            resolution = uninstall-blocked-after
+        ]]
     test-expensive:
         dev-tcl/expect
         sys-apps/bc
