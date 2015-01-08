@@ -74,6 +74,7 @@ MYOPTIONS="
             pg_upgrade [[ description = [ Command line utility to upgrade clusters between major versions ] ]]
             pgcrypto [[ description = [ Cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
             pgstattuple [[ description = [ Functions for tuple-level statistics ] ]]
+            postgres_fdw [[ description = [ Extension with the Foreign Data Wrapper to access other PostgreSQL servers ] ]]
             seg [[ description = [ The seg data type for representing line segments or floating point intervals ] ]]
             spi [[ description = [ Package of autoinc, insert_username, moddatetime, refint and timetravel extensions ] ]]
             sslinfo [[ description = [ Functions for retrieving informations about the client SSL certificate ]
@@ -123,6 +124,7 @@ OPTIONS_IN_CONTRIB=(
     pg_upgrade
     pgcrypto
     pgstattuple
+    postgres_fdw
     seg
     spi
     sslinfo
@@ -155,7 +157,7 @@ DEPENDENCIES="
         )
 "
 
-if ever at_least 9.4; then
+if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
     PG_WITH_UUID="uuid=e2fs"
 else
     DEPENDENCIES+="
@@ -250,6 +252,11 @@ EOF
 postgresql_src_test() {
     esandbox allow_net "unix:${TEMP}/.s.PGSQL.*"
     esandbox allow_net --connect "unix:${TEMP}/.s.PGSQL.*"
+    if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
+        esandbox allow_net --connect "unix:/run/uuidd/request"
+        esandbox allow_net --connect "inet:0.0.0.0/0@53"
+        esandbox allow_net --connect "inet:127.0.0.1@9"
+    fi
 
     PG_REGRESS_SOCK_DIR="${TEMP}" default
 
@@ -261,5 +268,10 @@ postgresql_src_test() {
 
     esandbox disallow_net "unix:${TEMP}/.s.PGSQL.*"
     esandbox disallow_net --connect "unix:${TEMP}/.s.PGSQL.*"
+    if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
+        esandbox disallow_net --connect "unix:/run/uuidd/request"
+        esandbox disallow_net --connect "inet:0.0.0.0/0@53"
+        esandbox disallow_net --connect "inet:127.0.0.1@9"
+    fi
 }
 

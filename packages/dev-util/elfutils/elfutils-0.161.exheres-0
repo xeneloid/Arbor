@@ -37,6 +37,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-zlib
 )
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/147018e729e7c22eeabf15b82d26e4bf68a0d18e.patch )
+
 src_configure() {
     # NOTE (abdulras) tests require that the debug information be present in the tools
     expecting_tests && append-flags -g

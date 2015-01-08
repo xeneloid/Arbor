@@ -3,8 +3,7 @@
 # Based in part upon 'rpcbind-0.2.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2009 Gentoo Foundation
 
-require sourceforge
-require systemd-service [ systemd_files=[ systemd/rpcbind.service systemd/rpcbind.socket ] ]
+require sourceforge systemd-service
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="RPC server replacing portmap"
@@ -34,18 +33,15 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/b3b031b07cc5909aaf964f9d4cf46f6097769320.patch
-    "${FILES}"/0001-systemd-add-support-for-system-bus-activation.patch
-    "${FILES}"/0001-socket-activation-don-t-unlink-socket-we-didn-t-create.patch
-    "${FILES}"/0001-socket-activation-fix-rpcbind-service-to-use-separate-socket.patch
-    "${FILES}"/rpcbind-journal.patch
-    "${FILES}"/move-lock-file-to-run-fs.patch
-    "${FILES}"/rpcbind-exherbo-systemd-disable-warmstart.patch
+    "${FILES}"/${PN}-0.2.3-rc1.patch
+    "${FILES}"/${PN}-0.2.1-move-lock-file-to-run-fs.patch
+    "${FILES}"/${PN}-0.2.2-warmstart.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --bindir=/usr/$(exhost --target)/sbin
     --enable-warmstarts
+    --with-nss-modules="files"
     --with-statedir=/run/${PN}
     --with-rpcuser=rpc
 )
@@ -56,6 +52,8 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 
 src_install() {
     default
+
+    install_systemd_files
 
     if option systemd ; then
         insinto /usr/$(exhost --target)/lib/tmpfiles.d

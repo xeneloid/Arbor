@@ -44,7 +44,7 @@ llvm_src_prepare() {
         expatch "${FILES}"/llvm-config-path.patch
     fi
 
-    if ever at_least 3.4 && ! ever is_scm; then
+    if ever at_least 3.4 && ! ever at_least 3.5; then
         expatch "${FILES}"/llvm-config-path-3.4.patch
     fi
 

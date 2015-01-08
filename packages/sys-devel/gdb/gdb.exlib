@@ -40,6 +40,10 @@ DEPENDENCIES="
         sys-libs/readline
         guile? ( dev-lang/guile:=[>=2.0] )
         python? ( dev-lang/python:= )
+        !sys-devel/binutils[<=2.25] [[
+            description = [ gdb and binutils both installed libbfd and libiberty ]
+            resolution = upgrade-blocked-before
+        ]]
 "
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
@@ -54,6 +58,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-curses
     --with-expat
     --with-system-readline
+    # These are already installed by binutils:
+    --disable-install-libbfd
+    --disable-install-libiberty
 )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( gdb sim )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( CONTRIBUTE )
