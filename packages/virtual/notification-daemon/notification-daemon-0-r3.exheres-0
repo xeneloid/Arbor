@@ -18,6 +18,7 @@ MYOPTIONS="
         notification-daemon-xfce
         notify-osd
         plasma
+        xfce4-notifyd
     ) [[
         *description = [ Freedesktop notifications provider ]
         number-selected = at-least-one
@@ -34,5 +35,6 @@ DEPENDENCIES="
     providers:notification-daemon-xfce? ( xfce-extra/notification-daemon-xfce )
     providers:notify-osd? ( x11-apps/notify-osd )
     providers:plasma? ( kde/plasma-workspace [[ description = [ Use Plasma 5 as notification daemon ] ]] )
+    providers:xfce4-notifyd? ( xfce-extra/xfce4-notifyd )
 "
 
