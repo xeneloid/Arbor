@@ -1,9 +1,7 @@
 # Copyright 2012 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="http://llvm.org/git/llvm.git"
-
-require scm-git llvm
+require llvm
 
 PLATFORMS="~amd64"
 
