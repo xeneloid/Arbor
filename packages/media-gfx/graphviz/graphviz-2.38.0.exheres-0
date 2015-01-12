@@ -3,26 +3,27 @@
 # Based in part upon 'graphviz-2.18.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
-
 SUMMARY="Open Source Graph Visualization Software"
-HOMEPAGE="http://www.graphviz.org/"
+HOMEPAGE="http://www.graphviz.org"
 DOWNLOADS="${HOMEPAGE}/pub/${PN}/ARCHIVE/${PNV}.tar.gz"
 
 LICENCES="EPL-1.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-           svg [[ description = [ Support node shapes in svg output ] ]]
            gtk  [[ description = [ Provides canvas support and cairo renderer ] ]]
+           pdf
+           postscript [[ description = [ Support for PostScript utilizing Ghostscript ] ]]
+           svg [[ description = [ Support node shapes in svg output ] ]]
+           webp [[ description = [ Support for the Webp image format ] ]]
            X
 " # perl python ruby"
 
 DEPENDENCIES="
     build:
-        virtual/pkg-config[>=0.20]
         sys-devel/flex
         sys-devel/gettext
+        virtual/pkg-config[>=0.20]
     build+run:
         dev-libs/expat[>=2.0.0]  [[ note = [ Required for HTML-like labels ] ]]
         dev-libs/glib:2[>=2.11]
@@ -31,8 +32,11 @@ DEPENDENCIES="
         media-libs/libpng:=[>=1.2]
         x11-libs/cairo[>=1.1.10]
         x11-libs/pango[>=1.12.4]
-        svg? ( gnome-desktop/librsvg:2 )
         gtk? ( x11-libs/gtk+:2[>=2.7] )
+        pdf? ( app-text/poppler[glib] )
+        postscript? ( app-text/ghostscript )
+        svg? ( gnome-desktop/librsvg:2 )
+        webp? ( media-libs/libwebp )
         X? ( x11-libs/libXaw )
 "
 
@@ -65,6 +69,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-devil
     --without-libgd
     # Deprecated crap
+    --without-gdk
     --without-gdk-pixbuf
     --without-ming
     --without-gtkgl
@@ -75,7 +80,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     # No swig-bindings yet
     --disable-{guile,java,io,ocaml,php,r,sharp,tcl}
     # Requires extra packages (gts, smyrna, etc.), and doesn't seem to work yet (cgraph)
-    --without-{smyrna,glade,gtkglext,cgraph,gts}
+    --without-{ann,cgraph,glade,gtkglext,gts,lasi,smyrna}
     # disable gvedit, requires Qt
     --without-qt
 )
@@ -85,8 +90,11 @@ TODO_DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
-    'svg rsvg'
     'gtk'
+    'pdf poppler'
+    'postscript ghostscript'
+    'svg rsvg'
+    'webp'
     'X x'
 )
 
