@@ -1,6 +1,17 @@
 # Copyright 2012 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+if ever is_scm ; then
+    SCM_REPOSITORY="http://llvm.org/git/clang.git"
+
+    require scm-git
+else
+    MY_PNV=cfe-${PV}.src
+    WORK=${WORKBASE}/${MY_PNV}
+
+    DOWNLOADS=http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz
+fi
+
 require cmake [ api=2 ] easy-multibuild
 
 export_exlib_phases src_prepare src_install
@@ -17,12 +28,14 @@ DEPENDENCIES="
         dev-lang/perl:*
         sys-devel/flex
     build+run:
-        dev-lang/llvm[~${PV}]
+        dev-lang/llvm[multibuild_c:*(-)?][~${PV}]
     run:
        sys-devel/gcc:*
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-3.2-tblgen.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/clang-3.5.0-lit.cfg-use-PATH.patch"
+)
 
 clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
@@ -35,26 +48,24 @@ clang_src_prepare() {
 }
 
 configure_one_multibuild() {
+    # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
+    # method is hidden; move the definition out of line, and export the interface
     local args=(
-        -DCLANG_PATH_TO_LLVM_BUILD:STRING=/usr
+        -DCLANG_INCLUDE_TESTS:BOOL=$(expecting_tests TRUE FALSE)
+        -DLLVM_CONFIG:STRING=/usr/bin/${CHOST}-llvm-config
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
+        -DLLVM_LIT_ARGS:STRING="-sv"
         -DLLVM_MAIN_SRC_DIR:STRING=/usr
-        -DCLANG_INCLUDE_TESTS:BOOL=TRUE
-        -DLIT:STRING=/usr/bin/llvm-lit
+        -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO
     )
-    if ever at_least 3.4 ; then
-        # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
-        # method is hidden; move the definition out of line, and export the interface
-        args+=( -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO )
-    fi
+
     ecmake "${args[@]}"
 }
 
 test_one_multibuild() {
-    PATH="/usr/libexec/llvm:${PWD}/utils/TableGen/clang_tblgen_build_subdir:${PATH}" \
-    CLANG="${PWD}/bin/clang" \
-    LIT=/usr/bin/llvm-lit \
-    emake clang-test
+    PATH="/usr/libexec/llvm:${PATH}" \
+        CLANG="${PWD}/bin/clang" \
+        emake clang-test
 }
 
 clang_src_install() {
@@ -62,7 +73,6 @@ clang_src_install() {
 
     # the sole file here, config.h, is explicitly not installed
     edo rmdir "${IMAGE}"/usr/include/clang/Config
-    ever at_least 3.4 && ! ever is_scm && edo rmdir "${IMAGE}/usr/include/clang/IDE"
 
     edo pushd "${CMAKE_SOURCE}"/tools
     insinto /usr/share/clang-analyzer
