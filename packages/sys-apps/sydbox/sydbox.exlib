@@ -77,6 +77,11 @@ sydbox_src_test() {
     else
         elog "Not running tests because sydbox doesn't work under sydbox"
         elog "set PALUDIS_DO_NOTHING_SANDBOXY=1 if you want to run the tests"
+
+        if ever at_least 1.0.2; then
+            elog "As of sydbox-1.0.2, tests are installed by default."
+            elog "You can use the helper utility sydtest to run the tests."
+        fi
     fi
 }
 
