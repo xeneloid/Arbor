@@ -41,7 +41,7 @@ fi
 if ever at_least 1.0.0; then
     DEPENDENCIES+="
         build+run:
-            dev-libs/pinktrace[~scm]"
+            dev-libs/pinktrace[>=0.9.0]"
 elif ever at_least 1; then
     # sydbox 1 pre-releases come with their own embedded pinktrace
     :
