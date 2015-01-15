@@ -50,6 +50,24 @@ llvm_src_prepare() {
     # Fix the use of dot
     edo sed -e 's/@DOT@//g' -i docs/doxygen.cfg.in
 
+    # expect some tests to fail for everything except the default class
+    local xfail_line="" target
+    for target in ${MULTIBUILD_C_TARGETS} ; do
+        if ! MULTIBUILD_TARGET=${target} multibuild_default_target C ; then
+            xfail_line+=",$(multibuild_get_var C ${target} CHOST)"
+        fi
+    done
+    if [[ -n "${xfail_line}" ]]; then
+        xfail_line="XFAIL: ${xfail_line#,}"
+        local file
+        # gold tests won't work since our system ld isn't multibuilt
+        for file in test/tools/gold/*.ll ; do
+            edo sed \
+                -e "1 i\\; ${xfail_line}" \
+                -i "${file}"
+        done
+    fi
+
     if ! ever at_least scm ; then
         expatch "${FILES}"/${PN}-fix-llvm-config.patch
         expatch "${FILES}"/llvm-config-path-v3.patch
