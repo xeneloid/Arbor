@@ -14,7 +14,7 @@ fi
 
 require cmake [ api=2 ] easy-multibuild
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_prepare src_compile src_install
 
 SUMMARY="C language family frontend for LLVM"
 HOMEPAGE="http://clang.llvm.org/"
@@ -26,6 +26,7 @@ MYOPTIONS="multibuild_c: 32 64"
 DEPENDENCIES="
     build:
         dev-lang/perl:*
+        dev-python/Sphinx
         sys-devel/flex
     build+run:
         dev-lang/llvm[multibuild_c:*(-)?][~${PV}]
@@ -62,6 +63,14 @@ configure_one_multibuild() {
     ecmake "${args[@]}"
 }
 
+clang_src_compile() {
+    easy-multibuild_src_compile
+
+    edo pushd "${CMAKE_SOURCE}"/docs
+    emake -f Makefile.sphinx man html
+    edo popd
+}
+
 test_one_multibuild() {
     PATH="/usr/libexec/llvm:${PATH}" \
         CLANG="${PWD}/bin/clang" \
@@ -74,13 +83,21 @@ clang_src_install() {
     # the sole file here, config.h, is explicitly not installed
     edo rmdir "${IMAGE}"/usr/include/clang/Config
 
-    edo pushd "${CMAKE_SOURCE}"/tools
+    edo pushd "${CMAKE_SOURCE}"
+    edo pushd docs/_build
+    doman man/*
+    dodoc -r html
+    edo popd
+
+    edo pushd tools
     insinto /usr/share/clang-analyzer
     for f in scan-{build,view} ; do
         doins -r ${f}
         dosym /usr/share/clang-analyzer/${f}/${f} /usr/bin/${f}
     done
     edo popd
+    edo popd
+
     edo pushd "${IMAGE}"/usr/share/clang-analyzer
     edo chmod a+x scan-build/{ccc-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
     edo popd
