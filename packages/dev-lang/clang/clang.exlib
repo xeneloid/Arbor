@@ -25,6 +25,7 @@ MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build:
+        dev-cpp/gtest[multibuild_c:*(-)?] [[ note = [ LLVMExports-none.cmake references libgtest.a, so the build will fail without it even when tests are disabled ] ]]
         dev-lang/perl:*
         dev-python/Sphinx
         sys-devel/flex
