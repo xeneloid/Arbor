@@ -23,14 +23,20 @@ LICENCES="UoI-NCSA"
 SLOT="0"
 MYOPTIONS="multibuild_c: 32 64"
 
+if ever at_least scm; then
+    LLVM_PVR=${PV}
+else
+    # we require at least 3.5.1-r2 because libgtest*.a wasn't properly installed for the other ones
+    LLVM_PVR=${PV}-r2
+fi
+
 DEPENDENCIES="
     build:
-        dev-cpp/gtest[multibuild_c:*(-)?] [[ note = [ LLVMExports-none.cmake references libgtest.a, so the build will fail without it even when tests are disabled ] ]]
         dev-lang/perl:*
         dev-python/Sphinx
         sys-devel/flex
     build+run:
-        dev-lang/llvm[multibuild_c:*(-)?][~${PV}]
+        dev-lang/llvm[multibuild_c:*(-)?][~${LLVM_PVR}]
     run:
        sys-devel/gcc:*
 "
