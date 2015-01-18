@@ -92,7 +92,7 @@ configure_one_multibuild() {
         -DLLVM_BINUTILS_INCDIR:STRING=/usr/include
         -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=${CHOST}
         -DLLVM_ENABLE_ASSERTIONS:BOOL=$(option asserts TRUE FALSE)
-        -DLLVM_INCLUDE_TESTS:BOOL=$(expecting_tests TRUE FALSE)
+        -DLLVM_INCLUDE_TESTS:BOOL=TRUE
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
         -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO
     )
@@ -118,8 +118,18 @@ install_one_multibuild() {
     # the next target
     edo mv "${IMAGE}"/usr/share/llvm/cmake/{LLVMExports-none,_LLVMExports-none-${MULTIBUILD_TARGET}}.cmake
 
-    # remove llvm's copy of gtest; clang should use the system gtest library
-    expecting_tests && edo rm "${IMAGE}"/usr/${LIBDIR}/libgtest*
+    # prefix the llvm gtest copy so it doesn't clash with the system one
+    edo mkdir "${IMAGE}"/usr/${LIBDIR}/llvm
+
+    local lib
+    for lib in "${IMAGE}"/usr/${LIBDIR}/libgtest* ; do
+        lib=${lib#${IMAGE}/usr/${LIBDIR}/}
+
+        edo mv "${IMAGE}"/usr/${LIBDIR}/{,llvm/}${lib}
+        edo sed \
+            -e "s:${LIBDIR}/${lib}:${LIBDIR}/llvm/${lib}:g" \
+            -i "${IMAGE}"/usr/share/llvm/cmake/_LLVMExports-none-${MULTIBUILD_TARGET}.cmake
+    done
 
     # Use our system copy of llvm-lit instead of expecting the llvm sources to be present in the
     # file system. This is currently needed for clang.
