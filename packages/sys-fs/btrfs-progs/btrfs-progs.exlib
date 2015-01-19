@@ -28,6 +28,8 @@ SLOT="0"
 MYOPTIONS=""
 
 DEPENDENCIES="
+    build:
+        app-doc/asciidoc
     build+run:
         app-arch/lzo:2
         sys-apps/acl
