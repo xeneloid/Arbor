@@ -14,16 +14,17 @@ if ! ever is_scm ; then
     DOWNLOADS="http://dev.exherbo.org/~alip/pinktrace/release/${PNV}.tar.bz2"
 fi
 
-LICENCES="BSD-3"
-SLOT="0"
-
 BUGS_TO="alip@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
+
 UPSTREAM_DOCUMENTATION="
     ${HOMEPAGE}/api/c      [[ lang = en description = [ API documentation ] ]]
     ${HOMEPAGE}/api/python [[ lang = en description = [ Python bindings API documentation ] ]]
     ${HOMEPAGE}/api/ruby   [[ lang = en description = [ Ruby bindings API documentation ] ]]
 "
+
+LICENCES="BSD-3"
+SLOT="0"
 
 pinktrace_src_test() {
     if ! esandbox check 2>/dev/null; then
