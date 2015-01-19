@@ -1,5 +1,5 @@
 # Copyright 2009 Bryan Østergaard
-# Copyright 2012-2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2012-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
