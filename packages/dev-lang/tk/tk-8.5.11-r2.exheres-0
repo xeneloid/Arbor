@@ -61,12 +61,17 @@ install_one_multibuild() {
     nonfatal emake DESTDIR="${IMAGE}" install-private-headers || die "emake install-private-headers failed"
 
     local v1=$(ever range 1-2)
+    local v2=$(ever range 1-3)
     # Fix the tkConfig.sh to eliminate references to the build directory
     local mylibdir=${LIBDIR//\/}
-    edo sed -e "s,^\(TK_BUILD_LIB_SPEC='-L\)${WORK%%/},\1/usr/${mylibdir}," \
-            -e "s,^\(TK_SRC_DIR='\)${WORK%%/}',\1/usr/${mylibdir}/${PN}${v1}/include'," \
-            -e "s,^\(TK_BUILD_STUB_LIB_SPEC='-L\)${WORK%%/},\1/usr/${mylibdir}," \
-            -e "s,^\(TK_BUILD_STUB_LIB_PATH='\)${WORK%%/},\1/usr/${mylibdir}," \
+
+    local worklibdir=${WORKBASE}/C/${mylibdir//lib}
+    local workincdir=${WORKBASE}/${PN}${v2}
+
+    edo sed -e "s,^\(TK_BUILD_LIB_SPEC='-L\)${worklibdir%%/},\1/usr/${mylibdir}," \
+            -e "s,^\(TK_SRC_DIR='\)${workincdir%%/}',\1/usr/include'," \
+            -e "s,^\(TK_BUILD_STUB_LIB_SPEC='-L\)${worklibdir%%/},\1/usr/${mylibdir}," \
+            -e "s,^\(TK_BUILD_STUB_LIB_PATH='\)${worklibdir%%/},\1/usr/${mylibdir}," \
             -e "s,^\(TK_CC_SEARCH_FLAGS='.*\)',\1:/usr/${mylibdir}'," \
             -e "s,^\(TK_LD_SEARCH_FLAGS='.*\)',\1:/usr/${mylibdir}'," \
             -i "${IMAGE}"/usr/${mylibdir}/tkConfig.sh
