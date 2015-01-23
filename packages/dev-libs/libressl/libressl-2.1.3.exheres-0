@@ -4,7 +4,7 @@
 require easy-multibuild
 
 # we need openssl for c_rehash
-OSSL_PNV="openssl-1.0.1j"
+OSSL_PNV="openssl-1.0.2"
 
 SUMMARY="OpenBSD's portable fork of OpenSSL"
 DESCRIPTION="
@@ -33,7 +33,6 @@ BUGS_TO="will@worrbase.com"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-rand-egd.patch
-    "${FILES}"/${PNV}-add-stdint.h-to-ssl.h.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
