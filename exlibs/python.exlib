@@ -1,5 +1,6 @@
 # Copyright 2009 Ingmar Vanhassel
 # Copyright 2013 Jorge Aparicio
+# Copyright 2015 Pierre Lejeune
 # Distributed under the terms of the GNU General Public License v2
 
 # Based in part upon 'python.eclass' v1.32 from Gentoo, which is:
@@ -46,6 +47,13 @@
 #
 #   option_name ( format: foo ) ( defaults to python )
 #     the name of the option that needs to be enabled to build python bindings
+#
+#   2to3 (format: true or false) ( defaults to false )
+#     whether to use 2to3 prior to build
+#     The following arrays can be defined:
+#       PYTHON_2TO3_FIXES: array of fixes to apply. Can be empty.
+#       PYTHON_2TO3_NOFIXES: array of fixes to NOT apply. Can be empty.
+#       PYTHON_2TO3_PARAMS: array of files and directories to transform. Defaults to * if empty.
 
 # example:
 #   require python [ python_opts="[readline]" min_versions="3.1.1" \
@@ -65,6 +73,7 @@
 
 myexparam -b has_lib=true
 myexparam -b has_bin=false
+myexparam -b 2to3=false
 
 PYTHON_EXLIB_API=2
 
@@ -76,6 +85,8 @@ fi
 
 case ${PYTHON_EXLIB_API} in
     1)
+        exparam -b 2to3 && export_exlib_phases src_prepare
+
         myexparam python_dep=
 
         if [[ $(exparam python_dep) == \[*\] ]] ; then
@@ -158,6 +169,14 @@ case ${PYTHON_EXLIB_API} in
             edo python$(python_get_abi)    -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
             edo python$(python_get_abi) -O -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
         }
+
+        if exparam -b 2to3; then
+            python_src_prepare() {
+                default
+
+                python_run_2to3
+            }
+        fi
         ;;
     2)
         myexparam -b multibuild=true
@@ -241,7 +260,12 @@ case ${PYTHON_EXLIB_API} in
             # set python version which we will build against, we need that until easy-multibuild is fixed
             # PYTHON_ABIS is set via the suboption
             if exparam -b multibuild; then
-                export_exlib_phases src_configure src_compile src_test src_install
+                local export_src_prepare=
+                if exparam -b 2to3; then
+                    export_exlib_phases src_prepare src_configure src_compile src_test src_install
+                else
+                    export_exlib_phases src_configure src_compile src_test src_install
+                fi
 
                 python_run_phase() {
                     if exparam -b with_opt; then
@@ -250,6 +274,18 @@ case ${PYTHON_EXLIB_API} in
                         easy-multibuild_run_phase
                     fi
                 }
+
+                if exparam -b 2to3; then
+                    python_src_prepare() {
+                        python_run_phase
+                    }
+
+                    prepare_one_multibuild() {
+                        default
+
+                        python_run_2to3
+                    }
+                fi
 
                 python_src_configure() {
                     python_run_phase
@@ -268,7 +304,17 @@ case ${PYTHON_EXLIB_API} in
                     emagicdocs
                 }
             else
+                exparam -b 2to3 && export_exlib_phases src_prepare
+
                 export PYTHON="/usr/bin/python${PYTHON_ABIS}"
+
+                if exparam -b 2to3; then
+                    python_src_prepare() {
+                        default
+
+                        python_run_2to3
+                    }
+                fi
             fi
         else
             # TODO decide what to do with this part
@@ -346,3 +392,37 @@ case ${PYTHON_EXLIB_API} in
         die "Detecting python exlib api went wrong"
         ;;
 esac
+
+if exparam -b 2to3; then
+    # Runs 2to3 to make source code compatible with Python-3.
+    e2to3() {
+        illegal_in_global_scope
+
+        [[ ${EXHERES_PHASE} != prepare ]] && die "${FUNCNAME} should only be run in src_prepare()"
+
+        local python_abi=$(python_get_abi) fixes=() nofixes=()
+
+        [[ $(ever major ${python_abi}) != 3 ]] && die "${FUNCNAME} is for usage with python-3 only"
+
+        [[ -n ${PYTHON_2TO3_PARAMS[@]} ]] || PYTHON_2TO3_PARAMS=( * )
+
+        for fix in "${PYTHON_2TO3_FIXES[@]}"; do
+            fixes+=( "--fix=${fix}" )
+        done
+
+        for nofix in "${PYTHON_2TO3_NOFIXES[@]}"; do
+            nofixes+=( "--nofix=${nofix}" )
+        done
+
+        edo 2to3-${python_abi} -j${EXJOBS:-1} -wn --no-diffs "${fixes[@]}" "${nofixes[@]}" "${PYTHON_2TO3_PARAMS[@]}"
+    }
+
+    python_run_2to3() {
+        illegal_in_global_scope
+
+        local python_abi=$(python_get_abi)
+
+        [[ $(ever major ${python_abi}) == 3 ]] && e2to3
+    }
+fi
+
