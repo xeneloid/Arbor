@@ -1,9 +1,9 @@
 # Copyright 2008, 2009 Mike Kelly <pioto@exherbo.org>
-# Distributed under the terms of the GPL v2
+# Distributed under the terms of the GNU General Public License v2
 
 require udev-rules github [ user=rickysarraf tag="upstream/${PV}" ] systemd-service [ systemd_files=[ etc/systemd/laptop-mode.service ] ]
 
-SUMMARY="A laptop power saving package for Linux systems"
+SUMMARY="Laptop power saving package for Linux systems"
 DESCRIPTION="
 Laptop mode is a kernel \"mode\" that allows you to extend the battery
 life of your laptop. It does this by making disk write activity
@@ -26,10 +26,9 @@ MYOPTIONS="baselayout systemd"
 
 DEPENDENCIES="
     run:
+        sys-apps/iproute2 [[ note = [ for shutting down ethernet devices ] ]]
         sys-power/acpid
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-0001-Make-usr-lib-path-configurable.patch )
 
 src_compile() { :; }
 
@@ -38,13 +37,16 @@ src_install() {
         LIB_D="${LIBDIR}" ULIB_D="/usr/${LIBDIR}" UDEV_D="${UDEVRULESDIR}" \
         INIT_D="none" SYSTEMD="no" \
         edo ./install.sh
+
     keepdir /etc/laptop-mode/{batt,lm-ac,nolm-ac}-{start,stop} /etc/laptop-mode/modules
 
     option baselayout && newinitd "${FILES}"/laptop-mode.init.d-0 laptop-mode
 
+    install_systemd_files
+
     if option systemd ; then
-        install_systemd_files
-        edo install -D -m 644 etc/systemd/laptop-mode.conf.tmpfiles "${IMAGE}"/usr/"${LIBDIR}"/tmpfiles.d/laptop-mode.conf
+        insinto /usr/${LIBDIR}/tmpfiles.d
+        newins etc/systemd/laptop-mode.conf.tmpfiles laptop-mode.conf
     fi
 }
 
