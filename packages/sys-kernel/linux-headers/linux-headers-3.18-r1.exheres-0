@@ -5,3 +5,5 @@ require linux-headers
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/be955b2984822e2a66176bccb3e0dbaf9cd569b6.patch )
+
