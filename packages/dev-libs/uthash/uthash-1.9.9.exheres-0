@@ -1,7 +1,7 @@
 # Copyright 2012 Nikolay Orlyuk
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge
+require github [ user=troydhanson tag=v${PV} ]
 
 SUMMARY="A hash table for C structures"
 DESCRIPTION="
@@ -13,6 +13,7 @@ member to the structure and calling these macros.
 LICENCES="BSD"
 SLOT="0"
 PLATFORMS="~amd64"
+MYOPTIONS="doc"
 
 DEPENDENCIES="
     test:
@@ -22,11 +23,18 @@ DEPENDENCIES="
 BUGS_TO="virkony@gmail.com"
 
 src_install() {
-    dodoc -r doc/{html,pdf,txt}
     insinto /usr/include
     doins src/*.h
+
+    emagicdocs
+
+    if option doc ; then
+        docinto html
+        dodoc -r doc/*.{css,html,png}
+    fi
 }
 
 src_test() {
     emake -C tests
 }
+
