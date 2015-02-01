@@ -1,9 +1,20 @@
 # Copyright 2012 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+if ever is_scm ; then
+    SCM_REPOSITORY="http://llvm.org/git/clang.git"
+
+    require scm-git
+else
+    MY_PNV=cfe-${PV}.src
+    WORK=${WORKBASE}/${MY_PNV}
+
+    DOWNLOADS=http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz
+fi
+
 require cmake [ api=2 ] easy-multibuild
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_prepare src_compile src_install
 
 SUMMARY="C language family frontend for LLVM"
 HOMEPAGE="http://clang.llvm.org/"
@@ -12,17 +23,27 @@ LICENCES="UoI-NCSA"
 SLOT="0"
 MYOPTIONS="multibuild_c: 32 64"
 
+if ever at_least scm; then
+    LLVM_PVR=${PV}
+else
+    # we require at least 3.5.1-r2 because libgtest*.a wasn't properly installed for the other ones
+    LLVM_PVR=${PV}-r2
+fi
+
 DEPENDENCIES="
     build:
         dev-lang/perl:*
+        dev-python/Sphinx
         sys-devel/flex
     build+run:
-        dev-lang/llvm[~${PV}]
+        dev-lang/llvm[multibuild_c:*(-)?][~${LLVM_PVR}]
     run:
        sys-devel/gcc:*
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-3.2-tblgen.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/clang-3.5.0-lit.cfg-use-PATH.patch"
+)
 
 clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
@@ -35,26 +56,32 @@ clang_src_prepare() {
 }
 
 configure_one_multibuild() {
+    # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
+    # method is hidden; move the definition out of line, and export the interface
     local args=(
-        -DCLANG_PATH_TO_LLVM_BUILD:STRING=/usr
+        -DCLANG_INCLUDE_TESTS:BOOL=$(expecting_tests TRUE FALSE)
+        -DLLVM_CONFIG:STRING=/usr/bin/${CHOST}-llvm-config
         -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
+        -DLLVM_LIT_ARGS:STRING="-sv"
         -DLLVM_MAIN_SRC_DIR:STRING=/usr
-        -DCLANG_INCLUDE_TESTS:BOOL=TRUE
-        -DLIT:STRING=/usr/bin/llvm-lit
+        -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO
     )
-    if ever at_least 3.4 ; then
-        # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
-        # method is hidden; move the definition out of line, and export the interface
-        args+=( -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO )
-    fi
+
     ecmake "${args[@]}"
 }
 
+clang_src_compile() {
+    easy-multibuild_src_compile
+
+    edo pushd "${CMAKE_SOURCE}"/docs
+    emake -f Makefile.sphinx man html
+    edo popd
+}
+
 test_one_multibuild() {
-    PATH="/usr/libexec/llvm:${PWD}/utils/TableGen/clang_tblgen_build_subdir:${PATH}" \
-    CLANG="${PWD}/bin/clang" \
-    LIT=/usr/bin/llvm-lit \
-    emake clang-test
+    PATH="/usr/libexec/llvm:${PATH}" \
+        CLANG="${PWD}/bin/clang" \
+        emake clang-test
 }
 
 clang_src_install() {
@@ -62,15 +89,22 @@ clang_src_install() {
 
     # the sole file here, config.h, is explicitly not installed
     edo rmdir "${IMAGE}"/usr/include/clang/Config
-    ever at_least 3.4 && ! ever is_scm && edo rmdir "${IMAGE}/usr/include/clang/IDE"
 
-    edo pushd "${CMAKE_SOURCE}"/tools
+    edo pushd "${CMAKE_SOURCE}"
+    edo pushd docs/_build
+    doman man/*
+    dodoc -r html
+    edo popd
+
+    edo pushd tools
     insinto /usr/share/clang-analyzer
     for f in scan-{build,view} ; do
         doins -r ${f}
         dosym /usr/share/clang-analyzer/${f}/${f} /usr/bin/${f}
     done
     edo popd
+    edo popd
+
     edo pushd "${IMAGE}"/usr/share/clang-analyzer
     edo chmod a+x scan-build/{ccc-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
     edo popd

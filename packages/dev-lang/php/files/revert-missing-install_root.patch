@@ -1,0 +1,28 @@
+Upstream: no
+Reason: https://github.com/php/php-src/commit/c7248e6359b4d0a23f4e9210f69258a6443a718b#commitcomment-9260972
+--
+From 58088adad0d4e785abf45d2794c9cc57ab7b8364 Mon Sep 17 00:00:00 2001
+From: Kevin Decherf <kevin@kdecherf.com>
+Date: Tue, 13 Jan 2015 15:52:02 +0100
+Subject: [PATCH] Revert "added missing INSTALL_ROOT"
+
+This reverts commit c7248e6359b4d0a23f4e9210f69258a6443a718b.
+---
+ ext/phar/Makefile.frag | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ext/phar/Makefile.frag b/ext/phar/Makefile.frag
+index 6516ddf..faa9db0 100644
+--- a/ext/phar/Makefile.frag
++++ b/ext/phar/Makefile.frag
+@@ -39,7 +39,7 @@ install-pharcmd: pharcmd
+ 	-@$(mkinstalldirs) $(INSTALL_ROOT)$(bindir)
+ 	$(INSTALL) $(builddir)/phar.phar $(INSTALL_ROOT)$(bindir)
+ 	-@rm -f $(INSTALL_ROOT)$(bindir)/phar
+-	$(LN_S) -f $(INSTALL_ROOT)$(bindir)/phar.phar $(INSTALL_ROOT)$(bindir)/phar
++	$(LN_S) -f $(bindir)/phar.phar $(INSTALL_ROOT)$(bindir)/phar
+ 	@$(mkinstalldirs) $(INSTALL_ROOT)$(mandir)/man1
+ 	@$(INSTALL_DATA) $(builddir)/phar.1 $(INSTALL_ROOT)$(mandir)/man1/phar.1
+ 	@$(INSTALL_DATA) $(builddir)/phar.phar.1 $(INSTALL_ROOT)$(mandir)/man1/phar.phar.1
+-- 
+2.2.1

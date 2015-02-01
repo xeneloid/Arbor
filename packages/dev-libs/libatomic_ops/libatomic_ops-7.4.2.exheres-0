@@ -19,7 +19,7 @@ DOWNLOADS="http://www.ivmaisoft.com/_bin/atomic_ops/${PNV}.tar.gz"
 
 LICENCES="GPL-2 MIT"
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""

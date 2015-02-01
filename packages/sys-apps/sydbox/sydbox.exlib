@@ -41,7 +41,7 @@ fi
 if ever at_least 1.0.0; then
     DEPENDENCIES+="
         build+run:
-            dev-libs/pinktrace[~scm]"
+            dev-libs/pinktrace[>=0.9.0]"
 elif ever at_least 1; then
     # sydbox 1 pre-releases come with their own embedded pinktrace
     :
@@ -77,6 +77,11 @@ sydbox_src_test() {
     else
         elog "Not running tests because sydbox doesn't work under sydbox"
         elog "set PALUDIS_DO_NOTHING_SANDBOXY=1 if you want to run the tests"
+
+        if ever at_least 1.0.2; then
+            elog "As of sydbox-1.0.2, tests are installed by default."
+            elog "You can use the helper utility sydtest to run the tests."
+        fi
     fi
 }
 

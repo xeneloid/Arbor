@@ -1,4 +1,4 @@
-# Copyright 2010-2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
@@ -16,7 +16,8 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.
         test-dbus-daemon \
         udev-rules \
         pam \
-        python [ blacklist="3.1" multibuild=false with_opt=true ]
+        python [ blacklist="3.1" multibuild=false with_opt=true ] \
+        toolchain-funcs
 
 export_exlib_phases pkg_pretend pkg_setup src_prepare src_configure src_test src_install pkg_postinst
 
@@ -36,7 +37,6 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="
     LGPL-2.1        [[ note = [ Everything but ] ]]
     GPL-2           [[ note = [ src/udev, ] ]]
-    MIT             [[ note = [ sd-readahead.[ch], ] ]]
     public-domain   [[ note = [ src/shared/MurmurHash2.c, src/shared/siphash24.c, src/journal/lookup3.c ] ]]
 "
 SLOT="0"
@@ -54,23 +54,19 @@ MYOPTIONS="
     gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     gobject-introspection
     gtk-doc
+    idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
+    journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
     kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
+    lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
     seccomp [[ description = [ System call filtering support via seccomp ] ]]
+    xkbcommon [[ description = [ verify x11 keymap settings by compiling the configured keymap ] ]]
     zsh-completion
     ( linguas: ${LANGUAGES[@]} )
 "
-
-if ever at_least 216; then
-    MYOPTIONS+="
-        idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
-        journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
-        lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
-    "
-fi
 
 DEPENDENCIES="
     build:
@@ -78,7 +74,7 @@ DEPENDENCIES="
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
         dev-util/gperf[>=3.0.4] [[ note = [ for keymap ] ]]
         dev-util/intltool[>=0.40.0]
-        sys-devel/gcc:*[>=4.8] [[ note = [ Older gcc have some issues building systemd ] ]]
+        sys-devel/gcc:*[>=4.9] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
         sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
@@ -96,8 +92,8 @@ DEPENDENCIES="
         sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
-        sys-apps/util-linux[>=2.22]
-        sys-kernel/linux-headers[>=2.6.39]
+        sys-apps/util-linux[>=2.25]
+        sys-kernel/linux-headers[>=3.10]
         sys-libs/libcap
         sys-libs/pam[>=1.1.2]
         !net-dns/nss-myhostname [[
@@ -113,10 +109,14 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt )
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
         gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
+        idn? ( net-dns/libidn )
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
+        journal-push? ( net-misc/curl )
+        lz4? ( app-arch/lz4 )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
         seccomp? ( sys-libs/libseccomp[>=1.0.0] )
+        xkbcommon? ( x11-libs/libxkbcommon )
     run:
         sys-apps/coreutils
         sys-apps/dbus[>=1.4.0]
@@ -126,11 +126,15 @@ DEPENDENCIES="
         group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
         group/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
+        group/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+        group/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
         group/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
         user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
         user/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
+        user/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
+        user/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
         user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
@@ -153,20 +157,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_INSTALL_PARAMS=( itlocaledir=/usr/share/locale )
 
-if ever at_least 216; then
-    DEPENDENCIES+="
-        build+run:
-            idn? ( net-dns/libidn )
-            journal-push? ( net-misc/curl )
-            lz4? ( app-arch/lz4 )
-        run:
-            group/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
-            group/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
-            user/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
-            user/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
-    "
-fi
-
 AT_M4DIR=( m4 )
 
 systemd_pkg_pretend() {
@@ -183,8 +173,15 @@ systemd_pkg_pretend() {
 
     if [[ -f "${ROOT}"/etc/tmpfiles.d/legacy.conf ]] ; then
         ewarn "The configuration file /etc/tmpfiles.d/legacy.conf has been moved to"
-        ewarn "/usr/${LIBDIR}/tmpfiles.d/legacy.conf and can be safely removed after upgrade"
+        ewarn "/usr/$(exhost --target)/lib/tmpfiles.d/legacy.conf and can be safely removed after upgrade"
         ewarn "if you did not make any changes to it."
+    fi
+
+    if ever at_least 217 ; then
+        if ! [[ $(gcc-version) =~ 4.9.* ]] ; then
+            eerror "You're using gcc-$(gcc-fullversion). ${PNV} requires gcc-4.9.x. Set your compiler to 4.9 by using eclectic gcc"
+            die "${PNV} requires gcc-4.9.x"
+        fi
     fi
 }
 
@@ -246,26 +243,28 @@ systemd_src_configure() {
         --enable-coredump
         --enable-dbus
         --enable-elfutils
+        --enable-firstboot
         --enable-gudev
+        --enable-hibernate
         --enable-hostnamed
         --enable-kmod
+        --enable-ldconfig
         --enable-localed
         --enable-logind
         --enable-machined
         --enable-manpages
-        --enable-multi-seat-x
         --enable-myhostname
         --enable-networkd
         --enable-pam
         --enable-quotacheck
         --enable-randomseed
-        --enable-readahead
         --enable-resolved
         --enable-rfkill
         --enable-sysusers
         --enable-tmpfiles
         --enable-timedated
         --enable-timesyncd
+        --enable-utmp
         --enable-vconsole
         --enable-xz
         --disable-audit
@@ -274,8 +273,9 @@ systemd_src_configure() {
         --disable-ima
         --disable-selinux
         --disable-smack
+        --disable-terminal
+        --with-certificate-root=/etc/ssl
         --with-debug-tty=/dev/tty9
-        --with-firmware-path=/usr/$(exhost --target)/lib/firmware/updates:/usr/$(exhost --target)/lib/firmware
         --with-kbd-loadkeys=/bin/loadkeys
         --with-kbd-setfont=/bin/setfont
         --with-pamconfdir=/etc/pam.d
@@ -294,12 +294,16 @@ systemd_src_configure() {
         $(option_enable gnutls)
         $(option_enable gobject-introspection introspection)
         $(option_enable gtk-doc)
+        $(option_enable idn libidn)
         $(option_enable journal-gateway microhttpd)
+        $(option_enable journal-push libcurl)
         $(option_enable kdbus)
+        $(option_enable lz4)
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
         $(option_enable seccomp)
+        $(option_enable xkbcommon)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
@@ -308,18 +312,6 @@ systemd_src_configure() {
     if ever at_least 215 && ! ever at_least scm; then
         # workaround 215 build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
         myconfig+=( --enable-dependency-tracking )
-    fi
-
-    if ever at_least 216; then
-        myconfig+=(
-            --enable-firstboot
-            --enable-ldconfig
-            --disable-terminal
-            --with-certificate-root=/etc/ssl
-            $(option_enable idn libidn)
-            $(option_enable journal-push libcurl)
-            $(option_enable lz4)
-        )
     fi
 
     edo mkdir -p src/gudev
@@ -515,6 +507,11 @@ EOF
 
     # Keep the administrator's udev hardware database dir.
     keepdir /etc/udev/hwdb.d
+
+    if ever at_least 218 ; then
+        # Keep the administrator's override directives directories.
+        keepdir /etc/systemd/{coredump,journald,logind,resolved,system,timesyncd,user}.conf.d
+    fi
 
     # module loading configuration
     insinto /etc/modprobe.d

@@ -20,9 +20,9 @@
 # These variable specify which vimrc files from the files/ dir will be installed.
 
 #require vim/doc flag-o-matic fdo-mime bash-completion
-require vim-doc flag-o-matic
+require vim-doc flag-o-matic alternatives
 
-[[ "${PN}" != 'vim-runtime' ]] && require alternatives python [ blacklist="3.1" multibuild=false with_opt=true ]
+[[ "${PN}" != 'vim-runtime' ]] && require python [ blacklist="3.1" multibuild=false with_opt=true ]
 [[ "${PN}" != 'gvim' ]] && require bash-completion
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_prerm pkg_postrm
@@ -63,7 +63,7 @@ if [[ ${PN} != vim-runtime ]]; then
         build+run:
             gpm?     ( sys-libs/gpm[>=1.19.3] )
             lua?     ( dev-lang/lua:= )
-            !minimal? ( app-editors/vim-runtime[=${PV}] )
+            !minimal? ( app-editors/vim-runtime:${VIM_VERSION} )
             perl?    ( dev-lang/perl:* )
             ruby?    ( dev-lang/ruby:* )
             cscope?  ( dev-util/cscope )"
@@ -436,7 +436,26 @@ vim_src_install() {
     # Same for these /usr/$(exhost --target)/bin symlinks
     edo rm -f "${IMAGE}"/usr/$(exhost --target)/bin/{ex,view}
 
-    if [[ "${PN}" != 'vim-runtime' ]] ; then
+    if [[ "${PN}" == 'vim-runtime' ]] ; then
+        local f target importance=${VIM_VERSION} alternatives
+        alternatives=( '_vim-runtime' "${VIM_VERSION}" "${importance}" )
+        edo cd "${IMAGE}"
+        for f in etc/vim/vimrc usr/$(exhost --target)/bin/{vimtutor,xxd} usr/share/bash-completion/completions/xxd; do
+            alternatives+=( /${f} ${f##*/}-${VIM_VERSION} )
+        done
+        while read f; do
+            if [[ -L ${f} ]]; then
+                target=$(readlink ${f})
+                alternatives+=( /${f} ${target} )
+                edo rm "${f}"
+            elif [[ -f ${f} ]]; then
+                alternatives+=( /${f} ${f##*/}-${VIM_VERSION} )
+            else
+                die "Unknown filetype for ${IMAGE}/${f}"
+            fi
+        done < <(find usr/share/man \! -type d)
+        alternatives_for "${alternatives[@]}"
+    else
         local importance
         [[ ${PN} == vim ]] && importance=10 || importance=5
         alternatives_for 'vi' "${PN}" "${importance}" "/usr/$(exhost --target)/bin/vi" "${PN}"
@@ -484,7 +503,7 @@ vim_pkg_postinst() {
     # Update documentation tags (from vim-doc.exlib)
     update_vim_helptags
 
-    [[ "${PN}" != 'vim-runtime' ]] && alternatives_pkg_postinst
+    alternatives_pkg_postinst
 
     # Update fdo mime stuff, bug #78394
     #if [[ "${PN}" == "gvim" ]] ; then
@@ -525,7 +544,7 @@ vim_pkg_postinst() {
 }
 
 vim_pkg_prerm() {
-    [[ "${PN}" == 'vim-runtime' ]] || alternatives_pkg_prerm
+    alternatives_pkg_prerm
 }
 
 vim_pkg_postrm() {

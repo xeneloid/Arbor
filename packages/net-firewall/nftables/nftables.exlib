@@ -1,4 +1,4 @@
-# Copyright 2009-2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Copyright 2014 Julien Pivotto <roidelapluie@inuits.eu>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -30,12 +30,12 @@ DEPENDENCIES="
         sys-devel/flex
     build+run:
         dev-libs/gmp
-        net-libs/libmnl
-        net-libs/libnftnl[>=1.0.2]
+        net-libs/libmnl[>=1.0.3]
+        net-libs/libnftnl[>=1.0.3]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    CONFIG_PDF=n
+    --with-cli
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
@@ -46,9 +46,9 @@ nftables_src_prepare() {
     # docbook2X is weird, has annoying dependencies, the latest release is from
     # 2007 and nftables doesn't find it even if it's installed. Let's just use
     # xmlto.
-    edo sed -i -e "s:docbook2x-man:xmlto:" configure.ac
-    edo sed -i -e "s:db2x_docbook2man:xmlto:" configure.ac
-    edo sed -i -e "s:--xinclude:man --skip-validation:" Makefile.rules.in
+    edo sed -i -e "s:docbook2x-man:xmlto:g" configure.ac
+    edo sed -i -e "s:db2x_docbook2man:xmlto:g" configure.ac
+    edo sed -i -e "s:--xinclude:man --skip-validation:" doc/Makefile.am
 
     autotools_src_prepare
 }

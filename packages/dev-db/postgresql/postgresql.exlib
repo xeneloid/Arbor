@@ -157,20 +157,9 @@ DEPENDENCIES="
         )
 "
 
-if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
-    PG_WITH_UUID="uuid=e2fs"
-else
-    DEPENDENCIES+="
-        build+run:
-            postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
-    "
-    PG_WITH_UUID="ossp-uuid"
-fi
-
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     # 'kerberos krb5'
     ldap pam perl python readline 'ssl openssl' tcl 'xml libxml' 'xml libxslt'
-    "postgresql_extensions:uuid-ossp ${PG_WITH_UUID}"
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -179,6 +168,16 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-system-tzdata=/usr/share/zoneinfo
     --with-zlib
 )
+
+if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
+    DEFAULT_SRC_CONFIGURE_PARAMS+=( --with-uuid=e2fs )
+else
+    DEPENDENCIES+="
+        build+run:
+            postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
+    "
+    DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=( "postgresql_extensions:uuid-ossp ossp-uuid" )
+fi
 
 postgresql_pkg_pretend() {
     if [[ -z ${POSTGRESQL_MAJOR_UPGRADE} ]] && has_version --root ${CATEGORY}/${PN} && \
