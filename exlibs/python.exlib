@@ -260,7 +260,6 @@ case ${PYTHON_EXLIB_API} in
             # set python version which we will build against, we need that until easy-multibuild is fixed
             # PYTHON_ABIS is set via the suboption
             if exparam -b multibuild; then
-                local export_src_prepare=
                 if exparam -b 2to3; then
                     export_exlib_phases src_prepare src_configure src_compile src_test src_install
                 else
