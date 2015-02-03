@@ -83,19 +83,33 @@ src_prepare() {
             -i gio/tests/network-monitor.c
 
     # coredump: "missing test plan" (builddir != srcdir ?)
-    edo sed -e '/mappedfile/d' \
-            -e '/asyncqueue/d' \
-            -e '/timer/d'      \
-            -e '/\tgvariant\t/d'   \
+    edo sed -e '/mappedfile/d'   \
+            -e '/asyncqueue/d'   \
+            -e '/fileutils/d'    \
+            -e '/timer/d'        \
+            -e '/\tgvariant\t/d' \
             -i glib/tests/Makefile.am
     edo sed -e '/network-address/d'       \
+            -e '/network-monitor/d'       \
+            -e '/\tactions/d'             \
+            -e '/\tfile/d'                \
+            -e '/\tmonitor/d'             \
+            -e '/\tpollable\t/d'          \
             -e '/\tsocket\t/d'            \
-            -e '/\tappinfo\t/d'            \
-            -e '/\tdesktop-app-info\t/d'            \
+            -e '/\tgsubprocess\t/d'       \
+            -e '/\tappinfo\t/d'           \
+            -e '/\tdesktop-app-info\t/d'  \
+            -e '/converter-stream/d'      \
             -e '/gdbus-connection-loss/d' \
-            -e '/gdbus-serialization/d' \
-            -e '/gdbus-threading/d' \
-            -e '/gdbus-proxy-threads/d' \
+            -e '/gdbus-connection-slow/d' \
+            -e '/gdbus-export/d'          \
+            -e '/gdbus-introspection/d'   \
+            -e '/gdbus-names/d'           \
+            -e '/gdbus-serialization/d'   \
+            -e '/gdbus-threading/d'       \
+            -e '/gdbus-proxy-threads/d'   \
+            -e '/socket-listener/d'       \
+            -e '/unix-streams/d'          \
             -i gio/tests/Makefile.am
 
     # hangs forever
