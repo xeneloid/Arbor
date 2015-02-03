@@ -21,7 +21,9 @@ DEPENDENCIES="
         sys-kernel/linux-headers[>=2.6.27]
         sys-libs/glibc[>=2.9]
     build+run:
-        sys-apps/systemd [[ note = [ udev is used for device enumeration and hotplug support ] ]]
+        sys-apps/systemd[multibuild_c:*(-)?] [[
+            note = [ udev is used for device enumeration and hotplug support ]
+        ]]
         !dev-libs/libusbx:1 [[
             description = [ dev-libs/libusbx won and was renamed back to libusb ]
             resolution = uninstall-blocked-after
