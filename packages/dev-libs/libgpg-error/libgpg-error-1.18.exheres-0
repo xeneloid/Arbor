@@ -14,10 +14,11 @@ MYOPTIONS="multibuild_c: 32 64"
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext[>=0.17]
+        sys-devel/gettext[>=0.19.3]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-doc
     --enable-nls
     # cryptsetup needs a static version of libgpg-error
     --enable-static
