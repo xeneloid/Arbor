@@ -99,7 +99,7 @@ cmake-build_src_compile() {
 }
 
 cmake-build_src_test() {
-    edo bin/ctest -V -E "Qt4And5AutomocReverse|CTestTestFailedSubmit|Qt4And5AutomocReverse"
+    edo bin/ctest -V -E "CTestTestFailedSubmit|Qt4And5AutomocReverse"
 }
 
 cmake-build_src_install() {
