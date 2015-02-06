@@ -5,3 +5,7 @@ require mysql
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/600fc63d7f5424bff531ae78f400d43682bad1f9.patch
+)
+

@@ -58,7 +58,7 @@ DEPENDENCIES="
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
 
-if ever at_least 5.6.12 ; then
+if ever at_least 5.6.23 ; then
     DEPENDENCIES+="
         build+run:
             dev-libs/libedit[multibuild_c:*(-)?]
@@ -142,9 +142,10 @@ configure_one_multibuild() {
         )
     fi
 
-    if ever at_least 5.6.12 ; then
+    if ever at_least 5.6.23 ; then
         cmakeargs+=(
             -DBUILD_WITH_WERROR:BOOL=FALSE
+            -DCMAKE_DISABLE_FIND_PACKAGE_Git:BOOL=TRUE
             -DCOMPILE_FLAG_WERROR:BOOL=FALSE
             -DENABLE_DTRACE:BOOL=FALSE
             -DENABLE_GCOV:BOOL=FALSE
@@ -187,7 +188,7 @@ mysql_src_install() {
 
     keepdir /etc/mysql
 
-    if ever at_least 5.6.10 ; then
+    if ever at_least 5.6.23 ; then
         edo cp "${IMAGE}"/usr/share/${PN}/my-default.cnf "${IMAGE}"/etc/mysql/my.cnf
     else
         edo cp "${IMAGE}"/usr/share/${PN}/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
