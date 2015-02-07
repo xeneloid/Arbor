@@ -80,6 +80,13 @@ DEPENDENCIES="
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
 
+if ever at_least 2.3.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            curl? ( net-misc/curl[>=7.34] )
+    "
+fi
+
 WORK=${WORKBASE}/${PNV/_/.}
 
 git-googlecode_src_unpack() {
