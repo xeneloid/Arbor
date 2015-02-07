@@ -9,13 +9,13 @@ myexparam project=$(exparam pn)
 myexparam pv=${MY_PV:-${PV}}
 myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
-HOMEPAGE="http://code.google.com/p/$(exparam project)"
+HOMEPAGE="https://code.google.com/p/$(exparam project)"
 if ! ever is_scm ; then
-    DOWNLOADS="http://$(exparam project).googlecode.com/files/$(exparam pnv).$(exparam suffix)"
+    DOWNLOADS="https://$(exparam project).googlecode.com/files/$(exparam pnv).$(exparam suffix)"
 fi
 
 # TODO
-# See Atom feed @ http://code.google.com/feeds/p/$(exparam project)/downloads/basic
+# See Atom feed @ https://code.google.com/feeds/p/$(exparam project)/downloads/basic
 # REMOTE_IDS+=" googlecode:$(exparam project)"
 
 if has $(exparam suffix) zip; then
