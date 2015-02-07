@@ -9,7 +9,7 @@ myexparam pn=${MY_PN:-${PN}}
 myexparam pv=${MY_PV:-${PV}}
 myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
-HOMEPAGE="http://www.gnu.org/software/${MY_PN:-${PN}}/"
+HOMEPAGE="https://www.gnu.org/software/${MY_PN:-${PN}}/"
 if exparam -b alpha; then
     DOWNLOADS="ftp://alpha.gnu.org/pub/gnu/"
 else
@@ -21,7 +21,7 @@ DOWNLOADS+="$(exparam pnv).tar.$(exparam suffix)"
 WORK="${WORKBASE}/$(exparam pnv)"
 
 UPSTREAM_DOCUMENTATION="
-http://www.gnu.org/software/$(exparam pn)/manual/$(exparam pn).html   [[ lang = en description = [ $(exparam pn) manual, HTML ] ]]
-http://www.gnu.org/software/$(exparam pn)/manual/$(exparam pn).pdf    [[ lang = en description = [ $(exparam pn) manual, PDF  ] ]]
+https://www.gnu.org/software/$(exparam pn)/manual/$(exparam pn).html   [[ lang = en description = [ $(exparam pn) manual, HTML ] ]]
+https://www.gnu.org/software/$(exparam pn)/manual/$(exparam pn).pdf    [[ lang = en description = [ $(exparam pn) manual, PDF  ] ]]
 "
 
