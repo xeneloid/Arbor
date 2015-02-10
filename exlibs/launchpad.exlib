@@ -9,7 +9,7 @@ myexparam project=$(exparam pn)
 myexparam pv=${MY_PV:-${PV}}
 myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
-HOMEPAGE="http://launchpad.net/$(exparam project)/"
+HOMEPAGE="https://launchpad.net/$(exparam project)/"
 WORK="${WORKBASE}/$(exparam pnv)"
 
 if ! ever is_scm; then
