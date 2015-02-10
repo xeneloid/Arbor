@@ -7,7 +7,7 @@ MY_PV=${MY_PV:-${PV/_beta/b}}
 MY_PV=${MY_PV/_rc/rc}
 MY_PNV=${PN}-${MY_PV}
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require pam easy-multibuild [ multiunpack=true work=${MY_PNV} ] systemd-service freedesktop-desktop gtk-icon-cache
 
 export_exlib_phases src_test pkg_postinst pkg_postrm
@@ -189,8 +189,6 @@ install_one_multibuild() {
 
     # directories are created automatically on startup
     edo rm -r "${IMAGE}"/run
-
-    ! option xinetd && edo rm -r "${IMAGE}"/no
 }
 
 cups_pkg_postinst() {
