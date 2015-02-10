@@ -11,7 +11,7 @@ HOMEPAGE="http://projects.gnome.org/$(exparam pn)"
 
 if ever is_scm ; then
     DOWNLOADS=""
-    SCM_REPOSITORY="git://git.gnome.org/$(exparam pn).git"
+    SCM_REPOSITORY="https://git.gnome.org/browse/$(exparam pn)"
     require scm-git
 else
     DOWNLOADS="mirror://gnome/sources/$(exparam pn)/$(ever range 1-2)/$(exparam pnv)$(exparam suffix)"
