@@ -1,5 +1,5 @@
 # Copyright 2007-2008 Bryan Østergaard <kloeri@exherbo.org>
-# Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008-2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam source_uri="mirror://gnu/${PN}/${PNV}.tar.bz2"
@@ -49,7 +49,18 @@ DEPENDENCIES="
         sys-kernel/linux-headers
         bootstrap? ( sys-devel/bootstrap-gcc )
     run:
-        sys-libs/timezone-data"
+        sys-libs/timezone-data
+"
+
+if ever at_least 2.21; then
+    DEPENDENCIES+="
+        build:
+            sys-apps/texinfo[>=4.7]
+            sys-devel/binutils[>=2.22]
+            sys-devel/bison[>=2.7]
+            sys-devel/gcc:*[>=4.6]
+    "
+fi
 
 # tests are expensive
 RESTRICT=test
@@ -174,10 +185,11 @@ EOF
         BUILD_CC=${CC} CC="${PLATFORM_CC} "                                 \
             econf --cache-file=config.cache                                 \
                   --libdir="/usr/${LIBDIR}"                                 \
-                  --with-add-ons                                            \
                   --enable-kernel=${MINIMUM_KERNEL_VERSION}                 \
                   $(ever at_least 2.14.1-r2 && echo --enable-obsolete-rpc)  \
-                  $(ever at_least 2.18  && echo --enable-pt_chown)          \
+                  $(ever at_least 2.18 && echo --enable-pt_chown)           \
+                  $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons) \
+                  $(ever at_least 2.21 && echo --disable-werror)            \
                   --enable-stackguard-randomization                         \
                   --enable-lock-elision=no                                  \
                   --with-headers=/usr/include                               \
@@ -221,7 +233,12 @@ glibc_src_install() {
         multibuild_switch_build_target C ${multibuild_c_target}
 
         edo cd "${WORK}/${multibuild_c_target}"
-        default
+        # new code added in Makerules wih 2.21 causes install to fail without -j1
+        if ever at_least 2.21 ; then
+            emake -j1 DESTDIR="${IMAGE}" install
+        else
+            default
+        fi
     done
 
     # make ld-linux.so.2 accessible to everything that expects to find things in /lib

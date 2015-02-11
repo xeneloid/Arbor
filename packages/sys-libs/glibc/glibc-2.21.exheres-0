@@ -1,0 +1,69 @@
+# Copyright 2007-2008 Bryan Østergaard <kloeri@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require glibc [ source_uri="mirror://gnu/${PN}/${PNV}.tar.xz" \
+                minimum_kernel_version="2.6.34" ]
+
+PLATFORMS="~amd64 ~arm ~x86"
+
+MYOPTIONS+="
+    ( linguas: ia sl uk )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-75adf430d2d7ee16eaf3166680de83b498444720.patch
+    "${FILES}"/${PNV}-allow-two-additional-tests-to-xfail.patch
+)
+
+src_prepare() {
+    edo cd "${ECONF_SOURCE}"
+
+    # fail with sydbox
+    edo sed \
+        -e '68s:tst-dir ::' \
+        -e 's:tst-getaddrinfo4 ::' \
+        -e 's: tst-getaddrinfo5::' \
+        -i "${WORKBASE}"/${PNV}/posix/Makefile
+    edo sed \
+        -e 's:tst-fchmodat ::' \
+        -e 's:tst-openat ::' \
+        -e 's:tst-renameat ::' \
+        -i "${WORKBASE}"/${PNV}/io/Makefile
+
+    # makes sydbox segfault
+    # *** Error in `sydbox': free(): invalid pointer: 0x00007f6e46c71d18 ***
+    edo sed \
+        -e 's:tst-eintr1 ::' \
+        -i "${WORKBASE}"/${PNV}/nptl/Makefile
+
+    # fail with 2.21
+    edo sed \
+        -e '300s:tst-cleanupx4 ::' \
+        -i "${WORKBASE}"/${PNV}/nptl/Makefile
+    edo sed \
+        -e 's:tst-mqueue5 ::' \
+        -i "${WORKBASE}"/${PNV}/rt/Makefile
+
+    glibc_src_prepare
+}
+
+src_test_expensive() {
+    local multibuild_c_target
+
+    esandbox allow_net "unix:/tmp/tst-cancel4-socket-*-*"
+
+    for multibuild_c_target in ${MULTIBUILD_C_TARGETS} ; do
+        multibuild_switch_build_target C ${multibuild_c_target}
+        edo pushd "${WORK}/${multibuild_c_target}"
+
+        local GCONV_PATH="${WORK}/iconvdata LC_ALL=C ${WORK}/elf/ld.so.1 --library-path
+${WORK}/:${WORK}/math:${WORK}/elf:${WORK}/dlfcn:${WORK}/nss:${WORK}/nis:${WORK}/rt:${WORK}/resolv:${WORK}/crypt:${WORK}/nptl:${WORK}/dfp"
+
+        TIMEOUTFACTOR=20 emake -j1 check
+
+        edo popd
+    done
+
+    esandbox disallow_net "unix:/tmp/tst-cancel4-socket-*-*"
+}
+
