@@ -22,6 +22,11 @@ DEPENDENCIES="
         sys-apps/lesspipe
 "
 
+src_prepare() {
+    edo chmod +x configure
+    default
+}
+
 src_install() {
     default
 
