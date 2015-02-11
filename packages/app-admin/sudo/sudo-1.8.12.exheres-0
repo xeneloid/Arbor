@@ -40,12 +40,14 @@ WORK=${WORKBASE}/${MY_PNV}
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
+    --disable-static
     --with-all-insults
     --with-env-editor
     --with-insults
     --with-plugindir=/usr/${LIBDIR}/sudo
     --with-rundir=/run/sudo
     --with-secure-path=/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/sbin:/usr/local/bin
+    --with-tzdir=/usr/share/zoneinfo
     --with-vardir=/var/db/sudo
     --without-AFS
     --without-DCE
