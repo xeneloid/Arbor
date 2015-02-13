@@ -19,18 +19,17 @@ DEPENDENCIES="
     build:
         virtual/pkg-config[>=0.9.0]
     build+run:
+        sys-apps/systemd[>=196]
         virtual/usb:1
     run:
         sys-apps/usbutils-data
-        python? ( dev-lang/python )
+        python? ( dev-lang/python:2.7 )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --datarootdir=/usr/share
     --datadir=/usr/share/misc
     --disable-static
-    --disable-usbids
-    --disable-zlib
 )
 
 usbutils_src_prepare() {
@@ -43,8 +42,5 @@ usbutils_src_install() {
     default
 
     option python || edo rm -f "${IMAGE}"/usr/bin/lsusb.py
-
-    # remove emtpy directory
-    edo rmdir "${IMAGE}"/usr/share/misc
 }
 
