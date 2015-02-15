@@ -3,7 +3,7 @@
 # Based in part upon 'libmilter-1.0.2.ebuild' from Gentoo, which is:
 #   Copyright 1999-2013 Gentoo Foundation
 
-SENDMAIL_PV="8.14.9"
+SENDMAIL_PV="8.15.1"
 SENDMAIL_PNV="sendmail-${SENDMAIL_PV}"
 
 # Version defined as 0x01000002 in include/mfapi.h
