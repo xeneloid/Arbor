@@ -23,11 +23,11 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( docs/PLATFORMS )
 WORK="${WORKBASE}/${PNV%a}"
 
 test_one_multibuild() {
-    multibuild_default_target C && emake TESTSUITEFLAGS="-k !expensive -j${EXJOBS:-1}" check-local
+    multibuild_default_target C && emake TESTSUITEFLAGS="-k !expensive -j1" check-local
 }
 
 test_expensive_one_multibuild() {
-    multibuild_default_target C && emake TESTSUITEFLAGS="-k expensive -j${EXJOBS:-1}" check-local
+    multibuild_default_target C && emake TESTSUITEFLAGS="-k expensive -j1" check-local
 }
 
 src_test_expensive() {
