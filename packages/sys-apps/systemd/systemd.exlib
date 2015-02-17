@@ -247,6 +247,8 @@ systemd_src_prepare() {
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
     edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am
     edo sed -i -e '/test-resolve/s:test-resolve:$(NULL):' Makefile.am
+    edo sed -i -e '/test-cap-list/s:test-cap-list:$(NULL):' Makefile.am
+    edo sed -i -e '/sysv-generator-test.py/s:sysv-generator-test.py:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -262,6 +264,7 @@ configure_one_multibuild() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        --enable-bzip2
         --enable-compat-libs
         --enable-coredump
         --enable-dbus
@@ -270,6 +273,8 @@ configure_one_multibuild() {
         --enable-gudev
         --enable-hibernate
         --enable-hostnamed
+        --enable-hwdb
+        --enable-importd
         --enable-kmod
         --enable-ldconfig
         --enable-localed
@@ -292,10 +297,12 @@ configure_one_multibuild() {
         --enable-utmp
         --enable-vconsole
         --enable-xz
+        --enable-zlib
         --disable-audit
         --disable-apparmor
         --disable-chkconfig
         --disable-ima
+        --disable-libiptc
         --disable-selinux
         --disable-smack
         --disable-terminal
