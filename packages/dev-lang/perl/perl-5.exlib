@@ -60,9 +60,6 @@ perl-5_src_prepare() {
     # https://rt.perl.org/rt3//Public/Bug/Display.html?id=113022
     test-flag-CC -fno-lto && edo sed -e '/if(p())/{n; s/$ldflags/& -fno-lto/}' \
                                      -i Configure
-
-    # https://rt.perl.org/Public/Bug/Display.html?id=121505
-    ever at_least 5.20 || CFLAGS+=" -fwrapv"
 }
 
 perl-5_src_configure() {

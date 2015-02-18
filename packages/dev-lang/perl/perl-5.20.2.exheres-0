@@ -10,7 +10,7 @@ require perl-5 [ Module_Build_pv=0.4003 ]
 PLATFORMS="~amd64 ~arm ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p1 "${FILES}/${PN}-5.11.3-Remove-Syslog-tests.patch"
+    -p1 "${FILES}"/${PN}-5.11.3-Remove-Syslog-tests.patch
     -p2 "${FILES}"/IO-skip-test.patch
     -p2 "${FILES}"/IO-Socket-IP-skip-tests.patch
 )
