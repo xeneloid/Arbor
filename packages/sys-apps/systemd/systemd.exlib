@@ -215,7 +215,7 @@ systemd_src_prepare() {
             -e "/^catalogdir=/s:/lib/:/${LIBDIR}/:" \
             -e "/^kernelinstalldir = /s:/lib/:/${LIBDIR}/:" \
             -e "/^ntpunitsdir=/s:/lib/:/${LIBDIR}/:" \
-            -e "/^sd_bootlibdir = /s:/lib/:/${LIBDIR}/:" \
+            -e "/^bootlibdir = /s:/lib/:/${LIBDIR}/:" \
             -e "/\$(DESTDIR)\$(prefix)/s:/lib/:/${LIBDIR}/:" \
             -e "/\$(INSTALL_DIRS)/s:\$(INSTALL_DIRS):\$(subst /lib/,/${LIBDIR}/,&):" \
             Makefile.am
