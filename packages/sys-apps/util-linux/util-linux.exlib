@@ -74,6 +74,7 @@ DEPENDENCIES="
         sys-libs/pam[multibuild_c:*(-)?]
         sys-libs/zlib[multibuild_c:*(-)?]
         session-management? ( x11-libs/libutempter[multibuild_c:*(-)?] )
+        systemd? ( sys-apps/systemd[multibuild_c:*(-)?] )
         udev? ( sys-apps/systemd[multibuild_c:*(-)?] )
     test:
         sys-apps/bc
@@ -116,9 +117,9 @@ configure_one_multibuild() {
     local deprecated=( deprecated-last line )
 
     local enabled_tools=(
-        agetty bfs cramfs eject fallocate fdformat fsck hwclock last losetup lslogins mesg
-        minix more mount mountpoint nsenter nologin partx pg pivot_root raw rename
-        schedutils setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl
+        agetty bfs cramfs eject fallocate fdformat fsck hwclock last losetup mesg minix
+        more mount mountpoint nsenter nologin partx pg pivot_root raw rename schedutils
+        setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl zramctl
     )
 
     local disabled_tools=( pylibmount runuser write )
@@ -128,7 +129,9 @@ configure_one_multibuild() {
         --localstatedir=/run \
         --enable-fs-paths-extra=/usr/sbin \
         --enable-libblkid \
+        --enable-libfdisk \
         --enable-libmount \
+        --enable-libmount-force-mountinfo \
         --enable-libuuid \
         --enable-nls \
         --disable-static \
