@@ -66,6 +66,7 @@ if ever is_scm; then
 fi
 
 HOMEPAGE="https://github.com/$(exparam user)/$(exparam pn)"
+REMOTE_IDS+=" github:$(exparam user)/$(exparam pn) "
 
 case ${download_type} in
 scm)
