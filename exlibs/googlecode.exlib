@@ -14,9 +14,8 @@ if ! ever is_scm ; then
     DOWNLOADS="https://$(exparam project).googlecode.com/files/$(exparam pnv).$(exparam suffix)"
 fi
 
-# TODO
 # See Atom feed @ https://code.google.com/feeds/p/$(exparam project)/downloads/basic
-# REMOTE_IDS+=" googlecode:$(exparam project)"
+REMOTE_IDS+=" googlecode:$(exparam project) "
 
 if has $(exparam suffix) zip; then
     DEPENDENCIES+="
