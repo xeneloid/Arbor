@@ -207,16 +207,25 @@ gcc_src_prepare() {
             -e "s,toolexeclibdir=\S\+,toolexeclibdir='\$(libdir)'," \
             -e "s,toolexeclibdir=\S\+,toolexeclibdir='\$(libdir)'," \
             -i "${WORK}/libgcc/configure"                           \
-            -i "${WORK}/libitm/configure"                           \
-            -i "${WORK}/libmudflap/configure"
+            -i "${WORK}/libitm/configure"
 
     # TODO(compnerd) convert these into part of exherbo-multiarch-paths patch
     edo sed -e "/SHLIB_DIR = /c SHLIB_DIR = ." \
             -i "${WORK}/libgcc/config/t-slibgcc"
     edo sed -e "/libsubdir = /clibsubdir = /usr/$(exhost --target)/lib/gcc/\$(host_noncanonical)/\$(version)" \
             -i "${WORK}/libgcc/Makefile.in"                                                         \
-            -i "${WORK}/libitm/Makefile.in"                                                         \
-            -i "${WORK}/libmudflap/Makefile.in"
+            -i "${WORK}/libitm/Makefile.in"
+
+    # NOTE(compnerd) mudflap was removed in 4.9 in favour of ASAN
+    if ! ever at_least 4.9 ; then
+        edo sed -e "s,toolexecdir=\S\+,toolexecdir='\$(libdir)',"    \
+                -e "s,toolexeclibdir=\S\+,toolexeclibdir='\$(libdir)'," \
+                -e "s,toolexeclibdir=\S\+,toolexeclibdir='\$(libdir)'," \
+                -i "${WORK}/libmudflap/configure"
+
+        edo sed -e "/libsubdir = /clibsubdir = /usr/$(exhost --target)/lib/gcc/\$(host_noncanonical)/\$(version)" \
+                -i "${WORK}/libmudflap/Makefile.in"
+    fi
 
     # TODO(compnerd) do this properly via autotools
     edo sed -e '/export_sym_check=/c export_sym_check="${target_alias}-objdump -T"'                 \
