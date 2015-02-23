@@ -87,8 +87,11 @@ configure_one_multibuild() {
         --with-session-socket-dir=/tmp                   \
         --with-system-pid-file=/run/dbus.pid             \
         --with-system-socket=/run/dbus/system_bus_socket \
+        --disable-apparmor                               \
+        --disable-ducktype-docs                          \
         --disable-libaudit                               \
         --disable-selinux                                \
+        --disable-static                                 \
         --disable-tests                                  \
         $(option_enable debug asserts)                   \
         $(option_enable debug verbose-mode)              \
@@ -145,3 +148,4 @@ dbus_src_install() {
 
     edo rmdir "${IMAGE}"/var/run/{dbus,}
 }
+
