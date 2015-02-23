@@ -6,8 +6,8 @@ DESCRIPTION="
 If you are writing software in C++ that needs to access databases managed by
 postgres—on just about any platform—then libpqxx is the library you use.
 "
-HOMEPAGE="http://pqxx.org/"
-DOWNLOADS="http://pqxx.org/download/software/${PN}/${PNV}.tar.gz"
+HOMEPAGE="http://pqxx.org"
+DOWNLOADS="${HOMEPAGE}/download/software/${PN}/${PNV}.tar.gz"
 
 # Requires connection to a running postgres server
 RESTRICT="test"
@@ -15,23 +15,28 @@ RESTRICT="test"
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="doc"
 
 DEPENDENCIES="
     build:
-        app-doc/doxygen
-        app-text/xmlto
+        virtual/pkg-config
     build+run:
         dev-libs/boost
-        dev-db/postgresql
+        dev-db/postgresql[>=8.0]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p2 "${FILES}"/${PNV}-include-cstddef.h.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-shared
+    --disable-documentation
     --disable-static
 )
+
+src_install() {
+    default
+
+    if option doc; then
+        insinto /usr/share/doc/${PNVR}/html
+        doins -r doc/html/*
+    fi
+}
 
