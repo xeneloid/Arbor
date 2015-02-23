@@ -1,4 +1,4 @@
-# Copyright 2014 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2014-2015 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PN=${PN/-paranoia/}
@@ -13,10 +13,7 @@ CDROM directly as data, with no analog step between, and writes the
 data to a file or pipe as .wav, .aifc or as raw 16 bit linear PCM.
 "
 
-LICENCES="
-    GPL-2 [[ note = [ cdparanoia command line tool ] ]]
-    LGPL-2 [[ note = [ cdda-{interface,paranoia} libraries ] ]]
-"
+LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
