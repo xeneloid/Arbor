@@ -4,7 +4,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 SUMMARY="The GNU Privacy Guard, a GPL pgp replacement"
-HOMEPAGE="http://www.gnupg.org/"
+HOMEPAGE="http://www.gnupg.org"
 DOWNLOADS="mirror://gnupg/gnupg/${PNV}.tar.bz2"
 
 LICENCES="GPL-3"
@@ -15,6 +15,9 @@ MYOPTIONS="
     hkps [[ description = [ Enable support for HKPS protocol using GnuTLS ] ]]
     smartcard [[ description = [ Install the smartcard daemon ( includes CCID support ). ] ]]
 "
+
+# fail with (newer) sydbox (last checked: 2.1.2)
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
@@ -43,15 +46,15 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gnupg-trust.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --enable-agent
     --enable-bzip2
     --enable-gpg
     --enable-gpgsm
     --enable-nls
     --enable-symcryptrun
     --enable-tools
-    --disable-ntbtls
     --disable-ldap
+    --disable-ntbtls
+    --disable-selinux-support
     --without-capabilities # This option doesn't do anything.
     --without-adns # Requires GNU adns
 )
@@ -68,8 +71,10 @@ src_compile() {
 
 src_test() {
     # Allow the tests to run its own instance of gpg-agent
-    esandbox allow_net    "unix:${WORK}/tests/openpgp/S.gpg-agent"
+    esandbox allow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
+    esandbox allow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
     default
+    esandbox disallow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
     esandbox disallow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
 }
 
