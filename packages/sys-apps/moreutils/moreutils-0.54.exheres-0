@@ -1,7 +1,7 @@
 # Copyright 2014-2015, Kylie McClain <somasissounds@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://git.kitenet.net/moreutils.git"
+SCM_REPOSITORY="git://git.kitenet.net/${PN}.git"
 SCM_TAG="${PV}"
 require scm-git
 
@@ -18,6 +18,8 @@ DEPENDENCIES="
         dev-libs/libxslt
     build+run:
         dev-lang/perl:=
+    run:
+        dev-perl/IPC-Run [[ description = [ required by \`chronic\` ] ]]
 "
 
 src_prepare() {
