@@ -24,7 +24,7 @@ exparam -b manpages && DOWNLOADS+=" mirror://kernel/software/scm/${PN}/${PN}-man
 
 BUGS_TO="ingmar@exherbo.org philantrop@exherbo.org"
 
-REMOTE_IDS="freecode:${PN}"
+REMOTE_IDS="freshcode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
