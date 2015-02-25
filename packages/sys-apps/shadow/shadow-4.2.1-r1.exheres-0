@@ -3,7 +3,7 @@
 # Based in part upon 'shadow-4.1.2-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require pam
+require pam option-renames [ renames=[ 'attr xattr' ] ]
 
 SUMMARY="User and group management related utilities"
 HOMEPAGE="http://pkg-${PN}.alioth.debian.org"
@@ -17,7 +17,7 @@ PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     acl  [[ description = [ Add support for ACL when copying user
                             directories. ] ]]
-    attr [[ description = [ Add support for extended attributes when copying
+    xattr [[ description = [ Add support for extended attributes when copying
                             user directories. ] ]]
 "
 
@@ -26,7 +26,7 @@ DEPENDENCIES="
         sys-devel/gettext
     build+run:
         acl? ( sys-apps/acl )
-        attr? ( sys-apps/attr )
+        xattr? ( sys-apps/attr )
         sys-libs/cracklib[>=2.8.3]
         sys-libs/pam[>=1.0.1]
         !sys-apps/util-linux[<2.24] [[
@@ -53,7 +53,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-selinux
 )
 
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( acl attr )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( acl 'xattr attr' )
 
 DEFAULT_SRC_INSTALL_PARAMS=( suidperms=4711 )
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES="doc/"
