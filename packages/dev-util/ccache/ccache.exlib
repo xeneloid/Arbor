@@ -31,7 +31,7 @@ ccache_src_install() {
     dodir /usr/libexec/ccache/
     insinto /usr/libexec/ccache/
     local f
-    for f in {${CHOST}-,}{gcc,g++,c++}; do
+    for f in {${CHOST}-,}{gcc,g++,c++} clang{,++}; do
         dosym /usr/bin/ccache /usr/libexec/ccache/${f}
     done
 
