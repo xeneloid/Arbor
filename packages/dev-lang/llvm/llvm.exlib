@@ -50,6 +50,8 @@ llvm_src_prepare() {
     # Fix the use of dot
     edo sed -e 's/@DOT@//g' -i docs/doxygen.cfg.in
 
+    expatch "${FILES}"/${PN}-fix-llvm-config.patch
+
     if ever at_least scm ; then
         # expect some tests to fail for everything except the default class
         local xfail_line="" target
@@ -69,7 +71,6 @@ llvm_src_prepare() {
             done
         fi
     else
-        expatch "${FILES}"/${PN}-fix-llvm-config.patch
         expatch "${FILES}"/llvm-config-path-v3.patch
     fi
 
