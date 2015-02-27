@@ -5,7 +5,7 @@
 # Based in part upon 'alsa-plugins-1.0.19.ebuild' from Gentoo, which is:
 #     Copyright 1999-2009 Gentoo Foundation
 
-require easy-multibuild autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require easy-multibuild autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Plugins for ALSA"
 HOMEPAGE="http://www.alsa-project.org"
