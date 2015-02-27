@@ -33,7 +33,6 @@ LICENCES="|| ( BSD-3 GPL-2 )"
 SLOT="0"
 
 MYOPTIONS="
-    ap       [[ description = [ Support Access Point mode ] ]]
     baselayout
     dbus     [[ description = [ Enable the DBus control interface ] ]]
     eap-fast [[
@@ -123,6 +122,7 @@ wpa_supplicant_src_prepare() {
 
 wpa_supplicant_src_configure() {
     config_enable \
+        AP \
         BACKEND=file \
         CTRL_IFACE=unix \
         DEBUG_FILE \
@@ -139,7 +139,6 @@ wpa_supplicant_src_configure() {
         READLINE \
         TDLS
 
-    option ap       && config_enable AP
     option dbus     && config_enable CTRL_IFACE_DBUS{,_NEW,_INTRO}
     option pcap     && config_enable L2_PACKET=pcap ||
                        config_enable L2_PACKET=linux
