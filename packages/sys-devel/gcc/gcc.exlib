@@ -419,7 +419,7 @@ EOF
                 --with-system-zlib                                                                  \
                 --with-sysroot='""'                                                                 \
                 --with-gxx-include-dir=/usr/${target}/include/c++/${PV}                             \
-                --with-multilib-list=
+                --with-multilib-list=''                                                             \
                 $(if ever at_least 4.7 ; then
                     echo --disable-libitm
                   fi)                                                                               \
