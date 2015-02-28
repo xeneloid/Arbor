@@ -227,6 +227,12 @@ gcc_src_prepare() {
                 -i "${WORK}/libmudflap/Makefile.in"
     fi
 
+    # TODO(compnerd) figure out why this is needed for gcc 4.9+ to build libgcc
+    if ever at_least 4.9 ; then
+        edo sed -e "/\bFLAGS_FOR_TARGET=/s|-B\$(build_tooldir)/lib|-B/usr/$(exhost --target)/lib|"  \
+                -i "${WORK}/configure"
+    fi
+
     # TODO(compnerd) do this properly via autotools
     edo sed -e '/export_sym_check=/c export_sym_check="${target_alias}-objdump -T"'                 \
             -i "${WORK}/gcc/configure"
