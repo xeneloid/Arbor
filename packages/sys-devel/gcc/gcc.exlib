@@ -418,6 +418,7 @@ EOF
                 --with-pkgversion="exherbo ${PNVR}"                                                 \
                 --with-system-zlib                                                                  \
                 --with-sysroot='""'                                                                 \
+                --with-native-system-header-dir=/usr/${target}/include                              \
                 --with-gxx-include-dir=/usr/${target}/include/c++/${PV}                             \
                 --with-multilib-list=''                                                             \
                 $(if ever at_least 4.7 ; then
