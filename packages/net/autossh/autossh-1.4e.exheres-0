@@ -7,14 +7,13 @@ A program to start a copy of ssh and monitor it, restarting it as necessary
 should it die or stop passing traffic. The idea is from rstunnel
 (Reliable SSH Tunnel), but implemented in C.
 "
+
 HOMEPAGE="http://www.harding.motd.ca/autossh/"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tgz"
 
 LICENCES="as-is"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-
-REMOTE_IDS="freecode:autossh"
 
 DEPENDENCIES="
     build+run:
