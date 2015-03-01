@@ -12,7 +12,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
-    idn  [[ description = [ Enable support for internationalized domain names ] ]]
+    idn    [[ description = [ Enable support for internationalized domain names ] ]]
 "
 
 DEPENDENCIES="
@@ -43,6 +43,7 @@ src_configure() {
         --enable-ipv6
         --enable-nls
         --disable-assert
+        --with-libuuid
         --with-ssl=$(optionv gnutls || echo openssl)
         --with-zlib
         --without-libpsl
