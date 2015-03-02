@@ -60,8 +60,6 @@ DEPENDENCIES="
         net-print/foomatic-db      [[ note = [ for non-PostScript printers ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}"/${PNV}-poppler-0.31.0.patch )
-
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 configure_one_multibuild() {
