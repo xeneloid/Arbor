@@ -3,11 +3,10 @@
 # Based in part upon 'libgcrypt-1.4.0-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require easy-multibuild
-require flag-o-matic
+require easy-multibuild flag-o-matic
 
 SUMMARY="General purpose crypto library based on the code used in GnuPG"
-HOMEPAGE="http://www.gnupg.org/"
+HOMEPAGE="http://www.gnupg.org"
 DOWNLOADS="mirror://gnupg/${PN}/${PNV}.tar.bz2"
 
 REMOTE_IDS="freecode:${PN}"
