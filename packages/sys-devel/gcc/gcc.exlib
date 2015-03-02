@@ -150,11 +150,16 @@ UPSTREAM_DOCUMENTATION="${HOMEPAGE}onlinedocs/libstdc++/libstdc++-html-USERS-${S
 # TODO(compnerd) consider upstreaming the 0001- prefixed patches; they are
 # generic build system fixes which should be mostly palatable for upstream as
 # they simply fix rarely used parameters' behaviour to match the documentation
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch"
-                              "${FILES}/0001-config-fix-definition-for-target-flags.patch"
-                              "${FILES}/0001-allow-build-host-target-_configargs-to-override-the-.patch"
-                              "${FILES}/0001-makefile.in-honour-configure-args-for-subdirs.patch"
-                              "${FILES}/${PN}-cross-flags.patch" )
+if ever at_least 4.9 ; then
+    DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/gcc-4.9-exherbo-multiarch-paths.patch" )
+else
+    DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch" )
+fi
+
+DEFAULT_SRC_PREPARE_PATCHES+=( "${FILES}/0001-config-fix-definition-for-target-flags.patch"
+                               "${FILES}/0001-allow-build-host-target-_configargs-to-override-the-.patch"
+                               "${FILES}/0001-makefile.in-honour-configure-args-for-subdirs.patch"
+                               "${FILES}/${PN}-cross-flags.patch" )
 
 RESTRICT="test" # tests are expensive
 
