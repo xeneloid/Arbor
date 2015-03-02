@@ -121,7 +121,7 @@ ruby-2_src_install() {
 
     edo pushd "${IMAGE}"
     local src target alternatives=()
-    for src in usr/bin/*${SLOT} usr/share/man/man1/*${SLOT}.1; do
+    for src in usr/$(exhost --target)/bin/*${SLOT} usr/share/man/man1/*${SLOT}.1; do
         target=${src/${SLOT}}
         alternatives+=( /${target} ${src##*/} )
     done
