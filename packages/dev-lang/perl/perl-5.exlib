@@ -75,9 +75,6 @@ perl-5_src_prepare() {
     #    Can't load '/var/tmp/paludis/build/dev-lang-perl-5.18.1/work/perl-5.18.1/ext/Opcode/../../lib/auto/File/Glob/Glob.so'
     #    for module File::Glob: /var/tmp/paludis/build/dev-lang-perl-5.18.1/work/perl-5.18.1/ext/Opcode/../../lib/auto/File/Glob/Glob.so:
     #    wrong ELF class: ELFCLASS32 …
-
-    # https://rt.perl.org/Public/Bug/Display.html?id=121505
-    ever at_least 5.20 || CFLAGS+=" -fwrapv"
 }
 
 perl-5_src_configure() {

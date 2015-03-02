@@ -74,6 +74,7 @@ DEPENDENCIES="
         sys-libs/pam
         sys-libs/zlib
         session-management? ( x11-libs/libutempter )
+        systemd? ( sys-apps/systemd )
         udev? ( sys-apps/systemd )
     test:
         sys-apps/bc
@@ -118,9 +119,9 @@ util-linux_src_configure() {
     local deprecated=( deprecated-last line )
 
     local enabled_tools=(
-        agetty bfs cramfs eject fallocate fdformat fsck hwclock last losetup lslogins mesg
-        minix more mount mountpoint nsenter nologin partx pg pivot_root raw rename
-        schedutils setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl
+        agetty bfs cramfs eject fallocate fdformat fsck hwclock last losetup mesg minix
+        more mount mountpoint nsenter nologin partx pg pivot_root raw rename schedutils
+        setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl zramctl
     )
 
     local disabled_tools=( pylibmount runuser write )
@@ -129,7 +130,9 @@ util-linux_src_configure() {
         --localstatedir=/run \
         --enable-fs-paths-extra=/usr/$(exhost --target)/sbin \
         --enable-libblkid \
+        --enable-libfdisk \
         --enable-libmount \
+        --enable-libmount-force-mountinfo \
         --enable-libuuid \
         --enable-nls \
         --disable-static \

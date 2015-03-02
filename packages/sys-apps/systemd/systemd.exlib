@@ -178,7 +178,7 @@ systemd_pkg_pretend() {
     fi
 
     if ever at_least 217 ; then
-        if ! [[ $(gcc-version) =~ 4.9.* ]] ; then
+        if cc-is-gcc && ! ever at_least 4.9 $(gcc-version); then
             eerror "You're using gcc-$(gcc-fullversion). ${PNV} requires gcc-4.9.x. Set your compiler to 4.9 by using eclectic gcc"
             die "${PNV} requires gcc-4.9.x"
         fi
@@ -226,6 +226,8 @@ systemd_src_prepare() {
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
     edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am
     edo sed -i -e '/test-resolve/s:test-resolve:$(NULL):' Makefile.am
+    edo sed -i -e '/test-cap-list/s:test-cap-list:$(NULL):' Makefile.am
+    edo sed -i -e '/sysv-generator-test.py/s:sysv-generator-test.py:$(NULL):' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
@@ -239,6 +241,7 @@ systemd_src_configure() {
         --enable-backlight
         --enable-binfmt
         --enable-blkid
+        --enable-bzip2
         --enable-compat-libs
         --enable-coredump
         --enable-dbus
@@ -247,6 +250,8 @@ systemd_src_configure() {
         --enable-gudev
         --enable-hibernate
         --enable-hostnamed
+        --enable-hwdb
+        --enable-importd
         --enable-kmod
         --enable-ldconfig
         --enable-localed
@@ -267,10 +272,12 @@ systemd_src_configure() {
         --enable-utmp
         --enable-vconsole
         --enable-xz
+        --enable-zlib
         --disable-audit
         --disable-apparmor
         --disable-chkconfig
         --disable-ima
+        --disable-libiptc
         --disable-selinux
         --disable-smack
         --disable-terminal

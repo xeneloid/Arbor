@@ -52,7 +52,7 @@ DEPENDENCIES="
     test:
         dev-cpp/gtest
     run:
-        net-misc/rsync
+        net-misc/rsync[>=3.1.0]
         net-misc/wget
         sys-apps/sydbox[>=0.7.6]
         sys-devel/dwz

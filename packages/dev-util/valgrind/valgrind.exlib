@@ -3,12 +3,12 @@
 # Based in part upon 'valgrind-3.3.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require flag-o-matic autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
+require flag-o-matic autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require easy-multibuild [ multiunpack=true ]
 
 SUMMARY="An open-source memory debugger for GNU/Linux"
 HOMEPAGE="http://www.valgrind.org"
-DOWNLOADS="http://www.valgrind.org/downloads/${PNV}.tar.bz2"
+DOWNLOADS="${HOMEPAGE}/downloads/${PNV}.tar.bz2"
 
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/docs/manual/dist.news.html"
 

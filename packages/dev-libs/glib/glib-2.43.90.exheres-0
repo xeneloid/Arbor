@@ -1,0 +1,133 @@
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require bash-completion glib
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
+SLOT="2"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="gtk-doc"
+
+DEPENDENCIES="
+    build:
+        app-doc/gtk-doc-autotools
+        sys-devel/gettext[>=0.11]
+        (
+            app-text/docbook-xml-dtd:4.1.2 [[ note = [ Checked in configure.ac but not used ] ]]
+            app-text/docbook-xsl-stylesheets
+            dev-libs/libxslt
+        ) [[ description = [ For man pages ] ]]
+        gtk-doc? ( dev-doc/gtk-doc[>=1.20] )
+    build+run:
+        dev-util/elfutils[>=0.142]
+        dev-libs/libffi[>=3.0.0]
+    test:
+        dev-util/desktop-file-utils
+        gnome-bindings/pygobject:3
+        sys-apps/dbus[>=1.2.14] [[
+            note = [ Required for building GDBus tests ]
+        ]]
+        virtual/pkg-config[>=0.16]
+        x11-misc/shared-mime-info
+    recommendation:
+        sys-apps/dbus[>=1.2.14] [[ note = [ Required for GDBus ] ]]
+        dev-libs/glib-networking [[ description = [ Required for GNet ] ]]
+    suggestion:
+        gnome-desktop/dconf [[ description = [ default GSettings backend ] ]]
+        gnome-desktop/gvfs [[ description = [ Provides utilities and support for GIO ] ]]
+"
+
+# NOTE: glib:2 is used by sydbox, and thus in system. For this reason it shouldn't hard depend on
+# anything not in ::arbor, that means no recommendations, just suggestions
+
+# Disable FAM support as FAM is no longer necessary with GIO's inotify support
+#
+# xattr support is also provided by libc.  glib will prefer to use glibc's xattr support over
+# libattr.  As a result, there is no dependency added for attr support.
+#
+# Enable libelf (via elf-utils) to read compressed module data
+#
+# The internal copy of PCRE is "patched to use GLib for memory management and Unicode handling"
+# Its usage is recommended by upstream, see also
+# http://developer.gnome.org/glib/2.32/glib-building.html#dependencies
+DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-static' '--disable-fam' '--disable-selinux'
+                               '--enable-xattr' '--enable-libelf' '--with-pcre=internal'
+                               '--with-threads=posix' '--disable-dtrace' '--disable-systemtap'
+                               '--disable-gcov' '--enable-man' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( gtk-doc )
+DEFAULT_SRC_CONFIGURE_TESTS=( '--enable-modular-tests --disable-modular-tests' )
+
+src_prepare() {
+    glib_src_prepare
+
+    # with multipy, we end up with #!python2.7 as a shebang
+    edo sed -e 's:@PYTHON@:/usr/bin/env @PYTHON@:' \
+            -i gio/gdbus-2.0/codegen/gdbus-codegen.in
+
+    # we have no guarantee for ipv6 support, so we disable those tests
+    edo sed -e '\:/socket/ipv6_a\?sync:d'  \
+            -e '\:/socket/ipv6_v4mapped:d' \
+            -i gio/tests/socket.c
+
+    # uses inet@0.0.0.0
+    edo sed -e '\:/socket/datagram_get_available:d' -i gio/tests/socket.c
+
+    # broken test: https://bugzilla.gnome.org/show_bug.cgi?id=684690
+    edo sed -e '/appinfo\/launch"/d' -i gio/tests/appinfo.c
+
+    # tries to access to root's dconf stuff
+    edo sed -e ':/network-monitor/default:d'         \
+            -e ':/network-monitor/add_networks:d'    \
+            -e ':/network-monitor/remove_networks:d' \
+            -i gio/tests/network-monitor.c
+
+    # coredump: "missing test plan" (builddir != srcdir ?)
+    edo sed -e '/mappedfile/d'   \
+            -e '/asyncqueue/d'   \
+            -e '/fileutils/d'    \
+            -e '/timer/d'        \
+            -e '/\tgvariant\t/d' \
+            -i glib/tests/Makefile.am
+    edo sed -e '/network-address/d'       \
+            -e '/network-monitor/d'       \
+            -e '/\tactions/d'             \
+            -e '/\tfile/d'                \
+            -e '/\tmonitor/d'             \
+            -e '/\tpollable\t/d'          \
+            -e '/\tsocket\t/d'            \
+            -e '/\tgsubprocess\t/d'       \
+            -e '/\tappinfo\t/d'           \
+            -e '/\tdesktop-app-info\t/d'  \
+            -e '/converter-stream/d'      \
+            -e '/gdbus-connection-loss/d' \
+            -e '/gdbus-connection-slow/d' \
+            -e '/gdbus-export/d'          \
+            -e '/gdbus-introspection/d'   \
+            -e '/gdbus-names/d'           \
+            -e '/gdbus-serialization/d'   \
+            -e '/gdbus-threading/d'       \
+            -e '/gdbus-proxy-threads/d'   \
+            -e '/socket-listener/d'       \
+            -e '/unix-streams/d'          \
+            -i gio/tests/Makefile.am
+
+    # hangs forever
+    edo sed -e '/dbus-appinfo/d' -i gio/tests/Makefile.am
+
+    # does some gdb vaudoo on missing file
+    edo sed -e '/run-assert-msg-test.sh/d' -i tests/Makefile.am
+
+    # else src_compile will fail, seems to depend on automake-1.13.1
+    eautoreconf
+}
+
+src_install() {
+    glib_src_install
+
+    if option !bash-completion ; then
+        edo rm "${IMAGE}"/usr/share/bash-completion/completions/{gapplication,gdbus,gresource,gsettings}
+        edo rmdir "${IMAGE}"/usr/share/bash-completion/{completions/,}
+    fi
+}
+

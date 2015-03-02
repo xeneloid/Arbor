@@ -24,7 +24,7 @@ exparam -b manpages && DOWNLOADS+=" mirror://kernel/software/scm/${PN}/${PN}-man
 
 BUGS_TO="ingmar@exherbo.org philantrop@exherbo.org"
 
-REMOTE_IDS="freecode:${PN}"
+REMOTE_IDS="freshcode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -79,6 +79,13 @@ DEPENDENCIES="
 
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
+
+if ever at_least 2.3.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            curl? ( net-misc/curl[>=7.34] )
+    "
+fi
 
 WORK=${WORKBASE}/${PNV/_/.}
 

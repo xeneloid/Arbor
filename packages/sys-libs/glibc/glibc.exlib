@@ -1,5 +1,5 @@
 # Copyright 2007-2008 Bryan Østergaard <kloeri@exherbo.org>
-# Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008-2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2010, 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -54,6 +54,16 @@ DEPENDENCIES="
     run:
         sys-libs/timezone-data
 "
+
+if ever at_least 2.21; then
+    DEPENDENCIES+="
+        build:
+            sys-apps/texinfo[>=4.7]
+            sys-devel/binutils[>=2.22]
+            sys-devel/bison[>=2.7]
+            sys-devel/gcc:*[>=4.6]
+    "
+fi
 
 # tests are expensive
 RESTRICT=test
@@ -171,10 +181,11 @@ EOF
             --localedir=/usr/share/locale                           \
             --localstatedir=/var/$(exhost --target)                 \
             --sysconfdir=/etc                                       \
-            --enable-addons                                         \
             --enable-kernel=${MINIMUM_KERNEL_VERSION}               \
             --enable-obsolete-rpc                                   \
-            $(ever at_least 2.18  && echo --enable-pt_chown)        \
+            $(ever at_least 2.18 && echo --enable-pt_chown)         \
+            $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons) \
+            $(ever at_least 2.21 && echo --disable-werror)          \
             --enable-stackguard-randomization                       \
             --enable-lock-elision=no                                \
             --with-headers=/usr/${target}/include
@@ -193,7 +204,11 @@ glibc_src_install() {
 
     export LANGUAGE=C
 
-    default
+    if ever at_least 2.21 ; then
+        emake -j1 DESTDIR="${IMAGE}" install
+    else
+        default
+    fi
 
     ! ever at_least 2.17 && ! exhost --is-native -q && edo rmdir "${IMAGE}/usr/$(exhost --target)/libexec/getconf"
 

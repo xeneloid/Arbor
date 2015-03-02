@@ -1,4 +1,5 @@
 # Copyright 2013 Jorge Aparicio
+# Copyright 2015 Pierre Lejeune
 # Distributed under the terms of the GNU General Public License v2
 
 # exparams:
@@ -25,7 +26,7 @@
 #     see python.exlib
 #
 #   has_bin, has_lib, min_versions, python_opts, multibuild, multiunpack, work,
-#   with_opt, option_name
+#   with_opt, option_name, 2to3
 #     see python.exlib
 
 # VARIABLES:
@@ -97,6 +98,7 @@ myexparam has_lib=true
 myexparam blacklist=none
 myexparam min_versions=
 myexparam python_opts=
+myexparam -b 2to3=false
 
 require python [ has_bin=$(exparam has_bin) \
                  has_lib=$(exparam has_lib) \
@@ -104,7 +106,8 @@ require python [ has_bin=$(exparam has_bin) \
                  min_versions="$(exparam min_versions)" \
                  python_opts="$(exparam python_opts)" \
                  multibuild=${SETUP_PY_MULTIBUILD} \
-                 with_opt=${SETUP_PY_WITH_OPT} ]
+                 with_opt=${SETUP_PY_WITH_OPT} \
+                 2to3=$(exparam 2to3) ]
 
 myexparam import
 
@@ -139,6 +142,8 @@ export_exlib_phases src_prepare src_configure src_compile src_install
 setup-py_prepare_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
     default
+
+    exparam -b 2to3 && python_run_2to3
 
     # remove ez_setup stuff to prevent packages
     # from installing setuptools on their own

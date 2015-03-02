@@ -42,7 +42,7 @@ DEPENDENCIES="
         X? ( x11-proto/xproto )
     build+run:
         dev-libs/expat[>=1.95.8]
-        dev-libs/glib:2[>=2.26]
+        dev-libs/glib:2[>=2.36]
         sys-apps/skeleton-filesystem-layout[>=0.5.4]
         group/messagebus
         group/plugdev
@@ -83,8 +83,11 @@ dbus_src_configure() {
         --with-session-socket-dir=/tmp                   \
         --with-system-pid-file=/run/dbus.pid             \
         --with-system-socket=/run/dbus/system_bus_socket \
+        --disable-apparmor                               \
+        --disable-ducktype-docs                          \
         --disable-libaudit                               \
         --disable-selinux                                \
+        --disable-static                                 \
         --disable-tests                                  \
         $(option_enable debug asserts)                   \
         $(option_enable debug verbose-mode)              \
