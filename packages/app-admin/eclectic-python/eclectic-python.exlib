@@ -30,7 +30,7 @@ WORK="${WORKBASE}"
 eclectic-python_src_install() {
     target=$(exhost --target)
     alternatives=(
-        python-${target} ${SLOT} ${IMPORTANCE}
+        python ${SLOT} ${IMPORTANCE}
         /usr/${target}/bin/2to3 2to3-${SLOT}
         /usr/${target}/bin/idle idle${SLOT}
         /usr/${target}/bin/pydoc pydoc${SLOT}
