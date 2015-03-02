@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require easy-multibuild gnome.org [ suffix=.tar.xz ]
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 1.12 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="A simple network library"
 HOMEPAGE="http://www.gnome.org/"
