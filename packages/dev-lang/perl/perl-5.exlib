@@ -234,6 +234,6 @@ perl-5_src_install() {
         perl_alternatives+=( "/${manpage}" "${manfile/%.1/-${SLOT}.1}" )
     done
 
-    alternatives_for ${PN}-$(exhost --target) ${SLOT} ${SLOT} "${perl_alternatives[@]}"
+    alternatives_for ${PN} ${SLOT} ${SLOT} "${perl_alternatives[@]}"
 }
 

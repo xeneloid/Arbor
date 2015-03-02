@@ -152,7 +152,7 @@ python-build_src_install() {
 
     target=$(exhost --target)
     # alternatives handling
-    alternatives=("${PN}$(ever major)-${target}" "${SLOT}" "${SLOT}")
+    alternatives=("${PN}$(ever major)" "${SLOT}" "${SLOT}")
 
     # for backward compatibility, have plat-linux3 and plat-linux2 folders
     # as long as they are identical, this shouldn't be a problem
