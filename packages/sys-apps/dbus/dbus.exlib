@@ -97,8 +97,10 @@ configure_one_multibuild() {
         $(option_enable debug verbose-mode)              \
         $(option_enable doc doxygen-docs)                \
         $(option_enable systemd)                         \
+        $(option_enable systemd user-session)            \
         $(option_with X x)                               \
-        $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR})
+        $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}) \
+        $(option_with systemd systemduserunitdir ${SYSTEMDUSERUNITDIR})
 }
 
 dbus_src_configure() {
