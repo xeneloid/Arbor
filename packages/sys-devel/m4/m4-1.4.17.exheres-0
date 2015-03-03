@@ -37,7 +37,7 @@ src_install() {
 }
 
 pkg_postinst() {
-    if exhost --is-native -q && [[ $(readlink -f "${ROOT##/}"/bin) == ${ROOT##/}/bin ]] ; then
+    if [[ $(readlink -f "${ROOT##/}"/usr/bin) == ${ROOT##/}/usr/bin ]] ; then
         nonfatal edo ln -sf ../${CHOST}/bin/m4 "${ROOT}"/usr/bin/m4 ||
             eerror "Copying /usr/bin/m4 failed"
     fi
