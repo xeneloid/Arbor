@@ -6,7 +6,7 @@
 require flag-o-matic
 
 SUMMARY="General purpose crypto library based on the code used in GnuPG"
-HOMEPAGE="http://www.gnupg.org/"
+HOMEPAGE="http://www.gnupg.org"
 DOWNLOADS="mirror://gnupg/${PN}/${PNV}.tar.bz2"
 
 REMOTE_IDS="freecode:${PN}"
