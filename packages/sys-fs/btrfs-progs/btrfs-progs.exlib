@@ -57,8 +57,8 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 )
 
 DEFAULT_SRC_INSTALL_PARAMS=(
-    prefix=/usr
-    libdir=/usr/${LIBDIR}
+    prefix=/usr/$(exhost --target)
+    libdir=/usr/$(exhost --target)/lib
     mandir=/usr/share/man
 )
 
