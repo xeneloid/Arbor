@@ -26,9 +26,7 @@ src_configure() {
     # The purpose of this test in m4/acl.m4 is to check if 'acl_get_file' works
     # and doesn't have a particular bug on Darwin 8.7.0. Since the test fails
     # when cross-compiling we assume we are not on Darwin 8.7.0 for the time being.
-    if ! exhost --is-native ; then
-        export gl_cv_func_working_acl_get_file=yes
-    fi
+    exhost --is-native -q || export gl_cv_func_working_acl_get_file=yes
 
     default
 }
