@@ -93,10 +93,12 @@ dbus_src_configure() {
         $(option_enable debug verbose-mode)              \
         $(option_enable doc doxygen-docs)                \
         $(option_enable systemd)                         \
+        $(option_enable systemd user-session)            \
         $(option_with X x)                               \
-        $(option_with systemd systemdsystemunitdir /usr/$(exhost --target)/lib/systemd/system)
+        $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}) \
+        $(option_with systemd systemduserunitdir ${SYSTEMDUSERUNITDIR})
 
-    esandbox allow_net 'unix-abstract:/tmp/dbus-fake-socket-*'
+    esandbox disallow_net 'unix-abstract:/tmp/dbus-fake-socket-*'
 }
 
 dbus_src_compile() {

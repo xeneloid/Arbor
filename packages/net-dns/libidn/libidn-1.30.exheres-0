@@ -17,7 +17,7 @@ MYOPTIONS="doc"
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext[>=0.18.3]
+        sys-devel/gettext[>=0.19.3]
 "
 
 # FIXME: Add java, mono and emacs support.
