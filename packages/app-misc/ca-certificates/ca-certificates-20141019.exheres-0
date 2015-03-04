@@ -67,9 +67,13 @@ pkg_postinst() {
         || ewarn "Some broken symlinks couldn't be removed. You must fix this manually."
 
     if [[ ${ROOT} == "/" ]]; then
-        update-ca-certificates || ewarn "update-ca-certificates failed."
+        if has_version 'dev-libs/libressl[>=2.1.4]'; then
+            openssl certhash -v /etc/ssl/certs || ewarn "openssl certhash failed."
+        else
+            update-ca-certificates || ewarn "update-ca-certificates failed."
+        fi
     else
-        ewarn "Cannot run update-ca-certificates because ROOT == ${ROOT} != /, you need to run it manually."
+        ewarn "Cannot run 'update-ca-certificates' or 'openssl certhash' because ROOT == ${ROOT} != /, you need to run it manually."
     fi
 }
 
