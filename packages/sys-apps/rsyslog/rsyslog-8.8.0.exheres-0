@@ -48,9 +48,8 @@ DEPENDENCIES="
         kerberos? ( app-crypt/heimdal )
         mysql? ( dev-db/mysql )
         postgresql? ( dev-db/postgresql )
-        relp? ( net-libs/librelp[>=1.0.3] )
-    run:
-        systemd? ( sys-apps/systemd[>=38] )
+        relp? ( net-libs/librelp[>=1.2.5] )
+        systemd? ( sys-apps/systemd[>=209] )
     suggestion:
         app-admin/logrotate [[ description = [ Support for rotating log files ] ]]
 "
@@ -62,11 +61,10 @@ RESTRICT="test"
 src_configure() {
     local myconf=(
         --disable-mmnormalize
-        --enable-cached-man-pages
+        --disable-liblogging-stdlog
         --enable-imdiag
         --enable-imptcp
         --enable-imfile
-        --enable-imttcp
         --enable-inet
         --enable-klog
         --enable-mail
@@ -76,7 +74,6 @@ src_configure() {
         --enable-regexp
         --enable-rsyslogd
         --enable-rsyslogrt
-        --enable-zlib
 
         # This is not a mistake and passing it to configure is correct.
         # Java is not being used at all yet, however the tests depend on it.
@@ -120,10 +117,6 @@ src_install() {
         edo echo '$SystemLogSocketName /run/systemd/journal/syslog' >> "${IMAGE}"/etc/rsyslog.conf
         edo sed -i -e "/systemd-kmsg-syslogd.service/d" "${IMAGE}"/usr/${LIBDIR}/systemd/system/rsyslog.service
     fi
-
-    # html docs
-    insinto /usr/share/doc/${PNVR}/html
-    doins -r "${WORK}"/doc/*.{html,png,jpg}
 
     edo rmdir "${IMAGE}"/usr/share/man/man1
 

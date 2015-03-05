@@ -25,15 +25,15 @@ UPSTREAM_CHANGELOG="${HOMEPAGE}/files/v$(ever range 1-2)/CMakeChangeLog-${PV}"
 
 LICENCES="BSD-3"
 SLOT="0"
-MYOPTIONS="emacs qt4
-    qt5 [[ description = [ Build against Qt5 instead of Qt4. ] ]]
+MYOPTIONS="doc qt4
+    qt5   [[ description = [ Build against Qt5 instead of Qt4. ] ]]
     vim-syntax
 
     ( qt4 qt5 )  [[ number-selected = at-most-one ]]"
 
 DEPENDENCIES="
     build:
-        dev-python/Sphinx[>=1.2.2][python_abis:2.7]
+        doc? ( dev-python/Sphinx[>=1.2.2][python_abis:2.7] )
     build+run:
         app-arch/bzip2
         app-arch/libarchive
@@ -103,7 +103,7 @@ cmake-build_src_configure() {
         --datadir=/../share/${PN}                                               \
         --mandir=/../share/man                                                  \
         --verbose                                                               \
-        --sphinx-man                                                            \
+        $(option doc && echo "--sphinx-man")                                    \
         --                                                                      \
         -DCMAKE_C_COMPILER:PATH="${CC}"                                         \
         -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                      \

@@ -3,9 +3,6 @@
 
 require easy-multibuild
 
-# we need openssl for c_rehash
-OSSL_PNV="openssl-1.0.2"
-
 SUMMARY="OpenBSD's portable fork of OpenSSL"
 DESCRIPTION="
 An SSL/TLS library with more ciphers, fewer bugs and much less bloat
@@ -13,7 +10,6 @@ An SSL/TLS library with more ciphers, fewer bugs and much less bloat
 HOMEPAGE="http://www.libressl.org/"
 DOWNLOADS="
     http://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${PNV}.tar.gz
-    http://www.openssl.org/source/${OSSL_PNV}.tar.gz
 "
 
 LICENCES="openssl"
@@ -39,19 +35,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-libtls
 )
 
-install_one_multibuild() {
-    default
-    keepdir /etc/ssl/{certs,private}
-    emagicdocs
-}
-
 src_install() {
     easy-multibuild_src_install
 
-    edo sed \
-        -e 's!\$dir = "/usr/local/ssl"!$dir = "/etc/ssl"!' \
-        -e 's!\$prefix = "/usr/local/ssl"!$prefix = "/usr"!' \
-        -i "${WORKBASE}"/${OSSL_PNV}/tools/c_rehash
-    dobin "${WORKBASE}"/${OSSL_PNV}/tools/c_rehash
+    emagicdocs
+    keepdir /etc/ssl/{certs,private}
 }
 
