@@ -73,7 +73,7 @@ pkg_postinst() {
         if has_version 'dev-libs/libressl[>=2.1.4]'; then
             openssl certhash -v /etc/ssl/certs || ewarn "openssl certhash failed."
         else
-            /usr/$(exhost --target)/sbin/update-ca-certificates || ewarn "update-ca-certificates failed."
+            update-ca-certificates || ewarn "update-ca-certificates failed."
         fi
     else
         ewarn "Cannot run 'update-ca-certificates' or 'openssl certhash' because ROOT == ${ROOT} != /, you need to run it manually."
