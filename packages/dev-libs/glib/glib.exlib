@@ -82,10 +82,32 @@ glib_src_test() {
     edo kill ${DBUS_SESSION_BUS_PID}
 }
 
+glib_src_configure() {
+    if ! exhost --is-native -q ; then
+        # "Whether the stack grows up or down; defaults to "no", which works
+        # most places. If you are compiling for PA-RISC or various other
+        # architectures, you'll have to change this."
+        export glib_cv_stack_grows=no
+        # "Whether an underscore needs to be prepended to symbols when
+        # looking them up via dlsym. Only needs to be set if your system
+        # uses dlopen/dlsym."
+        export glib_cv_uscore=yes
+        # "Whether you have a getpwuid_r function (in your C library,
+        # not your thread library) that conforms to the POSIX spec.
+        # (Takes a 'struct passwd **' as the final argument)"
+        export ac_cv_func_posix_getpwuid_r=yes
+        # Whether you have a getgrgid_r function that conforms to the
+        # POSIX spec.
+        export ac_cv_func_posix_getgrgid_r=yes
+    fi
+
+    default
+}
+
 glib_src_install() {
     default
     keepdir "/usr/$(exhost --target)/lib/gio/modules"
 }
 
-export_exlib_phases src_prepare src_test src_install
+export_exlib_phases src_configure src_prepare src_test src_install
 
