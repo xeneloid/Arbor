@@ -25,9 +25,15 @@ DEPENDENCIES="
             description = [ procps now provides pidof ]
             resolution = upgrade-blocked-before
         ]]
+        !sys-apps/coreutils[<8.23-r3]  [[
+            description = [ procps now provides uptime ]
+            resolution = upgrade-blocked-before
+        ]]
     test:
         dev-util/dejagnu
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/92071e963e6ff50f0e221dde286f3229267b2ff9.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-modern-top
@@ -66,10 +72,6 @@ src_install() {
     default
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/usr/bin/* "${IMAGE}"/usr/$(exhost --target)/bin/
-
-    # Provided by sys-apps/coreutils
-    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/uptime
-    edo rm "${IMAGE}"/usr/share/man/man1/uptime.1
 
     edo find "${IMAGE}"/ -type d -empty -delete
 
