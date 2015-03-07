@@ -24,6 +24,10 @@ DEPENDENCIES="
             description = [ procps now provides pidof ]
             resolution = upgrade-blocked-before
         ]]
+        !sys-apps/coreutils[<8.23-r3]  [[
+            description = [ procps now provides uptime ]
+            resolution = upgrade-blocked-before
+        ]]
     test:
         dev-util/dejagnu
 "
@@ -65,10 +69,6 @@ src_install() {
     default
 
     edo mv "${IMAGE}"/usr/usr/bin/* "${IMAGE}"/usr/bin/
-
-    # Provided by sys-apps/coreutils
-    edo rm "${IMAGE}"/usr/bin/uptime
-    edo rm "${IMAGE}"/usr/share/man/man1/uptime.1
 
     edo find "${IMAGE}"/ -type d -empty -delete
 }

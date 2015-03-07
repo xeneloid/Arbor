@@ -123,6 +123,10 @@ coreutils_src_install() {
         edo dosym /bin/${binfile} /usr/bin/${binfile}
     done
 
+    # Provided by sys-process/procps
+    edo rm "${IMAGE}"/usr/bin/uptime
+    edo rm "${IMAGE}"/usr/share/man/man1/uptime.1
+
     # NOTE(compnerd) do not provide a link for hostname.  /bin is part of ${PATH} by default, and
     # allows for overloading of hostname from inetutils for a more feature-rich version if users
     # desire.  Install the manpage as hostname.coreutils to avoid conflicting with inetutils since
