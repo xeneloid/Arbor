@@ -1,9 +1,7 @@
 # Copyright 2014-2015, Kylie McClain <somasissounds@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://git.kitenet.net/${PN}.git"
-SCM_TAG="${PV}"
-require scm-git
+require debian-upstream [ debian_pv="${PV}.orig" ]
 
 SUMMARY="A growing collection of unix tools no one thought to write of long ago"
 SLOT="0"
