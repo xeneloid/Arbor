@@ -1,0 +1,22 @@
+From 61960992e26da78259ab4944e5b7ab11f0fb8e0d Mon Sep 17 00:00:00 2001
+From: Saleem Abdulrasool <compnerd@compnerd.org>
+Date: Sat, 12 Jan 2013 08:52:56 -0800
+Subject: [PATCH] exherbo multi-arch paths
+
+---
+ gcc/config.gcc              |  2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gcc/config.gcc b/gcc/config.gcc
+index d6c8153..f200541 100644
+--- a/gcc/config.gcc
++++ b/gcc/config.gcc
+@@ -236,7 +236,7 @@ default_gnu_indirect_function=no
+ target_gtfiles=
+ need_64bit_hwint=
+ need_64bit_isa=
+-native_system_header_dir=/usr/include
++native_system_header_dir=/usr/${target}/include
+ target_type_format_char='@'
+ 
+ # Don't carry these over build->host->target.  Please.

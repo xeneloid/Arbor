@@ -1,0 +1,68 @@
+# Copyright 2015 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
+
+if [[ ${PV} == *_pre* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
+fi
+
+SUMMARY="GCC C Runtime Library"
+LICENCES="GPL-2"
+SLOT="$(ever range 1-2)"
+
+MYOPTIONS="
+    linguas:
+        be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
+"
+
+DEPENDENCIES="
+    build:
+        sys-libs/gmp
+        sys-libs/mpfr
+        sys-libs/mpc
+        sys-devel/binutils[>=2.20.1] [[ note = [ minimal version of binutils for LTO ] ]]
+"
+
+REMOTE_IDS="freecode:gcc"
+
+UPSTREAM_RELEASE_NOTES="${HOMEPAGE}gcc-${SLOT}/"
+UPSTREAM_CHANGELOG="${UPSTREAM_RELEASE_NOTES}changes.html"
+
+WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
+
+ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}"
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch" )
+
+# TODO(compnerd) find a way to expose build tools when cross-compiling and replace
+# {AR,RANLIB}_FOR_BUILD accordingly
+# TODO(compnerd) use cc rather than gcc for CC_FOR_TARGET
+DEFAULT_SRC_CONFIGURE_PARAMS=( AR_FOR_BUILD=$(exhost --build)-ar
+                               RANLIB_FOR_BUILD=$(exhost --build)-ranlib
+                               CC_FOR_TARGET=$(exhost --tool-prefix)gcc
+                               --disable-bootstrap --disable-multilib --enable-languages=c
+                               --disable-lto --disable-libssp --disable-libquadmath
+                               --disable-libgomp --disable-libatomic --disable-intl )
+
+DEFAULT_SRC_COMPILE_PARAMS=( all-target-libgcc )
+
+libgcc_src_unpack() {
+    default
+    edo mkdir -p "${WORK}"
+}
+
+libgcc_src_prepare() {
+    cd "${WORK}/.."
+    default
+}
+
+libgcc_src_install() {
+    # NOTE(compnerd) we must manually install here to avoid installing the build time dependencies
+    # of gcc and fixheaders from being merged as part of this package.  einstall will by default add
+    # 'install' to the make invocation, resulting in host and target builds being installed.
+    emake DESTDIR="${IMAGE}" install-target-libgcc
+}
+
+export_exlib_phases src_unpack src_prepare src_install
+
