@@ -23,7 +23,7 @@ SUMMARY="Perl is a general-purpose programming language originally developed for
 HOMEPAGE="http://www.perl.org"
 DOWNLOADS="
     mirror://cpan/src/5.0/${PNV}.tar.bz2
-    https://github.com/arsv/${PN}-cross/raw/releases/${PN}-${CROSS_PERL_VER[1]:-${PV}}-cross-${CROSS_PERL_VER[0]}.tar.gz
+    https://github.com/arsv/${PN}-cross/releases/download/${CROSS_PERL_VER[0]}/${PN}-${CROSS_PERL_VER[1]:-${PV}}-cross-${CROSS_PERL_VER[0]}.tar.gz
 "
 
 REMOTE_IDS="cpan:${PN} freecode:${PN}"

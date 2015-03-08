@@ -9,9 +9,6 @@ require perl-5 [ Module_Build_pv=0.4003 cross_perl_ver=[ 0.9.6 ] ]
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-# misnamed upstream release, https://github.com/arsv/perl-cross/issues/14
-DOWNLOADS=${DOWNLOADS/perl-5.20.2-cross-0.9.6.tar.gz/perl-5.20.2-cross-0.9.6.tar.gz -> perl-5.20.2-cross-0.9.6.tar}
-
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p1 "${FILES}"/${PN}-5.11.3-Remove-Syslog-tests.patch
     -p2 "${FILES}"/IO-skip-test.patch
