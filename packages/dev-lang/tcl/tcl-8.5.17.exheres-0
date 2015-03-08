@@ -66,7 +66,7 @@ src_install() {
     keepdir /usr/${host}/lib/${PN}8/8.3/
 
     local v1=$(ever range 1-2)
-    dosym /usr/${host}/bin/tclsh{${v1},}
+    dosym tclsh${v1} /usr/${host}/bin/tclsh
 
     dodoc "${WORKBASE}"/${MY_PNV}/{ChangeLog*,changes,README}
 }
