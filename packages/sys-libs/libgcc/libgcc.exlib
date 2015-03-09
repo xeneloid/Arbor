@@ -18,9 +18,9 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        sys-libs/gmp
-        sys-libs/mpfr
-        sys-libs/mpc
+        dev-libs/gmp
+        dev-libs/mpfr
+        dev-libs/mpc
         sys-devel/binutils[>=2.20.1] [[ note = [ minimal version of binutils for LTO ] ]]
 "
 
