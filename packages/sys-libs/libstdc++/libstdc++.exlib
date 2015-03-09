@@ -50,6 +50,9 @@ WORK="${WORKBASE}/build/$(exhost --target)/libstdc++-v3"
 libstdc++_src_unpack() {
     default
     mkdir -p "${WORK}"
+
+    # NOTE(compnerd) make sure that we detect thread support properly
+    edo ln -s gthr-posix.h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
 }
 
 export_exlib_phases src_unpack
