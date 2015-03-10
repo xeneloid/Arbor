@@ -55,6 +55,12 @@ libgcc_src_unpack() {
 libgcc_src_prepare() {
     cd "${WORK}/.."
     default
+
+    # TODO(compnerd) figure out why this is needed for gcc 4.9+ to build libgcc
+    if ever at_least 4.9 ; then
+        edo sed -e "/\bFLAGS_FOR_TARGET=/s|-B\$(build_tooldir)/lib|-B/usr/\$(target)/lib|"  \
+                -i "${WORKBASE}/gcc-${PV/_p?(re)/-}/configure"
+    fi
 }
 
 libgcc_src_install() {
