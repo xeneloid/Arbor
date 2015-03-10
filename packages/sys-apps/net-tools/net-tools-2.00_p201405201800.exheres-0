@@ -18,7 +18,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_INSTALL_PARAMS=(
     BINDIR=/usr/$(exhost --target)/bin
-    SBINDIR=/usr/$(exhost --target)/sbin
+    SBINDIR=/usr/$(exhost --target)/bin
 )
 
 src_configure() {
@@ -28,8 +28,6 @@ src_configure() {
 
 src_install() {
     default
-
-    dosym ../bin/route /usr/$(exhost --target)/sbin/route
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{hostname,domainname}
     for i in {dns,yp,nis}domainname; do
