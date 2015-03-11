@@ -1,0 +1,59 @@
+# Copyright 2014 Pierre Lejeune <superheron@gmail.com>
+# Copyright 2015 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user="open-source-parsers" ] cmake [ api=2 ]
+require python [ blacklist=none has_bin=true has_lib=false ]
+
+SUMMARY="An implementation of a JSON reader and writer in C++"
+DESCRIPTION="
+JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans
+to read and write. It is easy for machines to parse and generate.
+"
+
+LICENCES="|| ( public-domain MIT )"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="doc"
+
+DEPENDENCIES="
+    build:
+        doc? ( app-doc/doxygen )
+    test:
+        dev-lang/python:*[>=2.6]
+"
+
+CMAKE_SRC_CONFIGURE_PARAMS+=(
+    -DJSONCPP_LIB_BUILD_SHARED:BOOL=TRUE
+    -DJSONCPP_WITH_CMAKE_PACKAGE:BOOL=TRUE
+    -DJSONCPP_WITH_POST_BUILD_UNITTEST:BOOL=FALSE
+    -DJSONCPP_WITH_WARNING_AS_ERROR:BOOL=FALSE
+)
+CMAKE_SRC_CONFIGURE_TESTS=( '-DJSONCPP_WITH_TESTS=TRUE -DJSONCPP_WITH_TESTS=FALSE' )
+
+src_test() {
+    emake jsoncpp_readerwriter_tests
+}
+
+src_compile() {
+    default
+
+    if option doc ; then
+        # Needs to be run from the project's root dir
+        edo pushd "${CMAKE_SOURCE}"
+        ${PYTHON} doxybuild.py --doxygen=/usr/bin/doxygen
+        edo popd
+    fi
+}
+
+src_install() {
+    cmake_src_install
+
+    if option doc; then
+        edo pushd "${CMAKE_SOURCE}"/dist/doxygen
+        docinto html
+        dodoc -r ${PN}-api-html-${PV}/*
+        edo popd
+    fi
+}
+

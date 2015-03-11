@@ -1,17 +1,11 @@
 # Copyright 2008 Wulf Krueger <philantrop@exherbo.org>
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
-# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
+# Copyright 2014-2015 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'cmake-2.6.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require bash-completion
-
-if ever at_least 3.0.0 ; then
-    require elisp-optional [ source_directory=Auxiliary ]
-else
-    require elisp-optional [ source_directory=Docs ]
-fi
+require bash-completion elisp-optional [ source_directory=Auxiliary ]
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
@@ -31,12 +25,16 @@ MYOPTIONS="doc qt4
 
     ( qt4 qt5 )  [[ number-selected = at-most-one ]]"
 
+ever at_least 3.2.1 && MYOPTIONS+="
+    bootstrap [[ description = [ Use the internal jsoncpp (it needs cmake to build itself) ] ]]"
+
 DEPENDENCIES="
     build:
         doc? ( dev-python/Sphinx[>=1.2.2][python_abis:2.7] )
     build+run:
         app-arch/bzip2
         app-arch/libarchive
+        app-arch/xz
         dev-libs/expat[>=2.0.1]
         dev-libs/libxml2:2.0[>=2.6.28]
         net-misc/curl[>=7.16.4][ssl(+)]
@@ -44,10 +42,17 @@ DEPENDENCIES="
         qt5? ( x11-libs/qtbase:5 )
 "
 
-if ever at_least 3.1.0 ; then
+if ever at_least 3.2.1 ; then
     DEPENDENCIES+="
         build+run:
-            app-arch/xz
+            app-arch/libarchive[>=3.0.0]
+            sys-libs/ncurses
+           !bootstrap? ( dev-libs/jsoncpp[>=0.6.0] )
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            app-arch/libarchive
     "
 fi
 
@@ -97,13 +102,18 @@ cmake-build_src_configure() {
     ./bootstrap                                                                 \
         --parallel=${EXJOBS:-1}                                                 \
         --$(option qt5 || option qt4 || echo "no-")qt-gui                       \
-        --system-libs                                                           \
+        --system-bzip2                                                          \
+        --system-curl                                                           \
+        --system-expat                                                          \
+        --system-libarchive                                                     \
+        --system-zlib                                                           \
         --prefix=/usr/${host}                                                   \
         --docdir=/../share/doc/${PNVR}                                          \
         --datadir=/../share/${PN}                                               \
         --mandir=/../share/man                                                  \
         --verbose                                                               \
         $(option doc && echo "--sphinx-man")                                    \
+        $(ever at_least 3.2.1 && option bootstrap --no-system-jsoncpp --system-jsoncpp) \
         --                                                                      \
         -DCMAKE_C_COMPILER:PATH="${CC}"                                         \
         -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                      \
