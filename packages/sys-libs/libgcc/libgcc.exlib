@@ -47,6 +47,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( AR_FOR_BUILD=$(exhost --build)-ar
 
 DEFAULT_SRC_COMPILE_PARAMS=( all-target-libgcc )
 
+# NOTE(compnerd) libgcc does not have a testsuite
+RESTRICT="test"
+
 libgcc_src_unpack() {
     default
     edo mkdir -p "${WORK}"
@@ -67,7 +70,12 @@ libgcc_src_install() {
     # NOTE(compnerd) we must manually install here to avoid installing the build time dependencies
     # of gcc and fixheaders from being merged as part of this package.  einstall will by default add
     # 'install' to the make invocation, resulting in host and target builds being installed.
-    emake DESTDIR="${IMAGE}" install-target-libgcc
+    edo cd "${WORK}/$(exhost --target)/libgcc"
+    edo emake DESTDIR="${IMAGE}" install-shared
+
+    # TODO(compnerd) figure out why the first install gets the wrong path
+    nonfatal edo mv "${IMAGE}"/usr/$(exhost --target)/lib64/libgcc_s* "${IMAGE}"/usr/$(exhost --target)/lib
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib64
 }
 
 export_exlib_phases src_unpack src_prepare src_install
