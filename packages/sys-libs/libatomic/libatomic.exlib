@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
+require toolchain-runtime-libraries
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
@@ -38,5 +39,13 @@ libatomic_src_prepare() {
     default
 }
 
-export_exlib_phases src_unpack src_prepare
+libatomic_src_install() {
+    default
+
+    symlink_dynamic_libs ${PN}
+    slot_dynamic_libs ${PN}
+    slot_static_libs ${PN}
+}
+
+export_exlib_phases src_unpack src_prepare src_install
 
