@@ -6,7 +6,7 @@ require gnu [ pn=${PN#static-} suffix=bz2 ]
 SUMMARY="stand alone compiler"
 
 LICENCES="GPL-2"
-SLOT="0"
+SLOT="$(ever range 1-2)"
 CROSS_COMPILE_TARGETS="
     arm-exherbo-linux-gnueabi
     i686-pc-linux-gnu
@@ -95,32 +95,38 @@ EOF
                 --sysconfdir=/etc                           \
                 --disable-dependency-tracking               \
                 --enable-fast-install                       \
+                --enable-serial-configure                   \
                 --disable-bootstrap                         \
                 --disable-decimal-float                     \
+                --disable-install-libiberty                 \
                 --disable-libatomic                         \
                 --disable-libffi                            \
+                --disable-libgfortran                       \
                 --disable-libgomp                           \
+                --disable-libitm                            \
                 --disable-libmudflap                        \
+                --disable-libobjc                           \
                 --disable-libquadmath                       \
                 --disable-libsanitizer                      \
                 --disable-libssp                            \
-                --disable-lto                               \
+                --disable-libstdcxx                         \
+                --disable-libstdc++-v3                      \
                 --disable-multilib                          \
                 --disable-nls                               \
                 --disable-plugin                            \
                 --disable-shared                            \
+                --enable-lto                                \
                 --disable-threads                           \
-                --enable-languages=c                        \
-                --enable-serial-configure                   \
-                $([[ ${CHOST} == ${target} ]]               \
-                    && echo --with-newlib)                  \
+                --enable-languages=c,c++,objc,obj-c++,fortran \
+                --with-newlib                               \
+                --with-sysroot='""'                         \
+                --without-headers                           \
                 $(if [[ ${target} == ${CHOST} ]] ; then
-                    echo --program-prefix=static-
+                    echo --program-suffix=-${SLOT}
                   else
-                    echo --program-prefix=${target}-static-
+                    echo echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
                   fi)                                       \
                 --with-lib-path=${libpath}                  \
-                --without-headers                           \
                 --with-as=/usr/${CHOST}/bin/${target}-as    \
                 --with-ld=/usr/${CHOST}/bin/${target}-ld    \
                 --with-system-zlib                          \
@@ -166,8 +172,14 @@ static-gcc_src_install() {
         emake -j1 DESTDIR="${IMAGE}" install
         edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV}"
         if [[ ${target} == ${CHOST} ]] ; then
-            for tool in cpp gcov ; do
-                edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}static-${tool}
+            # TODO(compnerd) tweak build to automatically name these tools properly
+            for tool in c++-${SLOT} cpp-${SLOT} g++-${SLOT} gcov-${SLOT} gfortran-${SLOT} ; do
+                edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
+                nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
+            done
+            for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
+                edo rm "${IMAGE}/usr/${CHOST}/bin/${tool}"
+                nonfatal edo rm "${IMAGE}/usr/share/man/man1/${tool}.1"
             done
         fi
     done
