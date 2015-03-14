@@ -42,7 +42,7 @@ MYOPTIONS="
 
 # TODO(compnerd): we need a way to handle this sort of dependency
 #        $(for host in arm-exherbo-linux-gnueabi i686-pc-linux-gnu x86_64-pc-linux-gnu ; do
-#            echo "hosts:${host}? ( sys-devel/static-gcc[targets:${host}] )"
+#            echo "hosts:${host}? ( sys-devel/gcc[targets:${host}] )"
 #          done)
 DEPENDENCIES="
     build:
@@ -155,7 +155,7 @@ libc_cv_prog_ld_gnu=yes
 EOF
     fi
 
-    PLATFORM_CC="/usr/${build}/bin/${target}-static-gcc"
+    PLATFORM_CC="/usr/${build}/bin/${target}-gcc"
     case $(exhost --target) in
         x86_64-pc-linux-gnu) PLATFORM_CC="${PLATFORM_CC} -m64";;
         i686-pc-linux-gnu)   PLATFORM_CC="${PLATFORM_CC} -m32";;
@@ -169,8 +169,8 @@ EOF
     NM="${target}-nm"                                               \
     BUILD_CC="${build}-gcc -B/usr/${build}/${build}/bin"            \
     CC="${PLATFORM_CC}"                                             \
-    CPP="/usr/${build}/bin/${target}-static-cpp "                   \
-    CXX="/usr/${build}/bin/${target}-static-g++"                    \
+    CPP="/usr/${build}/bin/${target}-cpp"                           \
+    CXX="/usr/${build}/bin/${target}-g++"                           \
         "${WORKBASE}/${PNV}/configure"                              \
             --cache-file=config.cache                               \
             --build=${build}                                        \
