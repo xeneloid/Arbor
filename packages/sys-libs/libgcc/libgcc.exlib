@@ -26,11 +26,8 @@ REMOTE_IDS="freecode:gcc"
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}gcc-${SLOT}/"
 UPSTREAM_CHANGELOG="${UPSTREAM_RELEASE_NOTES}changes.html"
 
-WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
-
 ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}"
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch" )
+WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
 
 # TODO(compnerd) find a way to expose build tools when cross-compiling and replace
 # {AR,RANLIB}_FOR_BUILD accordingly
