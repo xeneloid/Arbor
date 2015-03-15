@@ -46,6 +46,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-zlib
     --disable-jbig
     --disable-static
+    --with-docdir=/usr/share/doc/${PNVR}
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'opengl x' )
 
