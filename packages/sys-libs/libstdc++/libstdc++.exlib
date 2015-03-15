@@ -23,8 +23,6 @@ DEPENDENCIES="
     build:
         sys-apps/texinfo[>4.4]
         sys-devel/gettext
-        sys-devel/make
-        sys-devel/binutils[>=2.20.1] [[ note = [ minimal version of binutils for LTO ] ]]
         doc? (
             app-doc/doxygen[>=1.5.1]
             dev-libs/libxml2
@@ -42,7 +40,8 @@ UPSTREAM_DOCUMENTATION="${HOMEPAGE}onlinedocs/libstdc++/libstdc++-html-USERS-${S
 # TODO(compnerd) enable precompiled headers
 # TODO(compnerd) make vtv an optional feature; it is not free and everything built against it will
 # need to explicitly depend on the VTV option as it changes vtable information.
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-clocale=gnu --disable-libstdcxx-pch --disable-vtable-verify )
+DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-clocale=gnu --disable-libstdcxx-pch --disable-vtable-verify
+                               --with-python-dir=gdb/python )
 
 ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}/libstdc++-v3"
 WORK="${WORKBASE}/build/$(exhost --target)/libstdc++-v3"
@@ -50,9 +49,6 @@ WORK="${WORKBASE}/build/$(exhost --target)/libstdc++-v3"
 libstdc++_src_unpack() {
     default
     mkdir -p "${WORK}"
-
-    # NOTE(compnerd) make sure that we detect thread support properly
-    edo ln -s gthr-posix.h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
 }
 
 export_exlib_phases src_unpack
