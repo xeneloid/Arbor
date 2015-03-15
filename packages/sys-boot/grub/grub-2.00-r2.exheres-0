@@ -67,6 +67,10 @@ pkg_setup() {
 src_configure() {
     myconf=(
         "CPP=${CC} -E"
+
+        # TODO(compnerd) use cc instead of gcc
+        "BUILD_CC=$(exhost --build)-gcc"
+
         --with-bootdir=/boot
         --with-grubdir=grub
         --enable-cache-stats
