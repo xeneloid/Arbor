@@ -109,10 +109,6 @@ libgcc_src_install() {
     # 'install' to the make invocation, resulting in host and target builds being installed.
     edo cd "${WORK}/$(exhost --target)/libgcc"
     edo emake DESTDIR="${IMAGE}" install-shared
-
-    # TODO(compnerd) figure out why the first install gets the wrong path
-    nonfatal edo mv "${IMAGE}"/usr/$(exhost --target)/lib64/libgcc_s* "${IMAGE}"/usr/$(exhost --target)/lib
-    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib64
 }
 
 export_exlib_phases src_unpack src_prepare src_compile src_install
