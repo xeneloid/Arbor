@@ -116,13 +116,15 @@ EOF
                 --disable-libssp                            \
                 --disable-libstdcxx                         \
                 --disable-libstdc++-v3                      \
+                --disable-libvtv                            \
+                --disable-vtable-verify                     \
                 --disable-multilib                          \
                 --disable-nls                               \
                 --disable-shared                            \
                 --enable-lto                                \
                 --disable-plugin                            \
                 $(option_enable threads)                    \
-                --enable-languages=c,c++,fortran,go,objc,obj-c++ \
+                --enable-languages=c,c++,fortran,objc,obj-c++ \
                 --with-newlib                               \
                 --with-sysroot='""'                         \
                 --without-headers                           \
@@ -155,7 +157,7 @@ static-gcc_src_compile() {
         # NOTE(compnerd) pass gcc_cv_objdump through the environment to allow the sub-configures to
         # receive the correct value; we also must pass gcc_cv_libc_provides_ssp to ensure that it is
         # received by the sub-configures.
-        export_sym_check='' gcc_cv_libc_provides_ssp=yes gcc_cv_objdump=${target}-objdump default
+        gcc_cv_libc_provides_ssp=yes gcc_cv_objdump=${target}-objdump default
     done
 }
 
@@ -178,11 +180,11 @@ static-gcc_src_install() {
         edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV}"
         if [[ ${target} == ${CHOST} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
-            for tool in c++-${SLOT} cpp-${SLOT} g++-${SLOT} gccgo-${SLOT} gcov-${SLOT} gfortran-${SLOT} ; do
+            for tool in c++-${SLOT} cpp-${SLOT} g++-${SLOT} gcov-${SLOT} gfortran-${SLOT} ; do
                 edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
                 nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
-            for tool in dir gfortran gccgo ; do
+            for tool in dir gfortran ; do
                 nonfatal edo mv "${IMAGE}"/usr/share/info/${tool}{.info,-${SLOT}.info}
             done
             for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
