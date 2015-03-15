@@ -55,6 +55,9 @@ libstdc++_src_unpack() {
     edo sed -e "s,glibcxx_toolexecdir=no,glibcxx_toolexecdir='\${libdir}',"         \
             -e "s,glibcxx_toolexeclibdir=no,glibcxx_toolexeclibdir='\${libdir}',"   \
             -i "${ECONF_SOURCE}/configure"
+
+    # NOTE(compnerd) make sure that we setup _GLIBCXX_HAS_GTHREADS properly
+    edo ln -s gthr-posix.h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
 }
 
 export_exlib_phases src_unpack
