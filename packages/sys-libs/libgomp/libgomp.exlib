@@ -23,8 +23,6 @@ DEPENDENCIES="
     build:
         sys-apps/texinfo[>4.4]
         sys-devel/gettext
-        sys-devel/make
-        sys-devel/binutils[>=2.20.1] [[ note = [ minimal version of binutils for LTO ] ]]
         doc? (
             app-doc/doxygen[>=1.5.1]
             dev-libs/libxml2
