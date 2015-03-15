@@ -28,7 +28,7 @@ DEPENDENCIES="
 #   buil+run:
 #       sys-libs/glibc[hosts:*(-)?]
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/exherbo-multiarch-paths.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/gcc-${SLOT}-exherbo-multiarch-paths.patch" )
 
 static-gcc_pkg_setup() {
     local target=
@@ -101,12 +101,15 @@ EOF
                 --disable-decimal-float                     \
                 --disable-install-libiberty                 \
                 --disable-libatomic                         \
+                --disable-libcilkrts                        \
                 --disable-libffi                            \
                 --disable-libgfortran                       \
                 --disable-libgo                             \
                 --disable-libgomp                           \
                 --disable-libitm                            \
-                --disable-libmudflap                        \
+                $(if ! ever at_least 4.9 ; then
+                    echo --disable-libmudflap
+                  fi)                                       \
                 --disable-libobjc                           \
                 --disable-libquadmath                       \
                 --disable-libsanitizer                      \
