@@ -38,7 +38,7 @@ create_device_node() {
 pkg_pretend() {
     local x
     # checks more than it has to, but if you have /include then you did something wrong anyway.
-    for x in {,/usr}/{bin,sbin,lib,libexec,local,include,src}; do
+    for x in {,/usr}/{bin,sbin,lib,libexec,include}; do
         if [[ -e "${ROOT}${x}" && ! -L "${ROOT}${x}" ]]; then
             die "${x}: Expected a symlink but found a directory"
         fi
@@ -91,17 +91,17 @@ pkg_postinst() {
     edo ln -sf /proc/self/mounts "${ROOT}"/etc/mtab
 
     # /usr structure
-    for x in usr{,/$(exhost --target),/share}; do
+    for x in usr{,/$(exhost --target),/{share,src,local}}; do
         create_root_owned_directory "${ROOT}${x}"
     done
 
     # /usr/$(exhost --target) structure
-    for x in usr/$(exhost --target)/{bin,sbin,include,lib,libexec,local,src}; do
+    for x in usr/$(exhost --target)/{bin,sbin,include,lib,libexec}; do
         create_root_owned_directory "${ROOT}${x}"
     done
 
-    # /usr/$(exhost --target)/local structure
-    for x in usr/$(exhost --target)/local/{bin,sbin,include,lib,libexec,etc,man,share{,/man}}; do
+    # /usr/local structure
+    for x in usr/local/{bin,sbin,include,lib,libexec,etc,man,share{,/man}}; do
         create_root_owned_directory "${ROOT}${x}"
     done
 
@@ -142,13 +142,12 @@ pkg_postinst() {
     edo ln -snTf $(exhost --build) "${ROOT}"usr/host
 
     # create compat symlinks for bin, sbin, include, lib{,exec} and /usr/local
-    for x in bin sbin include lib libexec local; do
+    for x in bin sbin include lib libexec; do
         edo ln -snTf host/${x} "${ROOT}"usr/${x}
     done
 
     for x in bin sbin lib; do
         edo ln -snTf usr/host/${x} "${ROOT}${x}"
     done
-
 }
 
