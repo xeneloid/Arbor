@@ -69,10 +69,13 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-mcfs
 )
 
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    "samba vfs-smb"
+)
+
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "gpm gpm-mouse"
     "X x"
-    samba
 )
 
 WORK=${WORKBASE}/${PNV/_/-}
