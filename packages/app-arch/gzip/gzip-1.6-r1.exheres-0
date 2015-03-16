@@ -1,7 +1,9 @@
 # Copyright 2007 Bryan Østergaard <bryan.ostergaard@gmail.com>
+# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=xz ]
+require alternatives
 
 SUMMARY="Compression utility designed to be a replacement for compress"
 HOMEPAGE="http://www.gzip.org/ ${HOMEPAGE}"
@@ -15,3 +17,10 @@ DEPENDENCIES=""
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --prefix=/ )
 
+src_install() {
+    default
+    alternatives_for "gzip" "${PN}" "100"       \
+                     "/bin/${PN}"                       "${PN}.gzip"  \
+                     "/bin/gunzip"                      "${PN}.gunzip"  \
+                     "/usr/share/man/man1/${PN}.1"      "${PN}.gzip.1"
+}
