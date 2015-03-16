@@ -1,0 +1,30 @@
+# Copyright 2012 Elias Pipping <pipping@exherbo.org>
+# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives
+
+SUMMARY="Parallel implementation of gzip"
+HOMEPAGE="http://www.zlib.net/${PN}"
+DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
+
+LICENCES="ZLIB"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+src_install() {
+    # gzip uses /bin so we should probably follow suit
+    edo mkdir "${IMAGE}/bin"
+    edo mv ${PN} "${IMAGE}/bin"
+    dosym "/bin/${PN}" "/bin/unpigz"
+
+    doman ${PN}.1
+    dodoc README ${PN}.pdf
+
+    alternatives_for "gzip" "${PN}" "50"                        \
+                     "/bin/gzip"                     "${PN}"    \
+                     "/bin/gunzip"                   "unpigz"   \
+                     "/usr/share/man/man1/gzip.1"    "${PN}.1"
+}
+
