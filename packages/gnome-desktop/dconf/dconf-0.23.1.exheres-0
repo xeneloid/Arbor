@@ -1,0 +1,29 @@
+# Copyright 2010 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require dconf
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="
+    gtk-doc
+"
+
+DEPENDENCIES="
+    build:
+        app-text/docbook-xml-dtd:4.2
+        app-text/docbook-xsl-stylesheets [[ note = [ required for manapages/docbook.xsl ] ]]
+        dev-libs/libxslt
+        dev-util/intltool[>=0.50.0]
+        virtual/pkg-config[>=0.21]
+        gtk-doc? ( dev-doc/gtk-doc[>=1.15] )
+    build+run:
+        dev-libs/glib:2[>=2.39.1]
+        sys-apps/dbus
+    test:
+        sys-apps/dbus[X] [[ note = [ for autolaunch ] ]]
+"
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'gtk-doc' )
+
