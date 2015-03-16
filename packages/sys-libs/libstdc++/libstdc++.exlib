@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
+require alternatives toolchain-runtime-libraries
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
@@ -63,5 +64,25 @@ libstdc++_src_unpack() {
     edo ln -s gthr-posix.h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
 }
 
-export_exlib_phases src_unpack
+libstdc++_src_install() {
+    local alternatives=() locale= name=
+
+    default
+
+    symlink_dynamic_libs ${PN}
+    slot_dynamic_libs ${PN}
+    slot_static_libs ${PN} libsupc++
+
+    edo pushd "${IMAGE}"
+    for locale in usr/share/locale/*/*/*.mo; do
+        [[ -e ${locale} ]] || continue
+        name=${locale##*/}
+        alternatives+=( /${locale} ${name%.mo}-${SLOT}.mo )
+    done
+    edo popd
+
+    alternatives_for _${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
+}
+
+export_exlib_phases src_unpack src_install
 
