@@ -155,20 +155,14 @@ libc_cv_prog_ld_gnu=yes
 EOF
     fi
 
-    PLATFORM_CC="/usr/${build}/bin/${target}-gcc"
-    case $(exhost --target) in
-        x86_64-pc-linux-gnu) PLATFORM_CC="${PLATFORM_CC} -m64";;
-        i686-pc-linux-gnu)   PLATFORM_CC="${PLATFORM_CC} -m32";;
-    esac
-
     # TODO(compnerd) determine how to handle non-gcc compilers
     # NOTE(compnerd) export readelf and NM explicitly because the immensely dumb configure
     # script does not bother to check for the prefixed tools!
     edo env                                                         \
-    READELF="${target}-readelf"                                     \
     NM="${target}-nm"                                               \
+    READELF="${target}-readelf"                                     \
     BUILD_CC="${build}-gcc -B/usr/${build}/${build}/bin"            \
-    CC="${PLATFORM_CC}"                                             \
+    CC="${target}-gcc"                                              \
     CPP="/usr/${build}/bin/${target}-cpp"                           \
     CXX="/usr/${build}/bin/${target}-g++"                           \
         "${WORKBASE}/${PNV}/configure"                              \
