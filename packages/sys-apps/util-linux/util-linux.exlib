@@ -128,6 +128,7 @@ util-linux_src_configure() {
 
     econf \
         --localstatedir=/run \
+        --enable-colors-default \
         --enable-fs-paths-extra=/usr/$(exhost --target)/sbin \
         --enable-libblkid \
         --enable-libfdisk \

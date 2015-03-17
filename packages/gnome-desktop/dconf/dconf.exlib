@@ -1,10 +1,13 @@
 # Copyright 2010 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License
 
-myexparam valac_slot
-exparam -v valac_slot valac_slot
+require bash-completion gnome.org [ suffix=.tar.xz ]
+if ! ever at_least 0.23; then
+    myexparam valac_slot
+    exparam -v valac_slot valac_slot
 
-require bash-completion gnome.org [ suffix=.tar.xz ] vala [ vala_dep=false vala_slots=[ $(exparam valac_slot) ] ]
+    require vala [ vala_dep=false vala_slots=[ $(exparam valac_slot) ] ]
+fi
 require gtk-icon-cache test-dbus-daemon
 ever at_least 0.17 && require gsettings
 
