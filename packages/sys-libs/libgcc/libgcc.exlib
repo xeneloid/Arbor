@@ -63,7 +63,7 @@ libgcc_src_prepare() {
     default
 
     # TODO(compnerd) do this properly via autotools
-    edo sed -e '/export_sym_check=/c export_sym_check="$(exhost --build)-objdump -T"' \
+    edo sed -e '/export_sym_check=/c export_sym_check="'"$(exhost --build)"'-objdump -T"' \
             -i "${ECONF_SOURCE}/gcc/configure"
 }
 
