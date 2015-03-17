@@ -162,7 +162,7 @@ EOF
     NM="${target}-nm"                                               \
     READELF="${target}-readelf"                                     \
     BUILD_CC="${build}-gcc -B/usr/${build}/${build}/bin"            \
-    CC="${target}-gcc"                                              \
+    CC="${target}-gcc -B/usr/${build}/${target}/bin"                \
     CPP="/usr/${build}/bin/${target}-cpp"                           \
     CXX="/usr/${build}/bin/${target}-g++"                           \
         "${WORKBASE}/${PNV}/configure"                              \
