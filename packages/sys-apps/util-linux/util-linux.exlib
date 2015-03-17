@@ -127,6 +127,7 @@ configure_one_multibuild() {
     econf \
         --libdir=/${LIBDIR} \
         --localstatedir=/run \
+        --enable-colors-default \
         --enable-fs-paths-extra=/usr/sbin \
         --enable-libblkid \
         --enable-libfdisk \
