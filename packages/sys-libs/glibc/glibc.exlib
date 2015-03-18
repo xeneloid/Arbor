@@ -11,6 +11,7 @@ else
 fi
 
 require multibuild flag-o-matic systemd-service [ systemd_files=[ nscd.service ] ] kernel
+require toolchain-funcs
 
 export_exlib_phases pkg_pretend pkg_setup src_unpack src_prepare src_configure src_install pkg_preinst pkg_postinst
 
@@ -104,7 +105,7 @@ glibc_pkg_setup() {
     filter-flags -flto
 
     # NOTE(compnerd) use -fuse-ld to specify the linker if available
-    if ever at_least 4.8 $(eclectic gcc show) ; then
+    if ever at_least 4.8 $(gcc-version) ; then
         filter-flags -fuse-ld*
         append-flags '-fuse-ld=bfd'
     fi
@@ -148,7 +149,7 @@ EOF
 
     # NOTE(compnerd) explicitly use the BFD linker as suggested by upstream, preferring to use
     # -fuse-ld if available
-    if ! ever at_least 4.8 $(eclectic gcc show) ; then
+    if ! ever at_least 4.8 $(gcc-version) ; then
         cat >> "${WORKBASE}/build/config.cache" <<- EOF
 ac_cv_prog_LD=/usr/${build}/${target}/bin/ld.bfd
 libc_cv_prog_ld_gnu=yes
