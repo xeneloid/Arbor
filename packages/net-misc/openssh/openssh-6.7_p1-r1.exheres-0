@@ -4,15 +4,7 @@
 # Based in part upon 'openssh-5.0_p1-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require openssh [ X509_version=7.9 ]
+require openssh [ X509_version=8.2 ]
 
 PLATFORMS="~amd64 ~arm ~x86"
-
-MYOPTIONS="tcpd"
-DEPENDENCIES="
-    build+run:
-        tcpd? ( sys-apps/tcp-wrappers[>=7.6] )
-"
-
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=( 'tcpd tcp-wrappers' )
 

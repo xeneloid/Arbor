@@ -8,3 +8,8 @@ require openssh
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_CONFIGURE_PARAMS+=(
+    --with-openssl
+    --with-ssh1
+)
+
