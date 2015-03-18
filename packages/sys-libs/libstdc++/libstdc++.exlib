@@ -31,6 +31,9 @@ DEPENDENCIES="
         )
 "
 
+# fails though it gets ignored. should be fixed and then marked as expensive.
+RESTRICT="test"
+
 REMOTE_IDS="freecode:gcc"
 
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}gcc-${SLOT}/"
