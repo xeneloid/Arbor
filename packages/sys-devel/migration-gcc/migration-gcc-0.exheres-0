@@ -32,7 +32,7 @@ src_install() {
     for tool in c++ g++ cpp gcc ; do
         cat <<- EOF > "${IMAGE}/usr/bin/${CHOST}-${tool}"
 #!/bin/bash
-exec /usr/bin/${CHOST}-${tool}-$(gcc-version) -B/usr/${CHOST}/${CHOST}/bin "\${@}"
+exec /usr/bin/${CHOST}-${tool}-$(gcc-version) -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/${CHOST}/include "\${@}"
 EOF
         edo chmod +x "${IMAGE}/usr/bin/${CHOST}-${tool}"
     done
