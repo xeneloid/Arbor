@@ -57,13 +57,14 @@ linux-headers_src_install() {
     [[ -n ${arch} ]] || die "unsupported host '${target}', please update linux-headers.exlib"
 
     edo mkdir -p "${IMAGE}/usr/${target}"
-    edo emake \
-        ARCH=${arch} \
-        HOSTCC="${CHOST}-gcc -B/usr/${CHOST}/${CHOST}/bin" \
+    edo emake                                     \
+        ARCH=${arch}                              \
+        HOSTCC="${CHOST}-gcc"                     \
         INSTALL_HDR_PATH="${IMAGE}/usr/${target}" \
         headers_install
     edo find "${IMAGE}/usr/${target}/include" -name '.install' -delete -or \
-                                            -name '..install.cmd' -delete
+                                              -name '..install.cmd' -delete
+    #
     # scsi.h is now provided by sys-libs/glibc
     ever at_least 2.6.35 || edo rm "${IMAGE}"/usr/${target}/include/scsi/scsi.h
 
