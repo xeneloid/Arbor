@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ pn=${PN#static-} suffix=bz2 ]
+require alternatives
 
 SUMMARY="stand alone compiler"
 
@@ -162,7 +163,7 @@ static-gcc_src_compile() {
 }
 
 static-gcc_src_install() {
-    local target=
+    local target= alternatives=()
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local libpath=/${target}/lib:/usr/${target}/lib
@@ -184,7 +185,7 @@ static-gcc_src_install() {
                 edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
                 nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
-            for tool in dir gfortran ; do
+            for tool in gfortran ; do
                 nonfatal edo mv "${IMAGE}"/usr/share/info/${tool}{.info,-${SLOT}.info}
             done
             for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
@@ -192,7 +193,27 @@ static-gcc_src_install() {
                 nonfatal edo rm "${IMAGE}/usr/share/man/man1/${tool}.1"
             done
         fi
+
+        edo pushd "${IMAGE}"
+        for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
+            alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
+        done
+        for man in usr/share/man/man1/${target}-*-${SLOT}.1; do
+            alternatives+=( /${man%-${SLOT}.1}.1 ${man##*/} )
+        done
+        for info in usr/share/info/*-${SLOT}.info; do
+            [[ -e ${info} ]] || continue
+            alternatives+=( /${info%-${SLOT}.info}.info ${info##*/} )
+        done
+        for locale in usr/share/locale/*/*/*.mo; do
+            [[ -e ${locale} ]] || continue
+            local name=${locale##*/}
+            alternatives+=( /${locale} ${name%.mo}-${SLOT}.mo )
+        done
+        edo popd
     done
+
+    alternatives_for gcc ${PN}-${SLOT} ${SLOT} "${alternatives[@]}"
 
     # Remove stuff installed by gcc
     edo rm "${IMAGE}"/usr/share/man/man7/{gpl,gfdl,fsf-funding}.7
