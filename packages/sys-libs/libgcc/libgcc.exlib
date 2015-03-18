@@ -34,6 +34,7 @@ WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
 # {AR,RANLIB}_FOR_BUILD accordingly
 # TODO(compnerd) use cc rather than gcc for CC_FOR_TARGET
 DEFAULT_SRC_CONFIGURE_PARAMS=( AR_FOR_BUILD=$(exhost --build)-ar
+                               CC_FOR_BUILD=$(exhost --build)-gcc
                                RANLIB_FOR_BUILD=$(exhost --build)-ranlib
                                CC_FOR_TARGET=$(exhost --tool-prefix)gcc
                                --disable-bootstrap
