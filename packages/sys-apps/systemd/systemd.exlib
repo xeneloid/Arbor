@@ -74,7 +74,7 @@ DEPENDENCIES="
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
         dev-util/gperf[>=3.0.4] [[ note = [ for keymap ] ]]
         dev-util/intltool[>=0.40.0]
-        sys-devel/gcc:*[>=4.9] [[ note = [ Older gcc have some issues building systemd ] ]]
+        sys-devel/static-gcc:*[>=4.9] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
         sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
