@@ -4,6 +4,8 @@
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
 require alternatives toolchain-runtime-libraries
 
+export_exlib_phases src_unpack src_install pkg_postinst
+
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
 fi
@@ -73,16 +75,28 @@ libstdc++_src_install() {
     slot_dynamic_libs ${PN}
     slot_static_libs ${PN} libsupc++
 
+    mo_provided=()
+
     edo pushd "${IMAGE}"
     for locale in usr/share/locale/*/*/*.mo; do
         [[ -e ${locale} ]] || continue
         name=${locale##*/}
         alternatives+=( /${locale} ${name%.mo}-${SLOT}.mo )
+        mo_provided+=( /${locale} )
     done
     edo popd
 
     alternatives_for _${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
 }
 
-export_exlib_phases src_unpack src_install
+libstdc++_pkg_postinst() {
+    local mo
+    for mo in "${mo_provided[@]}"; do
+        if [[ -e ${ROOT}${mo} && ! -L ${ROOT}${mo} ]]; then
+            nonfatal edo rm "${ROOT}${mo}" || ewarn "Failed to remove /${mo}"
+        fi
+    done
+
+    alternatives_pkg_postinst
+}
 
