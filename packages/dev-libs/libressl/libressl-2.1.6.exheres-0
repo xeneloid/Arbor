@@ -31,10 +31,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-rand-egd.patch
 )
 
-DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --enable-libtls
-)
-
 src_install() {
     easy-multibuild_src_install
 
