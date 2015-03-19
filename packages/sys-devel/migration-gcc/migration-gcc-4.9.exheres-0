@@ -54,3 +54,8 @@ EOF
     done
 }
 
+pkg_preinst() {
+    [[ $(readlink -f "${ROOT##/}"/usr/bin) == ${ROOT##/}/usr/bin*([^/]) ]] || \
+        edo rm -rf "${IMAGE}"{usr/bin,"${ALTERNATIVES_DIR}"/gcc/old-gcc-wrapper-${SLOT}}
+}
+
