@@ -1,0 +1,56 @@
+# Copyright 2015 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives
+
+SUMMARY="cross-migration toolchain wrappers"
+DESCRIPTION="
+Assistants for crossing the crossroad
+"
+HOMEPAGE="http://www.exherbo.org/"
+DOWNLOADS=""
+
+LICENCES="BSD-3"
+SLOT="${PV}"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        !sys-devel/migration-gcc:0 [[
+            description = [ slot move ]
+            resolution = uninstall-blocked-before
+        ]]
+    run:
+        sys-devel/gcc:${SLOT}
+"
+
+BUGS_TO="compnerd@compnerd.org"
+WORK=${WORKBASE}
+
+src_install() {
+    local prefix tool
+
+    local tools=( c++ g++ cpp gcc )
+    local -A providers=(
+        [/usr]=old-gcc-wrapper
+        [/usr/"${CHOST}"]=new-gcc-wrapper
+    )
+
+    for prefix in "${!providers[@]}"; do
+        local alternatives=()
+        into "${prefix}"
+
+        for tool in "${tools[@]}"; do
+            herebin "${CHOST}-${tool}" <<- EOF
+#!/bin/bash
+exec ${prefix}/bin/${CHOST}-${tool}-${SLOT} -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/${CHOST}/include "\${@}"
+EOF
+
+            alternatives+=( "${prefix}/bin/${CHOST}-${tool}" "${CHOST}-${tool}-${providers[${prefix}]}-${SLOT}" )
+        done
+
+        alternatives_for gcc ${providers[${prefix}]}-${SLOT} 0.${SLOT} "${alternatives[@]}"
+    done
+}
+
