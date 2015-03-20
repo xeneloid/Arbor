@@ -59,6 +59,7 @@ linux-headers_src_install() {
     edo mkdir -p "${IMAGE}/usr/${target}"
     edo emake                                     \
         ARCH=${arch}                              \
+        CROSS_COMPILE=$(exhost --tool-prefix)     \
         HOSTCC="${CHOST}-gcc"                     \
         INSTALL_HDR_PATH="${IMAGE}/usr/${target}" \
         headers_install
