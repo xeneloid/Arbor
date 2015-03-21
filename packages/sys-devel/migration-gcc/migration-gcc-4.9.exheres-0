@@ -33,6 +33,10 @@ DEPENDENCIES="
 BUGS_TO="compnerd@compnerd.org"
 WORK=${WORKBASE}
 
+pkg_pretend() {
+    [[ $(readlink -f "${ROOT##/}"/usr/bin) == ${ROOT##/}/usr/bin*([^/]) ]] || \
+        eerror "migration-gcc can only be installed during migration when /usr/bin isn't a symlink"
+}
 
 src_install() {
     local prefix tool target
@@ -40,25 +44,24 @@ src_install() {
 
     local tools=( c++ g++ cpp gcc )
 
+    into /usr
+
     for target in ${TARGETS}; do
         for tool in "${tools[@]}"; do
-            [[ ${target} == ${CHOST} ]] && prefix=../../bin/
-
-            herebin "${target}-${tool}" <<- EOF
+            if [[ ${target} == ${CHOST} ]]; then
+                herebin "${target}-${tool}" <<- EOF
 #!/bin/bash
-exec ${prefix}${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
+exec ${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
 EOF
 
-            alternatives+=( "/usr/${CHOST}/bin/${target}-${tool}" "${target}-${tool}-gcc-wrapper-${SLOT}" )
+            else
+                dodir /usr/bin
+                dosym "../${CHOST}/bin/${target}-${tool}-${SLOT}" /usr/bin/${target}-${tool}
+            fi
+            alternatives+=( "/usr/bin/${target}-${tool}" "${target}-${tool}-gcc-wrapper-${SLOT}" )
         done
-
     done
 
     alternatives_for gcc gcc-wrapper-${SLOT} 0.${SLOT} "${alternatives[@]}"
-}
-
-pkg_preinst() {
-    [[ $(readlink -f "${ROOT##/}"/usr/bin) == ${ROOT##/}/usr/bin*([^/]) ]] || \
-        edo rm -rf "${IMAGE}"{usr/bin,"${ALTERNATIVES_DIR}"/gcc/old-gcc-wrapper-${SLOT}}
 }
 
