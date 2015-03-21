@@ -53,7 +53,7 @@ EOF
 
         for tool in "${cxxtools[@]}" ; do
             herebin "${CHOST}-${tool}" <<- EOF
-#!/bin/nbash
+#!/bin/bash
 exec "${prefix}/bin/${CHOST}-${tool}-${SLOT} -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/include/c++/${SLOT}.\* -isystem /usr/${CHOST}/include "\${@}"
 EOF
 
