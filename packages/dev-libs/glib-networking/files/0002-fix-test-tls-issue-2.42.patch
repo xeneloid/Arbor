@@ -1,0 +1,59 @@
+From f395185318a70e2f3cd4d76aff1ec58644b8c0b3 Mon Sep 17 00:00:00 2001
+From: Michael Catanzaro <mcatanzaro@gnome.org>
+Date: Tue, 9 Dec 2014 20:08:32 +0100
+Subject: [PATCH 1/2] tls/tests: add one more gnutls release to our blacklist
+
+This bug will be fixed in 3.3.11
+---
+ tls/tests/connection.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tls/tests/connection.c b/tls/tests/connection.c
+index 6bcb9c2..2d2d1e8 100644
+--- a/tls/tests/connection.c
++++ b/tls/tests/connection.c
+@@ -1058,7 +1058,8 @@ check_gnutls_has_rehandshaking_bug (void)
+ 	  !strcmp (version, "3.1.28") ||
+ 	  !strcmp (version, "3.2.19") ||
+ 	  !strcmp (version, "3.3.8") ||
+-	  !strcmp (version, "3.3.9"));
++	  !strcmp (version, "3.3.9") ||
++          !strcmp (version, "3.3.10"));
+ }
+ 
+ static void
+-- 
+2.3.1
+
+
+From 17613e50901c50fedcfe3542f0dc93630c9b2884 Mon Sep 17 00:00:00 2001
+From: Iain Lane <iain.lane@canonical.com>
+Date: Wed, 10 Dec 2014 12:05:19 +0000
+Subject: [PATCH 2/2] tls/tests: skip test_create_certificate_chain if not
+ running against glib 2.43
+
+https://bugzilla.gnome.org/show_bug.cgi?id=741331
+---
+ tls/tests/certificate.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tls/tests/certificate.c b/tls/tests/certificate.c
+index 97c1793..7d3f031 100644
+--- a/tls/tests/certificate.c
++++ b/tls/tests/certificate.c
+@@ -226,6 +226,12 @@ test_create_certificate_chain (void)
+   GTlsCertificate *cert, *intermediate, *root;
+   GError *error = NULL;
+ 
++  if (glib_check_version (2, 43, 0))
++    {
++      g_test_skip ("This test requires glib 2.43");
++      return;
++    }
++
+   cert = g_tls_certificate_new_from_file (tls_test_file_path ("chain.pem"), &error);
+   g_assert_no_error (error);
+   g_assert (G_IS_TLS_CERTIFICATE (cert));
+-- 
+2.3.1
+
