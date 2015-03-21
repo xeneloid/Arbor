@@ -13,7 +13,12 @@ DOWNLOADS=""
 LICENCES="BSD-3"
 SLOT="${PV}"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+CROSS_COMPILE_TARGETS="
+    arm-exherbo-linux-gnueabi
+    i686-pc-linux-gnu
+    x86_64-pc-linux-gnu
+"
+MYOPTIONS="( targets: ${CROSS_COMPILE_TARGETS} )"
 
 DEPENDENCIES="
     build+run:
@@ -28,30 +33,28 @@ DEPENDENCIES="
 BUGS_TO="compnerd@compnerd.org"
 WORK=${WORKBASE}
 
+
 src_install() {
-    local prefix tool
+    local prefix tool target
+    local alternatives=()
 
     local tools=( c++ g++ cpp gcc )
-    local -A providers=(
-        [/usr]=old-gcc-wrapper
-        [/usr/"${CHOST}"]=new-gcc-wrapper
-    )
 
-    for prefix in "${!providers[@]}"; do
-        local alternatives=()
-        into "${prefix}"
-
+    for target in ${TARGETS}; do
         for tool in "${tools[@]}"; do
-            herebin "${CHOST}-${tool}" <<- EOF
+            [[ ${target} == ${CHOST} ]] && prefix=../../bin/
+
+            herebin "${target}-${tool}" <<- EOF
 #!/bin/bash
-exec ${prefix}/bin/${CHOST}-${tool}-${SLOT} -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/${CHOST}/include "\${@}"
+exec ${prefix}${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
 EOF
 
-            alternatives+=( "${prefix}/bin/${CHOST}-${tool}" "${CHOST}-${tool}-${providers[${prefix}]}-${SLOT}" )
+            alternatives+=( "/usr/${CHOST}/bin/${target}-${tool}" "${target}-${tool}-gcc-wrapper-${SLOT}" )
         done
 
-        alternatives_for gcc ${providers[${prefix}]}-${SLOT} 0.${SLOT} "${alternatives[@]}"
     done
+
+    alternatives_for gcc gcc-wrapper-${SLOT} 0.${SLOT} "${alternatives[@]}"
 }
 
 pkg_preinst() {
