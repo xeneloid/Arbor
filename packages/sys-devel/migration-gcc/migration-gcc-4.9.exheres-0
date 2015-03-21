@@ -31,7 +31,8 @@ WORK=${WORKBASE}
 src_install() {
     local prefix tool
 
-    local tools=( c++ g++ cpp gcc )
+    local ctools=( cpp gcc )
+    local cxxtools=( c++ g++ )
     local -A providers=(
         [/usr]=old-gcc-wrapper
         [/usr/"${CHOST}"]=new-gcc-wrapper
@@ -41,10 +42,19 @@ src_install() {
         local alternatives=()
         into "${prefix}"
 
-        for tool in "${tools[@]}"; do
+        for tool in "${ctools[@]}"; do
             herebin "${CHOST}-${tool}" <<- EOF
 #!/bin/bash
 exec ${prefix}/bin/${CHOST}-${tool}-${SLOT} -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/${CHOST}/include "\${@}"
+EOF
+
+            alternatives+=( "${prefix}/bin/${CHOST}-${tool}" "${CHOST}-${tool}-${providers[${prefix}]}-${SLOT}" )
+        done
+
+        for tool in "${cxxtools[@]}" ; do
+            herebin "${CHOST}-${tool}" <<- EOF
+#!/bin/nbash
+exec "${prefix}/bin/${CHOST}-${tool}-${SLOT} -B/usr/${CHOST}/${CHOST}/bin -isystem /usr/include -isystem /usr/include/c++/${SLOT}.\* -isystem /usr/${CHOST}/include "\${@}"
 EOF
 
             alternatives+=( "${prefix}/bin/${CHOST}-${tool}" "${CHOST}-${tool}-${providers[${prefix}]}-${SLOT}" )
