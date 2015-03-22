@@ -9,7 +9,7 @@
 ALTERNATIVES_DIR="/etc/env.d/alternatives"
 
 DEPENDENCIES="
-    build+run:
+    install:
         app-admin/eclectic[>=2.0.13]"
 
 # alternatives_for alternative provider importance source target [ source target [...]]
