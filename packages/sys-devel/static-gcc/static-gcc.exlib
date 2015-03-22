@@ -124,9 +124,9 @@ EOF
                 --disable-plugin                            \
                 $(option_enable threads)                    \
                 --enable-languages=c,c++,fortran,objc,obj-c++ \
-                --with-newlib                               \
                 --with-sysroot='""'                         \
-                --without-headers                           \
+                $(optionq threads || echo --with-newlib)    \
+                $(optionq threads || echo --without-headers)\
                 $(if [[ ${target} == ${CHOST} ]] ; then
                     echo --program-suffix=-${SLOT}
                   else
