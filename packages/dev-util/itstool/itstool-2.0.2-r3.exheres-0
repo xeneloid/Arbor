@@ -1,6 +1,8 @@
 # Copyright 2011 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 ] ]
+
 SUMMARY="Internalization Tag Set Tool"
 DESCRIPTION="
 ITS Tool allows you to translate your XML documents with PO files, using rules
@@ -20,5 +22,5 @@ DEPENDENCIES="
         dev-libs/libxml2:2.0[python]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/itstool-${PN}-python-usage.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/itstool-${PV}-python-usage.patch" )
 
