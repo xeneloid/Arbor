@@ -30,6 +30,7 @@ src_prepare() {
             -e "/^CC/s:\$(ALLFLAGS):${CFLAGS} \$(ALLFLAGS):g" \
             -e "/^CXX/s:\$(ALLFLAGS):${CXXFLAGS} \$(ALLFLAGS):g" \
             -e "/^DEST_SHARE/s:lib/:${LIBDIR}/:" \
+            -e "/^DEST_SHARE_DOC/s:${PN}:${PNVR}:" \
             -e "/^DEST_MAN/s:man:share/&:" \
             -i makefile*
 
