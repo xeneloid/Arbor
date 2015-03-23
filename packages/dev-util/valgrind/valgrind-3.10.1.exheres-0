@@ -7,5 +7,5 @@ require valgrind
 
 PLATFORMS="-* ~amd64 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-3.10.1-glibc-version-check.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-3.10.1-{glibc,linux}-version-check.patch )
 
