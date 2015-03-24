@@ -23,12 +23,11 @@ configure_string() {
 }
 
 src_prepare() {
-    edo sed -e  "/^echo /$(configure_string CC ${CC})" \
-            -e  "/^echo /$(configure_string CPP ${CPP})" \
-            -e  "/^echo /$(configure_string CFLAGS "\${CFLAGS} ${CFLAGS}")" \
-            -e "/^      /$(configure_string LFLAGS2 "\${LFLAGS2} ${LDFLAGS}")" \
-            -e 's:^\[ -f .* \] && CPP=.*::' \
-            -i unix/configure
+    edo sed -e "s/^\(CC =\) .*/\1 ${CC}/" \
+            -e "s/^\(CPP =\) .*/\1 ${CPP}/" \
+            -e "/^CFLAGS_NOOPT = /s/$/ ${CFLAGS}/" \
+            -e "/^LFLAGS2 = /s/$/ ${LDFLAGS}/" \
+            -i unix/Makefile
 
     edo sed -i -e 's:MANDIR = $(prefix):&/share:' unix/Makefile
 }
