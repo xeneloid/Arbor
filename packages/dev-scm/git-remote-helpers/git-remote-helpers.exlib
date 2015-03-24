@@ -19,7 +19,7 @@ if ever is_scm; then
     SCM_REPOSITORY="https://github.com/felipec/git-remote-bzr.git"
     SCM_CHECKOUT_TO="git-remote-bzr"
     SCM_UNPACK_TO="git-remote-bzr"
-    SCM_mercurial_REPOSITORY="https://github.com/felipec/git-remote-hg.git"
+    SCM_mercurial_REPOSITORY="https://github.com/fingolfin/git-remote-hg.git"
     SCM_mercurial_CHECKOUT_TO="git-remote-hg"
     SCM_mercurial_UNPACK_TO="git-remote-hg"
     SCM_SECONDARY_REPOSITORIES="mercurial"
@@ -91,12 +91,6 @@ git-remote-helpers_src_prepare() {
             edo mv git-remote-hg-${PV} git-remote-hg
 
             # Broken tests (last checked: 0.2)
-            edo sed -i -e "s:\(test_expect_\)success \('light tag sets author'\):\1failure \2:" git-remote-hg/test/main.t
-            edo sed -i -e "s:\(test_expect_\)success \('push tag different branch'\):\1failure \2:" git-remote-hg/test/main.t
-        fi
-    else
-        if option mercurial; then
-            # Broken tests (last checked: May, 31st, 2014)
             edo sed -i -e "s:\(test_expect_\)success \('light tag sets author'\):\1failure \2:" git-remote-hg/test/main.t
             edo sed -i -e "s:\(test_expect_\)success \('push tag different branch'\):\1failure \2:" git-remote-hg/test/main.t
         fi

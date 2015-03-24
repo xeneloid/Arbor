@@ -54,7 +54,8 @@ src_install() {
     if option doc; then
         edo pushd "${CMAKE_SOURCE}"/dist/doxygen
         docinto html
-        dodoc -r ${PN}-api-html-${PV}/*
+        # Versions compiled with C++11 begin with 1 instead of 0
+        dodoc -r ${PN}-api-html-1.$(ever range 2-3)/*
         edo popd
     fi
 }

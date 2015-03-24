@@ -3,7 +3,7 @@
 # Based in part upon 'ghostscript-8.62.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ] easy-multibuild [ multiunpack=true ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ] easy-multibuild [ multiunpack=true ]
 
 SUMMARY="An interpreter for the PostScript language and for PDF"
 HOMEPAGE="http://${PN}.com"
@@ -47,12 +47,22 @@ DEPENDENCIES="
         )
     run:
         app-text/poppler-data[>=0.4.4] [[ note = [ CMap encoding data ] ]]
-        fonts/urw-fonts [[ note = [ PostScript standard fonts ] ]]
+        fonts/urw-fonts[>=20150122] [[ note = [ PostScript standard fonts ] ]]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    # update URW font names to Jan 2015 release
+    -p2 "${FILES}"/be26bcf588c1dff9f8a867f764bb46b0d6389081-partial.patch
+)
 
 prepare_one_multibuild() {
     edo rm -r ./{cups/libs,expat,freetype,jbig2dec,jpeg{,xr},lcms{,2},libpng,tiff,zlib}
-    edo rm -r ./Resource/{CMap,Font}
+
+    # remove internal CMaps (CMaps from poppler-data are used instead)
+    edo rm -r ./Resource/CMap
+
+    # remove bundled URW fonts (fonts/urw-fonts are used instead)
+    edo rm -r ./Resource/Font
 
     if option !gtk; then
         edo sed -e 's:\$(GSSOX)::' \
@@ -112,8 +122,7 @@ configure_one_multibuild() {
 }
 
 compile_one_multibuild() {
-    # Parallel make is broken
-    emake -j1 so all
+    emake so all
 
     edo cd ./ijs
     emake
