@@ -391,6 +391,10 @@ systemd_src_install() {
 
     alternatives_for "${alternatives[@]}"
 
+    # Install pc-file to arch dependent location, since udevdir is /usr/${host}/lib/udev
+    edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
+    edo rmdir "${IMAGE}"/usr/share/pkgconfig
+
     # Don't install funny RPM macros.
     if [[ -d "${IMAGE}"/etc/rpm ]]; then
         edo rm -r "${IMAGE}"/etc/rpm
