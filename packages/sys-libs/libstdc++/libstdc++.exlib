@@ -52,6 +52,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-clocale=gnu --disable-libstdcxx-pch --di
 ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}/libstdc++-v3"
 WORK="${WORKBASE}/build/$(exhost --target)/libstdc++-v3"
 
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-multilib )
+
 libstdc++_src_unpack() {
     default
     mkdir -p "${WORK}"
