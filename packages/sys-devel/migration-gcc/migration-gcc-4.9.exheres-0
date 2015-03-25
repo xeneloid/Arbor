@@ -44,21 +44,19 @@ src_install() {
 
     local tools=( c++ g++ cpp gcc )
 
-    into /usr
-
     for target in ${TARGETS}; do
         for tool in "${tools[@]}"; do
             if [[ ${target} == ${CHOST} ]]; then
                 herebin "${target}-${tool}" <<- EOF
 #!/bin/bash
-exec ${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
+exec /usr/bin/${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
 EOF
 
             else
-                dodir /usr/bin
-                dosym "../${CHOST}/bin/${target}-${tool}-${SLOT}" /usr/bin/${target}-${tool}
+                dodir "/usr/${CHOST}/bin"
+                dosym ${target}-${tool}-${SLOT} "/usr/${CHOST}/bin/${target}-${tool}"
             fi
-            alternatives+=( "/usr/bin/${target}-${tool}" "${target}-${tool}-gcc-wrapper-${SLOT}" )
+            alternatives+=( "/usr/${CHOST}/bin/${target}-${tool}" "${target}-${tool}-gcc-wrapper-${SLOT}" )
         done
     done
 
