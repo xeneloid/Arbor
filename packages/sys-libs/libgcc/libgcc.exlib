@@ -94,11 +94,12 @@ libgcc_src_compile() {
 
     edo mkdir -p "${WORK}/$(exhost --target)/libgcc"
     edo cd "${WORK}/$(exhost --target)/libgcc"
-    edo "${ECONF_SOURCE}/libgcc/configure"      \
-            --build=$(exhost --build)           \
-            --host=$(exhost --target)           \
-            --prefix=/usr/$(exhost --target)    \
-            --libdir=/usr/$(exhost --target)/lib
+    edo "${ECONF_SOURCE}/libgcc/configure"       \
+            --build=$(exhost --build)            \
+            --host=$(exhost --target)            \
+            --prefix=/usr/$(exhost --target)     \
+            --libdir=/usr/$(exhost --target)/lib \
+            --disable-multilib
     edo emake
 }
 
