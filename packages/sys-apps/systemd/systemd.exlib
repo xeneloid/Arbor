@@ -392,6 +392,7 @@ systemd_src_install() {
     alternatives_for "${alternatives[@]}"
 
     # Install pc-file to arch dependent location, since udevdir is /usr/${host}/lib/udev
+    # https://bugs.freedesktop.org/show_bug.cgi?id=89769
     edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
     edo rmdir "${IMAGE}"/usr/share/pkgconfig
 
