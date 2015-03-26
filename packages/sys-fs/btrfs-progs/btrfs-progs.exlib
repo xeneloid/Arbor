@@ -85,14 +85,11 @@ btrfs-progs_src_install() {
         dosym ../btrfs.service "${SYSTEMDSYSTEMUNITDIR}"/basic.target.wants/btrfs.service
     fi
 
-    dodir /sbin
-    dosym /usr/bin/btrfs /sbin/btrfs
-
     insinto /usr
-    dosbin btrfs-debug-tree
-    dosbin btrfs-image
-    dosbin btrfs-select-super
-    dosbin btrfs-zero-log
-    dosbin btrfstune
+    dobin btrfs-debug-tree
+    dobin btrfs-image
+    dobin btrfs-select-super
+    dobin btrfs-zero-log
+    dobin btrfstune
 }
 
