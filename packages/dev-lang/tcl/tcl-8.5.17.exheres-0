@@ -38,7 +38,10 @@ DEFAULT_SRC_PREPARE_PATCHES=(
         "${FILES}/${PN}-tclConfig-paths.patch"
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( "debug symbols" )
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-threads )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-threads
+    --hates=docdir
+)
 
 install_one_multibuild() {
     default
