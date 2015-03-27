@@ -62,6 +62,7 @@ src_configure() {
 
     econf \
         --hates=docdir \
+        --hates=datarootdir \
         ${graphics} \
         --with-bzip2 \
         --with-zlib \
@@ -84,6 +85,6 @@ src_install() {
     doins -r doc/links_cal
 
     # Install a compatibility symlink links2:
-    dosym links /usr/bin/links2
+    dosym links /usr/$(exhost --target)/bin/links2
 }
 
