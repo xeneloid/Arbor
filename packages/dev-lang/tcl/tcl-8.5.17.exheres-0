@@ -54,7 +54,10 @@ src_configure() {
         )
     fi
 
-    econf --enable-threads $(option_enable debug symbols) "${extra_params[@]}"
+    econf \
+        --enable-threads \
+        --hates=docdir \
+        $(option_enable debug symbols) "${extra_params[@]}"
 }
 
 src_install() {

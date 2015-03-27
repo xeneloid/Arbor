@@ -18,6 +18,6 @@ DEPENDENCIES="
 src_install() {
     dobin keychain
     doman keychain.1
-    dodoc README.rst ChangeLog
+    emagicdocs
 }
 
