@@ -50,7 +50,9 @@ lua-build_src_prepare() {
             -e "/^Libs/s:-llua:&${SLOT}:" \
             -i etc/${PN}-${SLOT}.pc
 
-    edo sed -e "s:/usr/local/:/usr/$(exhost --target):" \
+    # The trailing slashes are needed
+    edo sed -e "s:/usr/local/:/usr/$(exhost --target)/:" \
+            -e 's:LUA_ROOT "share/lua/":"/usr/share/lua/":' \
             -i src/luaconf.h
 
     default
