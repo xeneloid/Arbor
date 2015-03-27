@@ -131,7 +131,7 @@ case ${PYTHON_EXLIB_API} in
 
             # TODO(moben) this assumes that python == python2
             # hopefully we have migrated everything to API=2 of this exlib until that changes
-            python_abi=$(eclectic python2-$(exhost --target) show)
+            python_abi=$(eclectic python2 show)
 
             echo -n "${python_abi}"
         }
