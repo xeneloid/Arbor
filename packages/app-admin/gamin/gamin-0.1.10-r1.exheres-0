@@ -3,7 +3,8 @@
 # Based in part upon 'gamin-0.1.9-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require gnome.org easy-multibuild flag-o-matic python
+require gnome.org easy-multibuild flag-o-matic
+require python [ blacklist=3 multibuild=false python_opts="[multibuild_c:*(-)?]" ]
 
 SUMMARY="A library providing the File Alteration Monitor API"
 HOMEPAGE="http://www.gnome.org/~veillard/${PN}"
@@ -18,7 +19,6 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         dev-libs/glib:2[multibuild_c:*(-)?]
-        python? ( dev-lang/python:=[multibuild_c:*(-)?] )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
