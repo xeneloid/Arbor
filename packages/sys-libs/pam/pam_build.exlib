@@ -47,6 +47,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--disable-audit' '--disable-prelude' '--disable-regenerate-docu'
                                '--disable-selinux' '--enable-cracklib' '--enable-db=no'
                                '--enable-nls'
+                               #FIXME(moben) remove sbindir once econf changes are in
+                               "--sbindir=/usr/$(exhost --target)/bin"
                                "--enable-isadir=/usr/$(exhost --target)/lib/security"
                                "--enable-securedir=/usr/$(exhost --target)/lib/security"
                                "--includedir=/usr/$(exhost --target)/include/security" )
@@ -85,14 +87,10 @@ pam_build_src_configure() {
 }
 
 pam_build_src_test() {
-    if exhost --is-native -q; then
-        if [[ ! -f /etc/pam.d/other ]]; then
-            ewarn "Skipping tests. You don't have /etc/pam.d/other."
-        else
-            emake -j1 check
-        fi
+    if [[ ! -f /etc/pam.d/other ]]; then
+        ewarn "Skipping tests. You don't have /etc/pam.d/other."
     else
-        echo "cross compiled host, skipping tests"
+        emake -j1 check
     fi
 }
 
