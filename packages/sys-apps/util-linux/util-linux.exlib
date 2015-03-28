@@ -127,7 +127,9 @@ util-linux_src_configure() {
 
     local disabled_tools=( pylibmount runuser write )
 
+    # FIXME(moben) remove sbindir once econf is changed
     econf \
+        --sbindir=/usr/$(exhost --target)/bin \
         --localstatedir=/run \
         --enable-colors-default \
         --enable-fs-paths-default=/usr/$(exhost --target)/bin \
