@@ -45,6 +45,7 @@ RESTRICT="test"
 
 lvm2_src_configure() {
     local myconf=(
+        --sbindir=/usr/$(exhost --target)/bin
         --enable-applib
         --enable-blkid_wiping
         --enable-cmdlib
