@@ -133,12 +133,22 @@ coreutils_src_install() {
 }
 
 coreutils_pkg_preinst() {
-    if exhost --is-native -q && [[ $(readlink -f "${ROOT##/}"/bin) == ${ROOT##/}/bin ]] ; then
-        # NOTE(compnerd) preserve legacy paths for paludis
-        for bin in bin/pwd bin/rm {,usr/}bin/readlink usr/bin/env ; do
-            nonfatal edo rm "${ROOT}"/${bin} &&
-            nonfatal edo cp "${IMAGE}"/usr/${CHOST}/bin/$(basename ${bin}) "${ROOT}"/${bin} ||
-                eerror "Copying /${bin} failed"
+    exhost --is-native -q || return
+
+    # NOTE(compnerd) preserve legacy paths for paludis
+    if [[ $(readlink -f "${ROOT##/}"/bin) == ${ROOT##/}/bin ]]; then
+        for bin in echo pwd rm readlink env; do
+            if [[ ! -e ${ROOT}/usr/$(exhost --target)/bin/${bin} ]]; then
+                nonfatal edo cp "${ROOT}bin/${bin}" "${ROOT}usr/$(exhost --target)/bin/${bin}"
+            fi
+            nonfatal edo ln -sf ../usr/$(exhost --target)/bin/${bin} "${ROOT}bin/${bin}" || \
+                eerror ln -sf ../usr/$(exhost --target)/bin/${bin} "${ROOT}bin/${bin}" failed
+        done
+    fi
+    if [[ $(readlink -f "${ROOT##/}"/usr/bin) == ${ROOT##/}/usr/bin ]]; then
+        for bin in echo env readlink; do
+            nonfatal edo ln -sf ../$(exhost --target)/bin/${bin} "${ROOT}usr/bin/${bin}" || \
+                eerror nonfatal edo ln -sf ../$(exhost --target)/bin/${bin##*/} "${ROOT}usr/bin/${bin}" failed
         done
     fi
 }
