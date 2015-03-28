@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases src_test src_install
+export_exlib_phases src_install
 
 SUMMARY="Command line parsing library"
 HOMEPAGE="http://www.rpm5.org"
@@ -30,15 +30,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-doxygen
     --disable-static
 )
-
-popt_src_test() {
-    # FIXME(moben) nuke this after s-f-l changes are in and stages exist
-    if [[ -e /bin/echo ]]; then
-        default
-    else
-        echo "/bin symlink not yet in place, popt tests skipped"
-    fi
-}
 
 popt_src_install() {
     default
