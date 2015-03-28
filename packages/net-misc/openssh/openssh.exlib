@@ -138,6 +138,15 @@ openssh_src_test() {
     # Using net/whitelist/bind/unix doesn't fix it so I'll sandunbox/net here for now.
     esandbox disable_net
 
+    # NOTE(moben) fix tests during multiarch migration
+    # this test copies /bin/l* around a bit through sftp and checks for corruption.
+    # During the migration, /bin/l* doesn't exist. Change it to b* so it will always at least match bash
+    # similar for the rest, but without wildcards
+    [[ $(readlink -f /bin) == /bin ]] && edo sed -i -e 's#l\*#b\*#g' regress/sftp-{,bad}cmds.sh
+    [[ -e /usr/bin/time ]] || edo sed -i -e "s#/usr/bin/time#/usr/$(exhost --build)/bin/time#g" regress/kextype.sh
+    [[ -e /usr/bin/true ]] || edo sed -i -e "s#/usr/bin/true#/usr/$(exhost --build)/bin/true#g" regress/agent-pkcs11.sh
+    [[ -e /bin/ls ]] || edo sed -i -e "s#/bin/ls#/usr/$(exhost --build)/bin/ls#g" regress/forwarding.sh
+
     if [[ -n ${X509_VERSION} ]]; then
         option X509 && export SSH_X509TESTS="blob_auth"
     fi
