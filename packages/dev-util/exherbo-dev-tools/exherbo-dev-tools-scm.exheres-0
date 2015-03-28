@@ -1,4 +1,4 @@
-# Copyright 2014 Heiko Becker <heirecka@exherbo.org>
+# Copyright 2014-2015 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SCM_REPOSITORY="git://git.exherbo.org/${PN}.git"
@@ -25,7 +25,7 @@ DEPENDENCIES="
 "
 
 src_install() {
-    exeinto /usr/bin
+    exeinto /usr/$(exhost --target)/bin
     doexe $(find "${WORK}" -maxdepth 1 -type f ! -name 'Readme' ! -name '.*')
 
     emagicdocs
