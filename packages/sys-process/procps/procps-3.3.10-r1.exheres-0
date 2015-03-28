@@ -36,6 +36,8 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/92071e963e6ff50f0e221dde286f3229267b2ff9.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    # FIXME(moben) remove sbindir once econf is changed
+    --sbindir=/usr/$(exhost --target)/bin
     --enable-modern-top
     --enable-nls
     --enable-pidof
