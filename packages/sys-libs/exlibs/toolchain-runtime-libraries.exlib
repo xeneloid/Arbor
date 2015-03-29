@@ -41,7 +41,7 @@ symlink_dynamic_libs() {
 
             if [[ -n "${target_so}" ]]; then
                 edo rm "${target_so}"
-                alternatives_for _"${target_so}" "${provider_so##*.so.}" "${provider_so##*.so.}" \
+                alternatives_for "_$(exhost --target)_${target_so}" "${provider_so##*.so.}" "${provider_so##*.so.}" \
                     /usr/$(exhost --target)/lib/"${target_so}" "${provider_so}"
             fi
             target_so=${provider_so}
@@ -73,7 +73,7 @@ slot_dynamic_libs() {
         ext=${full_so#${name}.}
 
         # rename fully versioned .so using ${SLOT} and symlink
-        alternatives_for _${full_so} ${SLOT} ${SLOT} \
+        alternatives_for "_$(exhost --target)_${full_so}" ${SLOT} ${SLOT} \
             /usr/$(exhost --target)/lib/${full_so} ${name}-${SLOT}.${ext}
 
     done
@@ -103,7 +103,7 @@ slot_static_libs() {
                 )
         done
 
-       [[ ${#alternatives[@]} -gt 0 ]] && alternatives_for _"${name}" "${SLOT}" "${SLOT}" "${alternatives[@]}"
+       [[ ${#alternatives[@]} -gt 0 ]] && alternatives_for "_$(exhost --target)_${name}" "${SLOT}" "${SLOT}" "${alternatives[@]}"
     done
 }
 
