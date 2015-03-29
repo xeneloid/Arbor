@@ -72,7 +72,6 @@ case ${PYTHON_EXLIB_API} in
 
             edo ${PYTHON} -B setup.py install       \
                 --root="${IMAGE}"                   \
-                --install-lib=$(python_get_libdir)  \
                 --install-data=/usr                 \
                 --prefix=/usr/$(exhost --target)    \
                 --no-compile                        \
