@@ -248,7 +248,6 @@ setup-py_install_one_multibuild() {
 
     edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" install   \
         --root="${IMAGE}"                                       \
-        --install-lib=$(python_get_libdir)                      \
         --install-data=/usr                                     \
         --prefix=/usr/$(exhost --target)                        \
         --no-compile                                            \
