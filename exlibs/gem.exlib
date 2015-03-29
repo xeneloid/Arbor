@@ -75,7 +75,8 @@ gem_install_abi() {
 
 
     site_gem_dir=$(${RUBY} -rubygems -e 'print Gem.dir')
-    vendor_gem_dir=${site_gem_dir/gems/vendor_gems}
+    vendor_gem_dir=$(${RUBY} -rubygems -e 'print Gem.vendor_dir' 2> /dev/null) \
+        || vendor_gem_dir=${site_gem_dir/gems/vendor_gems}
 
     export GEM_HOME="${IMAGE%/}${vendor_gem_dir}"
     export GEM_PATH="${vendor_gem_dir}:${GEM_HOME}"
