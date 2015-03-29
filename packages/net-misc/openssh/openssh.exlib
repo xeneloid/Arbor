@@ -118,6 +118,7 @@ openssh_src_prepare() {
 
     edo sed -i -e '/_PATH_XAUTH/s:/usr/X11R6/bin/xauth:/usr/bin/xauth:' pathnames.h
     edo sed -i -e "s:-lcrypto:$(${PKG_CONFIG} --libs openssl):" configure.ac
+    edo sed -i -e "s#pkg-config#${PKG_CONFIG}#" contrib/Makefile
 
     eautoreconf
 }
