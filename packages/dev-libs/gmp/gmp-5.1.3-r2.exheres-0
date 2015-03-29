@@ -29,6 +29,7 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${PNV%a}
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/c0a9c060cb8a.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-cxx
     --enable-fft
