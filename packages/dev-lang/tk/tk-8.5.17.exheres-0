@@ -50,6 +50,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 configure_one_multibuild() {
     econf \
+        --hates=docdir \
         --enable-threads \
         --with-tcl=/usr/${LIBDIR} \
         $(option_enable debug symbols) \
