@@ -20,6 +20,7 @@ ncurses_src_configure() {
     local myconf=(
         --hates=datarootdir
         --hates=docdir
+        --with-build-cc=$(exhost --build)-gcc
         --with-normal
         --with-shared
         --without-ada
