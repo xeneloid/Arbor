@@ -26,6 +26,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     pam
+    systemd
     ( linguas: ca cs da de eo es eu fi fr gl hr it ja nb nl pl pt_BR ru sl sr sv tr uk vi zh_CN )
 "
 
@@ -67,10 +68,18 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( TROUBLESHOOTING UPGRADE )
 src_install() {
     default
 
-    keepdir /etc/sudoers.d /var/db/sudo
+    keepdir /etc/sudoers.d /var/db/sudo{,/lectured}
 
     if option pam ; then
         pamd_mimic_system sudo auth auth account password session
+    fi
+
+    if option systemd; then
+        insinto /usr/${LIBDIR}/tmpfiles.d
+        hereins ${PN}.conf <<EOF
+d /run/sudo 0711 root root
+D /run/sudo/ts 0700 root root
+EOF
     fi
 
     edo rmdir "${IMAGE}"/run/{sudo,}
