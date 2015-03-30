@@ -252,11 +252,6 @@ glibc_pkg_preinst() {
             nonfatal edo ln -sf "../usr/$(exhost --target)/lib/${loader_bn}" "${ROOT}/lib/${loader_bn}" ||
                 eerror ln "../usr/$(exhost --target)/lib/${loader_bn}" "${ROOT}/lib/${loader_bn}" failed
         done
-
-        # HACK(compnerd) preserve legacy paths for paludis
-        nonfatal edo rm "${ROOT}"/sbin/ldconfig &&
-        nonfatal edo cp "${IMAGE}"/usr/${CHOST}/bin/ldconfig "${ROOT}"/sbin/ldconfig ||
-            eerror cp "${IMAGE}"/usr/${CHOST}/bin/ldconfig "${ROOT}"/sbin/ldconfig failed
     fi
 }
 
