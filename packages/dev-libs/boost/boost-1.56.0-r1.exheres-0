@@ -1,6 +1,6 @@
 # Copyright 2008, 2009, 2010, 2012 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2013 Wouter van Kesteren <woutershep@gmail.com>
-# Copyright 2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2013-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV=${PN}_${PV//./_}
@@ -28,6 +28,11 @@ DEPENDENCIES="
         dev-libs/icu:=
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Add-toolchain-for-our-cross-stuff.patch
+    "${FILES}"/0001-Add-toolchain-for-our-cross-stuff-part-2.patch
+)
+
 global_conf=(
         -d+2
         -j${EXJOBS:-1}
@@ -35,13 +40,14 @@ global_conf=(
         --build-dir="${WORKBASE}"/build
         --prefix=/usr
         --layout=system
-        --libdir=/usr/${LIBDIR}
+        --includedir=/usr/$(exhost --target)/include
+        --libdir=/usr/$(exhost --target)/lib
         --without-mpi
         link=shared
         pch=off
         runtime-link=shared
         threading=multi
-        toolset=gcc
+        toolset=cross
 )
 
 [[ -n ${CFLAGS} ]] && global_conf+=( cflags="${CFLAGS}" )
@@ -50,11 +56,17 @@ global_conf=(
 
 src_configure() {
     local bootstrap_conf=(
-        --prefix=/usr
-        --libdir=/usr/${LIBDIR}
-        --with-python=/usr/bin/python
-        TOOLSET=gcc
+        --libdir=/usr/$(exhost --target)/lib
+        --with-python=/usr/$(exhost --target)/bin/python
+        --with-toolset=cross
     )
+
+    # Patch the patch to use the right compiler
+    edo sed -e "s:x86_64-pc-linux-gnu-\(.*\):$(exhost --target)-\1:g" \
+            -i tools/build/src/engine/build.jam \
+            -i tools/build/src/engine/build.sh \
+            -i tools/build/src/tools/cross.jam \
+            -i libs/context/build/Jamfile.v2
 
     edo ./bootstrap.sh "${bootstrap_conf[@]}"
 }
@@ -69,14 +81,15 @@ src_install() {
     # Careful: The IMAGE-prefixed paths *must* precede global_conf
     edo ./b2 \
         --prefix="${IMAGE}"/usr \
-        --libdir="${IMAGE}"/usr/${LIBDIR} \
+        --libdir="${IMAGE}"/usr/$(exhost --target)/lib \
+        --includedir="${IMAGE}"/usr/$(exhost --target)/include \
         "${global_conf[@]}" \
         install
 
     # Install compatibility symlinks to get -mt-suffixed libs
-    edo pushd "${IMAGE}"/usr/${LIBDIR}
+    edo pushd "${IMAGE}"/usr/$(exhost --target)/lib
     for lib in *.so; do
-        dosym ${lib} /usr/${LIBDIR}/${lib/.so/-mt.so}
+        dosym ${lib} /usr/$(exhost --target)/lib/${lib/.so/-mt.so}
     done
     edo popd
 
@@ -90,7 +103,7 @@ src_install() {
         insinto /usr/share/doc/${PNVR}/html
         doins -r doc libs more
 
-        dosym /usr/include/${PN} /usr/share/doc/${PNVR}/html/${PN}
+        dosym /usr/$(exhost --target)/include/${PN} /usr/share/doc/${PNVR}/html/${PN}
     fi
 }
 
