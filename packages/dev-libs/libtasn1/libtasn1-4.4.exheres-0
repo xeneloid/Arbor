@@ -4,7 +4,7 @@
 require easy-multibuild gnu [ suffix=gz ]
 
 SUMMARY="ASN.1 parser for GNUTLS"
-HOMEPAGE="http://www.gnutls.org/"
+HOMEPAGE="http://www.gnutls.org"
 
 LICENCES="
     LGPL-2.1    [[ description = [ libtasn1.* ] ]]
