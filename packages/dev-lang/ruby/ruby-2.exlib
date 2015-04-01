@@ -126,15 +126,20 @@ ruby-2_src_install() {
         alternatives+=( /${target} ${src##*/} )
     done
 
-    # Split gems/ up into vendor_gems/ (packaged gems) and gems/ (user-installed gems)
     if ever at_least 2.2.1; then
         # Ruby 2.2.1 already supports Gem.vendor_dir (/usr/lib64/ruby/vendor_ruby/gems/VERSION)
         # lets use that implementation
-        local gem_vendordir=${vendordir}/gems/${SLOT} # based on Ruby 2.2 defaults.rb (Gem.default_dir)
-        keepdir ${gem_vendordir}
-        edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/gems/${SLOT}/gems "${IMAGE}/${gem_vendordir}/"
+        local gem_vendordir=${vendordir}/gems/${SLOT} # based on Ruby 2.2 defaults.rb (Gem.vendor_dir)
+
+        # move provided gems into Gem.vendor_dir directory
+        dodir ${gem_vendordir}
+        edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/gems/${SLOT}/* "${IMAGE}"/${gem_vendordir}/
+
+        # Gem.default_dir and Gem.vendor_dir
         keepdir /usr/${LIBDIR}/ruby/gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
+        keepdir ${gem_vendordir}/{build_info,cache,doc,extensions,gems,specifications}
     else
+        # Split gems/ up into vendor_gems/ (packaged gems) and gems/ (user-installed gems)
         edo sed -e "s/default_dir]/default_dir, default_dir.gsub\('gems','vendor_gems'\)]/" -i \
             "${IMAGE}"/${rubylibdir}/rubygems/defaults.rb
         if ever at_least 2.1.1; then
