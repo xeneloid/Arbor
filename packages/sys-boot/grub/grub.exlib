@@ -4,18 +4,13 @@
 require bash-completion
 require gnu [ suffix=xz ]
 require flag-o-matic
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+export_exlib_phases pkg_setup src_configure src_prepare src_install pkg_postinst
 
 SUMMARY="GRUB (Grand Unified Boot) bootloader"
 
-UPSTREAM_DOCUMENTATION="
-    http://grub.enbug.org/             [[ description = [ GNU Grub Wiki ] ]]
-    http://grub.enbug.org/TestingOnX86 [[ description = [ Installing Grub 2 on x86 ] ]]
-"
-
 LICENCES="GPL-3"
-SLOT="0"
-PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     device-mapper [[ description = [ Ability to detect and use device-mapper devices ] ]]
     efi           [[ description = [ Build for EFI platform ] ]]
@@ -51,20 +46,21 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-        "${FILES}"/${PNV}-find-ar-program-that-fits-with-host-argument.patch
-        "${FILES}"/${PNV}-Fix-build-with-FreeType-2.5.1.patch
-    -p0 "${FILES}"/grub-2-gets.patch
-)
-
 AT_M4DIR=( m4 )
 
-pkg_setup() {
+grub_pkg_setup() {
     # grub2 should be compiled with -Os, other optimizations may result in oversized core images
     replace-flags -O* -Os
 }
 
-src_configure() {
+grub_src_prepare() {
+    edo sed -i autogen.sh -e "/Running autoreconf/,+2d"
+    edo ./autogen.sh
+
+    autotools_src_prepare
+}
+
+grub_src_configure() {
     myconf=(
         "CPP=${CC} -E"
 
@@ -95,17 +91,17 @@ src_configure() {
         $( option_enable mkfont grub-mkfont )
 }
 
-src_install() {
+grub_src_install() {
     default
 
-    dodoc "${FILES}"/grub.cfg.example
+    dodoc "${WORK}"/docs/grub.cfg
 
     edo rm "${IMAGE%/}"/etc/bash_completion.d/${PN}
     edo rmdir "${IMAGE%/}"/etc/bash_completion.d/
     dobashcompletion "${WORK%/}"/util/bash-completion.d/${PN}
 }
 
-pkg_postinst() {
+grub_pkg_postinst() {
     elog "Use grub-install /dev/your-device e.g. sda to install grub onto the"
     elog "device you wish to boot from."
     elog "A sample grub.cfg has been installed into /usr/share/doc/${PNVR}."

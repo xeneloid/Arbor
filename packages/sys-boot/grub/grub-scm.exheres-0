@@ -1,0 +1,12 @@
+# Copyright 2015 Ivan Diorditsa <ivan.diorditsa@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+SCM_REPOSITORY="git://git.savannah.gnu.org/${PN}.git"
+require scm-git
+
+require grub
+DOWNLOADS=
+
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
