@@ -242,7 +242,6 @@ __gcc_setup_gdb_extension() {
 
 __gcc_migration_wrapper() {
     local prefix tool target
-    local alternatives=()
 
     local tools=( c++ g++ cpp gcc )
 
