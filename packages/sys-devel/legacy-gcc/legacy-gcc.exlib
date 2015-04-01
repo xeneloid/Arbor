@@ -19,7 +19,12 @@ SUMMARY="GNU Compiler Collection"
 LICENCES="GPL-2"
 SLOT="$(ever range 1-2)"
 
-MYOPTIONS=""
+CROSS_COMPILE_TARGETS="
+    arm-exherbo-linux-gnueabi
+    i686-pc-linux-gnu
+    x86_64-pc-linux-gnu
+"
+MYOPTIONS="( targets: ${CROSS_COMPILE_TARGETS} )"
 
 DEPENDENCIES="
     build:
@@ -235,18 +240,39 @@ __gcc_setup_gdb_extension() {
     done
 }
 
+__gcc_migration_wrapper() {
+    local prefix tool target
+    local alternatives=()
+
+    local tools=( c++ g++ cpp gcc )
+
+    into /usr/${CHOST}
+
+    for target in ${TARGETS}; do
+        for tool in "${tools[@]}"; do
+            if [[ ${target} == ${CHOST} ]]; then
+                herebin "${target}-${tool}" <<- EOF
+#!/bin/bash
+exec /usr/bin/${target}-${tool}-${SLOT} -B/usr/${CHOST}/${target}/bin -isystem /usr/include -isystem /usr/${target}/include "\${@}"
+EOF
+
+            else
+                dodir "/usr/${CHOST}/bin"
+                dosym ${target}-${tool}-${SLOT} "/usr/${CHOST}/bin/${target}-${tool}"
+            fi
+        done
+    done
+}
+
 __gcc_provide_slot_alternatives() {
-    local alternatives=( gcc legacy-gcc-${SLOT} ${SLOT} )
+    local alternatives=( gcc legacy-gcc-${SLOT} 0.${SLOT} )
     local program= item= location= name= section=
 
-    # binaries
-    for program in "${IMAGE}"/usr/bin/*-${SLOT} ; do
-        name=$(basename "${program}" -${SLOT})
-        alternatives+=( "/usr/bin/${name}" "${name}-${SLOT}" )
+    # migration-wrapper
+    for item in "${IMAGE}"/usr/${CHOST}/bin/*; do
+        name=${item##*/}
+        alternatives+=( "/usr/${CHOST}/bin/${name}" "${name}-gcc-wrapper-${SLOT}" )
     done
-
-    alternatives+=( "/usr/bin/cc" "${CHOST}-gcc-${SLOT}" )
-    alternatives+=( "/usr/bin/c++" "${CHOST}-g++-${SLOT}" )
 
     # info pages
     for item in "${IMAGE}"/usr/share/info/*-${SLOT}.info ; do
@@ -292,6 +318,7 @@ legacy-gcc_src_install() {
 
     __gcc_slot_runtime
     __gcc_slot_shared_data
+    __gcc_migration_wrapper
     __gcc_setup_gdb_extension
     __gcc_provide_slot_alternatives
 
