@@ -201,12 +201,18 @@ gcc_src_install() {
         for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
             alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
         done
-        for man in usr/share/man/man1/${target}-*-${SLOT}.1; do
-            alternatives+=( /${man%-${SLOT}.1}.1 ${man##*/} )
+        for man in usr/share/man/man*/*.*; do
+            local ext=${man##*.}
+            # some are already slotted due to --program-suffix, some aren't
+            [[ ${man} =~ -${SLOT}.${ext}$ ]] && man=${man%-${SLOT}.${ext}}.${ext}
+            local name=${man##*/}
+            alternatives+=( /${man} ${name%.${ext}}-${SLOT}.${ext} )
         done
-        for info in usr/share/info/*-${SLOT}.info; do
-            [[ -e ${info} ]] || continue
-            alternatives+=( /${info%-${SLOT}.info}.info ${info##*/} )
+        for info in usr/share/info/*.info; do
+            # some are already slotted due to --program-suffix, some aren't
+            [[ ${info} =~ -${SLOT}.info$ ]] && info=${info%-${SLOT}.info}.info
+            local name=${info##*/}
+            alternatives+=( /${info} ${name%.info}-${SLOT}.info )
         done
         for locale in usr/share/locale/*/*/*.mo; do
             [[ -e ${locale} ]] || continue
@@ -217,10 +223,6 @@ gcc_src_install() {
     done
 
     alternatives_for gcc ${SLOT} ${SLOT} "${alternatives[@]}"
-
-    # Remove stuff installed by gcc
-    edo rm "${IMAGE}"/usr/share/man/man7/{gpl,gfdl,fsf-funding}.7
-    edo rm "${IMAGE}"/usr/share/info/{gccint,gccinstall,gcc,cppinternals,cpp}.info
 
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
