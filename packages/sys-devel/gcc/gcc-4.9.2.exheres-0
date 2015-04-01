@@ -1,7 +1,7 @@
 # Copyright 2012 © Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require static-gcc
+require gcc
 
 PLATFORMS="~x86 ~amd64"
 

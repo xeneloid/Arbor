@@ -1,7 +1,7 @@
 # Copyright 2012 © Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ pn=${PN#static-} suffix=bz2 ]
+require gnu [ suffix=bz2 ]
 require alternatives
 
 SUMMARY="stand alone compiler"
@@ -19,6 +19,11 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build+run:
+        !sys-devel/static-gcc [[
+            description = [ static-gcc was moved back to gcc. ]
+            resolution = uninstall-blocked-after
+        ]]
     run:
         sys-devel/binutils[targets:*(-)?]
 "
@@ -29,9 +34,9 @@ DEPENDENCIES="
 #   buil+run:
 #       sys-libs/glibc[hosts:*(-)?]
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/gcc-${SLOT}-exherbo-multiarch-paths.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch" )
 
-static-gcc_pkg_setup() {
+gcc_pkg_setup() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
@@ -46,7 +51,7 @@ static-gcc_pkg_setup() {
     done
 }
 
-static-gcc_src_configure() {
+gcc_src_configure() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
@@ -84,7 +89,7 @@ EOF
             RANLIB=${CHOST}-ranlib                          \
             CFLAGS_FOR_TARGET="${!target_cflags_var}"       \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
-        "${WORKBASE}/${PN#static-}-${PV}/configure"         \
+        "${WORKBASE}/${PNV}/configure"         \
                 --cache-file=config.cache                   \
                 --build=${CHOST}                            \
                 --host=${CHOST}                             \
@@ -140,7 +145,7 @@ EOF
     done
 }
 
-static-gcc_src_compile() {
+gcc_src_compile() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
@@ -160,7 +165,7 @@ static-gcc_src_compile() {
     done
 }
 
-static-gcc_src_install() {
+gcc_src_install() {
     local target= alternatives=()
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
@@ -211,7 +216,7 @@ static-gcc_src_install() {
         edo popd
     done
 
-    alternatives_for gcc ${PN}-${SLOT} ${SLOT} "${alternatives[@]}"
+    alternatives_for gcc ${SLOT} ${SLOT} "${alternatives[@]}"
 
     # Remove stuff installed by gcc
     edo rm "${IMAGE}"/usr/share/man/man7/{gpl,gfdl,fsf-funding}.7
