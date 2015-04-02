@@ -134,10 +134,10 @@ ruby-2_src_install() {
 
         # move provided gems into Gem.vendor_dir directory
         dodir ${gem_vendordir}
-        edo mv "${IMAGE}"/usr/${LIBDIR}/ruby/gems/${SLOT}/* "${IMAGE}"/${gem_vendordir}/
+        edo mv "${IMAGE}"/${rubylibprefix}/gems/${SLOT}/* "${IMAGE}"/${gem_vendordir}/
 
         # Gem.default_dir and Gem.vendor_dir
-        keepdir /usr/${LIBDIR}/ruby/gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
+        keepdir ${rubylibprefix}/gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
         keepdir ${gem_vendordir}/{build_info,cache,doc,extensions,gems,specifications}
     else
         # Split gems/ up into vendor_gems/ (packaged gems) and gems/ (user-installed gems)
@@ -150,7 +150,7 @@ ruby-2_src_install() {
             edo sed -e "s/Gem.default_dir/&.gsub\('gems','vendor_gems'\)/" -i \
                 "${IMAGE}"/${rubylibdir}/rubygems/specification.rb
         fi
-        edo mv "${IMAGE}"/${rubylibprefix}/ruby/{,vendor_}gems
+        edo mv "${IMAGE}"/${rubylibprefix}/{,vendor_}gems
         keepdir ${rubylibprefix}/{vendor_,}gems/${SLOT}/{build_info,cache,doc,extensions,gems,specifications}
     fi
 
