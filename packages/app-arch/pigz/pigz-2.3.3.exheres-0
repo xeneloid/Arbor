@@ -13,18 +13,23 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
 
+src_prepare() {
+    edo sed \
+            -e "s/^CC=.*/CC=$(exhost --tool-prefix)gcc/"    \
+            -e "s/^CFLAGS=.*//"                             \
+            -i Makefile
+}
 src_install() {
-    # gzip uses /bin so we should probably follow suit
-    edo mkdir "${IMAGE}/bin"
-    edo mv ${PN} "${IMAGE}/bin"
-    dosym "/bin/${PN}" "/bin/unpigz"
+    edo mkdir -p "${IMAGE}/usr/$(exhost --target)/bin"
+    edo mv ${PN} "${IMAGE}/usr/$(exhost --target)/bin"
+    dosym "/usr/$(exhost --target)/bin/${PN}" "/usr/$(exhost --target)/bin/unpigz"
 
     doman ${PN}.1
     dodoc README ${PN}.pdf
 
-    alternatives_for "gzip" "${PN}" "50"                        \
-                     "/bin/gzip"                     "${PN}"    \
-                     "/bin/gunzip"                   "unpigz"   \
-                     "/usr/share/man/man1/gzip.1"    "${PN}.1"
+    alternatives_for "gzip" "${PN}" "50"                               \
+                     "/usr/$(exhost --target)/bin/gzip"     "${PN}"    \
+                     "/usr/$(exhost --target)/bin/gunzip"   "unpigz"   \
+                     "/usr/share/man/man1/gzip.1"           "${PN}.1"
 }
 
