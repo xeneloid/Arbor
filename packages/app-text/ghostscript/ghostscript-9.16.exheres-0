@@ -50,12 +50,11 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    # update URW font names to Jan 2015 release
-    -p2 "${FILES}"/be26bcf588c1dff9f8a867f764bb46b0d6389081-partial.patch
+    "${FILES}"/${PN}-9.16-system-zlib.patch
 )
 
 src_prepare() {
-    edo rm -r ./{cups/libs,expat,freetype,jbig2dec,jpeg{,xr},lcms{,2},libpng,tiff,zlib}
+    edo rm -r ./{cups/libs,expat,freetype,jbig2dec,jpeg{,xr},lcms2,libpng,tiff,zlib}
 
     # remove internal CMaps (CMaps from poppler-data are used instead)
     edo rm -r ./Resource/CMap
@@ -100,6 +99,7 @@ src_configure() {
         --enable-freetype \
         --enable-fontconfig \
         --enable-openjpeg \
+        --enable-threading \
         --disable-compile-inits \
         --with-drivers=ALL \
         --with-fontpath="$FONTPATH" \
@@ -107,7 +107,6 @@ src_configure() {
         --with-jbig2dec \
         --with-libpaper \
         --with-system-libtiff \
-        --without-lcms \
         --without-luratech \
         $(option_enable cups) \
         $(option_enable dbus) \

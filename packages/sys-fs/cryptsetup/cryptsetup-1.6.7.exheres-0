@@ -3,9 +3,8 @@
 # Copyright 2011-2012 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require googlecode
-
 SUMMARY="Userland utilities for dm-crypt"
+HOMEPAGE="https://gitlab.com/${PN}/${PN}"
 DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
