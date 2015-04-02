@@ -23,5 +23,9 @@ DEPENDENCIES="
 src_prepare() {
     # the Makefile references an incorrect path for manpages/docbook.xsl
     # it also tries to strip symbols with `install`
-    edo sed -i -e 's#/usr/share/xml/.*docbook.xsl#/usr/share/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl#' -e 's/install -s/install/' Makefile
+    edo sed \
+        -e 's#/usr/share/xml/.*docbook.xsl#/usr/share/sgml/docbook/xsl-stylesheets/manpages/docbook.xsl#' \
+        -e 's#install -s#install#' \
+        -e "s#\$(PREFIX)/bin#/usr/$(exhost --target)/bin#g" \
+        -i Makefile
 }
