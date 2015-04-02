@@ -10,6 +10,7 @@ SUMMARY="Paludis, the one true package mangler"
 HOMEPAGE="http://paludis.exherbo.org"
 DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
 
+MY_RUBY_ABIS=( 2.0 2.1 2.2 )
 MYOPTIONS="
     doc
     gemcutter    [[ description = [ Enable Gemcutter-based support for ruby gems ] ]]
@@ -20,6 +21,7 @@ MYOPTIONS="
     search-index [[ description = [ Enable cave search --index ] ]]
     vim-syntax
     xml          [[ description = [ Enable parsing of xml files, for GLSA and metadata.xml support, only useful with Gentoo repositories ] ]]
+    ruby? ( ( ruby_abis: ${MY_RUBY_ABIS[*]} ) [[ number-selected = exactly-one ]] )
 "
 LICENCES="GPL-2 vim-syntax? ( vim )"
 SLOT="0"
@@ -47,6 +49,12 @@ DEPENDENCIES="
             dev-lang/python:=
             dev-libs/boost
         )
+        ruby? (
+            $(for abi in ${MY_RUBY_ABIS[@]}; do
+                echo "ruby_abis:${abi}? ( dev-lang/ruby:${abi} )"
+            done)
+            doc? ( dev-ruby/syntax[ruby_abis:*(-)?] )
+        )
         search-index? ( dev-db/sqlite:3 )
         xml? ( dev-libs/libxml2:2.0[>=2.6] )
     test:
@@ -60,27 +68,6 @@ DEPENDENCIES="
     post:
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )
 "
-if ever at_least 2.4.0; then
-    MY_RUBY_ABIS=( 2.0 2.1 2.2 )
-    MYOPTIONS+=" ruby? ( ( ruby_abis: ${MY_RUBY_ABIS[*]} ) [[ number-selected = exactly-one ]] )"
-    DEPENDENCIES+="
-        build+run:
-            ruby? (
-                $(for abi in ${MY_RUBY_ABIS[@]}; do
-                    echo "ruby_abis:${abi}? ( dev-lang/ruby:${abi} )"
-                done)
-                doc? ( dev-ruby/syntax[ruby_abis:*(-)?] )
-            )
-    "
-else
-    DEPENDENCIES+="
-        build+run:
-            ruby? (
-                dev-lang/ruby:=
-                doc? ( dev-ruby/syntax )
-            )
-    "
-fi
 
 paludis_pkg_setup() {
     replace-flags -Os -O2
@@ -98,12 +85,11 @@ paludis_src_configure() {
         $(option_enable pink) \
         $(option_enable python) \
         $(option_enable ruby) \
-        $(ever at_least 2.4.0 && option ruby --with-ruby-version=${RUBY_ABIS}) \
+        $(option ruby --with-ruby-version=${RUBY_ABIS}) \
         $(option_enable search-index) \
         $(option_enable vim-syntax vim ) \
         $(option_enable xml) \
         --with-vim-install-dir=/usr/share/vim/vimfiles \
-        $(ever at_least 2.0.1 || echo '--enable-visibility') \
         --with-clients=default,cave \
         --with-environments=default \
         --with-repositories=${repositories} \
