@@ -35,6 +35,7 @@ src_configure() {
     # --without-capabilities - declared as Alpha code in configure.ac
     # ac_cv_sys_symbol_underscore=no - NOTE(compnerd) ELF does not have a global symbol prefix unlike COFF
     # (which is default on *BSD) this should be safe to unconditionally set until we support non-ELF targets
+    CC_FOR_BUILD=$(exhost --build)-gcc \
     econf \
         --enable-static \
         --disable-O-flag-munging \
