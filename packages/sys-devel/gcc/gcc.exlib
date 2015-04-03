@@ -55,7 +55,8 @@ gcc_src_configure() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
-        local libpath=/${target}/lib:/usr/${target}/lib
+        local libpath=/usr/${target}/lib
+        local gxx_incdir=/usr/${target}/include/c++/${PV}
         local target_cflags_var=${target//-/_}_CFLAGS
         local target_ldflags_var=${target//-/_}_LDFLAGS
 
@@ -130,6 +131,7 @@ EOF
                 $(option_enable threads)                    \
                 --enable-languages=c,c++,fortran,objc,obj-c++ \
                 --with-sysroot='""'                         \
+                --with-gxx-include-dir="${gxx_incdir}"      \
                 $(optionq threads || echo --with-newlib)    \
                 $(optionq threads || echo --without-headers)\
                 $(if [[ ${target} == ${CHOST} ]] ; then
@@ -169,8 +171,6 @@ gcc_src_install() {
     local target= alternatives=()
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
-        local libpath=/${target}/lib:/usr/${target}/lib
-
         if option !targets:${target} ; then
             echo "    Cross-Compile Target: ${target} (disabled)"
             continue
