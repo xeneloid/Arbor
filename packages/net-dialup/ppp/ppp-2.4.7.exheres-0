@@ -67,8 +67,9 @@ src_prepare() {
 
     if option radius ; then
         # set the right paths in radiusclient.conf
-        edo sed -i -e "s:/usr/local/etc:/etc:" \
-                -e "s:/usr/local/sbin:/usr/$(exhost --target)/bin:" pppd/plugins/radius/etc/radiusclient.conf
+        edo sed -e "s:/usr/local/etc:/etc:" \
+                -e "s:/usr/local/sbin:/usr/$(exhost --target)/bin:" \
+                -i pppd/plugins/radius/etc/radiusclient.conf
 
         # set config dir to /etc/ppp/radius
         edo sed -e "s:/etc/radiusclient:/etc/ppp/radius:g" \
