@@ -84,7 +84,7 @@ libpng_src_install() {
 
     for (( i = 0; i < ${#binaries[@]}; i++ )); do
         edo rm "${IMAGE}"/usr/${host}/bin/${binaries[i]}
-        alternatives_for _libpng ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]}  /usr/${host}/${binaries[++i]}
+        alternatives_for _libpng ${SLOT} ${SLOT} /usr/${host}/bin/${binaries[i]}  /usr/${host}/bin/${binaries[++i]}
     done
 }
 
