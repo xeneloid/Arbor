@@ -35,7 +35,6 @@ MYOPTIONS="
     debug
     embedded-server [[ description = [ The embedded MySQL server library, a full-featured MySQL server that can be run inside a client application ] ]]
     tcpd
-    multibuild_c: 32 64
 "
 
 DEPENDENCIES="
