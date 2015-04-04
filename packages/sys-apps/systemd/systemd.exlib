@@ -363,17 +363,17 @@ systemd_src_install() {
     default
 
     # alternatives
-    dodir /usr/${host}/sbin
+    dodir /usr/${host}/bin
     local a
     for a in halt poweroff reboot runlevel shutdown telinit; do
-        dosym ../bin/systemctl /usr/${host}/sbin/${a}
+        dosym ../bin/systemctl /usr/${host}/bin/${a}
         alternatives+=(
-            /usr/${host}/sbin/${a} ${PN}.${a}
+            /usr/${host}/bin/${a} ${PN}.${a}
         )
     done
-    dosym ../lib/systemd/systemd /usr/${host}/sbin/init
+    dosym ../lib/systemd/systemd /usr/${host}/bin/init
     alternatives+=(
-        /usr/${host}/sbin/init ${PN}.init
+        /usr/${host}/bin/init ${PN}.init
     )
 
     keepdir /usr/${host}/lib/systemd/user-generators
@@ -533,8 +533,7 @@ CONFIG_PROTECT_MASK="${UDEVRULESDIR}"
 EOT
 
     # Create compatibility symlinks
-    dosym ../lib/systemd/systemd-udevd /usr/${host}/sbin/udevd
-    dosym ../bin/udevadm /usr/${host}/sbin/udevadm
+    dosym ../lib/systemd/systemd-udevd /usr/${host}/bin/udevd
 
     # Exclude /var/tmp/paludis/build from cleaning
     edo echo "x /var/tmp/paludis/build" >> "${IMAGE}"/usr/${host}/lib/tmpfiles.d/tmp.conf
@@ -589,7 +588,7 @@ systemd_pkg_postinst() {
 
                 case "$(esandbox api)" in
                 1)
-                    esandbox exec /usr/${CHOST}/sbin/udevd --daemon || ewarn "udevd couldn't be restarted"
+                    esandbox exec /usr/${CHOST}/bin/udevd --daemon || ewarn "udevd couldn't be restarted"
                     ;;
                 0)
                     # Change the wait mode to wait/eldest so
@@ -597,7 +596,7 @@ systemd_pkg_postinst() {
                     esandbox wait_eldest
                     # Allow access to /run/udev/control for udevd
                     esandbox allow_net unix:/run/udev/control
-                    nonfatal edo /usr/${CHOST}/sbin/udevd --daemon || ewarn "udevd couldn't be restarted."
+                    nonfatal edo /usr/${CHOST}/bin/udevd --daemon || ewarn "udevd couldn't be restarted."
                     ;;
                 esac
             fi
@@ -605,7 +604,7 @@ systemd_pkg_postinst() {
     fi
 
     # Update the hwdb index
-    nonfatal edo /usr/${CHOST}/sbin/udevadm hwdb --root="${ROOT}" --update || ewarn "Updating hwdb failed (udevadm hwdb --update)"
+    nonfatal edo /usr/${CHOST}/bin/udevadm hwdb --root="${ROOT}" --update || ewarn "Updating hwdb failed (udevadm hwdb --update)"
 
     # Update the message catalogue index
     nonfatal edo /usr/${CHOST}/bin/journalctl --root="${ROOT}" --update-catalog || ewarn "Updating journal message catalogue failed (journalctl --update-catalog)"
