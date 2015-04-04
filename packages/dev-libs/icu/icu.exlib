@@ -51,13 +51,6 @@ icu_src_install() {
     done
     edo popd
 
-    edo pushd "${IMAGE}"/usr/${host}/sbin
-    for binary in * ; do
-        edo mv "${IMAGE}"/usr/${host}/sbin/${binary}{,${SLOT}}
-        alternatives_for _${PN} ${SLOT} ${SLOT} /usr/${host}/sbin/${binary} ${binary}${SLOT}
-    done
-    edo popd
-
     edo pushd "${IMAGE}"/usr/${host}/include
     for header in * ; do
         edo mv "${IMAGE}"/usr/${host}/include/${header}{,${SLOT}}
@@ -85,8 +78,7 @@ icu_pkg_postinst() {
     # We can't force alternatives to overwrite files with symlinks
     if has_version --root "dev-libs/icu:0"; then
         local files=(
-            "${ROOT}"/usr/${host}/bin/{derb,genbrk,gencfu,gencnval,gendict,genrb,icu-config,icuinfo,makeconv,pkgdata,uconv}
-            "${ROOT}"/usr/${host}/sbin/{genccode,gencmn,gennorm2,gensprep,icupkg}
+            "${ROOT}"/usr/${host}/bin/{derb,genbrk,gencfu,gencnval,gendict,genrb,icu-config,icuinfo,makeconv,pkgdata,uconv,genccode,gencmn,gennorm2,gensprep,icupkg}
             "${ROOT}"/usr/${host}/include/{layout,unicode}
             "${ROOT}"/usr/${host}/lib{,32,64}/pkgconfig/icu-{i18n,io,le,lx,uc}.pc
             "${ROOT}"/usr/share/man/man1/{derb,genbrk,gencfu,gencnval,gendict,genrb,icu-config,makeconv,pkgdata,uconv}.1
