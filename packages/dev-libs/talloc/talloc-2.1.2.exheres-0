@@ -29,6 +29,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=disable-silent-rules
     --hates=enable-fast-install
 )
+DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 DEFAULT_SRC_INSTALL_EXCLUDE=( release-script.sh )
 
 src_install() {
