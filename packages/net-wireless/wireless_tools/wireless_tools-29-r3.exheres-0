@@ -31,7 +31,7 @@ src_prepare() {
             -e "s:^\(RANLIB\) = ranlib:\1 = ${RANLIB}:" \
             -e "/^CFLAGS=/s:^:#:" \
             -e "s:^\(@\$(LDCONFIG).*\):#\1:" \
-            -e "s:^\(INSTALL_DIR= \$(PREFIX)\)/sbin/:\1/usr/${host}/sbin:" \
+            -e "s:^\(INSTALL_DIR= \$(PREFIX)\)/sbin/:\1/usr/${host}/bin:" \
             -e "s:^\(INSTALL_LIB= \$(PREFIX)\)/lib/:\1/usr/${host}/lib:" \
             -e "s:^\(INSTALL_MAN= \$(PREFIX)\)/man/:\1/usr/share/man:" \
             -e "s:^\(INSTALL_INC= \$(PREFIX)\)/include/:\1/usr/${host}/include:" \
