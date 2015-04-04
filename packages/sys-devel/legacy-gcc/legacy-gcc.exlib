@@ -93,10 +93,11 @@ EOF
     myconf=(
         --target=${CHOST}
         --prefix=/usr
+        --libdir=/usr/${libdir}
+        --bindir=/usr/bin
         --cache-file=config.cache
         --hates=docdir
         --hates=disable-dependency-tracking
-        --libdir=/usr/${libdir}
         --with-pkgversion="exherbo ${MY_PNVR}"
         --program-suffix=-${SLOT}
         --enable-clocale=gnu
