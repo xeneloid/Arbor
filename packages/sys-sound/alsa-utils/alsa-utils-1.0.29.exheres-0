@@ -46,7 +46,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --sbindir=/usr/$(exhost --target)/bin
     --enable-nls
     # disable alsaconf like all other distros do
     --disable-alsaconf

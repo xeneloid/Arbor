@@ -40,8 +40,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    # FIXME(moben) remove sbindir once econf is changed
-    --sbindir=/usr/$(exhost --target)/bin
     --enable-nls
     --enable-shadowgrp
     --enable-static

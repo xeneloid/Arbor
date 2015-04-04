@@ -38,7 +38,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --sbindir=/usr/$(exhost --target)/bin
     --localstatedir=/var
     --enable-dhcpv6
     --enable-execute

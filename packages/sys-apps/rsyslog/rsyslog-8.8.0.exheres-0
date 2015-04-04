@@ -60,7 +60,6 @@ RESTRICT="test"
 
 src_configure() {
     local myconf=(
-        --sbindir=/usr/$(exhost --target)/bin
         --disable-mmnormalize
         --disable-liblogging-stdlog
         --enable-imdiag

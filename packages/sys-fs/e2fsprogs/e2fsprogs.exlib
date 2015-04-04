@@ -37,9 +37,7 @@ e2fsprogs_src_configure() {
     export ac_cv_path_LDCONFIG=:
     export STRIP=:
 
-    # FIXME(moben) remove sbindir once econf is changed
     econf \
-        --sbindir=/usr/$(exhost --target)/bin \
         --enable-elf-shlibs \
         --enable-nls \
         --enable-symlink-install \

@@ -37,7 +37,6 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     SPOOL_DIR="/var/spool/cron/crontabs"
     ANACRON_SPOOL_DIR="/var/spool/anacron"
-    --sbindir=/usr/$(exhost --target)/bin
     --enable-syscrontab
     --with-daemon_username=cron
     --with-daemon_groupname=cron

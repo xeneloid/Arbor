@@ -81,7 +81,6 @@ cyrus-sasl_src_configure() {
         "--disable-srp"
         "--disable-java"
         "--disable-sql"
-        "--sbindir=/usr/$(exhost --target)/bin"
         "--with-dblib=gdbm"
         "--with-des"
         "--with-openssl"

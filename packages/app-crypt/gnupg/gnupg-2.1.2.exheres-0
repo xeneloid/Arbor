@@ -46,7 +46,6 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gnupg-trust.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --sbindir=/usr/$(exhost --target)/bin
     --enable-bzip2
     --enable-gpg
     --enable-gpgsm

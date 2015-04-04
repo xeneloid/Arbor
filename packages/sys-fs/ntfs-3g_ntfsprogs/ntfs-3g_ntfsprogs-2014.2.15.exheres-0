@@ -55,7 +55,6 @@ UPSTREAM_RELEASE_NOTES="${BASE_URL}/community/release-history/"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --exec-prefix=/usr/$(exhost --target)
-    --sbindir=/usr/$(exhost --target)/bin
     --enable-mount-helper
     --enable-ntfsprogs
     --enable-xattr-mappings
