@@ -204,7 +204,7 @@ glibc_src_install() {
     export LANGUAGE=C
 
     if ever at_least 2.21 ; then
-        emake -j1 DESTDIR="${IMAGE}" install
+        emake -j1 "${DEFAULT_SRC_INSTALL_PARAMS[@]}" DESTDIR="${IMAGE}" install
     else
         default
     fi
