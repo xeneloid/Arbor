@@ -363,10 +363,9 @@ systemd_src_install() {
     default
 
     # alternatives
-    dodir /usr/${host}/bin
     local a
     for a in halt poweroff reboot runlevel shutdown telinit; do
-        dosym ../bin/systemctl /usr/${host}/bin/${a}
+        dosym systemctl /usr/${host}/bin/${a}
         alternatives+=(
             /usr/${host}/bin/${a} ${PN}.${a}
         )
