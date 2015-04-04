@@ -138,7 +138,7 @@ EOF
                 $(if [[ ${target} == ${CHOST} ]] ; then
                     echo --program-suffix=-${SLOT}
                   else
-                    echo echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
+                    echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
                   fi)                                       \
                 --with-lib-path=${libpath}                  \
                 --with-as=/usr/${CHOST}/bin/${target}-as    \
