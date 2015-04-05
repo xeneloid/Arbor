@@ -141,7 +141,7 @@ pkg_postinst() {
     # create host symlink for default target
     edo ln -snTf $(exhost --build) "${ROOT}"usr/host
 
-    edo ln -snTf "${ROOT}"usr/host/lib "${ROOT}"usr/host/lib64
+    edo ln -snTf lib "${ROOT}"usr/host/lib64
 
     # create compat symlinks for bin, sbin, include, lib{,exec} and /usr/local
     for x in bin sbin include lib libexec; do
