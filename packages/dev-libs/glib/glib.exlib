@@ -26,6 +26,7 @@ AT_M4DIR=( "${WORKBASE}" )
 
 glib_src_prepare() {
     edo cp "${WORKBASE}"/pkg-config-*/pkg.m4 "${WORKBASE}"/
+    edo sed -i 's#gettext_dir=\$prefix/share#gettext_dir=$datarootdir#g' "${WORKBASE}/${PNV}/glib-gettextize.in"
     default
 }
 
