@@ -193,6 +193,8 @@ openssh_src_install() {
     fi
 
     install_systemd_files
+    # fix installed service files to use correct host
+    edo sed -e "s#/usr/host/#/usr/$(exhost --target)/#g" -i "${IMAGE}/${SYSTEMDSYSTEMUNITDIR}"/*.service
 
     # Delete empty dir.
     [[ -d ${IMAGE}/run ]] && edo rmdir "${IMAGE}"/run

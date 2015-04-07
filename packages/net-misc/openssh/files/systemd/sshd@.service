@@ -4,5 +4,5 @@ Wants=sshd-keygen.service
 After=auditd.service sshd-keygen.service
 
 [Service]
-ExecStart=-/usr/sbin/sshd -i
+ExecStart=-/usr/host/bin/sshd -i
 StandardInput=socket

@@ -3,9 +3,9 @@ Description=OpenSSH server daemon
 After=syslog.target network.target auditd.service
 
 [Service]
-ExecStartPre=/usr/bin/ssh-keygen -A
-ExecStart=/usr/sbin/sshd -D
-ExecReload=/bin/kill -HUP $MAINPID
+ExecStartPre=/usr/host/bin/ssh-keygen -A
+ExecStart=/usr/host/bin/sshd -D
+ExecReload=/usr/host/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
 RestartSec=42s
