@@ -24,21 +24,3 @@ DEPENDENCIES="
 "
 
 WORK=${WORKBASE}/${MY_PNV}
-
-ccache_src_install() {
-    default
-
-    dodir /usr/libexec/ccache/
-    insinto /usr/libexec/ccache/
-    local f
-    for f in {${CHOST}-,}{gcc,g++,c++} clang{,++}; do
-        dosym /usr/bin/ccache /usr/libexec/ccache/${f}
-    done
-
-    keepdir /var/cache/ccache
-}
-
-ccache_pkg_postinst() {
-    edo chown paludisbuild:paludisbuild /var/cache/ccache
-}
-
