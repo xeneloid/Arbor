@@ -28,7 +28,7 @@ DEPENDENCIES="
 "
 
 SRC_CONFIGURE_PARAMS=(
-    --prefix=/usr
+    --prefix=/usr/$(exhost --target)
     --shared-openssl
     --shared-zlib
 )
@@ -58,11 +58,8 @@ src_configure() {
 
 src_install() {
     default
-
-    if option npm && [[ $LIBDIR != lib ]]; then
-        edo mv "${IMAGE}/usr/lib" "${IMAGE}/usr/${LIBDIR}"
-        dosym "/usr/${LIBDIR}/node_modules/npm/bin/npm-cli.js" "/usr/bin/npm"
-    fi
+    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/man
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 }
 
 src_test() {
