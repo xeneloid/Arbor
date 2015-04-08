@@ -1,0 +1,104 @@
+# Copyright 2012 Paul Seidler
+# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+#
+# Based in part on 'packages/dev-util/pkg-config/pkg-config-0.28.exheres-0'
+# which can be found in ::arbor:
+#   Copyright 2007 Bryan Østergaard
+#   Distributed under the terms of the GNU General Public License v2
+
+require github alternatives
+
+SUMMARY="Provides compiler and linker configuration for development frameworks"
+DESCRIPTION="
+pkgconf is a program which helps to configure compiler and linker flags for development frameworks.
+It is similar to pkg-config, but was written from scratch in the summer of 2011 to replace
+pkg-config.
+"
+DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.bz2"
+
+LICENCES="as-is"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    targets:
+        arm-exherbo-linux-gnueabi
+        i686-pc-linux-gnu
+        x86_64-pc-linux-gnu
+"
+
+DEPENDENCIES="
+    build+run:
+        !dev-util/pkg-config[<=0.27.1] [[
+            description = [ aclocal file will collide ]
+            resolution = upgrade-blocked-before
+        ]]
+"
+
+ECONF_SOURCE=${WORK}
+
+src_configure() {
+    local target=
+
+    for target in ${CROSS_COMPILE_TARGETS}; do
+        local pc_path=/usr/${target}/lib/pkgconfig:/usr/share/pkgconfig
+        if option !targets:${target};then
+            echo "     Cross-Compile Target: ${target} (disabled)"
+            continue
+        fi
+
+        echo "     Cross-Compile Target: ${target}"
+
+        edo mkdir -p "${WORKBASE}/build/${target}"
+        edo cd "${WORKBASE}/build/${target}"
+
+        econf                                                       \
+                --with-pkg-config-dir="${pc_path}"                  \
+                --with-system-libdir="/usr/${target}/lib"           \
+                --with-system-includedir="/usr/${target}/include"
+    done
+}
+
+src_compile() {
+    local target=
+
+    for target in ${CROSS_COMPILE_TARGETS};do
+        if option !targets:${target};then
+            echo "     Cross-Compile Target: ${target} (disabled)"
+            continue
+        fi
+
+        echo "     Cross-Compile Target: ${target}"
+
+        edo cd "${WORKBASE}/build/${target}"
+        default
+    done
+}
+
+src_install() {
+    local alternatives=( pkg-config ${PN} 0 )
+    local target=
+
+    for target in ${CROSS_COMPILE_TARGETS};do
+        if option !targets:${target};then
+            echo "     Cross-Compile Target: ${target} (disabled)"
+            continue
+        fi
+        echo "     Cross-Compile Target: ${target}"
+
+        edo cd "${WORKBASE}/build/${target}"
+        emake -j1 DESTDIR="${IMAGE}" install
+        edo mv "${IMAGE}/usr/$(exhost --target)/bin/${PN}" "${IMAGE}/usr/$(exhost --target)/bin/${target}-pkg-config"
+
+        alternatives+=(
+            /usr/$(exhost --target)/bin/${target}-pkg-config ${target}-pkg-config.${PN}
+        )
+    done
+
+    alternatives+=(
+        /usr/share/aclocal/pkg.m4 pkg_${PN}.m4
+    )
+
+    alternatives_for "${alternatives[@]}"
+    emagicdocs
+}
