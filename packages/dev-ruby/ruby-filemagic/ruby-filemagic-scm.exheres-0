@@ -20,6 +20,12 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Fix-tests.patch )
 
+# work around hardcoded absolute paths
+DEFAULT_SRC_INSTALL_PARAMS=(
+    MAKEDIRS="mkdir -p"
+    INSTALL="install"
+)
+
 src_configure() {
     edo ruby extconf.rb
 }
