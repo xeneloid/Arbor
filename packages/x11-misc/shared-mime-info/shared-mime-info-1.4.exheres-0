@@ -34,3 +34,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-update-mimedb )
 # "update_mime_database-update-mime-database.o: file not recognized: File truncated"
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
+src_prepare() {
+    # Respect datarootdir
+    edo sed -e 's:itlocaledir = $(prefix)/$(DATADIRNAME)/locale:itlocaledir = $(datarootdir)/locale:' \
+        -i "${WORK}"/po/Makefile.in.in
+}
+
