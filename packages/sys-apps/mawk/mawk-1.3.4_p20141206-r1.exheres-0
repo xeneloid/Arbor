@@ -30,7 +30,7 @@ src_install() {
     doins -r examples/.
 
     alternatives_for awk ${PN} 10 \
-        /usr/bin/awk ${PN} \
+        /usr/$(exhost --target)/bin/awk ${PN} \
         /usr/share/man/man1/awk.1 ${PN}.1
 }
 
