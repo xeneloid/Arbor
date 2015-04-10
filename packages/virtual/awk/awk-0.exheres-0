@@ -1,0 +1,23 @@
+# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: awk providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers:
+        gawk
+        mawk
+    ) [[
+        *description = [ awk provider ]
+        number-selected = at-least-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:gawk? ( sys-apps/gawk )
+    providers:mawk? ( sys-apps/mawk )
+"
+
