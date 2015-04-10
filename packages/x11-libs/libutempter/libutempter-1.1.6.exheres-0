@@ -3,8 +3,6 @@
 # Based in part upon 'libutempter-1.1.5.ebuild' which is:
 #    Copyright 1999-2007 Gentoo Foundation
 
-require easy-multibuild [ multiunpack=true ]
-
 SUMMARY="A library interface for terminal emulators to record user sessions to utmp and wtmp"
 HOMEPAGE=""
 DOWNLOADS="ftp://ftp.altlinux.org/pub/people/ldv/${PN}/${PNV}.tar.bz2"
@@ -14,41 +12,30 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS="multibuild_c: 32 64"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
         group/utmp
 "
 
-DEFAULT_SRC_COMPILE_PARAMS=( libexecdir="/usr/libexec" )
-DEFAULT_SRC_INSTALL_PARAMS=( libexecdir="/usr/libexec" )
+DEFAULT_SRC_COMPILE_PARAMS=(
+    libdir="/usr/$(exhost --target)/lib"
+    libexecdir="/usr/$(exhost --target)/libexec"
+    RPM_OPT_FLAGS="$CFLAGS"
+)
 
-compile_one_multibuild() {
-    emake "${DEFAULT_SRC_COMPILE_PARAMS[@]}" libdir="/usr/${LIBDIR}" RPM_OPT_FLAGS="$CFLAGS"
-}
+DEFAULT_SRC_INSTALL_PARAMS=(
+    libdir="/usr/$(exhost --target)/lib"
+    includedir="/usr/$(exhost --target)/include"
+    libexecdir="/usr/$(exhost --target)/libexec"
+)
 
-install_one_multibuild() {
-    local extra_args=()
-    if ! multibuild_default_target C; then
-        extra_args+=(
-            "libexecdir=/usr/libexec.orphan"
-            "mandir=/usr/share/man.orphan"
-            "includedir=/usr/include.orphan"
-            )
-    fi
+src_install() {
+    default
 
-    emake -j1 DESTDIR="${IMAGE}" "${DEFAULT_SRC_INSTALL_PARAMS[@]}" libdir="/usr/${LIBDIR}" \
-        "${extra_args[@]}" install
-
-    if multibuild_default_target C; then
-        emagicdocs
-        edo chown root:utmp "${IMAGE}"/usr/libexec/utempter/utempter
-        edo chmod 2755 "${IMAGE}"/usr/libexec/utempter/utempter
-    else
-        # clean out orphan parts
-        edo rm -rf "${IMAGE}"/usr/{share/man,libexec,include}.orphan
-    fi
+    edo chown root:utmp "${IMAGE}"/usr/$(exhost --target)/libexec/utempter/utempter
+    edo chmod 2755 "${IMAGE}"/usr/$(exhost --target)/libexec/utempter/utempter
 }
 
 pkg_postinst() {
