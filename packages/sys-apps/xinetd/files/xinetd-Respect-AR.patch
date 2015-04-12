@@ -1,0 +1,118 @@
+Source: written by Pierre Lejeune <superheron@gmail.com>
+Upstream: no
+Reason: Respect AR
+
+--- a/libs/src/pset/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/pset/Makefile.in	2015-04-12 22:10:17.074536262 +0200
+@@ -43,6 +43,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640			# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -53,7 +54,7 @@
+ 	mv $(LIBNAME) $(LIBDIR)/optimized
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ install: $(LIBNAME)
+--- a/libs/src/portable/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/portable/Makefile.in	2015-04-12 22:17:18.608506693 +0200
+@@ -46,6 +46,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640		# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -57,7 +58,7 @@
+ 
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ install: $(LIBNAME)
+--- a/libs/src/sio/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/sio/Makefile.in	2015-04-12 22:19:22.505861806 +0200
+@@ -42,6 +42,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640			# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -52,7 +53,7 @@
+ 	$(INSTALL) $(FMODE) $(LIBNAME) $(LIBDIR)/optimized
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ install: $(LIBNAME)
+--- a/libs/src/str/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/str/Makefile.in	2015-04-12 22:21:21.592101018 +0200
+@@ -53,6 +53,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640			# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -63,7 +64,7 @@
+ 	$(INSTALL) $(FMODE) $(LIBNAME) $(LIBDIR)-O
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ LINT_IGNORE=possible pointer alignment|RCSid unused
+--- a/libs/src/misc/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/misc/Makefile.in	2015-04-12 22:22:42.645899650 +0200
+@@ -51,6 +51,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640		# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -62,7 +63,7 @@
+ 
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ install: $(LIBNAME)
+--- a/libs/src/xlog/Makefile.in	2003-02-19 18:29:27.000000000 +0100
++++ b/libs/src/xlog/Makefile.in	2015-04-12 22:23:21.147518286 +0200
+@@ -48,6 +48,7 @@
+ INSTALL			= @INSTALL@
+ FMODE			= -m 640			# used by install
+ RANLIB			= @RANLIB@
++AR			= @AR@
+ 
+ LIBNAME			= lib$(NAME).a
+ 
+@@ -58,7 +59,7 @@
+ 	$(INSTALL) $(FMODE) $(LIBNAME) $(LIBDIR)/optimized
+ 
+ $(LIBNAME): $(OBJECTS)
+-	ar r $@ $?
++	$(AR) r $@ $?
+ 	$(RANLIB) $@
+ 
+ install: $(LIBNAME)
