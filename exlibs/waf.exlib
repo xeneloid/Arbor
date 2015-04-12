@@ -50,6 +50,7 @@ waf_src_configure() {
     ewaf --jobs=1 configure \
         --prefix=/usr/$(exhost --target)/ \
         --bindir=/usr/$(exhost --target)/bin/ \
+        --sbindir=/usr/$(exhost --target)/bin/ \
         --libdir=/usr/$(exhost --target)/lib/ \
         --datadir=/usr/share/ \
         ${WAF_SRC_CONFIGURE_HTMLDIR---htmldir=/usr/share/doc/${PNVR}/html/} \
