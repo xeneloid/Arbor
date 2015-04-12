@@ -215,6 +215,10 @@ gcc_src_install() {
 
         edo pushd "${IMAGE}"
 
+        local unset_nullglob=
+        shopt -q nullglob || unset_nullglob=1
+        shopt -s nullglob
+
         for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
             alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
         done
@@ -240,6 +244,9 @@ gcc_src_install() {
             local name=${locale##*/}
             alternatives+=( /${locale} ${name%.mo}-${SLOT}.mo )
         done
+
+        [[ -n ${unset_nullglob} ]] && shopt -u nullglob
+
         edo popd
     done
 
