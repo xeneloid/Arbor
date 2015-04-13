@@ -1,0 +1,43 @@
+Title: Multi-arch/cross has been merged
+Author: Wulf C. Krueger <philantrop@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-04-05
+Revision: 1
+News-Item-Format: 1.0
+
+Exherbo's multi-arch/cross implementation[1] has been merged to master.
+
+You WILL have to migrate to this new setup in order to be able to install
+new software and updates.
+
+You'll find the migration guide at [2]. Make sure to follow it VERY closely
+because getting things wrong does have the potential to break your system.
+(You'll of course be able to access your data via a rescue system if everything
+goes wrong. We're changing the base system but are NOT touching user data.)
+
+If you don't want to migrate right now, you shouldn't update or install ANYTHING
+anymore until you are ready to do so.
+
+The last commit prior to the migration has been tagged as "pre-cross" in all
+official repositories so that you can stick with that if need be.
+If you wish to stay on the pre-cross revision, you need to set
+"sync_options = --revision=pre-cross" in the repository's configuration file.
+
+If you do migrate (which you should), you'll find that some packages might not
+yet install. As always, you're fully expected to help with migrating exheres
+to the new base system which basically involves undoing our former multi-lib
+approach. You'll find more details at [3] and you're, of course, encouraged to
+look at recent commits that mention "multiarch" or "cross" for tips on
+converting other packages.
+
+Furthermore, we have no control over 3rd-party/unofficial repositories. While
+quite a few of them feature a "cross" branch right now, they might not have been
+merged when the official repositories were.
+Thus, you might have to add "sync_options = --branch=cross" (without the
+quotation marks) to the respective repository's configuration until the
+maintainer has merged the cross branch into master.
+
+[1]: http://exherbo.org/docs/multiarch.txt
+[2]: http://exherbo.org/docs/multiarch.html
+[3]: http://exherbo.org/docs/cross.html
+
