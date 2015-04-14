@@ -25,6 +25,12 @@ DEPENDENCIES="
             dev-libs/cloog:=[>=0.17&<0.19]
             dev-libs/isl:=[>=0.10&<0.13]
         )
+        threads? (
+            dev-libs/gmp:=[>=4.2]
+            dev-libs/mpc:=[>=0.8.1]
+            dev-libs/mpfr:=[>=2.4.0]
+            sys-libs/zlib
+        )
         !sys-devel/static-gcc [[
             description = [ static-gcc was moved back to gcc. ]
             resolution = uninstall-blocked-after
