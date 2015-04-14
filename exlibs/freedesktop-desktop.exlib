@@ -22,7 +22,7 @@ freedesktop-desktop_update_desktop_database() {
     illegal_in_global_scope
 
     if [[ "${ROOT}" == / ]] ; then
-        nonfatal edo /usr/bin/update-desktop-database -q /usr/share/applications ||
+        nonfatal edo /usr/$(exhost --build)/bin/update-desktop-database -q /usr/share/applications ||
             eerror "update-desktop-database failed"
     else
         ewarn 'Not updating desktop database because ${ROOT} != /'
