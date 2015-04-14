@@ -20,16 +20,20 @@ DEPENDENCIES="
         virtual/libssl
         tk? ( dev-lang/python:=[tk] )"
 
-DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FEATURES )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-ssl=/usr/$(exhost --target)
     --enable-nls
     --enable-RPA
     --enable-NTLM
     --enable-SDPS
-    --without-gssapi --without-kerberos5 --without-kerberos --without-hesiod
-    --with-ssl
+    --without-gssapi
+    --without-kerberos5
+    --without-kerberos
+    --without-hesiod
 )
+DEFAULT_SRC_COMPILE_PARAMS=( AR="${AR}" )
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FEATURES )
 
 src_configure() {
     # Configure automagically enables the tk interface unless PYTHON=:
