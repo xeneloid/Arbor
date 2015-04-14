@@ -20,7 +20,12 @@ DEPENDENCIES="
 WORK="${WORKBASE}/${MY_PNV}"
 
 DEFAULT_SRC_COMPILE_PARAMS=( all3 )
-DEFAULT_SRC_INSTALL_PARAMS=( DEST_DIR="${IMAGE}" DEST_HOME="/usr/$(exhost --target)" )
+DEFAULT_SRC_INSTALL_PARAMS=(
+    DEST_DIR="${IMAGE}"
+    DEST_HOME="/usr/$(exhost --target)"
+    DEST_SHARE_DOC="/usr/share/doc/${PNVR}"
+    DEST_MAN="/usr/share/man"
+)
 
 src_prepare() {
     local makefile
@@ -48,9 +53,6 @@ src_prepare() {
             -e "/ALLFLAGS/s:-s ::" \
             -e "s:^CC=[^ ]\+\? \(.*\):CC=$(exhost --tool-prefix)gcc ${CFLAGS} \1:" \
             -e "s:^CXX=[^ ]\+\? \(.*\):CXX=$(exhost --tool-prefix)g++ ${CXXFLAGS} \1:" \
-            -e "/^DEST_SHARE/s:lib/:$(exhost --target)/lib/:" \
-            -e "/^DEST_SHARE_DOC/s:${PN}:${PNVR}:" \
-            -e "/^DEST_MAN/s:man:share/&:" \
             -i makefile.machine
 
     edo sed -i -e "/strip/d" install.sh
