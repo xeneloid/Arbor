@@ -1,0 +1,5 @@
+CROSS_ICU_VERSION=54.1
+TOOLEXEEXT=
+TOOLBINDIR=/usr/host/bin
+TOOLLIBDIR=/usr/host/lib
+
