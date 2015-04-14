@@ -1,0 +1,23 @@
+# Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require nfs-utils
+
+PLATFORMS="~amd64 ~arm ~x86"
+DOWNLOADS="
+    https://www.kepstin.ca/dump/${PNV}-exherbo.tar.xz [[ note = [
+        git archive --format=tar --prefix=${PNV}/ ${PN}-$(ever replace_all -) ] ]]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-cpp_path.patch
+    "${FILES}"/${PNV}-systemd-install-path.patch
+)
+
+src_prepare() {
+    nfs-utils_src_prepare
+
+    # From application of cpp_path patch, file permissions not preserved?
+    edo chmod +x "${WORK}"/tools/rpcgen/cpp
+}
+
