@@ -17,7 +17,7 @@ DEPENDENCIES="
 
 src_install() {
     perl-module_src_install
-    edo rm "${IMAGE}"/usr/{bin/zipdetails,share/man/man1/zipdetails.1}
+    edo rm "${IMAGE}"/usr/{$(exhost --target)/bin/zipdetails,share/man/man1/zipdetails.1}
     edo find "${IMAGE}"/usr -empty -delete
 }
 
