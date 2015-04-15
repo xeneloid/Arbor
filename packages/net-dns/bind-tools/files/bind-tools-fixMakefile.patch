@@ -1,0 +1,25 @@
+Author: Thomas Anderson
+Upstream: TODO, let's make sure this works first ;-)
+Reason: Add timestamp target to fool Make which expects it and fails if it's missing
+
+diff -aur bind-9.10.2-old/lib/lwres/man/Makefile.in bind-9.10.2/lib/lwres/man/Makefile.in
+--- bind-9.10.2-old/lib/lwres/man/Makefile.in	2015-02-18 01:55:55.000000000 +0000
++++ bind-9.10.2/lib/lwres/man/Makefile.in	2015-04-16 22:27:53.342051700 +0000
+@@ -85,13 +85,16 @@
+ doc man:: ${MANOBJS}
+ 
+ docclean manclean maintainer-clean::
+-	rm -f ${MANOBJS}
++	rm -f ${MANOBJS} timestamp
+ 
+ installdirs:
+ 	$(SHELL) ${top_srcdir}/mkinstalldirs ${DESTDIR}${mandir}/man3
+ 
+ man3 = ${DESTDIR}${mandir}/man3
+ 
++timestamp: ${MANOBJS}
++	touch timestamp
++
+ install:: installdirs
+ 	for m in ${MANPAGES}; do ${INSTALL_DATA} ${srcdir}/$$m ${DESTDIR}${mandir}/man3; done
+ 	rm -f ${man3}/lwres_addr_parse.3
