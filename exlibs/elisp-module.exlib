@@ -25,7 +25,7 @@ readonly ELISP_SITE_LISP=/usr/share/emacs/site-lisp
 readonly ELISP_GLOBAL_SITE_FILE=${ELISP_SITE_LISP}/site-exherbo.el
 readonly ELISP_SITE_DIR=${ELISP_SITE_LISP}/site-exherbo.d
 
-EMACS=/usr/bin/emacs
+EMACS=/usr/$(exhost --target)/bin/emacs
 ELISP_FLAGS=( --batch --no-site-file )
 ELISP_COMPILE_FLAGS=( --directory . )
 
