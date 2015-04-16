@@ -217,14 +217,10 @@ setup-py_compile_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
 
     # get the sysconfig.py and friends for the target
+    # NOTE(moben): Extremely likely that this needs more work to actually cross-compile anything.
     local target=$(exhost --target)
     export _PYTHON_HOST_PLATFORM=linux-${target%%-*}
     export PYTHONPATH=$(python_get_libdir)
-
-    edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" build_ext \
-        --include-dirs=$(python_get_incdir)                     \
-        --library-dirs=$(python_get_libdir)                     \
-        "${SETUP_PY_SRC_COMPILE_PARAMS[@]}"
 
     edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" build \
         "${SETUP_PY_SRC_COMPILE_PARAMS[@]}"
