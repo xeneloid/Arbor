@@ -216,14 +216,17 @@ setup-py_src_configure() {
 setup-py_compile_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
 
-    # get the sysconfig.py and friends for the target
-    # NOTE(moben): Extremely likely that this needs more work to actually cross-compile anything.
-    local target=$(exhost --target)
-    export _PYTHON_HOST_PLATFORM=linux-${target%%-*}
-    export PYTHONPATH=$(python_get_libdir)
+    # use a subshell to avoid leaking the PYTHONPATH
+    (
+        # get the sysconfig.py and friends for the target
+        # NOTE(moben): Extremely likely that this needs more work to actually cross-compile anything.
+        local target=$(exhost --target)
+        export _PYTHON_HOST_PLATFORM=linux-${target%%-*}
+        export PYTHONPATH=$(python_get_libdir)
 
-    edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" build \
-        "${SETUP_PY_SRC_COMPILE_PARAMS[@]}"
+        edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" build \
+            "${SETUP_PY_SRC_COMPILE_PARAMS[@]}"
+    )
 }
 
 compile_one_multibuild() {
@@ -237,21 +240,24 @@ setup-py_src_compile() {
 setup-py_install_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
 
-    # get the sysconfig.py and friends for the target
-    local target=$(exhost --target)
-    export _PYTHON_HOST_PLATFORM=linux-${target%%-*}
-    export PYTHONPATH=$(python_get_libdir)
+    # use a subshell to avoid leaking the PYTHONPATH
+    (
+        # get the sysconfig.py and friends for the target
+        local target=$(exhost --target)
+        export _PYTHON_HOST_PLATFORM=linux-${target%%-*}
+        export PYTHONPATH=$(python_get_libdir)
 
-    edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" install   \
-        --root="${IMAGE}"                                       \
-        --install-data=/usr                                     \
-        --prefix=/usr/$(exhost --target)                        \
-        --no-compile                                            \
-        "${SETUP_PY_SRC_INSTALL_PARAMS[@]}"
+        edo ${PYTHON} -B setup.py "${SETUP_PY_PARAMS[@]}" install   \
+            --root="${IMAGE}"                                       \
+            --install-data=/usr                                     \
+            --prefix=/usr/$(exhost --target)                        \
+            --no-compile                                            \
+            "${SETUP_PY_SRC_INSTALL_PARAMS[@]}"
+
+        python_bytecompile
+    )
 
     emagicdocs
-
-    python_bytecompile
 }
 
 install_one_multibuild() {
