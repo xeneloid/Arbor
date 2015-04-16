@@ -30,5 +30,5 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( libedit )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
-    CC_FOR_BUILD=$(exhost --tool-prefix)cc
+    CC_FOR_BUILD=$(exhost --build)-cc
 )
