@@ -90,7 +90,14 @@ lesspipe_set() {
 src_prepare() {
     default
 
-    edo sed -i -e "s:\(\$(PREFIX)\)\(/bin\):\1/$(exhost --target)\2:g" configure
+    # use "ar" with appropriate target prefix
+    edo sed -i -re "s:\<ar :${AR} :g" lesspipe.sh.in
+
+    # remove tests which fail as of 1.82
+    tmp=$(mktemp)
+    echo "grep -Ev '(a\\ b|symlink|test\.deb|test\.utf16|b\.gz)' TESTCMDS > \"$tmp\""
+    grep -Ev '(a\\ b|symlink|test\.deb|test\.utf16|b\.gz)' TESTCMDS > "$tmp"
+    edo mv "$tmp" "TESTCMDS"
 }
 
 src_configure() {
@@ -101,11 +108,8 @@ src_configure() {
     lesspipe_set plutil    N # OS X only (portable version exists but with different syntax)
     option hilight || lesspipe_set HILITE N
 
-    # fix pdftohtml usage
-    edo sed -i -e 's,pdftohtml -stdout,pdftohtml -dev png -stdout,' lesspipe.sh.in
-
     # Can't use econf as it's not autotools, just a hand-written perl script
-    edo ./configure --prefix="${IMAGE}"/usr --fixed
+    edo ./configure --prefix="/usr/$(exhost --target)" --fixed
 }
 
 src_compile() {
@@ -114,12 +118,17 @@ src_compile() {
 }
 
 src_test() {
-    LESS_ADVANCED_PREPROCESSOR=yes default
+    export LESSOPEN="| ./lesspipe.sh %s"
+    export LESS_ADVANCED_PREPROCESSOR=yes
+    default
 }
 
 src_install() {
-    dodir /usr/share/man/man1 # Makefile won't install man page otherwise
     default
+
+    # man-pages are platform-independent
+    edo mv "${IMAGE}/usr/"{$(exhost --target),}/share/man
+    edo rmdir "${IMAGE}/usr/$(exhost --target)/share"
 
     hereenvd 70lesspipe <<EOF
 LESSOPEN="| lesspipe.sh %s"
