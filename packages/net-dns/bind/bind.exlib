@@ -2,9 +2,9 @@
 # Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require systemd-service
+require systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-export_exlib_phases src_configure src_install pkg_postinst
+export_exlib_phases src_prepare src_configure src_install pkg_postinst
 
 MY_PV=${PV/_p/-P}
 MY_PNV=${PN}-${MY_PV}
@@ -64,6 +64,15 @@ WORK=${WORKBASE}/${MY_PNV}
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( KNOWN-DEFECTS )
 
+bind_src_prepare() {
+    edo sed -i "/AC_PATH_PROG(AR/d" configure.in
+    edo sed -i 's/"nm"/"'$(exhost --tool-prefix)'nm"/' util/mksymtbl.pl
+
+    expatch "${FILES}"/${PN}-fixMakefile.patch
+
+    eautoconf
+}
+
 bind_src_configure() {
     myoption() {
         if option ${2}; then
@@ -75,7 +84,7 @@ bind_src_configure() {
 
     # --enable-isc-spnego: Bundled kerberos parts
     econf \
-        --includedir=/usr/include \
+        --includedir=/usr/$(exhost --target)/include \
         --localstatedir=/var \
         --sysconfdir=/etc/${PN} \
         --enable-ipv6 \
@@ -141,7 +150,7 @@ EOF
     fi
 
     if option systemd ; then
-        insinto /usr/${LIBDIR}/tmpfiles.d
+        insinto /usr/$(exhost --target)/lib/tmpfiles.d
         hereins ${PN}.conf <<EOF
 d /run/named 0755 named named -
 EOF
@@ -161,9 +170,9 @@ EOF
 bind_pkg_postinst() {
     if [[ ! -f /etc/bind/rndc.key ]]; then
         if [[ -c /dev/urandom ]]; then
-            nonfatal edo /usr/sbin/rndc-confgen -r /dev/urandom -a -u named
+            nonfatal edo /usr/${host}/bin/rndc-confgen -r /dev/urandom -a -u named
         else
-            nonfatal edo /usr/sbin/rndc-confgen -a -u named
+            nonfatal edo /usr/${host}/bin/rndc-confgen -a -u named
         fi
     fi
 }
