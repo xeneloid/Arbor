@@ -92,24 +92,24 @@ mysql_pkg_pretend() {
 mysql_src_configure() {
     local cmakeargs=(
         -DBUILD_CONFIG:STRING=mysql_release
-        -DCMAKE_INSTALL_PREFIX:PATH=/usr/$(exhost --target)
+        -DCMAKE_INSTALL_PREFIX:PATH=/usr
         -DCOMPILATION_COMMENT:STRING="Exherbo"
         -DDEFAULT_CHARSET:STRING=utf8
         -DDEFAULT_COLLATION:STRING=utf8_general_ci
         -DFEATURE_SET:STRING=community
-        -DINSTALL_BINDIR:PATH=bin
+        -DINSTALL_BINDIR:PATH=/usr/$(exhost --target)/bin
         -DINSTALL_DOCDIR:PATH=/usr/share/doc/${PNVR}
         -DINSTALL_DOCREADMEDIR:PATH=/usr/share/doc/${PNVR}
-        -DINSTALL_INCLUDEDIR:PATH=include/mysql
+        -DINSTALL_INCLUDEDIR:PATH=/usr/$(exhost --target)/include/mysql
         -DINSTALL_INFODIR:PATH=/usr/share/mysql/info
-        -DINSTALL_LIBDIR:PATH=lib/mysql
+        -DINSTALL_LIBDIR:PATH=/usr/$(exhost --target)/lib/mysql
         -DINSTALL_MANDIR:PATH=/usr/share/man
-        -DINSTALL_MYSQLSHAREDIR:PATH=/usr/share/mysql
+        -DINSTALL_MYSQLSHAREDIR:PATH=share/mysql
         # Empty value to not install the mysql-test directory
         -DINSTALL_MYSQLTESTDIR:STRING=
-        -DINSTALL_PLUGINDIR:PATH=lib/mysql/plugin
-        -DINSTALL_SBINDIR:PATH=bin
-        -DINSTALL_SCRIPTDIR:PATH=bin
+        -DINSTALL_PLUGINDIR:PATH=/usr/$(exhost --target)/lib/mysql/plugin
+        -DINSTALL_SBINDIR:PATH=/usr/$(exhost --target)/bin
+        -DINSTALL_SCRIPTDIR:PATH=/usr/$(exhost --target)/bin
         -DINSTALL_SHAREDIR:PATH=/usr/share
         # Empty value to not install the sql-bench directory
         -DINSTALL_SQLBENCHDIR:STRING=
@@ -179,7 +179,7 @@ mysql_src_install() {
     ldpath="/usr/$(exhost --target)/lib/${PN}${ldpath:+:${ldpath}}"
 
     # Remove empty directories
-    edo rm -r "${IMAGE}"/usr/$(exhost --target)/data
+    edo rm -r "${IMAGE}"/usr/data
     edo rm -r "${IMAGE}"/usr/share/mysql/info
 
     keepdir /etc/mysql
