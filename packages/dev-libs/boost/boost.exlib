@@ -24,7 +24,7 @@ MYOPTIONS="debug doc"
 
 DEPENDENCIES="
     build+run:
-        dev-lang/python:=
+        dev-lang/python:=[<3]
         dev-libs/expat
         dev-libs/icu:=
 "
@@ -56,9 +56,17 @@ global_conf=(
 [[ -n ${LDFLAGS} ]] && global_conf+=( linkflags="${LDFLAGS}" )
 
 boost_src_configure() {
+    # TODO: right now, boost only uses python2. boost can support python 3
+    # as well, though, so we should be providing python_abis for the separate
+    # versions that it can use; for now, we use python2 specifically so the user
+    # can safely use python 3 as their python provider, though.
+    #
+    # do note that there's an issue in bootstrap.sh that arises when using python 3
+    # which can be easily fixed; s/print sys.prefix/print (sys.prefix)/
+
     local bootstrap_conf=(
         --libdir=/usr/$(exhost --target)/lib
-        --with-python=/usr/$(exhost --target)/bin/python
+        --with-python=/usr/$(exhost --target)/bin/python2
         --with-toolset=cross
     )
 
