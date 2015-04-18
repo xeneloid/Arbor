@@ -22,8 +22,9 @@ Most importantly, though, ${PN} is a dependency of k3b.
 
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS+="freecode:${PN}"
+
 UPSTREAM_CHANGELOG="${HOMEPAGE}/changelog.html"
-UPSTREAM_RELEASE_NOTES="http://sourceforge.net/forum/forum.php?forum_id=614663"
+UPSTREAM_RELEASE_NOTES="http://sourceforge.net/p/${PN}/news/2009/10/${PN}-123-released"
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/example.html [[ lang = en ]]"
 
 LICENCES="GPL-2"
@@ -38,29 +39,33 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --hates=datarootdir
     --hates=docdir
     --without-lame
     --without-linux-qnx-sched
     --without-mp3-support
     --without-ogg-support
-    --without-xdao
     --without-scglib
+    --without-xdao
 )
-
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
+
 DEFAULT_SRC_COMPILE_PARAMS=( COPTOPT="${CFLAGS}" )
 
 cdrdao_src_prepare() {
     default
 
     # Display better SCSI messages (advice from Bug 43003)
-    cd scsilib/include
-    sed -i -e 's:HAVE_SCANSTACK:NO_FRIGGING_SCANSTACK:g' xmconfig.h
-    sed -i -e 's:HAVE_SCANSTACK:NO_FRIGGING_SCANSTACK:g' mconfig.h
+    edo sed -e 's:HAVE_SCANSTACK:NO_FRIGGING_SCANSTACK:g' \
+            -i scsilib/include/{x,}mconfig.h
+
+    # Multiarch
+    edo sed -e 's:$(XCCCOM):${CC}:g' \
+            -i scsilib/RULES/rules.cnf
 }
 
 cdrdao_src_configure() {
     default
-    emake -C scsilib config
+    emake CC="${CC}" -C scsilib config
 }
 
