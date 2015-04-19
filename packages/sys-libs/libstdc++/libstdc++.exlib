@@ -33,8 +33,8 @@ DEPENDENCIES="
             media-gfx/graphviz
         )
     build+run:
-        sys-libs/libatomic
-        sys-libs/libgcc
+        sys-libs/libatomic:${SLOT}
+        sys-libs/libgcc:${SLOT}
 "
 
 # fails though it gets ignored. should be fixed and then marked as expensive.
