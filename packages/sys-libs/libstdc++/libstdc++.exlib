@@ -26,6 +26,8 @@ DEPENDENCIES="
     build:
         sys-apps/texinfo[>4.4]
         sys-devel/gettext
+        sys-libs/libatomic
+        sys-libs/libgcc
         doc? (
             app-doc/doxygen[>=1.5.1]
             dev-libs/libxml2
