@@ -4,7 +4,7 @@
 # Based in part upon 'postfix-2.5.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-export_exlib_phases src_configure src_install
+export_exlib_phases src_prepare src_configure src_install
 
 require pam alternatives systemd-service
 
@@ -50,15 +50,28 @@ DEPENDENCIES="
 
 BUGS_TO="mixi@exherbo.org"
 
+postfix_src_prepare() {
+    # fix makedefs to allow default tool names to be overridden via env
+    edo sed \
+        -e 's/AR=ar/AR=${AR:-ar}/' \
+        -e 's/RANLIB=ranlib/RANLIB=${RANLIB:-ranlib}/' \
+        -i makedefs
+}
+
 postfix_src_configure() {
     local \
-        auxlibs=( -pthread -lpam ) \
+        auxlibs=( -pthread -ldb -lnsl -lpam -lresolv ) \
         # -DUSE_SASL_AUTH: this enables dovecot SASL and adds no additional build dependencies
-        ccargs=( '-DDEF_DAEMON_DIR=\"/usr/${LIBDIR}/postfix\"'
-                 '-DDEF_MANPAGE_DIR=\"/usr/share/man\"'
-                 '-DDEF_README_DIR=\"/usr/share/doc/${PNVR}/readme\"'
-                 '-DDEF_HTML_DIR=\"/usr/share/doc/${PNVR}/html\"'
-                 '-DUSE_SASL_AUTH' )
+        ccargs=(
+            -DDEF_COMMAND_DIR=\\\"/usr/$(exhost --target)/bin\\\"
+            -DDEF_DAEMON_DIR=\\\"/usr/$(exhost --target)/lib/postfix\\\"
+            -DDEF_SENDMAIL_PATH=\\\"/usr/$(exhost --target)/bin/sendmail\\\"
+            -DDEF_MANPAGE_DIR=\\\"/usr/share/man\\\"
+            -DDEF_README_DIR=\\\"/usr/share/doc/${PNVR}/readme\\\"
+            -DDEF_HTML_DIR=\\\"/usr/share/doc/${PNVR}/html\\\"
+            -DUSE_SASL_AUTH
+            -DHAS_DB
+        )
 
     if option ssl; then
         ccargs+=( -DUSE_TLS )
@@ -66,7 +79,7 @@ postfix_src_configure() {
     fi
 
     if option cyrus; then
-        ccargs+=( -DUSE_CYRUS_SASL -I/usr/include/sasl )
+        ccargs+=( -DUSE_CYRUS_SASL -I/usr/$(exhost --target)/include/sasl )
         auxlibs+=( -lsasl2 )
     fi
 
@@ -76,8 +89,8 @@ postfix_src_configure() {
     fi
 
     if option mysql; then
-        ccargs+=( -DHAS_MYSQL -I/usr/include/mysql )
-        auxlibs+=( -L/usr/${LIBDIR}/mysql/ -lmysqlclient -lz -lm )
+        ccargs+=( -DHAS_MYSQL -I/usr/$(exhost --target)/include/mysql )
+        auxlibs+=( -L/usr/$(exhost --target)/lib/mysql/ -lmysqlclient -lz -lm )
     fi
 
     if option postgresql; then
@@ -85,6 +98,7 @@ postfix_src_configure() {
         auxlibs+=( -lpq )
     fi
 
+    export AR="${AR}" RANLIB="${RANLIB}"
     emake CC="${CC}" OPT="${CFLAGS}" \
         CCARGS="${ccargs[*]}" AUXLIBS="${auxlibs[*]}" makefiles
 }
@@ -96,14 +110,14 @@ postfix_src_install() {
         config_directory="/usr/share/doc/${PNVR}/defaults" \
         readme_directory="/usr/share/doc/${PNVR}/readme"
 
-    edo mv "${IMAGE}"/usr/sbin/{,${PN}.}sendmail
+    edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{,${PN}.}sendmail
     edo rm "${IMAGE}"/usr/bin/{mailq,newaliases}
     edo rmdir "${IMAGE}"/usr/bin
 
-    alternatives_for mta ${PN} 9 /usr/sbin/sendmail ${PN}.sendmail
-    alternatives_for mta ${PN} 9 /usr/${LIBDIR}/sendmail ../sbin/sendmail
-    alternatives_for mta ${PN} 9 /usr/bin/mailq ../sbin/sendmail
-    alternatives_for mta ${PN} 9 /usr/bin/newaliases ../sbin/sendmail
+    alternatives_for mta ${PN} 9 /usr/$(exhost --target)/bin/sendmail ${PN}.sendmail
+    alternatives_for mta ${PN} 9 /usr/$(exhost --target)/lib/sendmail ../bin/sendmail
+    alternatives_for mta ${PN} 9 /usr/$(exhost --target)/bin/mailq sendmail
+    alternatives_for mta ${PN} 9 /usr/$(exhost --target)/bin/newaliases sendmail
 
     local manpage
     for manpage in man1/{mailq.1,newaliases.1} man5/aliases.5; do
@@ -118,8 +132,8 @@ postfix_src_install() {
     rmdir "${IMAGE}"/var/spool/postfix/*
     edo chown root "${IMAGE}"/var/spool/postfix
 
-    edo chown root:postdrop "${IMAGE}"/usr/sbin/post{drop,queue}
-    edo chmod 2711 "${IMAGE}"/usr/sbin/post{drop,queue}
+    edo chown root:postdrop "${IMAGE}"/usr/$(exhost --target)/bin/post{drop,queue}
+    edo chmod 2711 "${IMAGE}"/usr/$(exhost --target)/bin/post{drop,queue}
 
     pamd_mimic_system smtp auth auth account
 

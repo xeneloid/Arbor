@@ -4,9 +4,9 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/postfix start
-ExecStop=/usr/sbin/postfix stop
-ExecReload=/usr/sbin/postfix reload
+ExecStart=/usr/host/bin/postfix start
+ExecStop=/usr/host/bin/postfix stop
+ExecReload=/usr/host/bin/postfix reload
 
 [Install]
 WantedBy=multi-user.target
