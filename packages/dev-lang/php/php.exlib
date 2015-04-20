@@ -368,7 +368,7 @@ php_src_install() {
         edo rm -rf "${IMAGE}"/.{channels,registry}
         edo rm "${IMAGE}"/.{depdb,depdblock,filemap,lock}
     fi
-    edo rmdir "${IMAGE}"/usr/include/php/include
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/include/php/include
 
     if option apache; then
         edo rm "${IMAGE}"/etc/apache2/*
@@ -409,7 +409,7 @@ php_src_install() {
 
     # Set extension_dir path. Only replace the first occurence.
     linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}')
-    extension_dir=$(edo "${IMAGE}"/usr/bin/php-config --extension-dir | sed -e 's/\//\\\//g')
+    extension_dir=$(edo "${IMAGE}"/usr/$(exhost --target)/bin/php-config --extension-dir | sed -e 's/\//\\\//g')
     edo sed -i -e "${linenum},${linenum} s/; extension_dir = \".\/\"/extension_dir = \"${extension_dir}\"/" "${IMAGE}"/etc/php/php.ini
 }
 
