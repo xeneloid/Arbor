@@ -11,8 +11,8 @@ DEPENDENCIES=""
 
 src_prepare() {
     sed -i \
-        -e 's,^PREFIX = /usr/local,PREFIX = /usr,' \
-        -e '/^MAN_BASE_DIR = /s,/man,/share/man,' \
+        -e "s,^PREFIX = /usr/local,PREFIX = /usr/$(exhost --target)," \
+        -e '/^MAN_BASE_DIR = /s,=.*$,= /usr/share/man,' \
         -e "/^CC = /s,gcc,${CC}," \
         -e 's,\$(BIN_DIR),$(DESTDIR)$(BIN_DIR),g' \
         -e 's,\$(MAN_DIR),$(DESTDIR)$(MAN_DIR),g' \
