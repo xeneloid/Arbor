@@ -12,23 +12,18 @@ else
     DOWNLOADS=http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz
 fi
 
-require cmake [ api=2 ] easy-multibuild
+require cmake [ api=2 ]
 
-export_exlib_phases src_prepare src_compile src_install
+export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
 SUMMARY="C language family frontend for LLVM"
 HOMEPAGE="http://clang.llvm.org/"
 
 LICENCES="UoI-NCSA"
 SLOT="0"
-MYOPTIONS="multibuild_c: 32 64"
+MYOPTIONS=""
 
-if ever at_least scm; then
-    LLVM_PVR=${PV}
-else
-    # we require at least 3.5.1-r2 because libgtest*.a wasn't properly installed for the other ones
-    LLVM_PVR=${PV}-r2
-fi
+LLVM_PVR=${PV}
 
 DEPENDENCIES="
     build:
@@ -36,17 +31,22 @@ DEPENDENCIES="
         dev-python/Sphinx
         sys-devel/flex
     build+run:
-        dev-lang/llvm[multibuild_c:*(-)?][~${LLVM_PVR}]
+        dev-lang/llvm[~${LLVM_PVR}]
     run:
-       sys-devel/gcc:*
+       sys-libs/libgcc:*
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}/clang-3.5.0-lit.cfg-use-PATH.patch"
+    "${FILES}"/clang-3.5.0-lit.cfg-use-PATH.patch
+    "${FILES}"/0001-exherbo-multi-arch-paths.patch
+    "${FILES}"/0002-Install-cmake-files-to-lib-cmake-clang.patch
 )
 
 clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
+
+    # ld tests will fail because of Exherbo's non-standard path for ld
+    edo rm test/Driver/{dyld-prefix.c,linux-ld.c}
 
     # Fix the use of dot
     edo sed -e 's/@DOT@//g' -i docs/doxygen.cfg.in
@@ -55,15 +55,14 @@ clang_src_prepare() {
     edo popd
 }
 
-configure_one_multibuild() {
+clang_src_configure() {
     # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
     # method is hidden; move the definition out of line, and export the interface
     local args=(
         -DCLANG_INCLUDE_TESTS:BOOL=$(expecting_tests TRUE FALSE)
-        -DLLVM_CONFIG:STRING=/usr/bin/${CHOST}-llvm-config
-        -DLLVM_LIBDIR_SUFFIX:STRING=${LIBDIR#lib}
+        -DLLVM_CONFIG:STRING=/usr/$(exhost --target)/bin/llvm-config
         -DLLVM_LIT_ARGS:STRING="-sv"
-        -DLLVM_MAIN_SRC_DIR:STRING=/usr
+        -DLLVM_MAIN_SRC_DIR:STRING=/usr/$(exhost --target)
         -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO
     )
 
@@ -71,24 +70,24 @@ configure_one_multibuild() {
 }
 
 clang_src_compile() {
-    easy-multibuild_src_compile
+    default
 
     edo pushd "${CMAKE_SOURCE}"/docs
     emake -f Makefile.sphinx man html
     edo popd
 }
 
-test_one_multibuild() {
-    PATH="/usr/libexec/llvm:${PATH}" \
+clang_src_test() {
+    PATH="/usr/$(exhost --target)/libexec/llvm:${PATH}" \
         CLANG="${PWD}/bin/clang" \
         emake clang-test
 }
 
 clang_src_install() {
-    easy-multibuild_src_install
+    default
 
     # the sole file here, config.h, is explicitly not installed
-    edo rmdir "${IMAGE}"/usr/include/clang/Config
+    edo rm -R "${IMAGE}"/usr/$(exhost --target)/include/clang/Config
 
     edo pushd "${CMAKE_SOURCE}"
     edo pushd docs/_build
@@ -100,7 +99,7 @@ clang_src_install() {
     insinto /usr/share/clang-analyzer
     for f in scan-{build,view} ; do
         doins -r ${f}
-        dosym /usr/share/clang-analyzer/${f}/${f} /usr/bin/${f}
+        dosym /usr/share/clang-analyzer/${f}/${f} /usr/$(exhost --target)/bin/${f}
     done
     edo popd
     edo popd
@@ -108,5 +107,8 @@ clang_src_install() {
     edo pushd "${IMAGE}"/usr/share/clang-analyzer
     edo chmod a+x scan-build/{ccc-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
     edo popd
+
+    edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 }
 
