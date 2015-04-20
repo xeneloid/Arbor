@@ -1,0 +1,28 @@
+Upstream: http://lists.cs.uiuc.edu/pipermail/llvm-commits/Week-of-Mon-20150427/273412.html
+Reason: Multiarch fix (search also for prefixed ld.gold)
+
+From 72dc4bdeaba0ffa3b857fa919182bb08cc524313 Mon Sep 17 00:00:00 2001
+From: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date: Fri, 24 Apr 2015 20:38:29 +0200
+Subject: [PATCH] [CMake] Also search for prefixed versions of ld.gold
+
+---
+ cmake/config-ix.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
+index c57f900..37ca95a 100755
+--- a/cmake/config-ix.cmake
++++ b/cmake/config-ix.cmake
+@@ -526,7 +526,7 @@ else()
+   endif()
+ endif()
+ 
+-find_program(GOLD_EXECUTABLE NAMES ld.gold ld DOC "The gold linker")
++find_program(GOLD_EXECUTABLE NAMES ld.gold ld ${LLVM_DEFAULT_TARGET_TRIPLE}-ld.gold ${LLVM_DEFAULT_TARGET_TRIPLE}-ld DOC "The gold linker")
+ if(GOLD_EXECUTABLE)
+ 	set(LLVM_BINUTILS_INCDIR "" CACHE PATH
+ 		"PATH to binutils/include containing plugin-api.h for gold plugin.")
+-- 
+2.3.3
+

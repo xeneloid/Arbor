@@ -1,0 +1,386 @@
+Upstream: Yes
+Reason: Mulitarch fix (search for ld.gold)
+
+From 642fbd51c020d08b5d3a78796af020c1bf6ef003 Mon Sep 17 00:00:00 2001
+From: Chandler Carruth <chandlerc@gmail.com>
+Date: Sat, 14 Feb 2015 09:43:57 +0000
+Subject: [PATCH 2/3] [gold] Consolidate the gold plugin options and actually
+ search for a gold binary explicitly. Substitute this binary into the tests
+ rather than just directly executing the 'ld' binary.
+
+This should allow folks to inject a cross compiling gold binary, or in
+my case to use a gold binary built and installed somewhere other than
+/usr/bin/ld. It should also allow the tests to find 'ld.gold' so that
+things work even if gold isn't the default on the system.
+
+I've only stubbed out support in the makefile to preserve the existing
+behavior with none of the fancy logic. If someone else wants to add
+logic here, they're welcome to do so.
+
+git-svn-id: https://llvm.org/svn/llvm-project/llvm/trunk@229251 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ cmake/config-ix.cmake                | 6 ++++++
+ test/Makefile                        | 1 +
+ test/lit.cfg                         | 5 +++--
+ test/lit.site.cfg.in                 | 1 +
+ test/tools/gold/alias.ll             | 2 +-
+ test/tools/gold/bad-alias.ll         | 2 +-
+ test/tools/gold/bcsection.ll         | 2 +-
+ test/tools/gold/coff.ll              | 2 +-
+ test/tools/gold/comdat.ll            | 2 +-
+ test/tools/gold/common.ll            | 6 +++---
+ test/tools/gold/emit-llvm.ll         | 6 +++---
+ test/tools/gold/invalid.ll           | 2 +-
+ test/tools/gold/linker-script.ll     | 2 +-
+ test/tools/gold/linkonce-weak.ll     | 4 ++--
+ test/tools/gold/mtriple.ll           | 2 +-
+ test/tools/gold/no-map-whole-file.ll | 2 +-
+ test/tools/gold/option.ll            | 2 +-
+ test/tools/gold/pr19901.ll           | 2 +-
+ test/tools/gold/slp-vectorize.ll     | 2 +-
+ test/tools/gold/stats.ll             | 2 +-
+ test/tools/gold/vectorize.ll         | 2 +-
+ test/tools/gold/weak.ll              | 2 +-
+ tools/gold/CMakeLists.txt            | 3 ---
+ 23 files changed, 34 insertions(+), 28 deletions(-)
+
+diff --git a/cmake/config-ix.cmake b/cmake/config-ix.cmake
+index f806d9c..d520616 100755
+--- a/cmake/config-ix.cmake
++++ b/cmake/config-ix.cmake
+@@ -517,6 +517,12 @@ else()
+   endif()
+ endif()
+ 
++find_program(GOLD_EXECUTABLE NAMES ld.gold ld DOC "The gold linker")
++if(GOLD_EXECUTABLE)
++	set(LLVM_BINUTILS_INCDIR "" CACHE PATH
++		"PATH to binutils/include containing plugin-api.h for gold plugin.")
++endif()
++
+ include(FindOCaml)
+ include(AddOCaml)
+ if(WIN32)
+diff --git a/test/Makefile b/test/Makefile
+index 7f253b0..4a3794b 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -128,6 +128,7 @@ lit.site.cfg: FORCE
+ 	@$(ECHOPATH) s=@SHLIBEXT@=$(SHLIBEXT)=g >> lit.tmp
+ 	@$(ECHOPATH) s=@EXEEXT@=$(EXEEXT)=g >> lit.tmp
+ 	@$(ECHOPATH) s=@PYTHON_EXECUTABLE@=$(PYTHON)=g >> lit.tmp
++	@$(ECHOPATH) s=@GOLD_EXECUTABLE@=ld=g >> lit.tmp
+ 	@$(ECHOPATH) s=@OCAMLFIND@=$(OCAMLFIND)=g >> lit.tmp
+ 	@$(ECHOPATH) s!@OCAMLFLAGS@!$(addprefix -cclib ,$(LDFLAGS))!g >> lit.tmp
+ 	@$(ECHOPATH) s=@HAVE_OCAMLOPT@=$(HAVE_OCAMLOPT)=g >> lit.tmp
+diff --git a/test/lit.cfg b/test/lit.cfg
+index 3023b93..b13dbbb 100644
+--- a/test/lit.cfg
++++ b/test/lit.cfg
+@@ -187,6 +187,7 @@ if re.search(r'win32', config.target_triple):
+ config.substitutions.append( ('%llc_dwarf', llc_dwarf) )
+ 
+ # Add site-specific substitutions.
++config.substitutions.append( ('%gold', config.gold_executable) )
+ config.substitutions.append( ('%go', config.go_executable) )
+ config.substitutions.append( ('%llvmshlibdir', config.llvm_shlib_dir) )
+ config.substitutions.append( ('%shlibext', config.llvm_shlib_ext) )
+@@ -329,7 +330,7 @@ def have_ld_plugin_support():
+     if not os.path.exists(os.path.join(config.llvm_shlib_dir, 'LLVMgold.so')):
+         return False
+ 
+-    ld_cmd = subprocess.Popen(['ld', '--help'], stdout = subprocess.PIPE)
++    ld_cmd = subprocess.Popen([config.gold_executable, '--help'], stdout = subprocess.PIPE)
+     ld_out = ld_cmd.stdout.read().decode()
+     ld_cmd.wait()
+ 
+@@ -348,7 +349,7 @@ def have_ld_plugin_support():
+     if 'elf32ppc' not in emulations or 'elf_x86_64' not in emulations:
+         return False
+ 
+-    ld_version = subprocess.Popen(['ld', '--version'], stdout = subprocess.PIPE)
++    ld_version = subprocess.Popen([config.gold_executable, '--version'], stdout = subprocess.PIPE)
+     if not 'GNU gold' in ld_version.stdout.read().decode():
+         return False
+     ld_version.wait()
+diff --git a/test/lit.site.cfg.in b/test/lit.site.cfg.in
+index 64ad0c3..9336c76 100644
+--- a/test/lit.site.cfg.in
++++ b/test/lit.site.cfg.in
+@@ -13,6 +13,7 @@ config.llvm_shlib_ext = "@SHLIBEXT@"
+ config.llvm_exe_ext = "@EXEEXT@"
+ config.lit_tools_dir = "@LLVM_LIT_TOOLS_DIR@"
+ config.python_executable = "@PYTHON_EXECUTABLE@"
++config.gold_executable = "@GOLD_EXECUTABLE@"
+ config.ocamlfind_executable = "@OCAMLFIND@"
+ config.have_ocamlopt = "@HAVE_OCAMLOPT@"
+ config.have_ocaml_ounit = "@HAVE_OCAML_OUNIT@"
+diff --git a/test/tools/gold/alias.ll b/test/tools/gold/alias.ll
+index dbf3af5..b4edb05 100644
+--- a/test/tools/gold/alias.ll
++++ b/test/tools/gold/alias.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ ; RUN: llvm-as %p/Inputs/alias-1.ll -o %t2.o
+-; RUN: ld -shared -o %t3.o -plugin %llvmshlibdir/LLVMgold.so %t2.o %t.o \
++; RUN: %gold -shared -o %t3.o -plugin %llvmshlibdir/LLVMgold.so %t2.o %t.o \
+ ; RUN:  -plugin-opt=emit-llvm
+ ; RUN: llvm-dis < %t3.o -o - | FileCheck %s
+ 
+diff --git a/test/tools/gold/bad-alias.ll b/test/tools/gold/bad-alias.ll
+index e0fc788..a98bf71 100644
+--- a/test/tools/gold/bad-alias.ll
++++ b/test/tools/gold/bad-alias.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ 
+-; RUN: not ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: not %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t.o -o %t2.o 2>&1 | FileCheck %s
+ 
+diff --git a/test/tools/gold/bcsection.ll b/test/tools/gold/bcsection.ll
+index 8565d9d..37d2994 100644
+--- a/test/tools/gold/bcsection.ll
++++ b/test/tools/gold/bcsection.ll
+@@ -2,7 +2,7 @@
+ 
+ ; RUN: llvm-mc -I=%T -filetype=obj -o %T/bcsection.bco %p/Inputs/bcsection.s
+ ; RUN: llvm-nm -no-llvm-bc %T/bcsection.bco | count 0
+-; RUN: ld -r -o %T/bcsection.o -plugin %llvmshlibdir/LLVMgold.so %T/bcsection.bco
++; RUN: %gold -r -o %T/bcsection.o -plugin %llvmshlibdir/LLVMgold.so %T/bcsection.bco
+ ; RUN: llvm-nm -no-llvm-bc %T/bcsection.o | FileCheck %s
+ 
+ ; CHECK: main
+diff --git a/test/tools/gold/coff.ll b/test/tools/gold/coff.ll
+index b66f028..5d8a1c9 100644
+--- a/test/tools/gold/coff.ll
++++ b/test/tools/gold/coff.ll
+@@ -1,5 +1,5 @@
+ ; RUN: llvm-as %s -o %t.o
+-; RUN: ld      -plugin %llvmshlibdir/LLVMgold.so -plugin-opt=emit-llvm \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so -plugin-opt=emit-llvm \
+ ; RUN:    -shared %t.o -o %t2.o
+ ; RUN: llvm-dis %t2.o -o - | FileCheck %s
+ 
+diff --git a/test/tools/gold/comdat.ll b/test/tools/gold/comdat.ll
+index 2edd782..370bf56 100644
+--- a/test/tools/gold/comdat.ll
++++ b/test/tools/gold/comdat.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ ; RUN: llvm-as %p/Inputs/comdat.ll -o %t2.o
+-; RUN: ld -shared -o %t3.o -plugin %llvmshlibdir/LLVMgold.so %t.o %t2.o \
++; RUN: %gold -shared -o %t3.o -plugin %llvmshlibdir/LLVMgold.so %t.o %t2.o \
+ ; RUN:  -plugin-opt=emit-llvm
+ ; RUN: llvm-dis %t3.o -o - | FileCheck %s
+ 
+diff --git a/test/tools/gold/common.ll b/test/tools/gold/common.ll
+index f309231..ef18e68 100644
+--- a/test/tools/gold/common.ll
++++ b/test/tools/gold/common.ll
+@@ -1,7 +1,7 @@
+ ; RUN: llvm-as %s -o %t1.o
+ ; RUN: llvm-as %p/Inputs/common.ll -o %t2.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t1.o %t2.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck %s
+@@ -11,7 +11,7 @@
+ ; Shared library case, we merge @a as common and keep it for the symbol table.
+ ; CHECK: @a = common global i16 0, align 8
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    %t1.o %t2.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck --check-prefix=EXEC %s
+@@ -20,7 +20,7 @@
+ ; EXEC: @a = internal global i16 0, align 8
+ 
+ ; RUN: llc %p/Inputs/common.ll -o %t2.o -filetype=obj
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    %t1.o %t2.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck --check-prefix=MIXED %s
+diff --git a/test/tools/gold/emit-llvm.ll b/test/tools/gold/emit-llvm.ll
+index 2c43147..f851fbf 100644
+--- a/test/tools/gold/emit-llvm.ll
++++ b/test/tools/gold/emit-llvm.ll
+@@ -1,20 +1,20 @@
+ ; RUN: llvm-as %s -o %t.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    --plugin-opt=generate-api-file \
+ ; RUN:    -shared %t.o -o %t2.o
+ ; RUN: llvm-dis %t2.o -o - | FileCheck %s
+ ; RUN: FileCheck --check-prefix=API %s < %T/../apifile.txt
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:     -m elf_x86_64 --plugin-opt=save-temps \
+ ; RUN:    -shared %t.o -o %t3.o
+ ; RUN: llvm-dis %t3.o.bc -o - | FileCheck %s
+ ; RUN: llvm-dis %t3.o.opt.bc -o - | FileCheck --check-prefix=OPT %s
+ 
+ ; RUN: rm -f %t4.o
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:     -m elf_x86_64 --plugin-opt=disable-output \
+ ; RUN:    -shared %t.o -o %t4.o
+ ; RUN: not test -a %t4.o
+diff --git a/test/tools/gold/invalid.ll b/test/tools/gold/invalid.ll
+index 8db7644..858cd47 100644
+--- a/test/tools/gold/invalid.ll
++++ b/test/tools/gold/invalid.ll
+@@ -1,4 +1,4 @@
+-; RUN: not ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: not %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    %p/Inputs/invalid.bc -o %t2 2>&1 | FileCheck %s
+ 
+ ; test that only one error gets printed
+diff --git a/test/tools/gold/linker-script.ll b/test/tools/gold/linker-script.ll
+index 35a7694..7c88b0f 100644
+--- a/test/tools/gold/linker-script.ll
++++ b/test/tools/gold/linker-script.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t.o -o %t2.o \
+ ; RUN:    -version-script=%p/Inputs/linker-script.export
+diff --git a/test/tools/gold/linkonce-weak.ll b/test/tools/gold/linkonce-weak.ll
+index 765275b..a0cccea 100644
+--- a/test/tools/gold/linkonce-weak.ll
++++ b/test/tools/gold/linkonce-weak.ll
+@@ -1,12 +1,12 @@
+ ; RUN: llvm-as %s -o %t.o
+ ; RUN: llvm-as %p/Inputs/linkonce-weak.ll -o %t2.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t.o %t2.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck %s
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t2.o %t.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck %s
+diff --git a/test/tools/gold/mtriple.ll b/test/tools/gold/mtriple.ll
+index 6395af6..94211ed 100644
+--- a/test/tools/gold/mtriple.ll
++++ b/test/tools/gold/mtriple.ll
+@@ -1,5 +1,5 @@
+ ; RUN: llvm-as %s -o %t.o
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so -m elf32ppc \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so -m elf32ppc \
+ ; RUN:    -plugin-opt=mtriple=powerpc-linux-gnu \
+ ; RUN:    -plugin-opt=obj-path=%t3.o \
+ ; RUN:    -shared %t.o -o %t2
+diff --git a/test/tools/gold/no-map-whole-file.ll b/test/tools/gold/no-map-whole-file.ll
+index 21a0c46..4c261d7 100644
+--- a/test/tools/gold/no-map-whole-file.ll
++++ b/test/tools/gold/no-map-whole-file.ll
+@@ -1,5 +1,5 @@
+ ; RUN: llvm-as -o %t.bc %s
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so -plugin-opt=emit-llvm \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so -plugin-opt=emit-llvm \
+ ; RUN:    --no-map-whole-files -r -o %t2.bc %t.bc
+ ; RUN: llvm-dis < %t2.bc -o - | FileCheck %s
+ 
+diff --git a/test/tools/gold/option.ll b/test/tools/gold/option.ll
+index 8154e43..59e3f1e 100644
+--- a/test/tools/gold/option.ll
++++ b/test/tools/gold/option.ll
+@@ -1,5 +1,5 @@
+ ; RUN: llvm-as %s -o %t.o
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so -m elf_x86_64 \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so -m elf_x86_64 \
+ ; RUN:    --plugin-opt=-jump-table-type=arity \
+ ; RUN:    --plugin-opt=-mattr=+aes \
+ ; RUN:    --plugin-opt=mcpu=core-avx2 \
+diff --git a/test/tools/gold/pr19901.ll b/test/tools/gold/pr19901.ll
+index 304246b..72c54ab 100644
+--- a/test/tools/gold/pr19901.ll
++++ b/test/tools/gold/pr19901.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llc %s -o %t.o -filetype=obj -relocation-model=pic
+ ; RUN: llvm-as %p/Inputs/pr19901-1.ll -o %t2.o
+-; RUN: ld -shared -o %t.so -plugin %llvmshlibdir/LLVMgold.so %t2.o %t.o
++; RUN: %gold -shared -o %t.so -plugin %llvmshlibdir/LLVMgold.so %t2.o %t.o
+ ; RUN: llvm-readobj -t %t.so | FileCheck %s
+ 
+ ; CHECK:       Symbol {
+diff --git a/test/tools/gold/slp-vectorize.ll b/test/tools/gold/slp-vectorize.ll
+index d378902..d39aa76 100644
+--- a/test/tools/gold/slp-vectorize.ll
++++ b/test/tools/gold/slp-vectorize.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=save-temps \
+ ; RUN:    -shared %t.o -o %t2.o
+ ; RUN: llvm-dis %t2.o.opt.bc -o - | FileCheck %s
+diff --git a/test/tools/gold/stats.ll b/test/tools/gold/stats.ll
+index 7c353e6..b3c8297 100644
+--- a/test/tools/gold/stats.ll
++++ b/test/tools/gold/stats.ll
+@@ -1,7 +1,7 @@
+ ; REQUIRES: asserts
+ 
+ ; RUN: llvm-as %s -o %t.o
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so  -shared \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so  -shared \
+ ; RUN:    -plugin-opt=-stats %t.o -o %t2 2>&1 | FileCheck %s
+ 
+ ; CHECK: Statistics Collected
+diff --git a/test/tools/gold/vectorize.ll b/test/tools/gold/vectorize.ll
+index 3d305db..c1626d7 100644
+--- a/test/tools/gold/vectorize.ll
++++ b/test/tools/gold/vectorize.ll
+@@ -1,6 +1,6 @@
+ ; RUN: llvm-as %s -o %t.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=save-temps \
+ ; RUN:    -shared %t.o -o %t2.o
+ ; RUN: llvm-dis %t2.o.opt.bc -o - | FileCheck %s
+diff --git a/test/tools/gold/weak.ll b/test/tools/gold/weak.ll
+index e05e905..6d8d7a8 100644
+--- a/test/tools/gold/weak.ll
++++ b/test/tools/gold/weak.ll
+@@ -1,7 +1,7 @@
+ ; RUN: llvm-as %s -o %t.o
+ ; RUN: llvm-as %p/Inputs/weak.ll -o %t2.o
+ 
+-; RUN: ld -plugin %llvmshlibdir/LLVMgold.so \
++; RUN: %gold -plugin %llvmshlibdir/LLVMgold.so \
+ ; RUN:    --plugin-opt=emit-llvm \
+ ; RUN:    -shared %t.o %t2.o -o %t3.o
+ ; RUN: llvm-dis %t3.o -o - | FileCheck %s
+diff --git a/tools/gold/CMakeLists.txt b/tools/gold/CMakeLists.txt
+index a70905c..1a6169d 100644
+--- a/tools/gold/CMakeLists.txt
++++ b/tools/gold/CMakeLists.txt
+@@ -1,6 +1,3 @@
+-set(LLVM_BINUTILS_INCDIR "" CACHE PATH
+-  "PATH to binutils/include containing plugin-api.h for gold plugin.")
+-
+ set(LLVM_EXPORTED_SYMBOL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/gold.exports)
+ 
+ if( LLVM_ENABLE_PIC AND LLVM_BINUTILS_INCDIR )
+-- 
+2.3.3
+
