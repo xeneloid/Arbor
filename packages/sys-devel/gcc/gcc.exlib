@@ -190,14 +190,15 @@ gcc_src_install() {
                 edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
                 nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
-            for tool in gfortran ; do
-                nonfatal edo mv "${IMAGE}"/usr/share/info/${tool}{.info,-${SLOT}.info}
-            done
             for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
                 edo rm "${IMAGE}/usr/${CHOST}/bin/${tool}"
                 nonfatal edo rm "${IMAGE}/usr/share/man/man1/${tool}.1"
             done
         fi
+
+        for tool in gfortran ; do
+            nonfatal edo mv "${IMAGE}"/usr/share/info/${tool}{.info,-${SLOT}.info}
+        done
 
         edo pushd "${IMAGE}"
         for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
