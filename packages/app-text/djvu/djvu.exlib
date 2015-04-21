@@ -9,8 +9,8 @@ require freedesktop-desktop freedesktop-mime sourceforge [ project=${PN} suffix=
 SUMMARY="DjVu encoders and utilities"
 
 LICENCES="GPL-2"
-MYOPTIONS=""
 SLOT="0"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build:
@@ -30,4 +30,14 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-tiff
     --enable-threads
 )
+
+pkg_postinst() {
+    freedesktop-desktop_pkg_postinst
+    freedesktop-mime_pkg_postinst
+}
+
+pkg_postrm() {
+    freedesktop-desktop_pkg_postrm
+    freedesktop-mime_pkg_postrm
+}
 
