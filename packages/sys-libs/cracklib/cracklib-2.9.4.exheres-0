@@ -15,7 +15,8 @@ DEPENDENCIES="
         sys-devel/gettext[>=0.17]
     build+run:
         sys-libs/zlib
-        python? ( dev-lang/python:= )"
+        python? ( dev-lang/python:= )
+"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
