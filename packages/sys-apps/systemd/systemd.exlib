@@ -207,6 +207,9 @@ systemd_src_prepare() {
         edo sed -i -e "/man page index/ a AC_DEFUN([AM_PATH_LIBGCRYPT],/bin/false)" configure.ac
     fi
 
+    # Put pkgconfig files in the correct location
+    edo sed -i -e '/pkgconfigdatadir/s:$(datadir):$(libdir):' Makefile.am
+
     # Architecture independent factory files shouldn't go into $(prefix)/
     edo sed -i -e '/factory_etcdir/s:$(prefix):/usr:' Makefile.am
     edo sed -i -e '/factory_pamdir/s:$(prefix):/usr:' Makefile.am
@@ -396,8 +399,10 @@ systemd_src_install() {
 
     # Install pc-file to arch dependent location, since udevdir is /usr/${host}/lib/udev
     # https://bugs.freedesktop.org/show_bug.cgi?id=89769
-    edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
-    edo rmdir "${IMAGE}"/usr/share/pkgconfig
+    if ! ever at_least scm; then
+        edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
+        edo rmdir "${IMAGE}"/usr/share/pkgconfig
+    fi
 
     # Don't install funny RPM macros.
     if [[ -d "${IMAGE}"/etc/rpm ]]; then
