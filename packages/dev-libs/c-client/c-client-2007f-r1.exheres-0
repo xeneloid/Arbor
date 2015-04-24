@@ -49,28 +49,26 @@ src_prepare() {
 
 src_compile() {
     # no parallel builds supported!
-    emake -j1 lnp SSLTYPE=unix EXTRACFLAGS="${CFLAGS}"
+    emake -j1 lnp SSLTYPE=unix EXTRACFLAGS="${CFLAGS}" CC=${CC} RANLIB=${RANLIB} "ARRC=${AR} rc"
 }
 
 src_install() {
-    into /usr
-
     # Library binary
-    dolib.a c-client/c-client.a
-    dosym c-client.a /usr/${LIBDIR}/libc-client.a
     dolib.so c-client/libc-client.so.1.0.0
+    dolib.a c-client/c-client.a
+    dosym c-client.a /usr/$(exhost --target)/lib/libc-client.a
 
     # Headers
     edo pushd c-client
-    insinto /usr/include/imap
+    insinto /usr/$(exhost --target)/include/imap
     for header in *.h ; do
         doins $(canonicalise ${header})
     done
     doins $(canonicalise linkage.c)
     edo popd
     # We need to use the correct header for our OS. The rest gets deleted.
-    edo mv "${IMAGE}"/usr/include/imap/os{_lnx,dep}.h
-    edo rm "${IMAGE}"/usr/include/imap/os_*.h
+    edo mv "${IMAGE}"/usr/$(exhost --target)/include/imap/os{_lnx,dep}.h
+    edo rm "${IMAGE}"/usr/$(exhost --target)/include/imap/os_*.h
 
     # Docs
     dodoc README docs/*.txt docs/CONFIG docs/RELNOTES
