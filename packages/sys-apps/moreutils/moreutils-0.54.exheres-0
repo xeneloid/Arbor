@@ -1,4 +1,4 @@
-# Copyright 2014-2015, Kylie McClain <somasissounds@gmail.com>
+# Copyright 2014-2015 Kylie McClain <somasissounds@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
 require debian-upstream [ debian_pv="${PV}.orig" ]
