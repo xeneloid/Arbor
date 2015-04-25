@@ -44,7 +44,7 @@ index e9d65dc..a2a20d1 100644
 +#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-exherbo-linux-gnueabi/lib/"
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_1 "/arm-exherbo-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/arm-exherbo-linux-gnueabi/lib/"
 +
 +#undef GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
 +#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/usr/arm-exherbo-linux-gnueabi/lib/ld-linux.so.3"
