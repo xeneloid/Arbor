@@ -135,16 +135,16 @@ index 0879e7e..06651f0 100644
 +/* exherbo specifc paths */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/powerpc64-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/powerpc64-unknown-linux-gnu/lib/"
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_2 "/powerpc64-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/powerpc64-unknown-linux-gnu/lib/"
 +
 +#undef GNU_USER_DYNAMIC_LINKER32
-+#define GNU_USER_DYNAMIC_LINKER32 "/usr/powerpc64-unknown-linux-gnueabi/lib/ld.so.1"
++#define GNU_USER_DYNAMIC_LINKER32 "/usr/powerpc64-unknown-linux-gnu/lib/ld.so.1"
 +
 +#undef GNU_USER_DYNAMIC_LINKER64
-+#define GNU_USER_DYNAMIC_LINKER64 "/usr/powerpc64-unknown-linux-gnueabi/lib/ld64.so.1"
++#define GNU_USER_DYNAMIC_LINKER64 "/usr/powerpc64-unknown-linux-gnu/lib/ld64.so.1"
 +
 -- 
 2.3.3
