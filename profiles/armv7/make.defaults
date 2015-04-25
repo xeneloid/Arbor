@@ -1,0 +1,12 @@
+# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+ACCEPT_PLATFORMS="armv7"
+
+FILESYSTEM_LAYOUT="cross"
+
+# these variables may be overridden by the user
+
+CHOST="armv7-unknown-linux-gnueabi"
+CFLAGS="-pipe -march=armv7 -g -Os"
+CXXFLAGS="-pipe -march=armv7 -g Os"
