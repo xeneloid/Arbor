@@ -1,0 +1,49 @@
+Upstream: backported from upstream commit, see below or
+ftp://ftp.invisible-island.net/ncurses/5.9/ncurses-5.9-20141206.patch.gz
+
+From 2214e056046c16533837f41c8356d37668bd3b0a Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Sat, 25 Apr 2015 12:03:42 +0200
+Subject: [PATCH] Fix build with gcc-5.1
+
+Backported from the upstream commit
+97bb4678dc03e753290b39bbff30ba2825df9517.
+---
+ ncurses/base/MKlib_gen.sh | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
+
+diff --git a/ncurses/base/MKlib_gen.sh b/ncurses/base/MKlib_gen.sh
+index 66ae295..f9e640f 100755
+--- a/ncurses/base/MKlib_gen.sh
++++ b/ncurses/base/MKlib_gen.sh
+@@ -437,12 +437,23 @@ sed -n -f $ED1 \
+ 	-e 's/gen_$//' \
+ 	-e 's/  / /g' >>$TMP
+ 
++cat >$ED1 <<EOF
++s/  / /g
++s/^ //
++s/ $//
++s/P_NCURSES_BOOL/NCURSES_BOOL/g
++EOF
++
++# A patch discussed here:
++#  https://gcc.gnu.org/ml/gcc-patches/2014-06/msg02185.html
++# introduces spurious #line markers.  Work around that by ignoring the system's
++# attempt to define "bool" and using our own symbol here.
++sed -e 's/bool/P_NCURSES_BOOL/g' $TMP > $ED2
++cat $ED2 >$TMP
++
+ $preprocessor $TMP 2>/dev/null \
+-| sed \
+-	-e 's/  / /g' \
+-	-e 's/^ //' \
+-	-e 's/_Bool/NCURSES_BOOL/g' \
+ | $AWK -f $AW2 \
++| sed -f $ED1 \
+ | sed -f $ED3 \
+ | sed \
+ 	-e 's/^.*T_CALLED.*returnCode( \([a-z].*) \));/	return \1;/' \
+-- 
+2.3.3
+
