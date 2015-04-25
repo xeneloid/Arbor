@@ -18,6 +18,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        sys-devel/gcc:=
     build+run:
         sys-libs/glibc
 "
@@ -49,6 +51,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( AR_FOR_BUILD=$(exhost --build)-ar
                                --disable-libssp
                                --disable-libquadmath
                                --disable-libgomp
+                               --disable-libvtv --disable-vtable-verify
                                --with-system-zlib )
 
 # NOTE(compnerd) libgcc does not have a testsuite
