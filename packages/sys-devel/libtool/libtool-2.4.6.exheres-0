@@ -16,6 +16,8 @@ DEPENDENCIES="
         sys-apps/help2man
     build+run:
         sys-devel/gnuconfig
+    test+test-expensive:
+        sys-libs/libgfortran:*
 "
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( docs/PLATFORMS )
