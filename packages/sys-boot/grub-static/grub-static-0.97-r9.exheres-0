@@ -19,7 +19,10 @@ WORK=${WORKBASE}
 
 src_install() {
     edo cp -a "${WORKBASE}"/* "${IMAGE}"
-    edo mv "${IMAGE}/lib" "${IMAGE}/${LIBDIR}"
+    edo mkdir "${IMAGE}"/usr/$(exhost --target)
+    edo mv "${IMAGE}"/{bin,lib} "${IMAGE}"/usr/$(exhost --target)
+    edo mv "${IMAGE}"/sbin/* "${IMAGE}"/usr/$(exhost --target)/bin
+    edo rmdir "${IMAGE}"/sbin
     edo mv "${IMAGE}"/usr/share/doc/{${PNVR/-static/},${PNVR}}
 }
 
