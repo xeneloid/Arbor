@@ -223,8 +223,11 @@ gcc_src_install() {
             alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
         done
 
-        # NOTE(compnerd) add an additional alternative for cc
+        # NOTE(compnerd) add an additional alternative for cc, fc
         alternatives+=( "/usr/${CHOST}/bin/${target}-cc" "${target}-gcc-${SLOT}" )
+        # TODO(compnerd) provider an alternative alternative for fortran to allow it to be changed
+        # independently of gcc
+        alternatives+=( "/usr/${CHOST}/bin/${target}-fc" "${target}-gfortran-${SLOT}" )
 
         for man in usr/share/man/man*/*.*; do
             local ext=${man##*.}
