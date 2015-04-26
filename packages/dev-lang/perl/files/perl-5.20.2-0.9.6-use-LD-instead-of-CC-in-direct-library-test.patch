@@ -1,0 +1,144 @@
+Upstream: perl-cross, submitted, https://github.com/arsv/perl-cross/pull/16
+
+From 9501ac82554c59574ffd1c30e4c1cf05a141db74 Mon Sep 17 00:00:00 2001
+From: Benedikt Morbach <benedikt.morbach@googlemail.com>
+Date: Sun, 26 Apr 2015 04:20:58 +0200
+Subject: [PATCH] use LD instead of CC in direct library test
+
+The libraries are needed at link time, so thise makes more sense.
+It also avoids problems we have because of it failing to resolve
+some symbols when looking for -l libraries.
+
+Example from subversion build:
+
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_hv_iterinit'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_mg_get'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_av_len'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_get_sv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newRV_noinc'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_2bool_flags'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_2mortal'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_hv_iternextsv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_free_tmps'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_stack_sp'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_PerlIO_read'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_looks_like_number'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_markstack_max'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_setref_pv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_markstack_ptr'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_PerlIO_close'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_pop_scope'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_call_sv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_free2'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_sv_undef'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_stack_grow'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_newmortal'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_av_fetch'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_call_method'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_PerlIO_fileno'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_tmps_floor'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_save_strlen'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_2io'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newSViv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_hv_common_key_len'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_mg_find'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_isobject'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_PerlIO_write'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newSVpv'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_av_push'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_2iv_flags'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_tmps_ix'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_stack_max'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_croak'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_push_scope'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newSV_type'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `svn_swig_pl_get_current_pool'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_derived_from'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newSVpvn'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_markstack_grow'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `PL_stack_base'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_newRV'
+    subversion/bindings/swig/perl/libsvn_swig_perl/.libs/libsvn_swig_perl-1.so: undefined reference to `Perl_sv_2pv_flags'
+    collect2: error: ld returned 1 exit status
+    Warning (mostly harmless): No library found for -lsvn_swig_perl-1
+
+Thie may be related to us using a shared library for libperl.
+
+If we use `ld` and `lddlflags`, we can avoid this because we
+will build a shared library and only need the symbols at runtime.
+This still notices if the library is missing, as can be evidenced
+by
+
+    # x86_64-pc-linux-gnu-gcc --shared try_mm.c -lnotfound
+    /usr/x86_64-pc-linux-gnu/bin/x86_64-pc-linux-gnu-ld: cannot find -lnotfound
+    collect2: error: ld returned 1 exit status
+
+it might be better to use `CC -c` + `LD`, but this is simpler and
+perl needs `LD=gcc` instead of `LD=ld` anyway to build.
+---
+ cnf/configure_genc.sh   |  4 ++--
+ cnf/diffs/liblist.patch | 10 +++++-----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/cnf/configure_genc.sh b/cnf/configure_genc.sh
+index 1664ec9..c038c94 100644
+--- a/cnf/configure_genc.sh
++++ b/cnf/configure_genc.sh
+@@ -1205,10 +1205,10 @@ default yaccflags
+ default zcat
+ default zip zip
+ 
+-# "use MakeMaker direct CC Library Test"
++# "use MakeMaker direct LD Library Test"
+ # see cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Liblist/Kid.pm
+ # and resp. patch for reasons
+-default usemmcclt 'define'
++default usemmldlt 'define'
+ 
+ if [ "$mode" == "buildmini" ]; then
+ 	default target_name
+diff --git a/cnf/diffs/liblist.patch b/cnf/diffs/liblist.patch
+index 236849b..59f339f 100644
+--- a/cnf/diffs/liblist.patch
++++ b/cnf/diffs/liblist.patch
+@@ -19,7 +19,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
+ -    if    ( $^O eq 'VMS' )     { return &_vms_ext; }
+ -    elsif ( $^O eq 'MSWin32' ) { return &_win32_ext; }
+ -    else                       { return &_unix_os2_ext; }
+-+  if   ($Config{usemmcclt}){ return &_cc_ext;       }
+++  if   ($Config{usemmldlt}){ return &_ld_ext;       }
+ +  elsif($^O eq 'VMS')      { return &_vms_ext;      }
+ +  elsif($^O eq 'MSWin32')  { return &_win32_ext;    }
+ +  else                     { return &_unix_os2_ext; }
+@@ -33,7 +33,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
+ +# A direct test for -l validity.
+ +# Because guessing real file names for -llib options when dealing
+ +# with a cross compiler is generally a BAD IDEA^tm.
+-+sub _cc_ext {
+++sub _ld_ext {
+ +    my($self,$potential_libs, $verbose, $give_libs) = @_;
+ +    $verbose ||= 0;
+ +
+@@ -47,8 +47,8 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
+ +    return ("", "", "", "", ($give_libs ? [] : ())) unless $potential_libs;
+ +    warn "Potential libraries are '$potential_libs':\n" if $verbose;
+ +
+-+    my($cc)   = $Config{cc};
+-+    my($ccflags)   = $Config{ccflags};
+++    my($ld)   = $Config{ld};
+++    my($lddlflags)   = $Config{lddlflags};
+ +    my($libs) = defined $Config{perllibs} ? $Config{perllibs} : $Config{libs};
+ +
+ +    my $try = 'try_mm.c';
+@@ -65,7 +65,7 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
+ +		push(@testlibs, $thislib);
+ +		next
+ +	};
+-+	my $cmd = "$cc $ccflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
+++	my $cmd = "$ld $lddlflags -o $tryx $try $testlibs $thislib >/dev/null 2>&1";
+ +	my $ret = system($cmd);
+ +	warn "Warning (mostly harmless): " . "No library found for $thislib\n" if $ret;
+ +	next if $ret;
+-- 
+2.3.3
+
