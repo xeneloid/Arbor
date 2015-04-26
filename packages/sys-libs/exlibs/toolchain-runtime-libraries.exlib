@@ -40,7 +40,9 @@ symlink_dynamic_libs() {
 
             if [[ -n "${target_so}" ]]; then
                 edo rm "${target_so}"
-                alternatives_for "_$(exhost --target)_${target_so}" "${provider_so##*.so.}" "${provider_so##*.so.}" \
+                # add ${SLOT} to the provider to avoid collisions when the soname doesn't change between versions
+                # importance can stay the same as the content is the same in that case
+                alternatives_for "_$(exhost --target)_${target_so}" "${provider_so##*.so.}--${SLOT}" "${provider_so##*.so.}" \
                     /usr/$(exhost --target)/lib/"${target_so}" "${provider_so}"
             fi
             target_so=${provider_so}
