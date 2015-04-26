@@ -48,11 +48,11 @@ libatomic_src_prepare() {
 libatomic_src_install() {
     default
 
-    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
-
     symlink_dynamic_libs ${PN}
     slot_dynamic_libs ${PN}
     slot_other_libs ${PN}.{a,la}
+    
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 }
 
 export_exlib_phases src_unpack src_prepare src_install
