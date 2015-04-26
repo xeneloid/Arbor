@@ -22,10 +22,6 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        graphite? (
-            dev-libs/cloog:=[>=0.17&<0.19]
-            dev-libs/isl:=[>=0.10&<0.13]
-        )
         threads? (
             dev-libs/gmp:=[>=4.2]
             dev-libs/mpc:=[>=0.8.1]
@@ -45,6 +41,21 @@ DEPENDENCIES="
 #         done)
 #   buil+run:
 #       sys-libs/glibc[hosts:*(-)?]
+
+if ever at_least 5.1.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            graphite? ( dev-libs/isl:=[>=0.12] )
+    "
+else
+    DEPENDENCIES+="
+        build+run:
+            graphite? (
+                dev-libs/cloog:=[>=0.17&<0.19]
+                dev-libs/isl:=[>=0.10&<0.13]
+            )
+    "
+fi
 
 gcc_pkg_setup() {
     local target=
@@ -144,7 +155,11 @@ gcc_src_configure() {
                 --enable-languages=c,c++,fortran,objc,obj-c++ \
                 --with-sysroot='""'                         \
                 --with-gxx-include-dir="${gxx_incdir}"      \
-                $(option_with graphite cloog)               \
+                $(if ever at_least 5.1 ; then
+                    option_with graphite isl
+                  else
+                    option_with graphite cloog
+                  fi)                                       \
                 $(optionq threads || echo --with-newlib)    \
                 $(optionq threads || echo --without-headers)\
                 $(if [[ ${target} == ${CHOST} ]] ; then
