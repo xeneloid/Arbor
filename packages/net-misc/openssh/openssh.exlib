@@ -37,8 +37,9 @@ MYOPTIONS="
     gtk  [[ description = [ Build gnome-ssh-askpass ] ]]
     kerberos
     ldns [[ description = [ Use ldns for DNSSEC support ] ]]
-    readline [[ description = [ Use libedit for tab completion in sftp ] ]]
     pam
+    readline [[ description = [ Use libedit for tab completion in sftp ] ]]
+    systemd
     X
     ( providers:
         openssl
@@ -194,7 +195,7 @@ openssh_src_install() {
 
     install_systemd_files
     # fix installed service files to use correct host
-    edo sed -e "s#/usr/host/#/usr/$(exhost --target)/#g" -i "${IMAGE}/${SYSTEMDSYSTEMUNITDIR}"/*.service
+    option systemd && edo sed -e "s#/usr/host/#/usr/$(exhost --target)/#g" -i "${IMAGE}/${SYSTEMDSYSTEMUNITDIR}"/*.service
 
     # Delete empty dir.
     [[ -d ${IMAGE}/run ]] && edo rmdir "${IMAGE}"/run
