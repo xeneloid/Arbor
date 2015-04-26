@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service [ systemd_files=[ "slapd.service" ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ]
 
 export_exlib_phases src_prepare src_compile src_install src_test_expensive
 
@@ -71,6 +72,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 
 DEFAULT_SRC_INSTALL_PARAMS=( STRIP="" )
 
+AT_M4DIR=( build )
+
 openldap_src_prepare() {
     default
 
@@ -79,6 +82,8 @@ openldap_src_prepare() {
 
     # Shared objects should have a+rx,u+w permissions
     edo sed -e '/LTINSTALL/s/-m 644/-m 755/' -i ./libraries/*/Makefile.in
+
+    eautoconf
 }
 
 openldap_src_compile() {

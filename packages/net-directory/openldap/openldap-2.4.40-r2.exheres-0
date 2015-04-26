@@ -5,3 +5,7 @@ require openldap
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-ITS-8056-fix-libdb-detection-with-gcc-5.patch
+)
+
