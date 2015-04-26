@@ -12,3 +12,5 @@ DEPENDENCIES="
 
 AT_M4DIR=( m4 )
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/linux-4.patch )
+
