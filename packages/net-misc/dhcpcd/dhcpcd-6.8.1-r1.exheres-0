@@ -36,11 +36,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-hooks="yp ntp"
 )
 
-src_prepare() {
-    default
-    edo sed -i 's/BSD_SOURCE/GNU_SOURCE/' configure
-}
-
 src_install() {
     default
 
