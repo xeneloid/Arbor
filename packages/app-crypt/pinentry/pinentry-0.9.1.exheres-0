@@ -41,3 +41,10 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 
 DEFAULT_SRC_COMPILE_PARAMS=( AR="$(exhost --target)-ar" )
 
+src_configure() {
+    # Fixes a build error with gcc-5.1, https://bugs.gnupg.org/gnupg/issue1961
+    export CXXFLAGS="${CXXFLAGS} -std=c++11"
+
+    default
+}
+
