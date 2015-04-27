@@ -5,8 +5,9 @@ require nfs-utils
 
 PLATFORMS="~amd64 ~arm ~x86"
 DOWNLOADS="
-    https://www.kepstin.ca/dump/${PNV}-exherbo.tar.xz [[ note = [
-        git archive --format=tar --prefix=${PNV}/ ${PN}-$(ever replace_all -) ] ]]
+    http://dev.exherbo.org/distfiles/${PN}/${PNV}-exherbo.tar.xz [[
+        note = [ git archive --format=tar --prefix=${PNV}/ ${PN}-$(ever replace_all -) ]
+    ]]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
