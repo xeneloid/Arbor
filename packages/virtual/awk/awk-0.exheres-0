@@ -5,7 +5,7 @@ SUMMARY="Virtual: awk providers"
 HOMEPAGE=""
 
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     ( providers:
         gawk
