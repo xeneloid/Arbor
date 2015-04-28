@@ -46,9 +46,6 @@ DEPENDENCIES="
 #   buil+run:
 #       sys-libs/glibc[hosts:*(-)?]
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
-                              "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch" )
-
 gcc_pkg_setup() {
     local target=
 
