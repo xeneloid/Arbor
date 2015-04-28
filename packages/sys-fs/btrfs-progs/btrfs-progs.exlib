@@ -2,15 +2,6 @@
 # Copyright 2012-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-if ever is_scm ; then
-    SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git"
-    DOWNLOADS=""
-    require scm-git
-else
-    DOWNLOADS="mirror://kernel/linux/kernel/people/kdave/btrfs-progs/${PN}-v${PV}.tar.xz"
-    WORK="${WORKBASE}/${PN}-v${PV}"
-fi
-
 require systemd-service
 
 export_exlib_phases src_test src_install
@@ -43,21 +34,10 @@ DEPENDENCIES="
 RESTRICT=test
 
 DEFAULT_SRC_COMPILE_PARAMS=(
-    AR="${AR}"
-    CC="${CC}"
-    CFLAGS="${CFLAGS}"
-    LDFLAGS="${LDFLAGS}"
     V=1
-    all
-    btrfs-debug-tree
-    btrfs-image
-    btrfs-select-super
-    btrfs-zero-log
-    btrfstune
 )
 
 DEFAULT_SRC_INSTALL_PARAMS=(
-    prefix=/usr/$(exhost --target)
     mandir=/usr/share/man
 )
 
@@ -84,11 +64,5 @@ btrfs-progs_src_install() {
         dodir "${SYSTEMDSYSTEMUNITDIR}"/basic.target.wants
         dosym ../btrfs.service "${SYSTEMDSYSTEMUNITDIR}"/basic.target.wants/btrfs.service
     fi
-
-    dobin btrfs-debug-tree
-    dobin btrfs-image
-    dobin btrfs-select-super
-    dobin btrfs-zero-log
-    dobin btrfstune
 }
 

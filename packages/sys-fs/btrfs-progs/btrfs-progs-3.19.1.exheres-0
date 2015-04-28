@@ -1,26 +1,18 @@
 # Copyright 2009 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/kdave/btrfs-progs.git"
-
-require btrfs-progs scm-git
+require btrfs-progs
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-DOWNLOADS=""
+DOWNLOADS="mirror://kernel/linux/kernel/people/kdave/btrfs-progs/${PN}-v${PV}.tar.xz"
 
 PLATFORMS="~amd64 ~x86"
+
+WORK="${WORKBASE}/${PN}-v${PV}"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     # TODO(sardemff7) Submit upstream
     "${FILES}"/0001-configure.ac-Use-PKG_CONFIG-everywhere.patch
     "${FILES}"/0002-configure.ac-Use-prefixed-AR.patch
 )
-
-src_prepare() {
-    default
-
-    # It needs to copy stuff from automake
-    # but does not actually use it
-    edo ./autogen.sh
-}
 

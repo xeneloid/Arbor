@@ -1,0 +1,33 @@
+Upstream: no
+From e218e14441bb3f2f3b172c8bffdc2740ce6f0a60 Mon Sep 17 00:00:00 2001
+From: Quentin Glidic <sardemff7+git@sardemff7.net>
+Date: Tue, 28 Apr 2015 15:07:31 +0200
+Subject: [PATCH] configure.ac: Use ${PKG_CONFIG} everywhere
+
+Signed-off-by: Quentin Glidic <sardemff7+git@sardemff7.net>
+---
+ configure.ac | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 79df38b..e8caaae 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -52,11 +52,11 @@ PKG_PROG_PKG_CONFIG
+ 
+ 
+ dnl
+-dnl Calls pkg-config --static
++dnl Calls ${PKG_CONFIG} --static
+ dnl
+ AC_DEFUN([PKG_STATIC], [
+-  if AC_RUN_LOG([pkg-config --exists --print-errors "$2"]); then
+-    $1=`pkg-config --libs --static "$2"`
++  if AC_RUN_LOG([${PKG_CONFIG} --exists --print-errors "$2"]); then
++    $1=`${PKG_CONFIG} --libs --static "$2"`
+     AC_SUBST([$1])
+   else
+     AC_MSG_ERROR([pkg-config description of $2, needed for static build, is not available])
+-- 
+2.0.1
+

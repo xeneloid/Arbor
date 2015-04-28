@@ -1,0 +1,27 @@
+Upstream: no
+From a84d63e1f1d9d9be5dcf12839d60fef150f73317 Mon Sep 17 00:00:00 2001
+From: Quentin Glidic <sardemff7+git@sardemff7.net>
+Date: Tue, 28 Apr 2015 15:23:06 +0200
+Subject: [PATCH] configure.ac: Use prefixed AR
+
+Signed-off-by: Quentin Glidic <sardemff7+git@sardemff7.net>
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index e8caaae..b65556b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -35,7 +35,7 @@ AC_SYS_LARGEFILE
+ 
+ AC_PROG_INSTALL
+ AC_PROG_LN_S
+-AC_PATH_PROG([AR], [ar])
++AC_PATH_TOOL([AR], [ar])
+ AC_PATH_PROG([RM], [rm], [rm])
+ AC_PATH_PROG([RMDIR], [rmdir], [rmdir])
+ 
+-- 
+2.0.1
+
