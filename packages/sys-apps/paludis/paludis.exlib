@@ -69,6 +69,13 @@ DEPENDENCIES="
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )
 "
 
+if ever is_scm; then
+    DEPENDENCIES+="
+        fetch:
+            app-misc/ca-certificates[cacert]
+    "
+fi
+
 paludis_pkg_setup() {
     replace-flags -Os -O2
 }
