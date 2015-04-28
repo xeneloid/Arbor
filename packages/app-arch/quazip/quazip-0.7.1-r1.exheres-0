@@ -1,0 +1,74 @@
+# Copyright 2012-2015 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=tar.gz ] cmake [ api=2 ] flag-o-matic
+
+SUMMARY="Simple C++ wrapper over Gilles Vollant's ZIP/UNZIP package"
+
+LICENCES="LGPL-2.1"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( qt4 qt5 ) [[ number-selected = at-least-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/zlib
+        qt4? ( x11-libs/qt:4[>=4.5.0] )
+        qt5? ( x11-libs/qtbase:5 )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-r258.patch
+)
+
+pkg_setup() {
+    option qt5 && append-flags -fPIC
+}
+
+src_configure() {
+    if option qt4; then
+        edo mkdir "${WORKBASE}"/qt4-build
+        edo pushd "${WORKBASE}"/qt4-build
+        ecmake -DBUILD_WITH_QT4:BOOL=TRUE "${CMAKE_SRC_CONFIGURE_PARAMS[@]}"
+        popd
+    fi
+    if option qt5; then
+        edo mkdir "${WORKBASE}"/qt5-build
+        edo pushd "${WORKBASE}"/qt5-build
+        ecmake -DBUILD_WITH_QT4:BOOL=FALSE "${CMAKE_SRC_CONFIGURE_PARAMS[@]}"
+        popd
+    fi
+}
+
+src_compile() {
+    if option qt4; then
+        edo pushd "${WORKBASE}"/qt4-build
+        emake
+        edo popd
+    fi
+    if option qt5; then
+        edo pushd "${WORKBASE}/"qt5-build
+        emake
+        edo popd
+    fi
+}
+
+src_install() {
+    if option qt4; then
+        edo pushd "${WORKBASE}"/qt4-build
+        emake DESTDIR="${IMAGE}" install
+        edo popd
+    fi
+    if option qt5; then
+        edo pushd "${WORKBASE}"/qt5-build
+        emake DESTDIR="${IMAGE}" install
+        edo popd
+    fi
+
+    edo pushd "${CMAKE_SOURCE}"
+    emagicdocs
+    edo popd
+}
+

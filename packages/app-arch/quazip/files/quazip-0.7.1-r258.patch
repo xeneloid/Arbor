@@ -1,0 +1,230 @@
+diff -Naur quazip-0.7.1/CMakeLists.txt quazip-code-258-trunk/CMakeLists.txt
+--- quazip-0.7.1/CMakeLists.txt	2013-11-18 18:37:54.000000000 +0100
++++ quazip-code-258-trunk/CMakeLists.txt	2015-02-06 16:45:25.000000000 +0100
+@@ -10,10 +10,11 @@
+ 
+ if (Qt5Core_FOUND)
+     set(QTCORE_LIBRARIES ${Qt5Core_LIBRARIES})
++    set(QUAZIP_LIB_VERSION_SUFFIX 5)
+     # if there is no QT_ROOT, try to deduce it from Qt QtCore include
+     if ("${QT_ROOT}" STREQUAL "")
+         set(QT_ROOT ${QT_QTCORE_INCLUDE_DIR}/../..)
+-    endif()    
++    endif()
+     include_directories(${Qt5Core_INCLUDE_DIRS})
+ 
+     macro(qt_wrap_cpp)
+@@ -33,7 +34,7 @@
+ endif()
+ 
+ # Use system zlib on unix and Qt ZLIB on Windows
+-IF(UNIX)
++IF(UNIX OR MINGW)
+ 	find_package(ZLIB REQUIRED)
+ ELSE(UNIX)
+ 	SET(ZLIB_INCLUDE_DIRS "${QT_ROOT}/src/3rdparty/zlib" CACHE STRING "Path to ZLIB headers of Qt")
+@@ -48,7 +49,9 @@
+ 
+ set(LIB_SUFFIX "" CACHE STRING "Define suffix of directory name (32/64)")
+ set(LIB_DESTINATION "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}" CACHE STRING "Library directory name" FORCE)
++set(QUAZIP_LIB_TARGET_NAME quazip${QUAZIP_LIB_VERSION_SUFFIX} CACHE
++    INTERNAL "Target name of libquazip" FORCE)
+ 
+ add_subdirectory(quazip)
+ 
+-install(FILES FindQuaZip.cmake DESTINATION ${CMAKE_ROOT}/Modules)
++install(FILES FindQuaZip.cmake RENAME FindQuaZip${QUAZIP_LIB_VERSION_SUFFIX}.cmake DESTINATION ${CMAKE_ROOT}/Modules)
+diff -Naur quazip-0.7.1/FindQuaZip.cmake quazip-code-258-trunk/FindQuaZip.cmake
+--- quazip-0.7.1/FindQuaZip.cmake	2012-02-26 07:46:10.000000000 +0100
++++ quazip-code-258-trunk/FindQuaZip.cmake	2015-02-06 16:45:25.000000000 +0100
+@@ -9,14 +9,17 @@
+ 	# in cache already
+ 	SET(QUAZIP_FOUND TRUE)
+ ELSE (QUAZIP_INCLUDE_DIRS AND QUAZIP_LIBRARIES)
++    IF (Qt5Core_FOUND)
++        set(QUAZIP_LIB_VERSION_SUFFIX 5)
++    ENDIF()
+ 	IF (WIN32)
+ 		FIND_PATH(QUAZIP_LIBRARY_DIR
+ 			WIN32_DEBUG_POSTFIX d
+-			NAMES libquazip.dll
++            NAMES libquazip${QUAZIP_LIB_VERSION_SUFFIX}.dll
+ 			HINTS "C:/Programme/" "C:/Program Files"
+ 			PATH_SUFFIXES QuaZip/lib
+ 		)
+-		FIND_LIBRARY(QUAZIP_LIBRARIES NAMES libquazip.dll HINTS ${QUAZIP_LIBRARY_DIR})
++        FIND_LIBRARY(QUAZIP_LIBRARIES NAMES libquazip${QUAZIP_LIB_VERSION_SUFFIX}.dll HINTS ${QUAZIP_LIBRARY_DIR})
+ 		FIND_PATH(QUAZIP_INCLUDE_DIR NAMES quazip.h HINTS ${QUAZIP_LIBRARY_DIR}/../ PATH_SUFFIXES include/quazip)
+ 		FIND_PATH(QUAZIP_ZLIB_INCLUDE_DIR NAMES zlib.h)
+ 	ELSE(WIN32)
+@@ -25,12 +28,12 @@
+ 		pkg_check_modules(PC_QUAZIP quazip)
+ 		FIND_LIBRARY(QUAZIP_LIBRARIES
+ 			WIN32_DEBUG_POSTFIX d
+-			NAMES quazip
++            NAMES quazip${QUAZIP_LIB_VERSION_SUFFIX}
+ 			HINTS /usr/lib /usr/lib64
+ 		)
+ 		FIND_PATH(QUAZIP_INCLUDE_DIR quazip.h
+ 			HINTS /usr/include /usr/local/include
+-			PATH_SUFFIXES quazip
++			PATH_SUFFIXES quazip${QUAZIP_LIB_VERSION_SUFFIX}
+ 		)
+ 		FIND_PATH(QUAZIP_ZLIB_INCLUDE_DIR zlib.h HINTS /usr/include /usr/local/include)
+ 	ENDIF (WIN32)
+diff -Naur quazip-0.7.1/quazip/CMakeLists.txt quazip-code-258-trunk/quazip/CMakeLists.txt
+--- quazip-0.7.1/quazip/CMakeLists.txt	2013-08-10 18:00:00.000000000 +0200
++++ quazip-code-258-trunk/quazip/CMakeLists.txt	2015-02-06 16:45:25.000000000 +0100
+@@ -14,10 +14,18 @@
+ qt_wrap_cpp(MOC_SRCS ${PUBLIC_HEADERS})
+ set(SRCS ${SRCS} ${MOC_SRCS})
+ 
+-add_library(quazip SHARED ${SRCS})
+-set_target_properties(quazip PROPERTIES VERSION 1.0.0 SOVERSION 1)
++add_library(${QUAZIP_LIB_TARGET_NAME} SHARED ${SRCS})
++add_library(quazip_static STATIC ${SRCS})
++ 
++# Windows uses .lib extension for both static and shared library
++# *nix systems use different extensions for SHARED and STATIC library and by convention both libraries have the same name
++if (NOT WIN32)
++	set_target_properties(quazip_static PROPERTIES OUTPUT_NAME quazip)
++endif ()
++
++set_target_properties(${QUAZIP_LIB_TARGET_NAME} quazip_static PROPERTIES VERSION 1.0.0 SOVERSION 1 DEBUG_POSTFIX d)
+ # Link against ZLIB_LIBRARIES if needed (on Windows this variable is empty)
+-target_link_libraries(quazip ${QT_QTMAIN_LIBRARY} ${QT_QTCORE_LIBRARY} ${ZLIB_LIBRARIES})
++target_link_libraries(${QUAZIP_LIB_TARGET_NAME} quazip_static ${QT_QTMAIN_LIBRARY} ${QTCORE_LIBRARIES} ${ZLIB_LIBRARIES})
+ 
+-install(FILES ${PUBLIC_HEADERS} DESTINATION include/quazip)
+-install(TARGETS quazip LIBRARY DESTINATION ${LIB_DESTINATION} ARCHIVE DESTINATION ${LIB_DESTINATION} RUNTIME DESTINATION ${LIB_DESTINATION})
++install(FILES ${PUBLIC_HEADERS} DESTINATION include/quazip${QUAZIP_LIB_VERSION_SUFFIX})
++install(TARGETS ${QUAZIP_LIB_TARGET_NAME} quazip_static LIBRARY DESTINATION ${LIB_DESTINATION} ARCHIVE DESTINATION ${LIB_DESTINATION} RUNTIME DESTINATION ${LIB_DESTINATION})
+diff -Naur quazip-0.7.1/quazip/quazip.cpp quazip-code-258-trunk/quazip/quazip.cpp
+--- quazip-0.7.1/quazip/quazip.cpp	2014-09-28 07:30:56.000000000 +0200
++++ quazip-code-258-trunk/quazip/quazip.cpp	2015-01-19 18:52:01.000000000 +0100
+@@ -39,6 +39,7 @@
+ class QuaZipPrivate {
+   friend class QuaZip;
+   private:
++    Q_DISABLE_COPY(QuaZipPrivate)
+     /// The pointer to the corresponding QuaZip instance.
+     QuaZip *q;
+     /// The codec for file names.
+@@ -90,6 +91,8 @@
+       zip64(false),
+       autoClose(true)
+     {
++        unzFile_f = NULL;
++        zipFile_f = NULL;
+         lastMappedDirectoryEntry.num_of_file = 0;
+         lastMappedDirectoryEntry.pos_in_zip_directory = 0;
+     }
+@@ -107,6 +110,8 @@
+       zip64(false),
+       autoClose(true)
+     {
++        unzFile_f = NULL;
++        zipFile_f = NULL;
+         lastMappedDirectoryEntry.num_of_file = 0;
+         lastMappedDirectoryEntry.pos_in_zip_directory = 0;
+     }
+@@ -123,6 +128,8 @@
+       zip64(false),
+       autoClose(true)
+     {
++        unzFile_f = NULL;
++        zipFile_f = NULL;
+         lastMappedDirectoryEntry.num_of_file = 0;
+         lastMappedDirectoryEntry.pos_in_zip_directory = 0;
+     }
+diff -Naur quazip-0.7.1/quazip/quazipfile.cpp quazip-code-258-trunk/quazip/quazipfile.cpp
+--- quazip-0.7.1/quazip/quazipfile.cpp	2014-09-28 07:30:56.000000000 +0200
++++ quazip-code-258-trunk/quazip/quazipfile.cpp	2015-01-19 18:52:01.000000000 +0100
+@@ -37,6 +37,7 @@
+ class QuaZipFilePrivate {
+   friend class QuaZipFile;
+   private:
++    Q_DISABLE_COPY(QuaZipFilePrivate)
+     /// The pointer to the associated QuaZipFile instance.
+     QuaZipFile *q;
+     /// The QuaZip object to work with.
+@@ -76,17 +77,38 @@
+     void setZipError(int zipError) const;
+     /// The constructor for the corresponding QuaZipFile constructor.
+     inline QuaZipFilePrivate(QuaZipFile *q):
+-      q(q), zip(NULL), internal(true), zipError(UNZ_OK) {}
++      q(q),
++      zip(NULL),
++      caseSensitivity(QuaZip::csDefault),
++      raw(false),
++      writePos(0),
++      uncompressedSize(0),
++      crc(0),
++      internal(true),
++      zipError(UNZ_OK) {}
+     /// The constructor for the corresponding QuaZipFile constructor.
+     inline QuaZipFilePrivate(QuaZipFile *q, const QString &zipName):
+-      q(q), internal(true), zipError(UNZ_OK)
++      q(q),
++      caseSensitivity(QuaZip::csDefault),
++      raw(false),
++      writePos(0),
++      uncompressedSize(0),
++      crc(0),
++      internal(true),
++      zipError(UNZ_OK)
+       {
+         zip=new QuaZip(zipName);
+       }
+     /// The constructor for the corresponding QuaZipFile constructor.
+     inline QuaZipFilePrivate(QuaZipFile *q, const QString &zipName, const QString &fileName,
+         QuaZip::CaseSensitivity cs):
+-      q(q), internal(true), zipError(UNZ_OK)
++      q(q),
++      raw(false),
++      writePos(0),
++      uncompressedSize(0),
++      crc(0),
++      internal(true),
++      zipError(UNZ_OK)
+       {
+         zip=new QuaZip(zipName);
+         this->fileName=fileName;
+@@ -96,7 +118,14 @@
+       }
+     /// The constructor for the QuaZipFile constructor accepting a file name.
+     inline QuaZipFilePrivate(QuaZipFile *q, QuaZip *zip):
+-      q(q), zip(zip), internal(false), zipError(UNZ_OK) {}
++      q(q),
++      zip(zip),
++      raw(false),
++      writePos(0),
++      uncompressedSize(0),
++      crc(0),
++      internal(false),
++      zipError(UNZ_OK) {}
+     /// The destructor.
+     inline ~QuaZipFilePrivate()
+     {
+diff -Naur quazip-0.7.1/qztest/testquazipfile.cpp quazip-code-258-trunk/qztest/testquazipfile.cpp
+--- quazip-0.7.1/qztest/testquazipfile.cpp	2014-09-28 07:30:56.000000000 +0200
++++ quazip-code-258-trunk/qztest/testquazipfile.cpp	2015-04-26 09:18:01.000000000 +0200
+@@ -135,6 +135,18 @@
+         QCOMPARE(archivedData, originalData);
+         testUnzip.goToNextFile();
+     }
++    if (!password.isEmpty()) {
++        QVERIFY(testUnzip.goToFirstFile());
++        QuaZipFileInfo64 info;
++        QVERIFY(testUnzip.getCurrentFileInfo(&info));
++        QFile original("tmp/" + info.name);
++        QVERIFY(original.open(QIODevice::ReadOnly));
++        QuaZipFile archived(&testUnzip);
++        QVERIFY(archived.open(QIODevice::ReadOnly, "WrongPassword"));
++        QByteArray originalData = original.readAll();
++        QByteArray archivedData = archived.readAll();
++        QVERIFY(archivedData != originalData);
++    }
+     testUnzip.close();
+     QCOMPARE(testUnzip.getZipError(), UNZ_OK);
+     // clean up
