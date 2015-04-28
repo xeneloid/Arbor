@@ -7,8 +7,7 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 UPSTREAM_RELEASE_NOTES="http://zsh.sourceforge.net/releases.html"
 
-src_prepare() {
-    default
-    edo sed -i -e 's/$(CPP)/& -P/' Src/zsh.mdd
-}
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-preprocessor-for-signal-name-generation.patch
+)
 
