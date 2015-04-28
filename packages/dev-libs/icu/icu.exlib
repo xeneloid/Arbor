@@ -26,9 +26,9 @@ WORK=${WORKBASE}/${PN}/source
 WORK_HOST=${WORKBASE}/${PN}-host/source
 
 icu_src_configure() {
-    if [[ -n $(exhost --is-native) ]] ; then
-        edo mkdir -p "${WORK_HOST}/config"
-        edo cp "${FILES}/icucross."{mk,inc} "${WORK_HOST}/config"
+    if exhost --is-native -q; then
+        edo mkdir -p "${WORK_HOST}"/config
+        edo cp "${FILES}"/icucross.{mk,inc} "${WORK_HOST}"/config
 
         econf --with-cross-build="${WORK_HOST}"
     else
