@@ -73,7 +73,7 @@ DEPENDENCIES="
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
         dev-libs/libxslt [[ note = [ for creating the man pages ] ]]
         dev-util/gperf[>=3.0.4] [[ note = [ for keymap ] ]]
-        dev-util/intltool[>=0.40.0]
+        dev-util/intltool[>=0.51.0]
         sys-devel/gcc:*[>=4.9] [[ note = [ Older gcc have some issues building systemd ] ]]
         sys-devel/gettext
         sys-kernel/linux-headers[>=3.10]
