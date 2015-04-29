@@ -1,5 +1,5 @@
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
-# Copyright 2011-2014 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2011-2015 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require cmake [ api=2 ] systemd-service
@@ -57,7 +57,7 @@ DEPENDENCIES="
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
 
-if ever at_least 5.6.23 ; then
+if ever at_least 5.6.24 ; then
     DEPENDENCIES+="
         build+run:
             dev-libs/libedit
@@ -126,7 +126,6 @@ mysql_src_configure() {
         -DWITH_FEDERATED_STORAGE_ENGINE:BOOL=TRUE
         -DWITH_INNOBASE_STORAGE_ENGINE:BOOL=TRUE
         -DWITH_PARTITION_STORAGE_ENGINE:BOOL=TRUE
-        -DWITH_SSL:STRING=/usr/$(exhost --target)
         -DWITH_UNIT_TESTS:BOOL=TRUE
         -DWITH_VALGRIND:BOOL=FALSE
         -DWITH_ZLIB:STRING=system
@@ -142,7 +141,7 @@ mysql_src_configure() {
         )
     fi
 
-    if ever at_least 5.6.23 ; then
+    if ever at_least 5.6.24 ; then
         cmakeargs+=(
             -DBUILD_WITH_WERROR:BOOL=FALSE
             -DCMAKE_DISABLE_FIND_PACKAGE_Git:BOOL=TRUE
@@ -153,11 +152,13 @@ mysql_src_configure() {
             -DENABLED_LOCAL_INFILE:BOOL=TRUE
             -DWITH_EDITLINE:STRING=system
             -DWITH_LIBEVENT:STRING=system
+            -DWITH_SSL:STRING=/usr/$(exhost --target)
         )
     else
         cmakeargs+=(
             -DWITH_LIBEDIT:BOOL=FALSE
             -DWITH_READLINE:BOOL=FALSE
+            -DWITH_SSL:STRING=system
         )
     fi
 
@@ -184,7 +185,7 @@ mysql_src_install() {
 
     keepdir /etc/mysql
 
-    if ever at_least 5.6.23 ; then
+    if ever at_least 5.6.24 ; then
         edo cp "${IMAGE}"/usr/share/${PN}/my-default.cnf "${IMAGE}"/etc/mysql/my.cnf
     else
         edo cp "${IMAGE}"/usr/share/${PN}/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
