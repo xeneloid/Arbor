@@ -63,8 +63,19 @@ src_prepare() {
     edo cp "${WORK}/src/EDITME" Local/Makefile
     # XXX option X && edo cp ../exim_monitor/EDITME eximon.conf
 
-    edo echo "CFLAGS += ${CFLAGS}" >> Local/Makefile
-    edo echo "LFLAGS += ${LDFLAGS}" >> Local/Makefile
+    edo sed -e "s:\(\# \)\?AR=ar:AR=${AR}:" \
+            -e "/^BIN_DIRECTORY/ s:/usr/bin:/usr/$(exhost --target)/bin:" \
+            -e "/MAKE_SHELL/ s:^.*$:MAKE_SHELL=sh:" \
+            -e "/_COMMAND/ s:^\(\# \)\?\([[:upper:]]\+_COMMAND=\)\(/usr\)\?/bin/:\2:p" \
+            -i Local/Makefile
+
+    edo cat <<EOF >> Local/Makefile
+CC = ${CC}
+RANLIB = ${RANLIB}
+
+CFLAGS += ${CFLAGS}
+LFLAGS += ${LDFLAGS}
+EOF
 
     edo sed -e 's/^buildname=.*/buildname=Exim-Exherbo/g' -i Makefile
 
