@@ -13,7 +13,8 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-3 LGPL-3"
 SLOT="0"
 CROSS_COMPILE_TARGETS="
-    arm-exherbo-linux-gnueabi
+    armv7-unknown-linux-gnueabi
+    armv7-unknown-linux-gnueabihf
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
     powerpc64-unknown-linux-gnu
