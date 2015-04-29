@@ -1,0 +1,23 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require sourceforge [ suffix=tar.gz ]
+
+SUMMARY="Stream-oriented XML parser written in C"
+
+LICENCES="MIT"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~x86"
+MYOPTIONS="parts: binaries development documentation libraries"
+
+DEPENDENCIES=""
+
+src_install() {
+    default
+
+    expart binaries /usr/$(exhost --target)/bin
+    expart development /usr/$(exhost --target)/include
+    expart documentation /usr/share/{doc,man}
+    expart libraries /usr/$(exhost --target)/lib
+}
+
