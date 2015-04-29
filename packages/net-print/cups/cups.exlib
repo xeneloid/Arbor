@@ -176,6 +176,10 @@ cups_src_install() {
 
     # directories are created automatically on startup
     edo rm -r "${IMAGE}"/run
+
+    # with [-systemd] the systemd files will be put in a 'no' directory that leads to:
+    # !!! Not allowed to merge '/var/tmp/paludis/build/net-print-cups-2.0.2/image/no' to '/no'
+    option systemd || edo rm -rf "${IMAGE}"/no
 }
 
 cups_pkg_postinst() {
