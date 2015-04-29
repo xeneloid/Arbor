@@ -9,7 +9,8 @@ SUMMARY="stand alone compiler"
 LICENCES="GPL-2"
 SLOT="$(ever range 1-2)"
 CROSS_COMPILE_TARGETS="
-    arm-exherbo-linux-gnueabi
+    armv7-unknown-linux-gnueabi
+    armv7-unknown-linux-gnueabihf
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
     powerpc64-unknown-linux-gnu
@@ -176,6 +177,13 @@ gcc_src_configure() {
                 --with-as=/usr/${CHOST}/bin/${target}-as    \
                 --with-ld=/usr/${CHOST}/bin/${target}-ld    \
                 --with-system-zlib                          \
+                $(if [[ ${target} == armv7* ]] ; then
+                    # TODO(compnerd) use the variant agnostic architecture by default
+                    echo --with-arch=armv7-a
+                  fi)                                       \
+                $(if [[ ${target} == arm*-*-*-*hf ]] ; then
+                    echo --with-float=hard
+                  fi)                                       \
                 --with-glibc-version=2.11                   \
                 --enable-linker-build-id                    \
                 --with-multilib-list=
