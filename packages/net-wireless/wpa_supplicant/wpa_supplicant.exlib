@@ -116,7 +116,6 @@ config_enable_eap() {
 wpa_supplicant_src_prepare() {
     if ! ever is_scm; then
         pushd "${WORKBASE}/${PNV}" >/dev/null 2>&1
-        expatch "${FILES}/${PN}-2.3-nl80211-includes.patch"
         expatch "${FILES}/${PN}-2.3-CVE-2015-1863.patch"
         popd >/dev/null 2>&1
     fi
@@ -144,6 +143,7 @@ wpa_supplicant_src_configure() {
         PEERKEY \
         PKCS12 \
         READLINE \
+        SUITEB \
         TDLS
 
     option dbus     && config_enable CTRL_IFACE_DBUS{,_NEW,_INTRO}
@@ -167,12 +167,11 @@ wpa_supplicant_src_configure() {
 #        config_enable \
 #            CLIENT_MLME \
 #            EAPOL_TEST
-#
-#        config_enable_driver TEST
 #    fi
 
     # EAP_FAST requires EAP_TLS (which is always enabled), and only works with
     # OpenSSL-0.9.9 (or internal TLS implementation)
+    # MESH/SAE/SUITEB192 require OpenSSL
     if option gnutls ; then
         config_enable \
             TLS=gnutls \
@@ -180,8 +179,11 @@ wpa_supplicant_src_configure() {
     elif ! option gnutls ; then
         config_enable \
             TLS=openssl \
-            SMARTCARD
+            SMARTCARD \
+            SUITEB192
         option eap-fast && config_enable_eap FAST
+        option nl80211 && config_enable MESH && \
+            config_enable SAE
     fi
 
     config_enable_driver \
@@ -213,6 +215,9 @@ wpa_supplicant_src_configure() {
         SAKE \
         TLS \
         TTLS
+
+    # EAP Re-Authentication Protocol (ERP)
+    config_enable ERP
 
     # Enabling this is a PITA, especially for the user. For details see the
     # file 'wpa_supplicant/defconfig' in the source.
