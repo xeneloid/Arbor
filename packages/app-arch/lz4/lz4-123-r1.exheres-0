@@ -13,7 +13,7 @@ LICENCES="
 "
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS=""
+MYOPTIONS="parts: binaries development documentation libraries"
 
 DEPENDENCIES="
     test:
@@ -24,4 +24,13 @@ DEPENDENCIES="
 RESTRICT="test"
 
 DEFAULT_SRC_INSTALL_PARAMS=( PREFIX=/usr/$(exhost --target) MANDIR=/usr/share/man/man1 )
+
+src_install() {
+    default
+
+    expart binaries /usr/$(exhost --target)/bin
+    expart development /usr/$(exhost --target)/include
+    expart documentation /usr/share/{doc,man}
+    expart libraries /usr/$(exhost --target)/lib
+}
 
