@@ -27,12 +27,12 @@ WORK_HOST=${WORKBASE}/${PN}-host/source
 
 icu_src_configure() {
     if exhost --is-native -q; then
+        econf
+    else
         edo mkdir -p "${WORK_HOST}"/config
         edo cp "${FILES}"/icucross.{mk,inc} "${WORK_HOST}"/config
 
         econf --with-cross-build="${WORK_HOST}"
-    else
-        econf
     fi
 }
 
