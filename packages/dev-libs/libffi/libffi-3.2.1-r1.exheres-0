@@ -28,7 +28,10 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="debug"
+MYOPTIONS="
+    debug
+    parts: development documentation libraries
+"
 
 DEPENDENCIES="
     test:
@@ -43,5 +46,10 @@ src_install() {
 
     # FIXME: our gcc installs it's own copy of libffi instead of using the system one
     edo rm "${IMAGE}"/usr/share/man/man3/{ffi,ffi_call,ffi_prep_cif}.3
+
+    expart libraries /usr/$(exhost --target)/lib
+    expart development /usr/$(exhost --target)/lib/${PNV}/include
+    expart development /usr/$(exhost --target)/lib/pkgconfig
+    expart documentation /usr/share/{doc,man,info}
 }
 
