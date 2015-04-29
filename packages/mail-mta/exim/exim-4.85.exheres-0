@@ -137,7 +137,7 @@ src_install() {
     default
     esandbox rmfilter /var/spool/exim
 
-    alternatives_for mta ${PN} 10 /usr/bin/sendmail ${PN}
+    alternatives_for mta ${PN} 10 /usr/$(exhost --target)/bin/sendmail ${PN}
     edo mv "${IMAGE}"/etc/mail/{,${PN}.}aliases
     alternatives_for mta ${PN} 10 /etc/mail/aliases ${PN}.aliases
 
