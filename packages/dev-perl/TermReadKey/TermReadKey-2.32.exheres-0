@@ -9,3 +9,6 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+# https://rt.cpan.org/Public/Bug/Display.html?id=100932
+DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
+
