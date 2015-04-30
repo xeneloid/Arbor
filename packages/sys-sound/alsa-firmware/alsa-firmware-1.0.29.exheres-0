@@ -12,5 +12,5 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --with-hotplug-dir=/${LIBDIR}/firmware )
+DEFAULT_SRC_CONFIGURE_PARAMS=( --with-hotplug-dir=/usr/$(exhost --target)/firmware )
 
