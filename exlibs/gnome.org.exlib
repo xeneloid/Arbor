@@ -8,6 +8,7 @@ myexparam pnv=${MY_PNV:-$(exparam pn)-${PV}}
 myexparam suffix=.tar.bz2
 
 HOMEPAGE="http://projects.gnome.org/$(exparam pn)"
+REMOTE_IDS="gnome:${PN}"
 
 if ever is_scm ; then
     DOWNLOADS=""
