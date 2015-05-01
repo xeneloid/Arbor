@@ -15,11 +15,14 @@ DEPENDENCIES="
         app-arch/xz
     build+run:
         caps? ( sys-libs/libcap )
-    test:
-        dev-python/pyelftools
 "
 
-src_compile() {
-    emake CC="${CC}" USE_CAP=$(option caps && echo yes || echo no)
+DEFAULT_SRC_CONFIGURE_PARAMS=( --without-python )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( caps )
+
+src_prepare() {
+    # py script is not compatible with cross, sh needs a tweak.
+    edo rm -rf tests/lddtree
+    edo sed -i -e "s/strings/$(exhost --tool-prefix)strings/" lddtree.sh
 }
 
