@@ -124,6 +124,9 @@ wpa_supplicant_src_prepare() {
 
     # FILES is a reserved exheres-0 variable
     ever is_scm && edo sed -i -e 's:FILES:DOC_FILES:g' doc/docbook/Makefile
+
+    # Fix PCSC include dir
+    edo sed -i -e "s:/usr/include/PCSC:/usr/$(exhost --target)/include/PCSC:g" Makefile
 }
 
 wpa_supplicant_src_configure() {
