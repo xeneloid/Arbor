@@ -55,7 +55,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-ldap
     --disable-ntbtls
     --disable-selinux-support
-    --without-capabilities # This option doesn't do anything.
+    --without-capabilities # This option doesn\'t do anything.
     --without-adns # Requires GNU adns
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
