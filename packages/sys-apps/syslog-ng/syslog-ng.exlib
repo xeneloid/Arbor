@@ -33,7 +33,7 @@ RESTRICT="test"
 # Since json-c has no deps, ignore json-glib entirely.
 DEPENDENCIES="
     build:
-        dev-util/pkg-config
+        virtual/pkg-config
     build+run:
         dev-libs/glib:2[>=2.10.1]
         dev-libs/ivykis[>=0.36.1]
@@ -57,7 +57,7 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( contrib/syslog-ng.conf.doc )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-pidfile-dir=/run
-    --with-module-dir=/usr/${LIBDIR}/syslog-ng
+    --with-module-dir=/usr/$(exhost --target)/lib/syslog-ng
     --sysconfdir=/etc/syslog-ng
     --enable-dynamic-linking
     --enable-ipv6
