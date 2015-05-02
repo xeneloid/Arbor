@@ -26,17 +26,20 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.1.11-paranoiacdda.patch
     "${FILES}"/${PN}-1.1.11-paranoiacdio.patch
+    "${FILES}"/0001-Fix-dirsplit.1-manual-path-for-multiarch.patch
 )
+CMAKE_SRC_CONFIGURE_PARAMS=( -DMANSUBDIR=/usr/share/man/ )
 
 src_install() {
     default
 
     # Remove genisoimage. It's in its own package now.
     edo rm \
-        "${IMAGE}"/usr/bin/genisoimage \
+        "${IMAGE}"/usr/$(exhost --target)/bin/genisoimage \
         "${IMAGE}"/usr/share/man/man1/genisoimage.1 \
         "${IMAGE}"/usr/share/man/man5/genisoimagerc.5
-
-    edo rmdir "${IMAGE}"/usr/share/man/man5
+    edo mv "${IMAGE}"/usr/$(exhost --target)/{s,}bin/netscsid
+    edo rmdir "${IMAGE}"/usr/share/man/man5 \
+        "${IMAGE}"/usr/$(exhost --target)/sbin
 }
 
