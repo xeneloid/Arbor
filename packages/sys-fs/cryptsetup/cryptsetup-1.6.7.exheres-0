@@ -50,6 +50,7 @@ src_configure() {
         --disable-static-cryptsetup \
         $(option_enable gcrypt gcrypt-pbkdf2) \
         $(option_enable python) \
+        $(option_with gcrypt libgcrypt-prefix /usr/$(exhost --target)) \
         --with-crypto_backend=$(
         if option gcrypt; then
             echo 'gcrypt'
