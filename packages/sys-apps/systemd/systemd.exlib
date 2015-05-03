@@ -318,6 +318,7 @@ systemd_src_configure() {
         $(option_enable seccomp)
         $(option_enable xkbcommon)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
+        $(option_with gcrypt libgcrypt-prefix /usr/$(exhost --target))
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
