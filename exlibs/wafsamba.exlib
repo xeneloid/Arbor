@@ -10,6 +10,8 @@ DEPENDENCIES="
         dev-libs/libxslt
 "
 
+# You should add items to
+# WAF_SRC_CONFIGURE_PARAMS using +=
 WAF_SRC_CONFIGURE_PARAMS=(
     --bundled-libraries=NONE
     --mandir=/usr/share/man
@@ -20,6 +22,5 @@ WAF_SRC_CONFIGURE_PARAMS=(
     --disable-dependency-tracking
     --disable-rpath
     --disable-rpath-install
-    ${WAFSAMBA_SRC_CONFIGURE_PARAMS[@]}
 )
 
