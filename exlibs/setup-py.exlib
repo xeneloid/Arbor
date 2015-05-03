@@ -41,7 +41,7 @@
 #     section of the cfg file
 
 # functions:
-#   setup-cfg_${COMMNAD}_append
+#   setup-cfg_${COMMAND}_append
 #     append "option = value" pairs under the [command] section that require
 #     more complex dependencies on options e.g. optionq foo && optionq bar or
 #     python_abis e.g. ${MULTIBUILD_TARGET}
