@@ -82,7 +82,7 @@ gcc_src_configure() {
         local libpath=/usr/${target}/lib
         local gxx_incdir=/usr/${target}/include/c++/${PV}
         local target_cflags_var=${target//-/_}_CFLAGS
-        local target_cflags_var=${target//-/_}_CXXFLAGS
+        local target_cxxflags_var=${target//-/_}_CXXFLAGS
         local target_ldflags_var=${target//-/_}_LDFLAGS
         local tool_prefix=$(exhost --tool-prefix)
 
