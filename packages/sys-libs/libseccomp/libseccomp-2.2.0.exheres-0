@@ -1,7 +1,7 @@
 # Copyright 2012 Pierre Lejeune <superheron@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix='tar.gz' ]
+require github [ user=seccomp release=v${PV} suffix=tar.gz ]
 
 SUMMARY="High level interface to the Linux Kernel's seccomp filter"
 DESCRIPTION="
@@ -16,15 +16,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-Allow-user-to-override-objdump.patch )
-
-DEFAULT_SRC_COMPILE_PARAMS=( V=1
-    # The Makefile claims that libseccomp requires gcc-specific functionality, so it looks for the
-    # compiler in the GCC environment variable. However, it seems to work fine with clang...
-    GCC="${CC}"
-)
-
-DEFAULT_SRC_INSTALL_PARAMS=(
-    INSTALL_MAN_DIR="${IMAGE}"/usr/share/man
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-python
+    --disable-static
 )
 
