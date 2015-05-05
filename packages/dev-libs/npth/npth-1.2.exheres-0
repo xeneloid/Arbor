@@ -6,16 +6,13 @@ DESCRIPTION="
 This is a reimplementation of the GNU Pth library,
 using the system's thread implementation.
 "
+HOMEPAGE="https://www.gnupg.org"
+DOWNLOADS="ftp://ftp.gnupg.org/gcrypt/${PN}/${PNV}.tar.bz2"
 
 LICENCES="LGPL-3 GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-
-DEPENDENCIES=""
 MYOPTIONS=""
 
-DOWNLOADS="ftp://ftp.gnupg.org/gcrypt/${PN}/${PNV}.tar.bz2"
-
-DEFAULT_SRC_CONFIGURE_PARAMS=( --hates=docdir )
-DEFAULT_SRC_INSTALL_EXTRA_DOCS=( VERSION )
+DEPENDENCIES=""
 
