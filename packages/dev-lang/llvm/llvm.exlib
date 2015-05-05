@@ -51,8 +51,8 @@ llvm_src_prepare() {
     if ! ever is_scm ; then
         expatch "${FILES}"/0001-lit-Make-the-gold-plugin-support-testing-work-with-a.patch
         expatch "${FILES}"/0002-gold-Consolidate-the-gold-plugin-options-and-actuall.patch
+        expatch "${FILES}"/0001-CMake-Also-search-for-prefixed-versions-of-ld.gold.patch
     fi
-    expatch "${FILES}"/0001-CMake-Also-search-for-prefixed-versions-of-ld.gold.patch
 
     default
     edo popd
