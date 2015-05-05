@@ -8,24 +8,23 @@ DESCRIPTION="
 Provides 'regulatory.bin'. A signed newly maintained regulatory database
 which can be used by other programs or operating systems.
 "
-HOMEPAGE="http://wireless.kernel.org/en/developers/Regulatory#The_regulatory_database"
+HOMEPAGE="https://wireless.wiki.kernel.org/en/developers/regulatory/${PN}"
 DOWNLOADS="mirror://kernel/software/network/${PN}/${PNV}.tar.xz"
 
+UPSTREAM_DOCUMENTATION="https://wireless.wiki.kernel.org/en/developers/Regulatory#Theregulatorydatabase"
+
 LICENCES="ISC"
+SLOT="0"
 MYOPTIONS=""
 
-SLOT="0"
-
 DEPENDENCIES=""
-
-UPSTREAM_DOCUMENTATION="http://wireless.kernel.org/en/developers/Regulatory#Theregulatorydatabase"
 
 DEFAULT_SRC_INSTALL_PARAMS+=( CRDA_PATH=/usr/${LIBDIR}/crda )
 
 wireless-regdb_src_prepare() {
     default
 
-#   sed "/^install: /s:regulatory.bin.5.gz::"
+    # sed "/^install: /s:regulatory.bin.5.gz::"
     edo sed -i -e "/regulatory.bin.5.gz/s:.gz::g" Makefile
 }
 

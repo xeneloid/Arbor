@@ -1,7 +1,7 @@
 # Copyright 2009 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/linville/${PN}.git"
+SCM_REPOSITORY="git://git.kernel.org/pub/scm/linux/kernel/git/sforshee/${PN}.git"
 require wireless-regdb scm-git
 
 DOWNLOADS=""
