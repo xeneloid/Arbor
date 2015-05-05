@@ -10,58 +10,64 @@ for regulatory compliance. It relies on nl80211 for communication. CRDA is
 intended to be run only through udev communication from the kernel. The user
 should never have to run it manually except if debugging udev issues.
 "
-HOMEPAGE="http://wireless.kernel.org/en/developers/Regulatory/CRDA"
-DOWNLOADS="http://wireless.kernel.org/download/${PN}/${PNV}.tar.bz2"
+HOMEPAGE="https://wireless.wiki.kernel.org/en/developers/Regulatory/CRDA"
+DOWNLOADS="mirror://kernel/software/network/${PN}/${PNV}.tar.xz"
+
+UPSTREAM_DOCUMENTATION="https://wireless.wiki.kernel.org/en/developers/Regulatory#crda"
 
 LICENCES="ISC"
 SLOT="0"
 PLATFORMS="~x86 ~amd64"
 
 MYOPTIONS="
-( crypt ssl ) [[
-    description = [ Use libgcrypt or OpenSSL to validate the regulatory database ]
-    number-selected = exactly-one
-]]
+    gcrypt [[ description = [ Use Libgcrypt instead of OpenSSL ] ]]
 "
 
 DEPENDENCIES="
     build:
         dev-lang/python:*
         dev-python/M2Crypto
-        net-wireless/wireless-regdb
+        net-wireless/wireless-regdb[>=2015.04.06-r1]
         virtual/pkg-config
     build+run:
-        net-libs/libnl:1
-        crypt? ( dev-libs/libgcrypt )
-        ssl? ( virtual/libssl )
+        net-libs/libnl:3.0
+        !gcrypt? ( virtual/libssl )
+        gcrypt? ( dev-libs/libgcrypt )
 "
 
-UPSTREAM_DOCUMENTATION="${HOMEPAGE}"
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-3.18-no-ldconfig.patch
+    "${FILES}"/${PN}-3.18-openssl.patch
+    "${FILES}"/${PN}-3.18-libreg-link.patch
+    "${FILES}"/${PN}-3.18-pkg-config.patch
+)
 
-CRDA_DIR=/usr/${LIBDIR}/crda
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/crda-1.1.0-buildtool.patch" )
+CRDA_DIR=/usr/share/crda
 
 src_prepare() {
     default
 
-    # do not add debug symbols by default, uncompressed manuals
+    # do not add debug symbols by default, uncompressed manuals, -Werror
     edo sed -e /'^CFLAGS +='/s:-g:: \
+            -e /'^CFLAGS +='/s:-Werror:: \
             -e /crda.8.gz/s:.gz::g \
             -e /regdbdump.8.gz/s:.gz::g \
             -i Makefile
 
     # remove hardcoded search paths
     edo sed -e /"\"\/usr\/local\/lib\/crda\/regulatory.bin\","/d \
-            -e /"\"\/usr\/lib\/crda\/regulatory.bin\","/d \
             -e /"\"\/lib\/crda\/regulatory.bin\","/d \
+            -i crda.c
+
+    # set proper search path
+    edo sed -e "s:/usr/lib:/usr/share:g" \
             -i crda.c
 }
 
 src_compile() {
     local mymake
 
-    option ssl && mymake+=( USE_OPENSSL=1 )
+    option !gcrypt && mymake+=( USE_OPENSSL=1 )
 
     emake REG_BIN=${CRDA_DIR}/regulatory.bin \
           PUBKEY_DIR=${CRDA_DIR}/pubkeys \
@@ -73,11 +79,12 @@ src_compile() {
 src_install() {
     local mymake
 
-    option ssl && mymake+=( USE_OPENSSL=1 )
+    option !gcrypt && mymake+=( USE_OPENSSL=1 )
 
     emake DESTDIR="${IMAGE}" \
           UDEV_RULE_DIR="${UDEVRULESDIR}" \
-          SBINDIR=/usr/sbin/ \
+          SBINDIR=/usr/$(exhost --target)/bin/ \
+          PREFIX=/usr/$(exhost --target) \
           ${mymake[@]} \
           install
 
