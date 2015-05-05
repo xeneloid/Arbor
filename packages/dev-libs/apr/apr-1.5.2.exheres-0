@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Apache portable runtime library"
 HOMEPAGE="http://${PN}.apache.org"
@@ -51,5 +51,13 @@ src_test() {
     esandbox allow_net "inet:0.0.0.0@8021"
     default
     esandbox disallow_net "inet:0.0.0.0@8021"
+}
+
+src_install() {
+    default
+
+    edo rm -r "${IMAGE}"/usr/share/build-1
+    # only used on AIX systems
+    edo rm "${IMAGE}"/usr/$(exhost --target)/lib/apr.exp
 }
 
