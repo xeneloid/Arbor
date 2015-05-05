@@ -22,3 +22,5 @@ DEPENDENCIES="
     ]]
 "
 
+WAF_SRC_COMPILE_PARAMS+=( -j1 )
+
