@@ -55,7 +55,7 @@ db_src_prepare() {
     edo cd "${WORKBASE}/${PN}-${MY_PV}/dist/"
 
     # Allow --docdir to work
-    edo sed -re "/^docdir/s:=\s+.*:= \$(prefix)/../share/doc/${PNVR}:" -i ./Makefile.in
+    edo sed -re "/^docdir/s:=\s+.*:= @docdir@:" -i ./Makefile.in
 
     if ! ever at_least 5.3.21; then
         # Hack in something similar --program-transform-name, simplifies slotting
