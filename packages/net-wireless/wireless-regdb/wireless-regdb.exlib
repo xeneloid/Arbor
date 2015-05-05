@@ -19,7 +19,7 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_INSTALL_PARAMS+=( CRDA_PATH=/usr/${LIBDIR}/crda )
+DEFAULT_SRC_INSTALL_PARAMS+=( CRDA_PATH=/usr/share/crda )
 
 wireless-regdb_src_prepare() {
     default
