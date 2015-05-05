@@ -18,7 +18,7 @@ written in Perl. Its main features are:
 "
 HOMEPAGE="http://guido-flohr.net/projects/${PN} ${HOMEPAGE}"
 
-LICENCES="LGPL-2.1"
+LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 
