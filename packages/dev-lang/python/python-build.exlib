@@ -64,6 +64,16 @@ if ever at_least 3.4; then
     DEFAULT_SRC_CONFIGURE_PARAMS+=( --without-ensurepip )
 fi
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    # We consider them as arch-dependent
+    SCRIPTDIR='$(LIBDIR)'
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    # We consider them as arch-dependent
+    SCRIPTDIR='$(LIBDIR)'
+)
+
 PYTHON_BYTECOMPILE_EXCLUDES=( bad_coding badsyntax lib2to3/tests/data site-packages )
 
 python-build_pkg_pretend() {
