@@ -15,15 +15,16 @@ DOWNLOADS="${HOMEPAGE}/files/v$(ever range 1-2)/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
-UPSTREAM_CHANGELOG="${HOMEPAGE}/files/v$(ever range 1-2)/CMakeChangeLog-${PV}"
-
 LICENCES="BSD-3"
 SLOT="0"
-MYOPTIONS="doc qt4
+MYOPTIONS="
+    doc
+    qt4
     qt5   [[ description = [ Build against Qt5 instead of Qt4. ] ]]
     vim-syntax
 
-    ( qt4 qt5 )  [[ number-selected = at-most-one ]]"
+    ( qt4 qt5 )  [[ number-selected = at-most-one ]]
+"
 
 ever at_least 3.2.1 && MYOPTIONS+="
     bootstrap [[ description = [ Use the internal jsoncpp (it needs cmake to build itself) ] ]]"
