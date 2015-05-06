@@ -62,12 +62,28 @@ waf_src_configure() {
         $(for s in "${WAF_SRC_CONFIGURE_TESTS[@]}" ; do expecting_tests ${s} ; done)
 }
 
+compile_one_multibuild() {
+    waf_compile_one_multibuild
+}
+
+waf_compile_one_multibuild() {
+    waf_src_compile
+}
+
 waf_src_compile() {
     ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_COMPILE_PARAMS[@]}" build
 }
 
 wafsamba_src_test() {
     ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_TEST_PARAMS[@]}" -v test
+}
+
+install_one_multibuild() {
+    waf_install_one_multibuild
+}
+
+waf_install_one_multibuild() {
+    waf_src_install
 }
 
 waf_src_install() {
