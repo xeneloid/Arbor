@@ -35,10 +35,6 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PN}-login.defs.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --enable-shadowgrp
@@ -62,7 +58,11 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HOWTO WISHLIST console.c.spec.txt )
 src_prepare() {
     default
 
-    edo sed -i -e "s:@LIBDIR@:$(exhost --build)/lib:" etc/login.defs
+    edo sed -i \
+        -e '/^LOGIN_RETRIES/   s:5$:3:'   \
+        -e '/^#MD5_CRYPT_ENAB/ s:no:yes:' \
+        -e '/^#MD5_CRYPT_ENAB/ s:^#::'    \
+        etc/login.defs
 }
 
 src_install() {
