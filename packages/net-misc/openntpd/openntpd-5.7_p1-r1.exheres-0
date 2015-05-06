@@ -46,7 +46,7 @@ NTPD_HOME=/var/empty
 NTPD_OPTS=""
 EOF
 
-    alternatives_for ntpd ${PN} 1 /usr/sbin/ntpd ${PN}
+    alternatives_for ntpd ${PN} 1 /usr/$(exhost --target)/bin/ntpd ${PN}
     alternatives_for ntpd ${PN} 1 /usr/share/man/man8/ntpd.8 ${PN}
 }
 
