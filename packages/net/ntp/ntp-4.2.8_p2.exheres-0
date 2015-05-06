@@ -5,3 +5,5 @@ require ntp
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-4.2.8-ipc-caps.patch )
+

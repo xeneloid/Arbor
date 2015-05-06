@@ -8,7 +8,7 @@ Conflicts=systemd-timesyncd.service
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/ntpd -u ntp:ntp -g
+ExecStart=/usr/bin/ntpd -u ntp:ntp -g
 PrivateTmp=true
 Restart=always
 
