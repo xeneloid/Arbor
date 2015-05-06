@@ -13,7 +13,10 @@ user-defined filetypes, etc.).
 "
 
 HOMEPAGE="http://www.netfilter.org/projects/${PN}"
-DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
+#DOWNLOADS="${HOMEPAGE}/files/${PNV}.tar.bz2"
+
+# tarball generated from an upstream git tag
+DOWNLOADS="http://dev.exherbo.org/~philantrop/distfiles/${PNV}.tar.xz"
 
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
