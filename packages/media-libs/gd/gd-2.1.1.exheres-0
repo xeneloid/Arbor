@@ -37,6 +37,8 @@ DEPENDENCIES="
         )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-2.1.1-libvpx14.patch )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-jpeg
