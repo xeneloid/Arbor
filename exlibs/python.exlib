@@ -50,6 +50,7 @@
 #
 #   2to3 (format: true or false) ( defaults to false )
 #     whether to use 2to3 prior to build
+#     needs either multibuild=false or multibuild=true && multiunpack=true
 #     The following arrays can be defined:
 #       PYTHON_2TO3_FIXES: array of fixes to apply. Can be empty.
 #       PYTHON_2TO3_NOFIXES: array of fixes to NOT apply. Can be empty.
@@ -235,6 +236,9 @@ case ${PYTHON_EXLIB_API} in
 
                 exparam -v PYTHON_MULTIUNPACK multiunpack
 
+                exparam -b 2to3 && ! exparam -b multiunpack && \
+                    die "exparam 2to3 can't be used with multibuild=true && multiunpack=false"
+
                 require easy-multibuild [ classes=[ PYTHON_ABIS ] with_option=${OPTION_NAME} \
                                           multiunpack=${PYTHON_MULTIUNPACK} $(exparam -b multiunpack && echo "work=${PYTHON_WORK}") ]
 
@@ -264,35 +268,33 @@ case ${PYTHON_EXLIB_API} in
             done
             DEPENDENCIES+=") )"
 
-            if exparam -b multibuild; then
-                if exparam -b 2to3; then
-                    export_exlib_phases src_prepare
-
-                    python_src_prepare() {
-                        easy-multibuild_run_phase
-                    }
-
-                    prepare_one_multibuild() {
-                        default
-
-                        python_run_2to3
-                    }
-                fi
-            else
-                exparam -b 2to3 && export_exlib_phases src_prepare
-
+            if ! exparam -b multibuild; then
                 # set python version which we will build against.
                 # In the multibuild case it gets set per subphase by easy-multibuild.
                 # Maybe we should always use multibuild?
                 # Downside: people have to use *_one_multibuild, even though they said multibuild=false
                 # Upside: only one codepath
                 export PYTHON="/usr/$(exhost --build)/bin/python${PYTHON_ABIS}"
+            fi
 
-                if exparam -b 2to3; then
+            python_prepare_one_multibuild() {
+                default
+
+                if [[ -z ${OPTION_NAME} ]] || option ${OPTION_NAME}; then
+                    exparam -b 2to3 && python_run_2to3
+                fi
+            }
+
+            if exparam -b 2to3; then
+                prepare_one_multibuild() {
+                    python_prepare_one_multibuild
+                }
+
+                if ! exparam -b multibuild; then
+                    export_exlib_phases src_prepare
+
                     python_src_prepare() {
-                        default
-
-                        python_run_2to3
+                        python_prepare_one_multibuild
                     }
                 fi
             fi
