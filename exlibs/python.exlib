@@ -125,6 +125,8 @@ case ${PYTHON_EXLIB_API} in
         }
 
         # Returns the current python abi
+        # NOTE(moben): Doesn't return the actual abi with flags, only the version, but that is what
+        # we need most of the time. See python_get_incdir()
         python_get_abi() {
             illegal_in_global_scope
 
@@ -141,7 +143,14 @@ case ${PYTHON_EXLIB_API} in
         python_get_incdir() {
             illegal_in_global_scope
 
-            echo -n "/usr/$(exhost --target)/include/python$(python_get_abi)"
+            # Hack the abi
+            # TODO(moben):  either rename the ABIs to x.ym or introduce all the abis
+            # x.y['','d','m','dm'] (for >=3.3) and have them depend on python[+-pymalloc][+-debug]
+            # would need to multibuild python n! times though, depending on options.
+            local abi=$(python_get_abi)
+            ever at least 3.2 ${abi} && abi+=m
+
+            echo -n "/usr/$(exhost --target)/include/python${abi}"
         }
 
         # Run without arguments, returns the python library directory.
@@ -326,6 +335,8 @@ case ${PYTHON_EXLIB_API} in
         }
 
         # Returns the current python abi
+        # NOTE(moben): Doesn't return the actual abi with flags, only the version, but that is what
+        # we need most of the time. See python_get_incdir()
         python_get_abi() {
             illegal_in_global_scope
 
@@ -340,7 +351,14 @@ case ${PYTHON_EXLIB_API} in
         python_get_incdir() {
             illegal_in_global_scope
 
-            echo -n "/usr/$(exhost --target)/include/python$(python_get_abi)"
+            # Hack the abi
+            # TODO(moben):  either rename the ABIs to x.ym or introduce all the abis
+            # x.y['','d','m','dm'] (for >=3.3) and have them depend on python[+-pymalloc][+-debug]
+            # would need to multibuild python n! times though, depending on options.
+            local abi=$(python_get_abi)
+            ever at least 3.2 ${abi} && abi+=m
+
+            echo -n "/usr/$(exhost --target)/include/python${abi}"
         }
 
         # Run without arguments, returns the python library directory.
