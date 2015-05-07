@@ -264,22 +264,12 @@ case ${PYTHON_EXLIB_API} in
             done
             DEPENDENCIES+=") )"
 
-            # set python version which we will build against, we need that until easy-multibuild is fixed
-            # PYTHON_ABIS is set via the suboption
             if exparam -b multibuild; then
                 if exparam -b 2to3; then
-                    export_exlib_phases src_prepare src_configure src_compile src_test src_install
-                else
-                    export_exlib_phases src_configure src_compile src_test src_install
-                fi
+                    export_exlib_phases src_prepare
 
-                python_run_phase() {
-                    easy-multibuild_run_phase
-                }
-
-                if exparam -b 2to3; then
                     python_src_prepare() {
-                        python_run_phase
+                        easy-multibuild_run_phase
                     }
 
                     prepare_one_multibuild() {
@@ -288,26 +278,14 @@ case ${PYTHON_EXLIB_API} in
                         python_run_2to3
                     }
                 fi
-
-                python_src_configure() {
-                    python_run_phase
-                }
-
-                python_src_compile() {
-                    python_run_phase
-                }
-
-                python_src_test() {
-                    python_run_phase
-                }
-
-                python_src_install() {
-                    python_run_phase
-                    emagicdocs
-                }
             else
                 exparam -b 2to3 && export_exlib_phases src_prepare
 
+                # set python version which we will build against.
+                # In the multibuild case it gets set per subphase by easy-multibuild.
+                # Maybe we should always use multibuild?
+                # Downside: people have to use *_one_multibuild, even though they said multibuild=false
+                # Upside: only one codepath
                 export PYTHON="/usr/$(exhost --build)/bin/python${PYTHON_ABIS}"
 
                 if exparam -b 2to3; then
