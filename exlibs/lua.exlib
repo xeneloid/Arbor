@@ -88,7 +88,7 @@ if exparam -b multibuild ; then
 
     exparam -v LUA_MULTIUNPACK multiunpack
 
-    require easy-multibuild [ classes=[ LUA_ABIS ] \
+    require easy-multibuild [ classes=[ LUA_ABIS ] with_option=${OPTION_NAME} \
             multiunpack=${LUA_MULTIUNPACK} $(exparam -b multiunpack && echo "work=${LUA_WORK}") ]
 
     MULTIBUILD_LUA_ABIS_TARGETS="${LUA_FILTERED_ABIS}"
