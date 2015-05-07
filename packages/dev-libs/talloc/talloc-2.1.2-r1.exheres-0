@@ -16,15 +16,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="
-    build:
-        (
-            app-text/docbook-xml-dtd:4.2
-            dev-libs/libxslt
-        ) [[ description = [ Need xsltproc to build the manual page ] ]]
-"
+DEPENDENCIES=""
 
-WAF_SRC_CONFIGURE_PARAMS+=( --disable-python )
 WAF_SRC_COMPILE_PARAMS=( -j1 )
 DEFAULT_SRC_INSTALL_EXCLUDE=( release-script.sh )
 
