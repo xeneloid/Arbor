@@ -1,7 +1,7 @@
 # Copyright 2012 Paul Seidler
 # Distributed under the terms of the GNU General Public License v2
 
-require waf [ waf_executable="buildtools/bin/waf" ]
+require wafsamba
 
 SUMMARY="Simple database API"
 HOMEPAGE="http://tdb.samba.org/"
@@ -22,5 +22,6 @@ DEPENDENCIES="
     ]]
 "
 
+WAF_SRC_CONFIGURE_PARAMS+=( --disable-python )
 WAF_SRC_COMPILE_PARAMS+=( -j1 )
 
