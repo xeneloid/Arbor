@@ -13,11 +13,24 @@
 #   work ( format: path ) ( defaults to ${PNV} if multiunpack is true and nothing otherwise )
 #     for use with the multiunpack exparam. path to WORK relative from the dir where the sources are
 #     unpacked.
+#
+#   with_option ( format: option_name ) ( defaults to empty )
+#     when given the name of an option, multibuild'ing will only be done if that option is enabled.
+#     Otherwise easy-multibuild_run_phase will run the *_one_multibuild phases on their own,
+#     outside the multibuild environment.
+#     Example:
+#         python.exlib can use [ with_option=python ] to only run multibuild if the python option is
+#         enabled, e.g. for optional python bindings. Otherwise, the phases are only run once with
+#         no python selected.
+#     Warning:
+#         Care has to be taken to not use anything dependent on multibuild if the option is disabled.
+#
 require multibuild
 
 myexparam classes=[ ]
 exparam -v EASY_MULTIBUILD_CLASSES classes[@]
 
+myexparam with_option=
 myexparam -b multiunpack=false
 
 if ! exparam -b multiunpack ; then
@@ -39,6 +52,22 @@ easy-multibuild_check_classes() {
     done
 }
 
+__easy-multibuild_prep_n_run_phase_or_default() {
+    if [[ "$(type -t "${EXHERES_PHASE}_prepare_one_multibuild")" == "function" ]] ; then
+        "${EXHERES_PHASE}_prepare_one_multibuild"
+    fi
+
+    edo pushd "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${easy_multibuild_work}"
+
+    if [[ "$(type -t "${EXHERES_PHASE}_one_multibuild")" == "function" ]] ; then
+        "${EXHERES_PHASE}_one_multibuild"
+    else
+        default
+    fi
+
+    edo popd
+}
+
 easy-multibuild_run_phase() {
     local targetsv easy_multibuild_work
 
@@ -47,34 +76,28 @@ easy-multibuild_run_phase() {
 
     [[ ${EXHERES_PHASE} != unpack ]] && exparam -v easy_multibuild_work work
 
-    for MULTIBUILD_CLASS in "${EASY_MULTIBUILD_CLASSES[@]}" ; do
-        targetsv="MULTIBUILD_${MULTIBUILD_CLASS}_TARGETS"
-        echo "Multibuild Class: ${MULTIBUILD_CLASS} (${targetsv})"
+    exparam -v option_name with_option
 
-        for MULTIBUILD_TARGET in ${!targetsv} ; do
-            if ! option ${MULTIBUILD_CLASS,,}:${MULTIBUILD_TARGET} ; then
-                echo "  ${MULTIBUILD_CLASS} Target: ${MULTIBUILD_TARGET} (disabled)"
-                continue
-            fi
+    if [[ -z ${option_name} ]] || option ${option_name}; then
+        for MULTIBUILD_CLASS in "${EASY_MULTIBUILD_CLASSES[@]}" ; do
+            targetsv="MULTIBUILD_${MULTIBUILD_CLASS}_TARGETS"
+            echo "Multibuild Class: ${MULTIBUILD_CLASS} (${targetsv})"
 
-            echo "  ${MULTIBUILD_CLASS} Target: ${MULTIBUILD_TARGET}"
-            multibuild_switch_build_target "${MULTIBUILD_CLASS}" "${MULTIBUILD_TARGET}"
+            for MULTIBUILD_TARGET in ${!targetsv} ; do
+                if ! option ${MULTIBUILD_CLASS,,}:${MULTIBUILD_TARGET} ; then
+                    echo "  ${MULTIBUILD_CLASS} Target: ${MULTIBUILD_TARGET} (disabled)"
+                    continue
+                fi
 
-            if [[ "$(type -t "${EXHERES_PHASE}_prepare_one_multibuild")" == "function" ]] ; then
-                "${EXHERES_PHASE}_prepare_one_multibuild"
-            fi
+                echo "  ${MULTIBUILD_CLASS} Target: ${MULTIBUILD_TARGET}"
+                multibuild_switch_build_target "${MULTIBUILD_CLASS}" "${MULTIBUILD_TARGET}"
 
-            edo pushd "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${easy_multibuild_work}"
-
-            if [[ "$(type -t "${EXHERES_PHASE}_one_multibuild")" == "function" ]] ; then
-                "${EXHERES_PHASE}_one_multibuild"
-            else
-                default
-            fi
-
-            edo popd
+                __easy-multibuild_prep_n_run_phase_or_default
+            done
         done
-    done
+    else
+        __easy-multibuild_prep_n_run_phase_or_default
+    fi
 }
 
 if exparam -b multiunpack ; then
@@ -91,17 +114,23 @@ if exparam -b multiunpack ; then
     }
 
     scm_multiunpack_hook() {
-        local unpack_to=${1}
-        local MULTIBUILD_CLASS MULTIBUILD_TARGET targetsv
+        exparam -v option_name with_option
 
-        for MULTIBUILD_CLASS in "${EASY_MULTIBUILD_CLASSES[@]}" ; do
-            targetsv="MULTIBUILD_${MULTIBUILD_CLASS}_TARGETS"
-            for MULTIBUILD_TARGET in ${!targetsv} ; do
-                if option ${MULTIBUILD_CLASS,,}:${MULTIBUILD_TARGET} ; then
-                    scm_multiunpack "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${unpack_to#${WORKBASE}/}"
-                fi
+        if [[ -z ${option_name} ]] || option ${option_name}; then
+            local unpack_to=${1}
+            local MULTIBUILD_CLASS MULTIBUILD_TARGET targetsv
+
+            for MULTIBUILD_CLASS in "${EASY_MULTIBUILD_CLASSES[@]}" ; do
+                targetsv="MULTIBUILD_${MULTIBUILD_CLASS}_TARGETS"
+                for MULTIBUILD_TARGET in ${!targetsv} ; do
+                    if option ${MULTIBUILD_CLASS,,}:${MULTIBUILD_TARGET} ; then
+                        scm_multiunpack "${WORKBASE}/${MULTIBUILD_CLASS}/${MULTIBUILD_TARGET}/${unpack_to#${WORKBASE}/}"
+                    fi
+                done
             done
-        done
+        else
+            scm_multiunpack "${1}"
+        fi
     }
 else
     configure_prepare_one_multibuild() {
