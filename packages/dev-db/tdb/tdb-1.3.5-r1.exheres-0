@@ -22,6 +22,5 @@ DEPENDENCIES="
     ]]
 "
 
-WAF_SRC_CONFIGURE_PARAMS+=( --disable-python )
 WAF_SRC_COMPILE_PARAMS+=( -j1 )
 
