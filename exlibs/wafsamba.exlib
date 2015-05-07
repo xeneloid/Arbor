@@ -1,7 +1,10 @@
 # Copyright 2011 Pierre Lejeune <superheron@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require waf [ waf_executable="$(ever is_scm && echo '../../' || echo './')buildtools/bin/waf" ]
+require waf [ waf_executable="python2 $(ever is_scm && echo '../../' || echo './')buildtools/bin/waf" ]
+require python [ blacklist='3' multibuild=false ]
+
+export_exlib_phases src_configure
 
 DEPENDENCIES="
     build:
@@ -24,3 +27,7 @@ WAF_SRC_CONFIGURE_PARAMS=(
     --disable-rpath-install
 )
 
+wafsamba_src_configure() {
+    export PYTHONARCHDIR="$(python_get_sitedir)"
+    waf_src_configure
+}
