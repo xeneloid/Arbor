@@ -235,7 +235,7 @@ case ${PYTHON_EXLIB_API} in
 
                 exparam -v PYTHON_MULTIUNPACK multiunpack
 
-                require easy-multibuild [ classes=[ PYTHON_ABIS ] \
+                require easy-multibuild [ classes=[ PYTHON_ABIS ] with_option=${OPTION_NAME} \
                                           multiunpack=${PYTHON_MULTIUNPACK} $(exparam -b multiunpack && echo "work=${PYTHON_WORK}") ]
 
                 MULTIBUILD_PYTHON_ABIS_TARGETS="${PYTHON_FILTERED_ABIS}"
@@ -274,11 +274,7 @@ case ${PYTHON_EXLIB_API} in
                 fi
 
                 python_run_phase() {
-                    if exparam -b with_opt; then
-                        option "${OPTION_NAME}" && easy-multibuild_run_phase
-                    else
-                        easy-multibuild_run_phase
-                    fi
+                    easy-multibuild_run_phase
                 }
 
                 if exparam -b 2to3; then
