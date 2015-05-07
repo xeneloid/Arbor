@@ -148,7 +148,7 @@ case ${PYTHON_EXLIB_API} in
             # x.y['','d','m','dm'] (for >=3.3) and have them depend on python[+-pymalloc][+-debug]
             # would need to multibuild python n! times though, depending on options.
             local abi=$(python_get_abi)
-            ever at least 3.2 ${abi} && abi+=m
+            ever at_least 3.2 ${abi} && abi+=m
 
             echo -n "/usr/$(exhost --target)/include/python${abi}"
         }
@@ -356,7 +356,7 @@ case ${PYTHON_EXLIB_API} in
             # x.y['','d','m','dm'] (for >=3.3) and have them depend on python[+-pymalloc][+-debug]
             # would need to multibuild python n! times though, depending on options.
             local abi=$(python_get_abi)
-            ever at least 3.2 ${abi} && abi+=m
+            ever at_least 3.2 ${abi} && abi+=m
 
             echo -n "/usr/$(exhost --target)/include/python${abi}"
         }
