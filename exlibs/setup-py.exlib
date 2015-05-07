@@ -131,7 +131,7 @@ fi
 
 setup-py_run_phase() {
     if exparam -b multibuild; then
-        python_run_phase
+        easy-multibuild_src_${EXHERES_PHASE}
     else
         setup-py_${EXHERES_PHASE}_one_multibuild
     fi
@@ -141,9 +141,8 @@ export_exlib_phases src_prepare src_configure src_compile src_install
 
 setup-py_prepare_one_multibuild() {
     [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
-    default
 
-    exparam -b 2to3 && python_run_2to3
+    python_prepare_one_multibuild
 
     # remove ez_setup stuff to prevent packages
     # from installing setuptools on their own
