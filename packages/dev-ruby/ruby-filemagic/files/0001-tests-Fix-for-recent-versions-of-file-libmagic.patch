@@ -1,15 +1,17 @@
-Upstream: no, maintainer has mail
-From 9e020e02f3bd0800282180ea22a3442ba35a27bb Mon Sep 17 00:00:00 2001
-From: Arne Janbu <arnej@arnej.de>
-Date: Fri, 21 Feb 2014 19:33:49 +0100
-Subject: [PATCH] Fix tests
+From 834ea4fbdbe84143d4ca5ca6d65d21c59f14918b Mon Sep 17 00:00:00 2001
+From: Marvin Schmidt <marv@exherbo.org>
+Date: Fri, 8 May 2015 17:15:31 +0200
+Subject: [PATCH] tests: Fix for recent versions of file/libmagic
+Upstream: Yes, https://github.com/ricardochimal/ruby-filemagic/pull/2
 
+The output of libmagic has changed quite a bit. With this
+change the tests reflect the output of file/libmagic version 5.22
 ---
- test/regress.rb | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ test/regress.rb | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/test/regress.rb b/test/regress.rb
-index 49b8801..b5fa2da 100644
+index 49b8801..582f6be 100644
 --- a/test/regress.rb
 +++ b/test/regress.rb
 @@ -14,13 +14,13 @@ class TestFileMagic < Test::Unit::TestCase
@@ -19,7 +21,8 @@ index 49b8801..b5fa2da 100644
 -    assert_equal("a python script text executable", res)
 +    assert_equal("Python script, ASCII text executable", res)
      res = fm.file("pylink")
-     assert_equal("symbolic link to `pyfile'", res)
+-    assert_equal("symbolic link to `pyfile'", res)
++    assert_equal("symbolic link to pyfile", res)
      fm.close
      fm = FileMagic.new(FileMagic::MAGIC_SYMLINK)
      res = fm.file("pylink")
@@ -33,7 +36,7 @@ index 49b8801..b5fa2da 100644
      fm = FileMagic.new(FileMagic::MAGIC_COMPRESS)
      res = fm.file("pyfile-compressed.gz")
 -    assert_equal('a python script text executable (gzip compressed data, was "pyfile-compressed", from Unix, last modified: Wed Jul 30 21:20:45 2003)', res)
-+    assert_equal('Python script, ASCII text executable (gzip compressed data, was "pyfile-compressed", from Unix, last modified: Wed Jul 30 21:20:45 2003)', res)
++    assert_equal('Python script, ASCII text executable (gzip compressed data, was "pyfile-compressed", last modified: Wed Jul 30 21:20:45 2003, from Unix)', res)
      fm.close
    end
  
@@ -47,5 +50,5 @@ index 49b8801..b5fa2da 100644
  
    def test_check
 -- 
-1.9.0
+2.3.3
 

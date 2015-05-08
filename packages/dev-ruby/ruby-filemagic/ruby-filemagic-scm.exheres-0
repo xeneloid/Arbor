@@ -16,9 +16,12 @@ MYOPTIONS=""
 DEPENDENCIES="
     build+run:
         dev-lang/ruby:=
+        sys-apps/file[>=5.22]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Fix-tests.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-tests-Fix-for-recent-versions-of-file-libmagic.patch
+)
 
 # work around hardcoded absolute paths
 DEFAULT_SRC_INSTALL_PARAMS=(
