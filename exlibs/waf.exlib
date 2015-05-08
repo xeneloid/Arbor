@@ -35,7 +35,9 @@ ewaf() {
         has ${j#--} ${hates} || args+=( "${i}" )
     done
 
-    PKGCONFIG=${PKG_CONFIG} edo ${WAF_EXECUTABLE} "${args[@]}"
+    edo env \
+        PKGCONFIG=${PKG_CONFIG} "${EWAF_ENVIRONMENT[@]}"  \
+        ${WAF_EXECUTABLE} "${args[@]}"
 }
 
 configure_one_multibuild() {
