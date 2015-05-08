@@ -235,7 +235,7 @@ __gcc_setup_gdb_extension() {
 __gcc_migration_wrapper() {
     local prefix tool target
 
-    local tools=( c++ g++ cpp gcc )
+    local tools=( c++ g++ cpp gcc cc )
 
     into /usr/${CHOST}
 
@@ -306,6 +306,8 @@ legacy-gcc_src_install() {
         insinto /usr/include/c++/${MY_PV:-${PV}}/${CHOST}/bits
         doins -r "${WORK}"/${CHOST}/libstdc++-v3/include/${CHOST}/bits/*.gch
     fi
+
+    edo ln -sf "${CHOST}-gcc-4.9" "${IMAGE}/bin/${CHOST}-cc-4.9"
 
     __gcc_slot_runtime
     __gcc_slot_shared_data
