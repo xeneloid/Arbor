@@ -1,7 +1,7 @@
 # Copyright 2009 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases src_configure src_compile src_install
+export_exlib_phases src_configure src_compile src_test src_install
 
 myexparam waf_executable="./waf"
 
@@ -76,7 +76,7 @@ waf_src_compile() {
     ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_COMPILE_PARAMS[@]}" build
 }
 
-wafsamba_src_test() {
+waf_src_test() {
     ewaf --jobs=${EXJOBS:-1} "${WAF_DEFAULT_PARAMS[@]}" "${WAF_SRC_TEST_PARAMS[@]}" -v test
 }
 
