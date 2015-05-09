@@ -37,6 +37,17 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     -p2 "${FILES}/${PN}-tclConfig-paths.patch"
 )
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    # We consider them as arch-dependent
+    TCL_LIBRARY='$(exec_prefix)/lib/tcl$(VERSION)'
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    # We consider them as arch-dependent
+    TCL_LIBRARY='$(exec_prefix)/lib/tcl$(VERSION)'
+    install-private-headers
+)
+
 src_configure() {
     local extra_params=( )
 
@@ -64,7 +75,6 @@ src_install() {
     local host=$(exhost --target)
 
     default
-    nonfatal emake DESTDIR="${IMAGE}" install-private-headers || die "emake install-private-headers failed"
 
     keepdir /usr/${host}/lib/${PN}8/8.3/
 
