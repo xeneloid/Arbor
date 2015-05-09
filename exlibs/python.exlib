@@ -84,6 +84,8 @@ if [[ -z $(exparam blacklist) ]]; then
     PYTHON_EXLIB_API=1
 fi
 
+export am_cv_python_pythondir='${libdir}/python${PYTHON_VERSION}/site-packages'
+
 case ${PYTHON_EXLIB_API} in
     1)
         exparam -b 2to3 && export_exlib_phases src_prepare
