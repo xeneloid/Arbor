@@ -94,17 +94,7 @@ if [[ ${PN} != vim-runtime ]]; then
     esac
 fi
 
-
-DOWNLOADS+="${VIM_EXHERBO_PATCHES_URI:-http://dev.exherbo.org/distfiles/vim/${VIM_VERSION}/vim-${VIM_VERSION}-exherbo-patches.tar.bz2}"
-
 vim_src_prepare() {
-    # A set of patches borrowed from src rpm to fix syntax errors etc.
-    for p in "${WORKBASE}"/patches/*; do
-        [[ -f "${p}" ]] || continue
-        patches+=( "${p}" )
-    done
-    expatch "${patches[@]}"
-
     # Fixup a script to use awk instead of nawk
     edo sed -i -e "1s|.*|#!/usr/$(exhost --target)/bin/awk -f|" "${WORK}"/runtime/tools/mve.awk
 
