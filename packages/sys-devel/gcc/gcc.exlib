@@ -200,6 +200,11 @@ gcc_src_compile() {
 
         edo cd "${WORKBASE}/build/${target}"
 
+        # NOTE(compnerd) unset CPP which is set by default by ebuild.bash.  We want to auto-detect
+        # the C preprocessor so that the cross-compiled configuration is properly detected and can
+        # honour the target specific flags.
+        unset CPP
+
         AR_FOR_TARGET=$(exhost --tool-prefix)ar           \
         READELF_FOR_TARGET=$(exhost --tool-prefix)readelf \
         CFLAGS_FOR_TARGET="${!target_cflags_var}"         \
