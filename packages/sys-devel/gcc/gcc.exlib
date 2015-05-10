@@ -82,6 +82,7 @@ gcc_src_configure() {
         local libpath=/usr/${target}/lib
         local gxx_incdir=/usr/${target}/include/c++/${PV}
         local target_cflags_var=${target//-/_}_CFLAGS
+        local target_cppflags_var=${target//-/_}_CPPFLAGS
         local target_cxxflags_var=${target//-/_}_CXXFLAGS
         local target_ldflags_var=${target//-/_}_LDFLAGS
         local tool_prefix=$(exhost --tool-prefix)
@@ -99,10 +100,14 @@ gcc_src_configure() {
         edo env                                             \
             AR=${CHOST}-ar                                  \
             RANLIB=${CHOST}-ranlib                          \
+            AR_FOR_TARGET=${tool_prefix}ar                  \
             AS_FOR_TARGET=${tool_prefix}as                  \
+            CPP_FOR_TARGET=${tool_prefix}cpp                \
+            READELF_FOR_TARGET=${tool_prefix}readelf        \
             NM_FOR_TARGET=${tool_prefix}nm                  \
             OBJDUMP_FOR_TARGET=${tool_prefix}objdump        \
             CFLAGS_FOR_TARGET="${!target_cflags_var}"       \
+            CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"   \
             CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"   \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
         "${WORKBASE}/${PNV}/configure"         \
@@ -181,6 +186,11 @@ gcc_src_compile() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
+        local target_cflags_var=${target//-/_}_CFLAGS
+        local target_cppflags_var=${target//-/_}_CPPFLAGS
+        local target_cxxflags_var=${target//-/_}_CXXFLAGS
+        local target_ldflags_var=${target//-/_}_LDFLAGS
+
         if option !targets:${target} ; then
             echo "    Cross-Compile Target: ${target} (disabled)"
             continue
@@ -190,7 +200,13 @@ gcc_src_compile() {
 
         edo cd "${WORKBASE}/build/${target}"
 
-        gcc_cv_readelf="/usr/$(exhost --build)/bin/${tool_prefix}readelf" AR=${target}-ar default
+        AR_FOR_TARGET=$(exhost --tool-prefix)ar           \
+        READELF_FOR_TARGET=$(exhost --tool-prefix)readelf \
+        CFLAGS_FOR_TARGET="${!target_cflags_var}"         \
+        CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"     \
+        CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"     \
+        LDFLAGS_FOR_TARGET="${!target_ldflags_var}"       \
+        default
     done
 }
 
