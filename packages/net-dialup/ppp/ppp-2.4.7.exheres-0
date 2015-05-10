@@ -80,6 +80,13 @@ src_prepare() {
     fi
 }
 
+src_configure() {
+    # This configure script is not Autotools-compliant
+    edo ./configure \
+        --prefix="/usr/$(exhost --target)" \
+        --sysconfdir=/etc
+}
+
 src_install() {
     local i
     for i in chat pppd pppdump pppstats
