@@ -40,7 +40,7 @@ lua-build_src_prepare() {
     # Upstream doesn't provide a pkg-config file with 5.2.x anymore
     if ever at_least 5.2.0 ; then
         edo mkdir etc
-        edo cp "${FILES}"/${PN}-${SLOT}.pc etc
+        edo cp "${FILES}"/${PN}.pc etc/${PN}-${SLOT}.pc
     else
         edo mv etc/{${PN},${PN}-${SLOT}}.pc
         edo sed -e "/^INSTALL_MAN/s:= .*:=/usr/share/man/man1:" \
