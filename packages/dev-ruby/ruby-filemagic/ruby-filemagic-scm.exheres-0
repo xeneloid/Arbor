@@ -19,10 +19,6 @@ DEPENDENCIES="
         sys-apps/file[>=5.22]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-tests-Fix-for-recent-versions-of-file-libmagic.patch
-)
-
 # work around hardcoded absolute paths
 DEFAULT_SRC_INSTALL_PARAMS=(
     MAKEDIRS="mkdir -p"
