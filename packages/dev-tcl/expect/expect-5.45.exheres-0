@@ -46,6 +46,10 @@ src_prepare() {
     # make sure to find stty on multiarch
     edo sed -e "s#STTY_BIN=/bin/stty#STTY_BIN=/usr/$(exhost --target)/bin/stty#g" -i configure.in
 
+    # TODO(sardemff7) Patch to upstream
+    # Use $(bindir)
+    edo sed -e 's:$(prefix)/bin:$(bindir):' -i Makefile.in
+
     autotools_src_prepare
 }
 
