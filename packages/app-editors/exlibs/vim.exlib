@@ -21,17 +21,15 @@
 
 #require vim/doc flag-o-matic fdo-mime bash-completion
 require vim-doc flag-o-matic alternatives
+require github [ pn=vim tag=v$(ever replace_all -) ]
 
 [[ "${PN}" != 'vim-runtime' ]] && require python [ blacklist="3.1" multibuild=false with_opt=true ]
 [[ "${PN}" != 'gvim' ]] && require bash-completion
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_prerm pkg_postrm
 
-### Versions and patchlevels
+### Version
 VIM_VERSION="${VIM_VERSION:-$(ever range 1-2)}"
-VIM_PATCH_LEVEL="${VIM_PATCH_LEVEL:-${PV#${VIM_VERSION}.}}"
-VIM_PATCH_LEVEL="${VIM_PATCH_LEVEL##0}"
-VIM_PATCH_LEVEL="${VIM_PATCH_LEVEL:-0}"
 
 HOMEPAGE="http://www.vim.org/"
 LICENCES="vim"
@@ -96,29 +94,11 @@ if [[ ${PN} != vim-runtime ]]; then
     esac
 fi
 
-# Used for setting DOWNLOADS (when ${1} is non-zero) and for outputting the patch names (for src_prepare)
-vim_src_uri_patches() {
-    # Upstream provides patches cat'ed and gzipped per hundred until 7.2, use those to fetch fewer files.
-    local i
 
-    for((i=1;i<=${VIM_PATCH_LEVEL};i++)); do
-        printf "${1:+${VIM_BASE_URI}/patches/${VIM_VERSION}/${VIM_VERSION}.%03d -> } vim-${VIM_VERSION}.%03d.patch\n" ${1:+"${i}"} "${i}"
-    done
-}
-
-VIM_BASE_URI="${VIM_BASE_URI:-ftp://ftp.vim.org/pub/vim}"
-DOWNLOADS="${VIM_BASE_URI}/unix/vim-${VIM_VERSION}.tar.bz2
-    ${VIM_EXHERBO_PATCHES_URI:-http://dev.exherbo.org/distfiles/vim/${VIM_VERSION}/vim-${VIM_VERSION}-exherbo-patches.tar.bz2}
-    $(vim_src_uri_patches DOWNLOADS)"
-WORK="${WORKBASE}/vim${VIM_VERSION//.}"
+DOWNLOADS+="${VIM_EXHERBO_PATCHES_URI:-http://dev.exherbo.org/distfiles/vim/${VIM_VERSION}/vim-${VIM_VERSION}-exherbo-patches.tar.bz2}"
 
 vim_src_prepare() {
-    # Apply any patches available from vim.org for this version
-    local p patches=( -p0 )
-    for p in $(vim_src_uri_patches); do
-        patches+=( "${FETCHEDDIR}"/${p} )
-    done
-    # Another set of patches borrowed from src rpm to fix syntax errors etc.
+    # A set of patches borrowed from src rpm to fix syntax errors etc.
     for p in "${WORKBASE}"/patches/*; do
         [[ -f "${p}" ]] || continue
         patches+=( "${p}" )
