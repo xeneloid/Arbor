@@ -50,12 +50,12 @@ waf_configure_one_multibuild() {
 
 waf_src_configure() {
     ewaf --jobs=1 configure \
-        --prefix=/usr \
-        --exec-prefix=/usr/$(exhost --target) \
-        --sbindir='${EXEC_PREFIX}'/bin/ \
-        --includedir='${EXEC_PREFIX}'/include/ \
-        --docdir='${DATAROOTDIR}'/doc/${PNVR} \
-        ${WAF_SRC_CONFIGURE_HTMLDIR---htmldir='${DOCDIR}'/html/} \
+        --prefix=/usr/$(exhost --target)/ \
+        --bindir=/usr/$(exhost --target)/bin/ \
+        --sbindir=/usr/$(exhost --target)/bin/ \
+        --libdir=/usr/$(exhost --target)/lib/ \
+        --datadir=/usr/share/ \
+        ${WAF_SRC_CONFIGURE_HTMLDIR---htmldir=/usr/share/doc/${PNVR}/html/} \
         "${WAF_DEFAULT_PARAMS[@]}" \
         "${WAF_SRC_CONFIGURE_PARAMS[@]}" \
         $(for s in "${WAF_SRC_CONFIGURE_OPTIONS[@]}" ; do option ${s} ; done) \
