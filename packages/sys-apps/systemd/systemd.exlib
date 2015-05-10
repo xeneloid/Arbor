@@ -240,9 +240,8 @@ systemd_src_prepare() {
 
 systemd_src_configure() {
     local myconfig=(
-        --prefix='${exec_prefix}'
-        --with-rootprefix='${exec_prefix}'
-        --libexecdir='${libdir}'
+        --with-rootprefix=/usr/$(exhost --target)
+        --libexecdir=/usr/$(exhost --target)/lib
         --localstatedir=/var
         --enable-backlight
         --enable-binfmt
@@ -292,7 +291,7 @@ systemd_src_configure() {
         --with-kbd-loadkeys=/bin/loadkeys
         --with-kbd-setfont=/bin/setfont
         --with-pamconfdir=/etc/pam.d
-        --with-pamlibdir='${libdir}'/security
+        --with-pamlibdir=/usr/$(exhost --target)/lib/security
         # Disable SysV init compatibility.
         --with-rc-local-script-path-start=""
         --with-rc-local-script-path-stop=""
