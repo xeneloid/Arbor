@@ -64,10 +64,10 @@ exparam -v LUA_MIN_VERSIONS min_versions
 
 # LUA_AVAILABLE_ABIS below need to be in sync with
 # MULTIBUILD_LUA_ABIS_TARGETS in profiles/make.defaults.
-LUA_AVAILABLE_ABIS="5.1 5.2"
+LUA_AVAILABLE_ABIS="5.1 5.2 5.3"
 
 if [[ ${LUA_WHITELIST} == all ]] ; then
-    LUA_FILTERED_ABIS=${LUA_AVAILABLE_ABIS}
+    LUA_FILTERED_ABIS="${LUA_AVAILABLE_ABIS}"
 else
     LUA_FILTERED_ABIS=
 
