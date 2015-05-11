@@ -32,5 +32,10 @@ DEPENDENCIES="
 
 REMOTE_IDS="freecode:${PN}"
 
+# TODO: python3 support, see swig exheres
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-static
+    --without-python3
+)
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( debug python )
 
