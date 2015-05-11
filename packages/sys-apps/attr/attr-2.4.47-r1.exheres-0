@@ -43,7 +43,7 @@ src_install() {
     emake -j1 DESTDIR="${IMAGE}" install install-dev install-lib
 
     # Part of sys-apps/man-pages
-    edo rm -r "${IMAGE}"/usr/share/man/man2
+    edo rm -r "${IMAGE}"/usr/share/man/man{2,5}
 
     expart binaries /usr/$(exhost --target)/bin
     expart development /usr/$(exhost --target)/include
