@@ -8,7 +8,7 @@ Before=network.target
 After=local-fs.target
 
 [Service]
-ExecStart=/sbin/dhcpcd -q -B
+ExecStart=/usr/bin/dhcpcd -q -B
 
 [Install]
 WantedBy=multi-user.target
