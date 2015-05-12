@@ -5,6 +5,7 @@
 require perl-module [ module_author=ETHER ]
 
 SUMMARY="Perl module for Uniform Resource Identifiers (absolute and relative)"
+
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
