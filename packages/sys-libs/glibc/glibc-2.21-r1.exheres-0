@@ -13,6 +13,7 @@ MYOPTIONS+="
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PNV}-75adf430d2d7ee16eaf3166680de83b498444720.patch
     "${FILES}"/${PNV}-allow-two-additional-tests-to-xfail.patch
+    "${FILES}"/${PNV}-CVE-2015-1781-resolv-nss_dns-dns-host.c-buffer-overf.patch
 )
 
 src_prepare() {
