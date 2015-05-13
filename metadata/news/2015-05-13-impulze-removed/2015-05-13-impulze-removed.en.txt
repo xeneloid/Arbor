@@ -1,0 +1,17 @@
+Title: repository/impulze has been removed from ::unavailable-unofficial
+Author: Kylie McClain <somasissounds@gmail.com>
+Content-Type: text/plain
+Posted: 2015-05-13
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: repository/impulze
+
+::impulze[1] has now been removed from ::unavailable-unofficial, due to being
+unmaintained for a while now.
+
+If you use any packages from ::impulze, you can resurrect them at any time
+by following the instructions on our Contributing[2] doc, and maintain them
+in your own repository.
+
+[1]: https://github.com/impulze/exherbo-impulze
+[2]: https://exherbo.org/docs/contributing.html
