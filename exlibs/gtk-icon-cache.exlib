@@ -10,7 +10,7 @@
 #              If gtk+ is indeed installed, this exlib will regenerate the
 #              cache when an application is installed.
 
-: ${GTK_UPDATE_ICON_CACHE:=${ROOT}usr/bin/gtk-update-icon-cache}
+: ${GTK_UPDATE_ICON_CACHE:=${ROOT}usr/$(exhost --build)/bin/gtk-update-icon-cache}
 
 GTK_ICON_CACHE_ICON_THEME_DIRECTORIES=()
 
