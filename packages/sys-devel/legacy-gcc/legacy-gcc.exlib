@@ -307,7 +307,7 @@ legacy-gcc_src_install() {
         doins -r "${WORK}"/${CHOST}/libstdc++-v3/include/${CHOST}/bits/*.gch
     fi
 
-    edo ln -sf "${CHOST}-gcc-${SLOT}" "${IMAGE}/bin/${CHOST}-cc-${SLOT}"
+    edo ln -sf "${CHOST}-gcc-${SLOT}" "${IMAGE}/usr/bin/${CHOST}-cc-${SLOT}"
 
     __gcc_slot_runtime
     __gcc_slot_shared_data
