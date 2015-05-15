@@ -33,9 +33,12 @@ UPSTREAM_DOCUMENTATION=
 
 LICENCES="|| ( Artistic GPL-1 GPL-2 GPL-3 )"
 SLOT="$(ever range 1-2)"
-MYOPTIONS="dbm ithreads
-( berkdb gdbm ) [[ requires = dbm ]]
-dbm? ( ( berkdb gdbm ) [[ number-selected = at-least-one ]] )
+MYOPTIONS="
+    dbm [[ description = [ rudimentary database support for Perl ] ]]
+    ithreads [[ description = [ Perl multi-threading support ] ]]
+    ( berkdb gdbm ) [[ requires = dbm ]]
+    dbm? ( ( berkdb gdbm ) [[ number-selected = at-least-one ]] )
+    multiplicity [[ description = [ multiple interpreter instances in the same process ] ]]
 "
 
 DEPENDENCIES="
@@ -120,9 +123,10 @@ perl-5_src_configure() {
         -Duselargefiles
         -Uinstallusrbinperl
         -Ui_ndbm
-        $(option_define ithreads)usethreads
-        $(option_define gdbm)i_gdbm
         $(option_define berkdb)i_db
+        $(option_define gdbm)i_gdbm
+        $(option_define ithreads)usethreads
+        $(option_define multiplicity)usemultiplicity
     )
     if ever at_least 0.9.1 ${CROSS_PERL_VER[0]}; then
         myconf+=(
