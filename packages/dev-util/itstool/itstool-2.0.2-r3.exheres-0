@@ -1,7 +1,7 @@
 # Copyright 2011 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.11 ] ]
 
 SUMMARY="Internalization Tag Set Tool"
 DESCRIPTION="
