@@ -26,6 +26,9 @@ DEPENDENCIES="
         dev-perl/Text-Unidecode
 "
 
+# Partly broken, cf. https://galileo.mailstation.de/gerrit/#/c/1494/
+RESTRICT="test"
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-encode
     --with-unidecode
