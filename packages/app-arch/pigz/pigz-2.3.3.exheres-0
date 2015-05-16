@@ -11,14 +11,16 @@ DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
 LICENCES="ZLIB"
 SLOT="0"
 PLATFORMS="~amd64"
+
 MYOPTIONS=""
 
 src_prepare() {
     edo sed \
-            -e "s/^CC=.*/CC=$(exhost --tool-prefix)gcc/"    \
+            -e "s/^CC=.*/CC=$(exhost --tool-prefix)cc/"    \
             -e "s/^CFLAGS=.*//"                             \
             -i Makefile
 }
+
 src_install() {
     edo mkdir -p "${IMAGE}/usr/$(exhost --target)/bin"
     edo mv ${PN} "${IMAGE}/usr/$(exhost --target)/bin"
