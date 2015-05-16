@@ -1,5 +1,7 @@
-# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
+
+require github [ user=twaugh release=${PV} suffix=tar.xz ]
 
 SUMMARY="A small collection of programs that operate on patch files"
 DESCRIPTION="
@@ -13,15 +15,9 @@ patch set based on modified files matching shell wildcards. Lsdiff lists modifie
 files in a patch. Rediff, recountdiff, and unwrapdiff correct hand-edited (or
 otherwise broken) patches.
 "
-BASEURI="http://cyberelk.net/tim"
-HOMEPAGE="${BASEURI}/software/${PN}/"
-DOWNLOADS="${BASEURI}/data/${PN}/stable/${PNV}.tar.xz"
 
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
-
-UPSTREAM_CHANGELOG="http://git.fedorahosted.org/git/?p=${PN}.git;a=blob_plain [[ lang = en ]]"
-UPSTREAM_DOCUMENTATION="${HOMEPAGE}/man/index.html [[ lang = en ]]"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -29,12 +25,6 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 DEPENDENCIES=""
 
-src_prepare() {
-    # Replace tests that require rpm's gendiff with dummies.
-    echo '/bin/true' > tests/gendiff1/run-test
-    echo '/bin/true' > tests/gendiff2/run-test
-    echo '/bin/true' > tests/comma/run-test
-
-    default
-}
+# The tests are completely broken (0.3.4)
+RESTRICT="test"
 
