@@ -16,7 +16,8 @@ MYOPTIONS="
     smartcard [[ description = [ Install the smartcard daemon ( includes CCID support ). ] ]]
 "
 
-# fail with (newer) sydbox (last checked: 2.1.2)
+# fail with (newer) sydbox (last checked: 2.1.4)
+# t-dns-cert wants to access a dns server
 RESTRICT="test"
 
 DEPENDENCIES="
@@ -42,8 +43,6 @@ DEPENDENCIES="
             Provides the default pcsc library for accessing smartcards
         ] ]]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/gnupg-trust.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-bzip2
