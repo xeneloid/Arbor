@@ -1,4 +1,4 @@
-# Copyright 2009-2013 Wulf C. Krueger
+# Copyright 2009-2015 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'pam-1.0.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
@@ -39,15 +39,10 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${MY_PNV}
 AT_M4DIR=( m4 )
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-fix-cppflags.patch
-    "${FILES}"/${PNV}-Do-not-use-yywrap-ticket-42.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=( '--disable-audit' '--disable-prelude' '--disable-regenerate-docu'
                                '--disable-selinux' '--enable-cracklib' '--enable-db=no'
                                '--enable-nls'
-                               # The configure.in is using some magic to install to /lib if libdir
+                               # The configure.ac is using some magic to install to /lib if libdir
                                # is ${exec_prefix}/lib and prefix is /usr
                                # Make sure we *always* specify libdir to be on the safe side
                                "--libdir=/usr/$(exhost --target)/lib"
