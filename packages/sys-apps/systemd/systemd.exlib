@@ -233,6 +233,8 @@ systemd_src_prepare() {
     edo sed -i -e '/test-resolve/s:test-resolve:$(NULL):' Makefile.am
     edo sed -i -e '/test-cap-list/s:test-cap-list:$(NULL):' Makefile.am
     edo sed -i -e '/sysv-generator-test.py/s:sysv-generator-test.py:$(NULL):' Makefile.am
+    edo sed -i -e '/test-condition/s:test-condition:$(NULL):' Makefile.am
+    edo sed -i -e '/test\/$(NULL) \\/d' Makefile.am
 
     edo intltoolize --force --automake
     autotools_src_prepare
