@@ -1,7 +1,9 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require bash-completion zsh-completion distutils googlecode [ suffix=tar.gz ]
+require bash-completion zsh-completion googlecode [ suffix=tar.gz ]
+require setup-py [ blacklist='3' import='distutils' has_bin=true has_lib=true \
+                   python_opts='[readline]' ]
 
 SUMMARY="Bugzilla command line client"
 
@@ -10,15 +12,13 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="
-    build+run:
-        dev-lang/python:=[readline]"
+DEPENDENCIES=""
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-default-to-exherbo.patch )
 
-src_install() {
-    distutils_src_install
-    dozshcompletion contrib/zsh-completion _pybugz
+install_one_multibuild() {
     dobashcompletion contrib/bash-completion
+    dozshcompletion contrib/zsh-completion _pybugz
+    setup-py_install_one_multibuild
 }
 
