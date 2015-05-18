@@ -26,11 +26,14 @@ DEPENDENCIES="
         app-text/ghostscript
 "
 
-src_configure() {
-    econf \
-        --disable-static \
-        $(expecting_tests && echo '--enable-test-compare-images' || echo '--disable-test-compare-images')
-}
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-static
+    --with-random=/dev/urandom
+)
+
+DEFAULT_SRC_CONFIGURE_TESTS=(
+    '--enable-test-compare-images --disable-test-compare-images'
+)
 
 # TODO: Use src_test_expensive to run the largefiles test suite
 
