@@ -11,7 +11,7 @@ DESCRIPTION="
 This package installs macros and utilities from the gtk-doc package that are
 used by autotools based build systems that use gtk-doc documentation.
 "
-HOMEPAGE="http://www.gtk.org/gtk-doc/"
+HOMEPAGE="http://www.gtk.org/gtk-doc"
 
 LICENCES="GPL-2 FDL-1.1"
 SLOT="0"
