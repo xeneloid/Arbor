@@ -21,8 +21,8 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        app-cdr/libburn[>=1.3.8][cdio(-)?]
-        app-cdr/libisofs[>=1.3.8][acl(+)?][xattr(+)?]
+        app-cdr/libburn[>=1.4.0][cdio(-)?]
+        app-cdr/libisofs[>=1.4.0][acl(+)?][xattr(+)?]
         sys-libs/readline
         sys-libs/zlib
         acl? ( sys-apps/acl )
@@ -49,6 +49,6 @@ src_install() {
     default
 
     # frontend is considered proof-of-concept (as of 1.2.6)
-    edo rm "${IMAGE}"/usr/bin/xorriso-tcltk
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/xorriso-tcltk
 }
 
