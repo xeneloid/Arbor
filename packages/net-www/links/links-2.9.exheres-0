@@ -3,7 +3,7 @@
 # Based in part upon 'links-2.2.ebuild', which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require common-metadata
+require links
 
 # To handle pre-versions ...
 MY_PNV="${PNV/_/}"
