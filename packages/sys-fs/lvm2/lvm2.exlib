@@ -4,6 +4,9 @@
 
 require systemd-service udev-rules
 
+# fixes malloc() detection avoiding undefined reference to `rpl_malloc'
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+
 export_exlib_phases src_configure src_install
 
 SUMMARY="Userspace toolset providing logical volume management facilities"
