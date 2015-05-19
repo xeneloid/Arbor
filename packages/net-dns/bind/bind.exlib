@@ -97,7 +97,7 @@ bind_src_configure() {
         --with-gssapi=no \
         --with-libtool=yes \
         --with-libxml2=yes \
-        --with-openssl=yes \
+        --with-openssl=/usr/$(exhost --target) \
         --with-pkcs11=no \
         --with-randomdev=/dev/urandom \
         $(myoption enable threads) \
