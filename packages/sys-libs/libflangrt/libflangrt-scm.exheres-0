@@ -1,0 +1,14 @@
+# Copyright 2015 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user='llvm-flang' ]
+require cmake
+
+SUMMARY="flang Fortran Runtime Library"
+HOMEPAGE="https://github.com/llvm-flang/libflangrt"
+
+LICENCES="UoI-NCSA"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
