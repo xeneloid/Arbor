@@ -41,6 +41,10 @@ src_install() {
 
     install_systemd_files
 
+    option systemd && edo sed \
+        -e "s:/usr/bin:/usr/$(exhost --target)/bin:" \
+        -i "${IMAGE}"/${SYSTEMDSYSTEMUNITDIR}/${PN}.service
+
     keepdir /var/lib/dhcpcd
 }
 
