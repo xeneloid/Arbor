@@ -1,12 +1,12 @@
 # Copyright 2008 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require github [ release=v${PV} suffix=tar.xz ]
+
 export_exlib_phases src_prepare src_install
 
 SUMMARY="Utilities to create and check MS-DOS filesystems under Linux"
 DESCRIPTION="MS-DOS filesystem programs mkfs.fat, fatlabel and fsck.fat."
-HOMEPAGE="http://daniel-baumann.ch/software/${PN}"
-DOWNLOADS="http://daniel-baumann.ch/files/software/${PN}/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
