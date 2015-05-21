@@ -1,0 +1,21 @@
+Title: ICU 55.1 update
+Author: Heiko Becker <heirecka@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-05-21
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-libs/icu:54.1
+
+icu has been bumped to 55.1. As it frequently breaks ABI, it has been slotted
+to prevent breaking your desktops and browsers, which means you need to
+rebuild all packages depending on dev-libs/icu. To do this you can run:
+
+# cave fix-linkage --library libicui18n.so.54 --library libicuio.so.54 \
+ --library libicule.so.54 --library libiculx.so.54 --library libicuuc.so.54
+
+(Alternatively you can use:
+
+# cave resolve -D icu:54.1 nothing
+
+Which might not match all the things you want though, depending on your installed
+icu dependencies.)
