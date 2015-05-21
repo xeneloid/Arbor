@@ -1,4 +1,4 @@
-# Copyright 2009 Bo Ørsted Andresen
+# Copyright 2009 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require bash

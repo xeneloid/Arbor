@@ -1,5 +1,5 @@
-# Copyright 2007-2008 Bryan Østergaard
-# Copyright 2009 Mike Kelly
+# Copyright 2007-2008 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2009 Mike Kelly <pioto@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV=${PNV%_p*}
