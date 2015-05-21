@@ -52,7 +52,6 @@ MYOPTIONS="
     ]]
     gcrypt [[ description = [ Enable cryptographically secured journal files ] ]]
     gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
-    gobject-introspection
     gtk-doc
     idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
@@ -87,7 +86,6 @@ DEPENDENCIES="
         )
     build+run:
         app-arch/xz
-        dev-libs/glib:2[>=2.26]
         dev-util/elfutils[>=0.158]
         sys-apps/kmod[>=15]
         sys-apps/pciutils
@@ -108,7 +106,6 @@ DEPENDENCIES="
         cryptsetup? ( sys-fs/cryptsetup[>=1.6.0] )
         gcrypt? ( dev-libs/libgcrypt )
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
-        gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         idn? ( net-dns/libidn )
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
         journal-push? ( net-misc/curl )
@@ -140,20 +137,30 @@ DEPENDENCIES="
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
     suggestion:
         app-admin/systemd-ui [[ description = [ Optional (G)UI tools for systemd ] ]]
-        (
-            gnome-bindings/pygobject:3
-            gnome-desktop/gobject-introspection:1
-        ) [[ description = [ Required for systemd-analyze - analyze the boot performance of your system ] ]]
-        dev-python/pycairo [[ description = [ Get fancy svgs about the boot process through systemd-analyze plot  ] ]]
         sys-apps/kexec-tools [[ description = [ Support for systemctl kexec - booting a kernel immediately, skipping the BIOS ] ]]
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
-        efi? (
-            sys-boot/gummiboot [[
-                note = [ Systemd can receive performance data and other information from supported bootloaders ]
-                url  = [ http://www.freedesktop.org/wiki/Software/systemd/BootLoaderInterface ]
-            ]]
-        )
 "
+
+if ever at_least 220 ; then
+    DEPENDENCIES+="
+        build+run:
+            efi? ( sys-boot/gnu-efi )
+    "
+else
+    MYOPTIONS+="gobject-introspection"
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/glib:2[>=2.26]
+            gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
+        suggestion:
+            efi? (
+                sys-boot/gummiboot [[
+                    note = [ Systemd can receive performance data and other information from supported bootloaders ]
+                    url  = [ http://www.freedesktop.org/wiki/Software/systemd/BootLoaderInterface ]
+                ]]
+            )
+    "
+fi
 
 AT_M4DIR=( m4 )
 
@@ -254,7 +261,6 @@ systemd_src_configure() {
         --enable-dbus
         --enable-elfutils
         --enable-firstboot
-        --enable-gudev
         --enable-hibernate
         --enable-hostnamed
         --enable-hwdb
@@ -306,7 +312,6 @@ systemd_src_configure() {
         $(option_enable efi)
         $(option_enable gcrypt)
         $(option_enable gnutls)
-        $(option_enable gobject-introspection introspection)
         $(option_enable gtk-doc)
         $(option_enable idn libidn)
         $(option_enable journal-gateway microhttpd)
@@ -328,7 +333,14 @@ systemd_src_configure() {
         myconfig+=( --enable-dependency-tracking )
     fi
 
-    edo mkdir -p src/gudev
+    if ever at_least 220 ; then
+        myconfig+=( --disable-gudev )
+        myconfig+=( $(option_enable efi gnuefi) )
+    else
+        myconfig+=( --enable-gudev )
+        myconfig+=( $(option_enable gobject-introspection introspection) )
+        edo mkdir -p src/gudev
+    fi
 
     econf "${myconfig[@]}"
 }
