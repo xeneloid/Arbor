@@ -181,6 +181,13 @@ systemd_pkg_pretend() {
         ewarn "/usr/$(exhost --target)/lib/tmpfiles.d/legacy.conf and can be safely removed after upgrade"
         ewarn "if you did not make any changes to it."
     fi
+
+    if ever at_least 217 ; then
+        if cc-is-gcc && ! ever at_least 4.9 $(gcc-version); then
+            eerror "You're using gcc-$(gcc-fullversion). ${PNV} requires gcc-4.9.x. Set your compiler to 4.9 by using eclectic gcc"
+            die "${PNV} requires gcc-4.9.x"
+        fi
+    fi
 }
 
 systemd_pkg_setup() {
