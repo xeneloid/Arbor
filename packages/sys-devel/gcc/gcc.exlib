@@ -73,11 +73,14 @@ gcc_pkg_setup() {
     done
 }
 
+gcc_src_prepare() {
+    edo sed -i -e '/AR = ar/cAR := \$(AR)' libcpp/Makefile.in
+    edo sed -i -e 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+    default
+}
+
 gcc_src_configure() {
     local target=
-
-    edo sed -e '/AR = ar/cAR := \$(AR)' \
-            -i libcpp/Makefile.in
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local libpath=/usr/${target}/lib
@@ -246,7 +249,7 @@ gcc_src_install() {
             done
             for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
                 edo rm "${IMAGE}/usr/${CHOST}/bin/${tool}"
-                nonfatal edo rm "${IMAGE}/usr/share/man/man1/${tool}.1"
+                nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
         fi
 
@@ -299,5 +302,5 @@ gcc_src_install() {
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
 
-export_exlib_phases pkg_setup src_configure src_compile src_install
+export_exlib_phases pkg_setup src_prepare src_configure src_compile src_install
 
