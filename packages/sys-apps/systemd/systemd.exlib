@@ -243,6 +243,8 @@ systemd_src_prepare() {
     edo sed -i -e '/test-condition/s:test-condition:$(NULL):' Makefile.am
     edo sed -i -e '/test\/$(NULL) \\/d' Makefile.am
 
+    [[ ${PV} == 220 ]] && edo rm src/journal/audit_type-to-name.h src/udev/keyboard-keys-from-name.gperf
+
     edo intltoolize --force --automake
     autotools_src_prepare
 }
@@ -413,7 +415,7 @@ systemd_src_install() {
 
     # Install pc-file to arch dependent location, since udevdir is /usr/${host}/lib/udev
     # https://bugs.freedesktop.org/show_bug.cgi?id=89769
-    if ! ever at_least scm; then
+    if ! ever at_least 220; then
         edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
         edo rmdir "${IMAGE}"/usr/share/pkgconfig
     fi
