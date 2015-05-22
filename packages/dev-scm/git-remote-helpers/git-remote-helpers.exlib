@@ -106,6 +106,8 @@ git-remote-helpers_src_test() {
 }
 
 git-remote-helpers_src_install() {
-    _tool_target D="${IMAGE}" prefix=/usr/$(exhost --target) mandir=/usr/share/man/man1 install install-doc
+    _tool_target D="${IMAGE}" prefix=/usr/$(exhost --target) install
+    option bzr && doman git-remote-bzr/doc/git-remote-bzr.1
+    option mercurial && doman git-remote-hg/doc/git-remote-hg.1
 }
 
