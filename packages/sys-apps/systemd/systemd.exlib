@@ -236,8 +236,6 @@ systemd_src_prepare() {
     edo sed -i -e '/test-condition/s:test-condition:$(NULL):' Makefile.am
     edo sed -i -e '/test\/$(NULL) \\/d' Makefile.am
 
-    [[ ${PV} == 220 ]] && edo rm src/journal/audit_type-to-name.h src/udev/keyboard-keys-from-name.gperf
-
     edo intltoolize --force --automake
     autotools_src_prepare
 }
@@ -325,7 +323,9 @@ systemd_src_configure() {
 
     if ever at_least 220 ; then
         myconfig+=( --disable-gudev )
-        myconfig+=( $(option_enable efi gnuefi) )
+        # src/boot/efi is missing from tarball
+        # myconfig+=( $(option_enable efi gnuefi) )
+        myconfig+=( --disable-gnuefi )
     else
         myconfig+=( --enable-gudev )
         myconfig+=( $(option_enable gobject-introspection introspection) )

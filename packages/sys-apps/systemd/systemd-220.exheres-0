@@ -5,3 +5,8 @@ require systemd
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+src_prepare() {
+    edo rm src/journal/audit_type-to-name.h src/udev/keyboard-keys-from-name.gperf
+    systemd_src_prepare
+}
+
