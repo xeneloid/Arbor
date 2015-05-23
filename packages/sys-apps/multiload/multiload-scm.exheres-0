@@ -1,4 +1,4 @@
-# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.15 ] ]

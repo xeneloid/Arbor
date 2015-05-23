@@ -1,5 +1,5 @@
 # Copyright 2010-2013 Wulf C. Krueger <philantrop@exherbo.org>
-# Copyright 2015 Kylie McClain <somasissounds@gmail.com>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam systemd_files=[ "${FILES}"/systemd ]

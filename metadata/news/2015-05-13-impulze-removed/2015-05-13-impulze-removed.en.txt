@@ -1,5 +1,5 @@
 Title: repository/impulze has been removed from ::unavailable-unofficial
-Author: Kylie McClain <somasissounds@gmail.com>
+Author: Kylie McClain <somasis@exherbo.org>
 Content-Type: text/plain
 Posted: 2015-05-13
 Revision: 1
