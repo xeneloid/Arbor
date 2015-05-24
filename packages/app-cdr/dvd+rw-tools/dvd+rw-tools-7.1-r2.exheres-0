@@ -24,7 +24,7 @@ DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PNV}-INT_MAX.patch" )
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" CXX="${CXX}" )
 DEFAULT_SRC_INSTALL_PARAMS=(
     prefix="${IMAGE}/usr/$(exhost --target)"
-    manprefix="${IMAGE}/usr/share"
+    manprefix="${IMAGE}/usr/share/man"
 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( index.html )
 
