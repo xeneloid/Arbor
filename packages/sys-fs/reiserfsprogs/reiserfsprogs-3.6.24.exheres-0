@@ -1,0 +1,15 @@
+# Copyright 2009 Sterling X. Winter <replica@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'reiserfsprogs-3.6.20-r1.ebuild' from Gentoo, which is:
+#     Copyright 1999-2008 Gentoo Foundation
+
+SUMMARY="Administration utilities for ReiserFS filesystems"
+HOMEPAGE="https://www.kernel.org/pub/linux/kernel/people/jeffm/${PN}"
+DOWNLOADS="mirror://kernel/linux/kernel/people/jeffm/${PN}/v${PV}/${PNV}.tar.xz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+
+DEFAULT_SRC_COMPILE_PARAMS=( AR="${AR}" )
+
