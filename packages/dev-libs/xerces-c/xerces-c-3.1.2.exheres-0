@@ -1,38 +1,38 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.11 1.10 ] ] easy-multibuild [ multiunpack=true ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="A validating XML parser written in a portable subset of C++"
-HOMEPAGE="http://xerces.apache.org/xerces-c/"
-DOWNLOADS="mirror://apache/xerces/c/$(ever major)/sources/${PNV}.tar.gz"
+HOMEPAGE="http://xerces.apache.org/${PN}"
+DOWNLOADS="mirror://apache/xerces/c/$(ever major)/sources/${PNV}.tar.xz"
 
 LICENCES="Apache-2.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    multibuild_c: 32 64
     platform: amd64
     x86_cpu_features: sse2
 "
 
 DEPENDENCIES="
     build+run:
-        net-misc/curl[multibuild_c:*(-)?]
+        net-misc/curl
 "
 
 RESTRICT="test"
 
 AT_M4DIR=( m4 )
 
-prepare_one_multibuild() {
+src_prepare() {
     edo sed -e 's|$(prefix)/msg|$(DESTDIR)/$(prefix)/share/xerces-c/msg|' \
+            -e 's/@mkdir_p@/@MKDIR_P@/' \
             -i src/xercesc/util/MsgLoaders/MsgCatalog/Makefile.in
 
     autotools_src_prepare
 }
 
-configure_one_multibuild() {
+src_configure() {
     local myconf=()
 
     myconf+=(
@@ -56,7 +56,7 @@ configure_one_multibuild() {
     econf "${myconf[@]}"
 }
 
-install_one_multibuild() {
+src_install() {
     default
 
     hereenvd 30xerces-c <<EOF
