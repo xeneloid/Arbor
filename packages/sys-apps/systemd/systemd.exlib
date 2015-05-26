@@ -141,17 +141,21 @@ DEPENDENCIES="
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
 "
 
-if ever at_least 220 ; then
+if ever at_least 221 ; then
     DEPENDENCIES+="
         build+run:
             efi? ( sys-boot/gnu-efi )
     "
 else
-    MYOPTIONS+="gobject-introspection"
+    if ! ever at_least 220 ; then
+        MYOPTIONS+="gobject-introspection"
+        DEPENDENCIES+="
+            build+run:
+                dev-libs/glib:2[>=2.26]
+                gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
+        "
+    fi
     DEPENDENCIES+="
-        build+run:
-            dev-libs/glib:2[>=2.26]
-            gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
         suggestion:
             efi? (
                 sys-boot/gummiboot [[
@@ -330,9 +334,12 @@ systemd_src_configure() {
 
     if ever at_least 220 ; then
         myconfig+=( --disable-gudev )
-        # src/boot/efi is missing from tarball
-        # myconfig+=( $(option_enable efi gnuefi) )
-        myconfig+=( --disable-gnuefi )
+        # src/boot/efi is missing from 220 tarball
+        if ever at_least 221 ; then
+            myconfig+=( $(option_enable efi gnuefi) )
+        else
+            myconfig+=( --disable-gnuefi )
+        fi
     else
         myconfig+=( --enable-gudev )
         myconfig+=( $(option_enable gobject-introspection introspection) )
