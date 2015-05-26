@@ -9,11 +9,13 @@ export_exlib_phases src_install
 
 SUMMARY="Clam Anti-Virus Scanner"
 HOMEPAGE="http://www.${PN}.net"
+
+REMOTE_IDS+=" freecode:${PN}"
+
 UPSTREAM_RELEASE_NOTES="https://github.com/vrtadmin/${PN}-devel/blob/master/README"
 UPSTREAM_DOCUMENTATION="
     https://github.com/vrtadmin/${PN}-faq [[ lang = en description = [ Official FAQs ] ]]
 "
-REMOTE_IDS+=" freecode:${PN}"
 
 LICENCES="
     || ( GPL-2 ( GPL-2 unRAR ) [ [[ note = [ libclamunrar uses code under unRAR licence ] ]] )
@@ -33,7 +35,10 @@ RESTRICT="test"
 DEPENDENCIES="
     build+run:
         dev-libs/gmp:= [[ note = [ optional; for digital signatures ] ]]
-        virtual/libssl [[ note = [ required as of 0.98.2 ] ]]
+        dev-libs/json-c [[ note = [ optional; for file property meta data collecting ] ]]
+        dev-libs/libxml2:2.0 [[ note = [ optional; for DMG and XAR support ] ]]
+        sys-libs/ncurses [[ note = [ optional; for clamdtop ] ]]
+        virtual/libssl
         milter? (
             mail-filter/libmilter
             net-misc/curl [[ note = [ for following mail URLs ] ]]
@@ -44,23 +49,26 @@ DEPENDENCIES="
         dev-libs/check
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( milter unrar )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --disable-check
     --enable-bzip2
+    --enable-clamdtop
     --enable-dns-fix
     --enable-id-check       # Use id utility instead of /etc/passwd parsing (Gentoo #72540)
     --enable-ipv6
-    --with-dbdir=/var/lib/clamav
-    --with-iconv
+    --enable-xml
+    --disable-check
     --disable-experimental
     --disable-llvm
+    --with-dbdir=/var/lib/clamav
+    --with-iconv
+    --with-libjson=/usr
 )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( milter unrar )
 
 clamav_src_install() {
     default
 
-    insinto /usr/${LIBDIR}/tmpfiles.d
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
     hereins ${PN}.conf <<EOF
 d /run/clamav 0755 clamav clamav
 EOF
@@ -78,6 +86,7 @@ FRESHCLAM_NICELEVEL=19
 EOF
         newinitd "${FILES}"/clamd.rc clamd
     fi
+
     dodir /var/log/${PN}
     keepdir /var/log/${PN}
     edo chown clamav:clamav "${IMAGE}"/var/log/${PN}
