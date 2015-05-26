@@ -22,10 +22,13 @@ eqmake() {
     fi
 
     # Install into the correct libdir on 64 bit systems
-    if [[ ${LIBDIR} == *64 ]] ; then
-        export QMAKESPEC="/usr/share/qt${qt_slot}/mkspecs/linux-g++-64"
-    else
+    if [[ ${qt_slot} == 5 ]] ; then
+        # Change this with the next qt5 bump, 5.4.2 should be out during this
+        # week (calendar week 22) or at the beginning of next one to avoid an
+        # otherwise unnecessary rev bump.
         export QMAKESPEC="/usr/share/qt${qt_slot}/mkspecs/linux-g++"
+    else
+        export QMAKESPEC="/usr/$(exhost --target)/lib/qt${qt_slot}/mkspecs/linux-g++"
     fi
 
     local qmake_path host=$(exhost --target)
