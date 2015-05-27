@@ -13,7 +13,16 @@ DOWNLOADS="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}/${PNV}.ta
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers:
+        links
+        w3m
+        lynx
+    ) [[
+        *description = [ HTML to Text conversion tool ]
+        number-selected = at-least-one
+    ]]
+"
 
 DEPENDENCIES="
     build:
@@ -22,5 +31,9 @@ DEPENDENCIES="
         app-text/docbook-xsl-stylesheets
         app-text/docbook-xml-dtd:4.2
         dev-libs/libxslt
+    run:
+        providers:links? ( net-www/links )
+        providers:w3m?   ( net-www/w3m   )
+        providers:lynx?  ( net-www/lynx  )
 "
 
