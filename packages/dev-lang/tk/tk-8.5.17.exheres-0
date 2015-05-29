@@ -48,6 +48,9 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 src_configure() {
+    export ac_cv_func_strtod=yes
+    export tcl_cv_strtod_buggy=1
+
     econf \
         --hates=docdir \
         --hates=datarootdir \
