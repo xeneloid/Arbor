@@ -257,14 +257,14 @@ glibc_pkg_preinst() {
 
 glibc_pkg_postinst() {
     local locales=( en_US.UTF-8 en_GB.UTF-8 )
-    local localedef="${ROOT}usr/${CHOST}/bin/localedef"
+    local localedef="${ROOT}"usr/$(exhost --target)/bin/localedef
     local locale=
 
-    # localedef fails if /usr/${CHOST}/lib/locale does not exist
-    edo mkdir -p "${ROOT}usr/${CHOST}/lib/locale"
+    # localedef fails if /usr/$(exhost --target)/lib/locale does not exist
+    edo mkdir -p "${ROOT}"usr/$(exhost --target)/lib/locale
 
     for locale in "${locales[@]}" ; do
-        I18NPATH="${ROOT}usr/share/i18n" nonfatal edo \
+        I18NPATH="${ROOT}"usr/share/i18n nonfatal edo \
             "${localedef}" --prefix="${ROOT}" -i ${locale%.*} -f ${locale#*.} ${locale}
     done
 }
