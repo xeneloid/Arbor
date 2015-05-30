@@ -15,12 +15,10 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.
 export_exlib_phases pkg_pretend src_prepare src_configure src_test src_install
 
 SUMMARY="Python interpreter"
-HOMEPAGE="http://www.${PN}.org/"
-DOWNLOADS="http://${PN}.org/ftp/${PN}/${PV}/${MY_PNV}.tar.xz"
+HOMEPAGE="https://www.${PN}.org/"
+DOWNLOADS="https://www.${PN}.org/ftp/${PN}/${PV}/${MY_PNV}.tar.xz"
 
-UPSTREAM_DOCUMENTATION="
-http://docs.${PN}.org/$(ever range 1-2)/
-"
+UPSTREAM_DOCUMENTATION="https://docs.${PN}.org/$(ever range 1-2)/"
 UPSTREAM_CHANGELOG="${HOMEPAGE}/download/releases/${PV}/NEWS.txt"
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/download/releases/${PV}/"
 
