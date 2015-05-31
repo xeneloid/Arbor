@@ -18,7 +18,7 @@ export_exlib_phases pkg_pretend pkg_setup src_unpack src_prepare src_configure s
 # TODO(compnerd) add exparam to run eautoconf
 
 SUMMARY="GNU C library"
-HOMEPAGE="http://www.gnu.org/software/libc"
+HOMEPAGE="https://www.gnu.org/software/libc"
 
 exparam -v source_uri source_uri
 exparam -v ports_uri ports_uri
