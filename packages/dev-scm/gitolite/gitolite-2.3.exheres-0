@@ -7,8 +7,8 @@ DESCRIPTION="
 Gitolite allows you to setup a centralised git server, with very fine-grained access control and
 many (many!) more powerful features.
 "
-HOMEPAGE="http://github.com/sitaramc/gitolite"
-DOWNLOADS="http://dev.exherbo.org/~mixi/distfiles/${PNV}.tar.gz"
+HOMEPAGE="https://github.com/sitaramc/gitolite"
+DOWNLOADS="https://dev.exherbo.org/~mixi/distfiles/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
