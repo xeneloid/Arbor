@@ -9,9 +9,9 @@ pinktrace is a wrapper around ptrace(2) system call.
 It provides a robust API for tracing processes.
 Note this is a work in progress and the API is *not* stable.
 "
-HOMEPAGE="http://dev.exherbo.org/~alip/${PN}"
+HOMEPAGE="https://dev.exherbo.org/~alip/${PN}"
 if ! ever is_scm ; then
-    DOWNLOADS="http://dev.exherbo.org/~alip/pinktrace/release/${PNV}.tar.bz2"
+    DOWNLOADS="https://dev.exherbo.org/~alip/pinktrace/release/${PNV}.tar.bz2"
 fi
 
 BUGS_TO="alip@exherbo.org"
