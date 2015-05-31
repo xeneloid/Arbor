@@ -10,7 +10,8 @@ PATCH_VER="1.0"
 HOMEPAGE="ftp://ftp.isc.org/isc/cron/"
 SUMMARY="Paul Vixie's cron daemon, a fully featured crond implementation"
 DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2
-    http://dev.exherbo.org/~philantrop/distfiles/${PNV}-exherbo-${PATCH_VER}.tar.bz2"
+    https://dev.exherbo.org/~philantrop/distfiles/${PNV}-exherbo-${PATCH_VER}.tar.bz2
+"
 
 LICENCES="as-is"
 SLOT="0"
