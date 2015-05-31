@@ -25,7 +25,7 @@ The Readline library includes additional functions to maintain a list of previou
 lines, to recall and perhaps reedit those lines, and perform csh-like history expansion on previous
 commands.
 "
-HOMEPAGE="http://cnswww.cns.cwru.edu/php/chet/${PN}/rltop.html"
+HOMEPAGE="https://cnswww.cns.cwru.edu/php/chet/${PN}/rltop.html"
 
 if (( PATCH_LEVEL )) ; then
     DOWNLOADS+="
@@ -35,7 +35,7 @@ if (( PATCH_LEVEL )) ; then
 fi
 
 REMOTE_IDS="freecode:gnu${PN}"
-UPSTREAM_CHANGELOG="http://cnswww.cns.cwru.edu/php/chet/${PN}/CHANGES"
+UPSTREAM_CHANGELOG="https://cnswww.cns.cwru.edu/php/chet/${PN}/CHANGES"
 
 LICENCES="GPL-3"
 SLOT="0"
