@@ -3,7 +3,7 @@
 
 SUMMARY="Base directories and common configuration for cron daemons"
 HOMEPAGE=""
-DOWNLOADS="http://dev.exherbo.org/~philantrop/distfiles/vixie-cron-4.1-exherbo-1.0.tar.bz2"
+DOWNLOADS="https://dev.exherbo.org/~philantrop/distfiles/vixie-cron-4.1-exherbo-1.0.tar.bz2"
 
 LICENCES="as-is"
 SLOT="0"
