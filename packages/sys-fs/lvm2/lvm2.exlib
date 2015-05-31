@@ -31,7 +31,7 @@ MYOPTIONS="
     fsadm [[ description = [ Utility to resize or check filesystem on a device ] ]]
 "
 
-UPSTREAM_RELEASE_NOTES="ftp://${BASE_URL}/pub/${PN}/WHATS_NEW"
+UPSTREAM_RELEASE_NOTES="https://git.fedorahosted.org/cgit/${PN}.git/tree/WHATS_NEW?id=v${PV//./_}"
 
 DEPENDENCIES="
     build:
