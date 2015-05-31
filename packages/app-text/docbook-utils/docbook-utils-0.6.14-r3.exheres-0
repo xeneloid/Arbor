@@ -21,7 +21,7 @@ tools you need to work on and format DocBook documents:
  * jw
  * sgmldiff
 "
-HOMEPAGE="http://sourceware.org/docbook-tools/"
+HOMEPAGE="https://sourceware.org/docbook-tools/"
 DOWNLOADS="mirror://sourceware/docbook-tools/new-trials/SOURCES/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
