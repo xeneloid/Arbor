@@ -21,7 +21,7 @@ BUGS_TO="philantrop@exherbo.org"
 HOMEPAGE="http://www.samba.org/ppp"
 DOWNLOADS="
     ftp://ftp.samba.org/pub/ppp/${PNV}.tar.gz
-    http://dev.exherbo.org/~philantrop/distfiles/${PN}-2.4.4-scripts-${SCRIPT_VER}.tar.bz2
+    https://dev.exherbo.org/~philantrop/distfiles/${PN}-2.4.4-scripts-${SCRIPT_VER}.tar.bz2
 "
 
 LICENCES="BSD-3 GPL-2"
