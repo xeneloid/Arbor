@@ -16,11 +16,11 @@ similar mass-storage devices, in particular large ones. The term \"volume\" refe
 to a disk drive or part thereof.
 This package also includes device-mapper.
 "
-BASE_URL="sources.redhat.com"
-HOMEPAGE="http://${BASE_URL}/${PN}/"
+BASE_URL="sourceware.org"
+HOMEPAGE="https://${BASE_URL}/${PN}/"
 DOWNLOADS="
-    ftp://${BASE_URL}/pub/${PN}/LVM2.${PV}.tgz
-    ftp://${BASE_URL}/pub/${PN}/old/LVM2.${PV}.tgz
+    mirror://sourceware/${PN}/LVM2.${PV}.tgz
+    mirror://sourceware/${PN}/old/LVM2.${PV}.tgz
 "
 
 LICENCES="GPL-2"
