@@ -4,16 +4,16 @@
 require python [ has_bin=true has_lib=false blacklist="3" min_versions="2.7" ]
 
 if ever is_scm ; then
-    SCM_REPOSITORY="git://sourceware.org/git/${PN}.git"
+    SCM_REPOSITORY="https://sourceware.org/git/${PN}.git"
     require scm-git autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 else
-    DOWNLOADS="http://sourceware.org/${PN}/ftp/releases/${PNV}.tar.gz"
+    DOWNLOADS="https://sourceware.org/${PN}/ftp/releases/${PNV}.tar.gz"
 fi
 
 export_exlib_phases src_install
 
 SUMMARY="Scripting language and tool for dynamically instrumenting running production Linux operating systems"
-HOMEPAGE="http://sourceware.org/${PN}"
+HOMEPAGE="https://sourceware.org/${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
