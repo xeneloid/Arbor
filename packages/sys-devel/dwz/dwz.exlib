@@ -2,14 +2,14 @@
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
-    SCM_REPOSITORY="git://sourceware.org/git/dwz.git"
+    SCM_REPOSITORY="https://sourceware.org/git/dwz.git"
     if ! ever at_least scm; then
         SCM_TAG="${PNV%-scm}"
     fi
 
     require scm-git
 else
-    DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
+    DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
     # generate tarball by:
     # $ git archive --prefix=${PNV}/ --format=tar ${PNV} | xz > ${PNV}.tar.xz
 fi
