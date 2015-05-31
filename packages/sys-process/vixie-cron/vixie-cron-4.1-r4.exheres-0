@@ -13,7 +13,7 @@ DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2
     https://dev.exherbo.org/~philantrop/distfiles/${PNV}-exherbo-${PATCH_VER}.tar.bz2
 "
 
-LICENCES="as-is"
+LICENCES="BSD-3 BSD-4 ISC"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="baselayout"
