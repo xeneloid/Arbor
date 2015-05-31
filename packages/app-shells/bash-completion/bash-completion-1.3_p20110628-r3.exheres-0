@@ -5,7 +5,7 @@
 
 require bash-completion autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.11 ] ]
 
-DOWNLOADS="http://dev.exherbo.org/~zlin/distfiles/${PNV}.tar.bz2"
+DOWNLOADS="https://dev.exherbo.org/~zlin/distfiles/${PNV}.tar.bz2"
 
 PLATFORMS="~amd64 ~arm ~x86"
 
