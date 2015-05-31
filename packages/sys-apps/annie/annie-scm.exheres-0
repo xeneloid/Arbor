@@ -5,7 +5,7 @@ SUMMARY="Some replacements for programs formerly provided by sysvinit."
 HOMEPAGE="http://www.exherbo.org/"
 DOWNLOADS=""
 
-SCM_REPOSITORY="git://git.exherbo.org/${PN}.git"
+SCM_REPOSITORY="https://git.exherbo.org/${PN}.git"
 require scm-git
 
 LICENCES="GPL-2"
