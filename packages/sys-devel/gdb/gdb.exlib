@@ -6,7 +6,7 @@
 export_exlib_phases src_test_expensive src_install
 
 SUMMARY="The GNU Project Debugger"
-HOMEPAGE="http://sourceware.org/${PN}"
+HOMEPAGE="https://sourceware.org/${PN}"
 DOWNLOADS="mirror://sourceware/${PN}/releases/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
