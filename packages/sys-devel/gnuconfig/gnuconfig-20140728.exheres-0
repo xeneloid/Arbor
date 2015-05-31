@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="GNU config.guess and config.sub scripts"
-HOMEPAGE="http://git.savannah.gnu.org/cgit/config.git"
-DOWNLOADS="http://dev.exherbo.org/~tgurr/distfiles/${PN}/${PNV}.tar.bz2"
+HOMEPAGE="https://savannah.gnu.org/projects/config"
+DOWNLOADS="https://dev.exherbo.org/~tgurr/distfiles/${PN}/${PNV}.tar.bz2"
 
 LICENCES="GPL-2"
 SLOT="0"
