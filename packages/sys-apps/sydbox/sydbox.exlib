@@ -6,7 +6,7 @@ export_exlib_phases src_test
 
 SUMMARY="Sydbox the other sandbox"
 DESCRIPTION="Sydbox is a ptrace based sandbox for Linux."
-ever is_scm || DOWNLOADS="http://dev.exherbo.org/~alip/${PN}/${PNV}.tar.bz2"
+ever is_scm || DOWNLOADS="https://dev.exherbo.org/~alip/${PN}/${PNV}.tar.bz2"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -18,7 +18,7 @@ REMOTE_IDS="freecode:${PN}"
 
 if ever at_least 1; then
 
-    HOMEPAGE="http://git.exherbo.org/sydbox-1.git"
+    HOMEPAGE="https://git.exherbo.org/sydbox-1.git"
 
     # sydbox 1(_pre): has seccomp
     MYOPTIONS+="
@@ -48,7 +48,7 @@ if ever at_least 1; then
 
 else
 
-    HOMEPAGE="http://git.exherbo.org/sydbox.git"
+    HOMEPAGE="https://git.exherbo.org/sydbox.git"
 
     # sydbox 0: no seccomp, glib, external pinktrace
     DEPENDENCIES+="
