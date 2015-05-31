@@ -407,10 +407,14 @@ vim_src_install() {
     edo rm -f "${IMAGE}"/usr/$(exhost --target)/bin/{ex,view}
 
     if [[ "${PN}" == 'vim-runtime' ]] ; then
-        local f target importance=${VIM_VERSION} alternatives
+        local f target importance=${VIM_VERSION} alternatives files=()
         alternatives=( '_vim-runtime' "${VIM_VERSION}" "${importance}" )
         edo cd "${IMAGE}"
-        for f in etc/vim/vimrc usr/$(exhost --target)/bin/{vimtutor,xxd} usr/share/bash-completion/completions/xxd; do
+        files+=(
+            etc/vim/vimrc usr/$(exhost --target)/bin/{vimtutor,xxd}
+            $(option bash-completion && echo usr/share/bash-completion/completions/xxd)
+        )
+        for f in "${files[@]}"; do
             alternatives+=( /${f} ${f##*/}-${VIM_VERSION} )
         done
         while read f; do
