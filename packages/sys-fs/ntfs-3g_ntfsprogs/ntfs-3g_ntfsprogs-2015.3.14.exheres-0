@@ -14,8 +14,8 @@ NetBSD, OpenSolaris, QNX, Haiku, and other operating systems. It provides safe h
 Windows XP, Windows Server 2003, Windows 2000, Windows Vista, Windows Server 2008 and Windows 7 NTFS
 file systems.
 "
-BASE_URL="http://www.tuxera.com"
-HOMEPAGE="${BASE_URL}/community/ntfs-3g-download"
+BASE_URL="https://www.tuxera.com"
+HOMEPAGE="${BASE_URL}/community/open-source-ntfs-3g/"
 DOWNLOADS="${BASE_URL}/opensource/${PNV}.tgz"
 
 BUGS_TO="philantrop@exherbo.org"
