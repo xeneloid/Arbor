@@ -4,7 +4,7 @@
 require multibuild
 
 SUMMARY="Compatibility package for running binaries linked against a pre gcc 3.4 libstdc++"
-HOMEPAGE="http://gcc.gnu.org/${PN}/"
+HOMEPAGE="https://gcc.gnu.org/${PN##-*}"
 DOWNLOADS="mirror://gnu/gcc/gcc-${PV}/gcc-${PV}.tar.bz2"
 
 LICENCES="GPL-2 LGPL-2.1"
