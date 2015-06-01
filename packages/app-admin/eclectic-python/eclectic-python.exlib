@@ -10,7 +10,7 @@ require alternatives
 export_exlib_phases src_install
 
 SUMMARY="Manages python symlinks"
-HOMEPAGE="http://www.exherbo.org"
+HOMEPAGE="https://www.exherbo.org"
 DOWNLOADS=""
 
 LICENCES="GPL-2"
