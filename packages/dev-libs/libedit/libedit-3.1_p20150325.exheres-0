@@ -10,7 +10,7 @@ DOWNLOADS="http://www.thrysoee.dk/editline/${PN}-${MY_PV}.tar.gz"
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="debug"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
@@ -19,9 +19,9 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${PN}-${MY_PV}
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-widec
+    --disable-examples
     --disable-static
 )
 
