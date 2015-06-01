@@ -8,7 +8,7 @@ require flag-o-matic alternatives
 PATCHTBZ2_VER="1.0"
 
 SUMMARY="System V init system"
-HOMEPAGE="http://savannah.nongnu.org/projects/${PN}"
+HOMEPAGE="https://savannah.nongnu.org/projects/${PN}"
 DOWNLOADS="http://download.savannah.gnu.org/releases/${PN}/${PNV}dsf.tar.bz2
     https://dev.exherbo.org/~philantrop/distfiles/${PN}-2.86-patches-${PATCHTBZ2_VER}.tar.bz2"
 
