@@ -4,7 +4,7 @@
 require sydbox autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 PLATFORMS="~amd64 ~arm ~x86"
-DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
+DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 
 DEPENDENCIES="
     build:

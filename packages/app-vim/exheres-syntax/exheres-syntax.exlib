@@ -5,7 +5,7 @@ require vim-plugin
 
 SUMMARY="Vim plugin: Exheres packages and exlibs"
 HOMEPAGE="https://www.exherbo.org/"
-DOWNLOADS="http://dev.exherbo.org/distfiles/exheres-syntax/${PNV}.tar.bz2"
+DOWNLOADS="https://dev.exherbo.org/distfiles/exheres-syntax/${PNV}.tar.bz2"
 
 MYOPTIONS=""
 SLOT="0"
