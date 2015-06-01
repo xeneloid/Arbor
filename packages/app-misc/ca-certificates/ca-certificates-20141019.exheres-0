@@ -11,9 +11,7 @@ DOWNLOADS="mirror://debian/pool/main/c/${PN}/${PN}_${PV}_all.deb"
 LICENCES="GPL-2 MPL-2.0"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="
-    cacert [[ description = [ Install CAcert's certificates ] ]]
-"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
@@ -39,10 +37,9 @@ src_install() {
     dodoc ./usr/share/doc/ca-certificates/*
     edo rm -r ./usr/share/doc/ca-certificates
 
-    if option cacert ; then
-        dodir /usr/share/ca-certificates/cacert.org
-        edo cp -r "${FILES}"/extra-ca-certs/cacert.org "${IMAGE}"/usr/share/ca-certificates
-    fi
+    # Install CAcert certificate; used to be an option but now is required by many system packages
+    dodir /usr/share/ca-certificates/cacert.org
+    edo cp -r "${FILES}"/extra-ca-certs/cacert.org "${IMAGE}"/usr/share/ca-certificates
 
     edo cp -pPR * "${IMAGE}"/
 
