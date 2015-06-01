@@ -8,7 +8,7 @@ DESCRIPTION="
 This is the only useful tool from old, crufty, obsolete sysvinit:
 - killall5
 "
-HOMEPAGE="http://savannah.nongnu.org/projects/${PN/-tools}"
+HOMEPAGE="https://savannah.nongnu.org/projects/${PN/-tools}"
 DOWNLOADS="http://download.savannah.gnu.org/releases/${PN/-tools}/${PNV/-tools}dsf.tar.bz2"
 LICENCES="GPL-2"
 SLOT="0"
