@@ -1,0 +1,17 @@
+Title: repository/muep has been removed from ::unavailable-unofficial
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-06-01
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: repository/muep
+
+::muep[1] has now been removed from ::unavailable-unofficial, due to being
+unmaintained for a long time now.
+
+If you use any packages from ::muep, you can resurrect them at any time
+by following the instructions on our Contributing[2] doc, and maintain them
+in your own repository.
+
+[1]: http://gitorious.org/muep-exherbo/muep-exherbo
+[2]: https://exherbo.org/docs/contributing.html
