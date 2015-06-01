@@ -10,7 +10,7 @@ A small utility that transforms the X server process (X.Org) into a daemon that
 can be used to make applications wait with starting until X.Org is ready for X11
 connections.
 "
-DOWNLOADS="http://foo-projects.org/~sofar/${PN}/${PNV}.tar.gz"
+DOWNLOADS="https://foo-projects.org/~sofar/${PN}/${PNV}.tar.gz"
 
 BUGS_TO="philantrop@exherbo.org"
 
