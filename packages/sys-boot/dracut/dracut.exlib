@@ -29,7 +29,7 @@ there is an attempt to keep things as distribution-agnostic as possible.
 HOMEPAGE="https://dracut.wiki.kernel.org/"
 
 UPSTREAM_DOCUMENTATION="
-    http://www.kernel.org/pub/linux/utils/boot/dracut/dracut.html [[ description = [ Manual ] lang = en ]]
+    https://www.kernel.org/pub/linux/utils/boot/dracut/dracut.html [[ description = [ Manual ] lang = en ]]
 "
 
 BUGS_TO="eternaleye@gmail.com philantrop@exherbo.org"
