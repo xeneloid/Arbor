@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Some replacements for programs formerly provided by sysvinit."
-HOMEPAGE="http://www.exherbo.org/"
+HOMEPAGE="https://www.exherbo.org/"
 DOWNLOADS=""
 
 SCM_REPOSITORY="https://git.exherbo.org/${PN}.git"
