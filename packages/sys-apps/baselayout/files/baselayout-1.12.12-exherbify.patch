@@ -154,7 +154,7 @@ index a1d5be2..ead8bc9 100755
  if [[ ${BE_VERBOSE} == "yes" ]] ; then
  echo -e "
 -${GREEN}Gentoo RC-Scripts; ${BLUE}http://www.gentoo.org/${OFF}
-+${GREEN}Exherbo RC-Scripts; ${BLUE}http://www.exherbo.org/${OFF}
++${GREEN}Exherbo RC-Scripts; ${BLUE}https://www.exherbo.org/${OFF}
 + Based upon Gentoo RC-Scripts which are:
   Copyright 1999-2007 Gentoo Foundation; Distributed under the GPL
  "

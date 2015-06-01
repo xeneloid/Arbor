@@ -48,7 +48,7 @@ index 9e70aca..6e4e9ba 100755
  	echo
 -	echo -e "${GOOD}Gentoo Linux${GENTOO_VERS}; ${BRACKET}http://www.gentoo.org/${NORMAL}"
 -	echo -e " Copyright 1999-2009 Gentoo Foundation; Distributed under the GPLv2"
-+	echo -e "${GOOD}Exherbo ${BRACKET}http://www.exherbo.org/${NORMAL}"
++	echo -e "${GOOD}Exherbo ${BRACKET}https://www.exherbo.org/${NORMAL}"
 +	echo -e " Baselayout-1 is copyright 1999-2009 Gentoo Foundation; GPLv2"
  	echo
  	if [[ ${RC_INTERACTIVE} == "yes" ]] ; then
