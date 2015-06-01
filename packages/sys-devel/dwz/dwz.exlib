@@ -24,7 +24,7 @@ techniques from DWARF standard appendix E - creating DW_TAG_partial_unit
 compilation units (CUs) for duplicated information and using
 DW_TAG_imported_unit to import it into each CU that needs it.
 "
-HOMEPAGE="http://sourceware.org/git/?p=dwz.git;a=summary"
+HOMEPAGE="https://sourceware.org/git/?p=dwz.git;a=summary"
 
 DEPENDENCIES="
     build+run:
