@@ -4,8 +4,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A preprocessor for less"
-HOMEPAGE="http://www-zeuthen.desy.de/~friebel/unix/lesspipe.html"
-DOWNLOADS="ftp://ftp.ifh.de/pub/unix/utility/${PNV}.tar.gz"
+
+BASE_URL="https://www-zeuthen.desy.de/~friebel/unix"
+HOMEPAGE="${BASE_URL}/lesspipe.html"
+DOWNLOADS="${BASE_URL}/less/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
 SLOT="0"
