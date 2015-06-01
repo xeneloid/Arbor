@@ -5,7 +5,7 @@
 # Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2013 Quentin "Sardem FF7" Glidic <sardemff7@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
-# Automake wrapper v1 -- http://www.exherbo.org
+# Automake wrapper v1 -- https://www.exherbo.org
 
 shopt -s nullglob
 
