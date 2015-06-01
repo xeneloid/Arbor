@@ -10,7 +10,7 @@ session (systemd --user). The goal of this package is to provide an easy way for
 people to collect, share and deploy systemd user session installations and help
 test the systemd user session core code.
 "
-DOWNLOADS="http://foo-projects.org/~sofar/${PN}/${PNV}.tar.gz"
+DOWNLOADS="https://foo-projects.org/~sofar/${PN}/${PNV}.tar.gz"
 
 BUGS_TO="philantrop@exherbo.org"
 
