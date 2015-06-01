@@ -4,7 +4,7 @@ After=syslog.target
 
 [Service]
 EnvironmentFile=/etc/conf.d/cronie.conf
-ExecStart=/usr/sbin/crond -n $CRONDARGS
+ExecStart=/usr/bin/crond -n $CRONDARGS
 
 [Install]
 WantedBy=multi-user.target

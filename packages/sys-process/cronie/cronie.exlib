@@ -1,4 +1,4 @@
-# Copyright 2011 Nathan McSween
+# Copyright 2011 Nathan McSween <nwmcsween@gmail.com>
 # Copyright 2011-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -6,7 +6,7 @@ require pam systemd-service [ systemd_files=[ cronie.service ] ] cron-install [ 
 
 export_exlib_phases src_install pkg_postinst
 
-SUMMARY="UNIX cron daemon based on vixie-cron but actually maintained."
+SUMMARY="UNIX cron daemon based on vixie-cron but actually maintained"
 DESCRIPTION="
 Cronie contains the standard UNIX daemon crond (vixie-cron) that runs specified
 programs at scheduled times and related tools. It is based on the original cron
@@ -67,7 +67,7 @@ cronie_src_install() {
         dodoc -r contrib
     fi
 
-    # Install the pam file
+    # overwrite the default pam file with our own
     newpamd "${FILES}"/pamd.compatible crond
 
     option baselayout && newinitd "${FILES}"/cronie.bl1 cronie
