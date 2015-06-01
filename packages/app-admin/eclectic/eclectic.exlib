@@ -15,7 +15,7 @@ It also contains bugfixes to the config module, and a few other
 unreleased features from eselect's trunk.
 "
 HOMEPAGE="https://www.exherbo.org/"
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
+DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 MYOPTIONS="doc"

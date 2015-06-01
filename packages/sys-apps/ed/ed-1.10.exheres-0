@@ -4,7 +4,7 @@
 require gnu [ suffix=gz ]
 
 SUMMARY="GNU ed line oriented text editor"
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.gz"
+DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.gz"
 
 LICENCES="GPL-3"
 SLOT="0"

@@ -5,7 +5,7 @@ require ltrace
 
 PLATFORMS="~amd64"
 
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
+DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
 
 DEPENDENCIES="
     build+run:

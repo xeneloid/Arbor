@@ -6,6 +6,6 @@
 
 require popt
 
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
+DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 PLATFORMS="~amd64 ~arm ~x86"
 

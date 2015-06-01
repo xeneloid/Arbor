@@ -9,7 +9,7 @@ if ever is_scm ; then
 
     require scm-git
 else
-    DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
+    DOWNLOADS="http://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
     # generate tarball by:
     # $ git archive --prefix=${PNV}/ --format=tar ${PNV} | xz > ${PNV}.tar.xz
 fi

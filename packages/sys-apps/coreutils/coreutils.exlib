@@ -9,7 +9,7 @@ export_exlib_phases src_prepare src_configure src_test src_test_expensive src_in
 
 SUMMARY="Core file, shell and text utilities expected to be on any system."
 
-DOWNLOADS+=" https://dev.exherbo.org/distfiles/${PNV}-man-pages.tar.xz"
+DOWNLOADS+=" http://dev.exherbo.org/distfiles/${PNV}-man-pages.tar.xz"
 
 BUGS_TO="philantrop@exherbo.org"
 
