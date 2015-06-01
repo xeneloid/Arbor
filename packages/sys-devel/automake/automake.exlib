@@ -16,7 +16,6 @@ require alternatives
 export_exlib_phases src_install
 
 SUMMARY="Tool used to automatically generate Makefile.in files"
-HOMEPAGE+=" http://sources.redhat.com/automake/"
 
 if ever at_least 1.11; then
     LICENCES="GPL-2 FDL-1.3"
