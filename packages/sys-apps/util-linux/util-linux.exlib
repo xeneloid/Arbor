@@ -8,12 +8,12 @@ require autotools [ supported_automake=[ 1.13 ] supported_autoconf=[ 2.5 ] ]
 export_exlib_phases src_prepare src_configure src_install
 
 SUMMARY="Common linux utilities"
-HOMEPAGE="http://git.kernel.org/?p=utils/${PN}/${PN}.git"
+HOMEPAGE="https://git.kernel.org/cgit/utils/${PN}/${PN}.git"
 DOWNLOADS="mirror://kernel/linux/utils/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
-MY_UPSTREAM="http://www.kernel.org/pub/linux/utils/${PN}/v$(ever range 1-2)/v${PV}"
+MY_UPSTREAM="https://www.kernel.org/pub/linux/utils/${PN}/v$(ever range 1-2)/v${PV}"
 UPSTREAM_CHANGELOG="${MY_UPSTREAM}-ChangeLog"
 UPSTREAM_RELEASE_NOTES="${MY_UPSTREAM}-ReleaseNotes"
 
