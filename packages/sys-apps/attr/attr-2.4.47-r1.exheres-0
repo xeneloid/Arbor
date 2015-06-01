@@ -5,7 +5,7 @@
 #     Copyright 1999-2008 Gentoo Foundation.
 
 SUMMARY="Extended attributes tools"
-HOMEPAGE="http://savannah.nongnu.org/projects/${PN}/"
+HOMEPAGE="https://savannah.nongnu.org/projects/${PN}/"
 DOWNLOADS="http://download.savannah.gnu.org/releases/${PN}/${PNV}.src.tar.gz"
 
 LICENCES="LGPL-2 LGPL-2.1"
