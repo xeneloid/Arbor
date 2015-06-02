@@ -1,4 +1,4 @@
-# Copyright 2010-2014 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2010-2015 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require sourceforge
@@ -23,6 +23,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-ipv6
+    --disable-authdes
     --disable-static
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
