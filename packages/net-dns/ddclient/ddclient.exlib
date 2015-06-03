@@ -1,4 +1,4 @@
-# Copyright 2009-2013 Wulf C. Krueger
+# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'ddclient-3.7.3-r1.ebuild' from Gentoo, which is:
 #       Copyright 1999-2008 Gentoo Foundation
@@ -22,11 +22,13 @@ SLOT="0"
 MYOPTIONS="baselayout"
 
 DEPENDENCIES="
-    run:
-       dev-perl/IO-Socket-SSL
     build+run:
         group/${PN}
         user/${PN}
+    run:
+        dev-perl/IO-Socket-SSL
+    recommendation:
+        dev-perl/JSON-Any [[ description = [ Required for Cloudflare update ] ]]
 "
 
 ddclient_pkg_pretend() {
