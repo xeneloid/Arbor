@@ -1,12 +1,8 @@
 # Copyright 2007-2009 Bo Ørsted Andresen
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix=tar.gz ]
-
 SUMMARY="Colour-highlighted diff output"
 
-# For some reason tarballs later than 1.0.8 disappeared from SourceForge's
-# mirrors but are still available directly from the project's website.
 DOWNLOADS="http://www.colordiff.org/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
@@ -25,12 +21,14 @@ src_compile() {
     :
 }
 
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BUGS CHANGES )
+
 src_install() {
     newbin colordiff{.pl,}
     newbin cdiff{.sh,}
     doman c{,olor}diff.1
     insinto /etc
     doins colordiffrc{,-lightbg}
-    dodoc BUGS CHANGES README
+    emagicdocs
 }
 
