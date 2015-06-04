@@ -8,6 +8,8 @@ require sourceforge [ suffix=tar.gz project=infozip ]
 SUMMARY="Zip is a compression and file packaging/archive utility."
 HOMEPAGE="http://www.info-zip.org/Zip.html"
 
+DOWNLOADS="ftp://ftp.info-zip.org/pub/infozip/src/${MY_PNV}.tgz -> ${MY_PNV}.tar.gz ${DOWNLOADS}"
+
 LICENCES="Info-ZIP"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
