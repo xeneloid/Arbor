@@ -3,14 +3,12 @@
 # Based in part upon 'clamav-0.93.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require sourceforge [ suffix=tar.gz ]
+require github [ user='vrtadmin' pn="${PN}-devel" tag="${PNV}" ]
 
 export_exlib_phases src_install
 
 SUMMARY="Clam Anti-Virus Scanner"
 HOMEPAGE="http://www.${PN}.net"
-
-REMOTE_IDS+=" freecode:${PN}"
 
 UPSTREAM_RELEASE_NOTES="https://github.com/vrtadmin/${PN}-devel/blob/master/README"
 UPSTREAM_DOCUMENTATION="
