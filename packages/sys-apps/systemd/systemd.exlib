@@ -330,14 +330,12 @@ systemd_src_configure() {
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
 
-    if ever at_least 220 ; then
+    if ever at_least 221 ; then
+        myconfig+=( $(option_enable efi gnuefi) )
+    elif ever at_least 220 ; then
         myconfig+=( --disable-gudev )
         # src/boot/efi is missing from 220 tarball
-        if ever at_least 221 ; then
-            myconfig+=( $(option_enable efi gnuefi) )
-        else
-            myconfig+=( --disable-gnuefi )
-        fi
+        myconfig+=( --disable-gnuefi )
     else
         myconfig+=( --enable-gudev )
         myconfig+=( $(option_enable gobject-introspection introspection) )
