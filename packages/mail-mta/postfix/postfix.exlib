@@ -55,6 +55,7 @@ postfix_src_prepare() {
     edo sed \
         -e 's/AR=ar/AR=${AR:-ar}/' \
         -e 's/RANLIB=ranlib/RANLIB=${RANLIB:-ranlib}/' \
+        -e 's:Linux.3\*:Linux.3\*|Linux.4\*:' \
         -i makedefs
 }
 
