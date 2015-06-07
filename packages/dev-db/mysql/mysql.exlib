@@ -47,11 +47,11 @@ DEPENDENCIES="
         tcpd? ( sys-apps/tcp-wrappers )
         !dev-db/mariadb [[
             description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]
-            resolution = uninstall-blocked-after
+            resolution = manual
         ]]
         !dev-db/Percona-Server [[
             description = [ Percona-Server is a drop-in replacement for MySQL with same binary names ]
-            resolution = uninstall-blocked-after
+            resolution = manual
         ]]
     suggestion:
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
