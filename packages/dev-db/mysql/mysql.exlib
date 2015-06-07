@@ -17,15 +17,15 @@ http://downloads.mysql.com/archives/${PN}-$(ever range 1-2)/${PNV}.tar.gz
 
 REMOTE_IDS="freecode:${PN}"
 UPSTREAM_CHANGELOG="
-https://dev.mysql.com/doc/relnotes/mysql/${MYSQL_MAJOR_VERSION}/en/news-$(ever replace_all '-').html [[ lang = [ en ] ]]
+    https://dev.mysql.com/doc/relnotes/mysql/${MYSQL_MAJOR_VERSION}/en/news-$(ever replace_all '-').html [[ lang = [ en ] ]]
 "
 UPSTREAM_DOCUMENTATION="
-https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/index.html                 [[ lang = [ en ] ]]
-https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/postinstallation.html      [[ lang = [ en ] note = [ Postinstallation documentation ] ]]
-https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/upgrading-downgrading.html [[ lang = [ en ] note = [ Upgrading or downgrading documentation ] ]]
+    https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/index.html                 [[ lang = [ en ] ]]
+    https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/postinstallation.html      [[ lang = [ en ] note = [ Postinstallation documentation ] ]]
+    https://dev.mysql.com/doc/refman/${MYSQL_MAJOR_VERSION}/en/upgrading-downgrading.html [[ lang = [ en ] note = [ Upgrading or downgrading documentation ] ]]
 "
 UPSTREAM_RELEASE_NOTES="
-https://dev.mysql.com/doc/relnotes/mysql/${MYSQL_MAJOR_VERSION}/en/ [[ lang = [ en ] ]]
+    https://dev.mysql.com/doc/relnotes/mysql/${MYSQL_MAJOR_VERSION}/en/ [[ lang = [ en ] ]]
 "
 
 LICENCES="GPL-2" # with-exceptions
