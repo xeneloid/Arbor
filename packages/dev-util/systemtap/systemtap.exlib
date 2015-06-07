@@ -44,6 +44,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-selinux
 )
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    AR="${AR}"
+)
+
 systemtap_src_install() {
     default
 
