@@ -8,7 +8,10 @@ SUMMARY="A git command for submitting branches to Gerrit"
 DESCRIPTION="
 git-review is a tool that helps submitting git branches to gerrit for review.
 "
-HOMEPAGE="https://launchpad.net/${PN}"
+HOMEPAGE+="
+    https://git.openstack.org/cgit/openstack-infra/${PN}
+    https://launchpad.net/${PN}
+"
 
 BUGS_TO="philantrop@exherbo.org"
 
