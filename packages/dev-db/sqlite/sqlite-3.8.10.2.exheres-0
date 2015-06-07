@@ -47,6 +47,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
 )
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    BCC=$(exhost --tool-prefix)cc
+)
+
 WORK=${WORKBASE}/${PN}-autoconf-${SCHNARF_PV}/
 
 pkg_setup() {
