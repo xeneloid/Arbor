@@ -4,15 +4,19 @@
 
 require cmake [ api=2 ] systemd-service
 
-export_exlib_phases pkg_pretend src_configure src_install
+export_exlib_phases pkg_pretend src_prepare src_configure src_install pkg_postinst
 
 MYSQL_MAJOR_VERSION=$(ever range 1-2)
+
+# Miraculously works for MySQL >= 5.1 till at least 5.6
+SPHINX_PV="2.2.9"
 
 SUMMARY="A relational database management system (RDBMS)"
 HOMEPAGE="https://www.mysql.com/"
 DOWNLOADS="
-mirror://mysql/Downloads/MySQL-$(ever range 1-2)/${PNV}.tar.gz
-http://downloads.mysql.com/archives/${PN}-$(ever range 1-2)/${PNV}.tar.gz
+    mirror://mysql/Downloads/MySQL-$(ever range 1-2)/${PNV}.tar.gz
+    http://downloads.mysql.com/archives/${PN}-$(ever range 1-2)/${PNV}.tar.gz
+    sphinx? ( http://sphinxsearch.com/files/sphinx-${SPHINX_PV}-release.tar.gz )
 "
 
 REMOTE_IDS="freecode:${PN}"
@@ -34,6 +38,7 @@ MYOPTIONS="
     baselayout
     debug
     embedded-server [[ description = [ The embedded MySQL server library, a full-featured MySQL server that can be run inside a client application ] ]]
+    sphinx [[ description = [ Add the Sphinx Search Engine with fulltext search support (external engine) ] ]]
     tcpd
 "
 
@@ -87,6 +92,12 @@ mysql_pkg_pretend() {
         ewarn "/usr/$(exhost --target)/lib/tmpfiles.d/${PN}.conf and can be safely removed after upgrade"
         ewarn "if you did not make any changes to it."
     fi
+}
+
+mysql_src_prepare() {
+    default
+
+    option sphinx && edo ln -s "${WORKBASE}"/sphinx-${SPHINX_PV}-release/mysqlse "${WORKBASE}"/${PNV}/storage/sphinx
 }
 
 mysql_src_configure() {
@@ -164,6 +175,12 @@ mysql_src_configure() {
         )
     fi
 
+    if option sphinx ; then
+        cmakeargs+=(
+            -DWITH_SPHINX_STORAGE_ENGINE:BOOL=TRUE
+        )
+    fi
+
     ecmake \
         "${cmakeargs[@]}" \
         $(cmake_with debug DEBUG)\
@@ -214,6 +231,16 @@ EOF
         hereins ${PN}.conf <<EOF
 d /run/mysqld 0755 mysql mysql
 EOF
+    fi
+}
+
+mysql_pkg_postinst() {
+    if option sphinx ; then
+        elog "In order to finalise your installation of the Sphinx Search Engine, you must install"
+        elog "it in MySQL using the following command as an administrative user:"
+        elog ""
+        elog "mysql> INSTALL PLUGIN SPHINX SONAME 'ha_sphinx.so';"
+        elog ""
     fi
 }
 
