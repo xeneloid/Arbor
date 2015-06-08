@@ -25,10 +25,6 @@ DEPENDENCIES="
 
 BUGS_TO="will@worrbase.com"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-rand-egd.patch
-)
-
 src_install() {
     default
 
