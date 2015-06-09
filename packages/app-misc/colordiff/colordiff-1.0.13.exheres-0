@@ -3,6 +3,7 @@
 
 SUMMARY="Colour-highlighted diff output"
 
+HOMEPAGE="http://www.colordiff.org/"
 DOWNLOADS="http://www.colordiff.org/${PNV}.tar.gz"
 
 LICENCES="GPL-2"
