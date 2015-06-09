@@ -198,6 +198,9 @@ mysql_src_install() {
     # construct ldpath for all targets
     ldpath="/usr/$(exhost --target)/lib/${PN}${ldpath:+:${ldpath}}"
 
+    # Remove empty directories
+    edo rmdir "${IMAGE}"/usr/share/mysql/info
+
     keepdir /etc/mysql
 
     if ever at_least 5.6.24 ; then
