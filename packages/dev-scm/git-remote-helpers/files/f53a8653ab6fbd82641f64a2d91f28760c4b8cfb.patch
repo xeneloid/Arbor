@@ -1,0 +1,39 @@
+Reason: This commit is wrong for exherbo, we guarantee en_US.UTF-8, en_GB.UTF-8, but not C.UTF-8
+        Thus we revert it with patch -R.
+
+From f53a8653ab6fbd82641f64a2d91f28760c4b8cfb Mon Sep 17 00:00:00 2001
+From: Paul Wise <pabs3@bonedaddy.net>
+Date: Thu, 29 May 2014 12:46:20 +0800
+Subject: [PATCH] test: use C.UTF-8 locale in tests
+
+The en_US.UTF-8 locale is not guaranteed to exist, and if it doesn't,
+several tests fail.
+
+Signed-off-by: Paul Wise <pabs3@bonedaddy.net>
+Signed-off-by: Felipe Contreras <felipe.contreras@gmail.com>
+---
+ test/main.t | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/test/main.t b/test/main.t
+index ca50f79..5aae6fa 100755
+--- a/test/main.t
++++ b/test/main.t
+@@ -470,7 +470,7 @@ rm -rf hgrepo
+ test_expect_success 'fetch special filenames' '
+ 	test_when_finished "rm -rf hgrepo gitrepo && LC_ALL=C" &&
+ 
+-	LC_ALL=en_US.UTF-8
++	LC_ALL=C.UTF-8
+ 	export LC_ALL
+ 
+ 	(
+@@ -503,7 +503,7 @@ test_expect_success 'push special filenames' '
+ 
+ 	mkdir -p tmp && cd tmp &&
+ 
+-	LC_ALL=en_US.UTF-8
++	LC_ALL=C.UTF-8
+ 	export LC_ALL
+ 
+ 	(

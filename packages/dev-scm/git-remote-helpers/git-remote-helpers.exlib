@@ -83,7 +83,11 @@ _tool_target() {
 git-remote-helpers_src_prepare() {
     default
 
-    if ! ever is_scm; then
+    if ever is_scm; then
+        if option mercurial; then
+            expatch -dgit-remote-hg --reverse "${FILES}"/f53a8653ab6fbd82641f64a2d91f28760c4b8cfb.patch
+        fi
+    else
         if option bzr; then
             edo mv git-remote-bzr-${PV} git-remote-bzr
         fi
