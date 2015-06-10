@@ -1,7 +1,7 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.15 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
 require github [ user='compnerd' tag="v${PV}" ]
 
 SUMMARY="A loader dispatcher which picks the correct loader for a program, based on its architecture"
