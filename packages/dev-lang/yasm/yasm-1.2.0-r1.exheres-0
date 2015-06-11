@@ -1,6 +1,8 @@
 # Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require python [ with_opt=true blacklist=3 ]
+
 SUMMARY="YASM Modular Assembler Project"
 DESCRIPTION="
 Yasm is a complete rewrite of the NASM assembler under the "new" BSD License.
@@ -25,7 +27,6 @@ DEPENDENCIES="
         sys-devel/gettext
     build+run:
         python? (
-            dev-lang/python:=
             dev-python/Cython
         )
 "
