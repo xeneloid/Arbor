@@ -5,3 +5,5 @@ require systemd
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DOWNLOADS="http://www.freedesktop.org/software/${PN}/${PNV}.tar.xz"
+
