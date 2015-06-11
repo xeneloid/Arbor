@@ -27,7 +27,6 @@ DEPENDENCIES="
         python? (
             dev-lang/python:=
             dev-python/Cython
-            dev-python/Pyrex
         )
 "
 
