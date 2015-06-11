@@ -1,0 +1,39 @@
+Upstream: submitted, http://www.openldap.org/its/index.cgi?findid=8169
+
+From 2fb34b0c7da8460c09fe3069fa63f4c4396f3bd9 Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Thu, 11 Jun 2015 21:09:59 +0200
+Subject: [PATCH] Allow passing manprefix to make install
+
+The motivation for this change is my distribution moving to a multiarch
+layout. While the architecture specific stuff (binaries, libraries,
+etc.) is installed under /usr/${host}/{bin,lib,...} architecture-independent
+data should still be installed to /usr/share/.
+---
+ libraries/liblmdb/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/libraries/liblmdb/Makefile b/libraries/liblmdb/Makefile
+index 759fc79..624a371 100644
+--- a/libraries/liblmdb/Makefile
++++ b/libraries/liblmdb/Makefile
+@@ -25,6 +25,7 @@ CFLAGS	= $(THREADS) $(OPT) $(W) $(XCFLAGS)
+ LDLIBS	=
+ SOLIBS	=
+ prefix	= /usr/local
++manprefix = $(prefix)/man
+ 
+ ########################################################################
+ 
+@@ -39,7 +40,7 @@ install: $(ILIBS) $(IPROGS) $(IHDRS)
+ 	for f in $(IPROGS); do cp $$f $(DESTDIR)$(prefix)/bin; done
+ 	for f in $(ILIBS); do cp $$f $(DESTDIR)$(prefix)/lib; done
+ 	for f in $(IHDRS); do cp $$f $(DESTDIR)$(prefix)/include; done
+-	for f in $(IDOCS); do cp $$f $(DESTDIR)$(prefix)/man/man1; done
++	for f in $(IDOCS); do cp $$f $(DESTDIR)$(manprefix)/man1; done
+ 
+ clean:
+ 	rm -rf $(PROGS) *.[ao] *.so *~ testdb
+-- 
+2.4.3
+

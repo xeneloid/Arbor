@@ -1,0 +1,12 @@
+# Copyright 2015 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require lmdb
+
+PLATFORMS="~amd64"
+
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    -p3 "${FILES}"/${PNV}-Allow-passing-AR-to-make.patch
+        "${FILES}"/${PNV}-Allow-passing-manprefix-to-make-install.patch
+)
+
