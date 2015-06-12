@@ -41,13 +41,6 @@ MYOPTIONS="
     readline [[ description = [ Use libedit for tab completion in sftp ] ]]
     systemd
     X
-    ( providers:
-        openssl
-        libressl
-    ) [[
-        *description = [ libssl provider ]
-        number-selected = exactly-one
-    ]]
 "
 
 if [[ -n ${X509_VERSION} ]]; then
@@ -67,7 +60,7 @@ DEPENDENCIES="
         user/sshd
         sys-apps/shadow
         sys-libs/zlib[>=1.2.3]
-        virtual/libssl[providers:*(-)?]
+        virtual/libssl
         gtk? ( x11-libs/gtk+:2 )
         kerberos? ( app-crypt/heimdal )
         ldns? ( net-libs/ldns )
