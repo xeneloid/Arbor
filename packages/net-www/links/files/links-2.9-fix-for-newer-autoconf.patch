@@ -1,0 +1,44 @@
+Upstream: mail sent to the bug reporting addresses on
+          http://links.twibright.com/development.php
+
+From 62da9ea18b28f5625cff90675472fe1f3d24d7fa Mon Sep 17 00:00:00 2001
+From: Johannes Nixdorf <mixi@exherbo.org>
+Date: Sat, 13 Jun 2015 15:44:31 +0200
+Subject: [PATCH 2/3] Don't break with newer autoconf releases.
+
+Autoconf produces broken configure scripts if AC_PROG_CXX is called
+conditionally.
+---
+ configure.in | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 313a6d3..08d4f04 100644
+--- a/configure.in
++++ b/configure.in
+@@ -14,10 +14,13 @@ AUTOHEADER="./missing autoheader"
+ 
+ AM_CONFIG_HEADER(config.h)
+ 
++dnl calling AC_PROG_CXX conditionally produces failing configure scripts with
++dnl newer autoconf versions
++
+ dnl Checks for programs.
+ AC_PROG_CC
++AC_PROG_CXX
+ 
+-dnl AC_PROG_CXX
+ dnl AC_PROG_AWK
+ dnl AM_PROG_LEX
+ dnl AC_PROG_YACC
+@@ -1032,7 +1035,6 @@ if test "$disable_atheos" != yes; then
+ 			AC_CHECK_LIB(syllable, main)
+ 		fi
+ 		if test "$ac_cv_lib_atheos_main" = yes -o "$ac_cv_lib_syllable_main" = yes; then
+-			AC_PROG_CXX
+ 			AC_DEFINE(GRDRV_ATHEOS)
+ 			drivers="$drivers ATHEOS"
+ 			cf_have_atheos=yes
+-- 
+2.4.3
+

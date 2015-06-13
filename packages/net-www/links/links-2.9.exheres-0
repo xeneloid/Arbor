@@ -3,6 +3,8 @@
 # Based in part upon 'links-2.2.ebuild', which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
 SUMMARY="a fast lightweight text and graphic web-browser"
 
 MY_PNV="${PNV/_/}"
@@ -57,6 +59,11 @@ REMOTE_IDS="freecode:links"
 UPSTREAM_CHANGELOG="http://links.twibright.com/download/ChangeLog"
 
 WORK="${WORKBASE}/${MY_PNV}"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-for-libressl.patch
+    "${FILES}"/${PNV}-fix-for-newer-autoconf.patch
+)
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BRAILLE_HOWTO KEYS SITES )
 
