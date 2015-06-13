@@ -17,4 +17,5 @@ if [[ "${DEBIAN_UPSTREAM_PN}" == lib* ]]; then
 fi
 
 DOWNLOADS="mirror://debian/pool/main/${DEBIAN_UPSTREAM_PREFIX}/${DEBIAN_UPSTREAM_PN}/${DEBIAN_UPSTREAM_PN}_${DEBIAN_UPSTREAM_PV}$(exparam suffix)"
+REMOTE_IDS+=" debian:${DEBIAN_UPSTREAM_PN}"
 
