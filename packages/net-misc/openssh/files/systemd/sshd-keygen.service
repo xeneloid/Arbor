@@ -4,5 +4,5 @@ ConditionPathExists=|!/etc/ssh/ssh_host_rsa_key
 ConditionPathExists=|!/etc/ssh/ssh_host_ed25519_key
 
 [Service]
-ExecStart=/usr/host/bin/ssh-keygen -A
+ExecStart=/usr/host/bin/sshd-keygen.sh
 Type=oneshot
