@@ -53,8 +53,6 @@ DEPENDENCIES="
         virtual/libssl
 "
 
-BUGS_TO="coldwind@exherbo.org"
-
 REMOTE_IDS="freecode:links"
 UPSTREAM_CHANGELOG="http://links.twibright.com/download/ChangeLog"
 
