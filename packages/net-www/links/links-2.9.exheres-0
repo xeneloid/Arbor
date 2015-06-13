@@ -3,13 +3,14 @@
 # Based in part upon 'links-2.2.ebuild', which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require links
+SUMMARY="a fast lightweight text and graphic web-browser"
 
-# To handle pre-versions ...
 MY_PNV="${PNV/_/}"
-WORK="${WORKBASE}/${MY_PNV}"
+
+HOMEPAGE="http://links.twibright.com/"
 DOWNLOADS="http://links.twibright.com/download/${MY_PNV}.tar.bz2"
 
+LICENCES="GPL-2"
 SLOT="2"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
@@ -22,6 +23,7 @@ MYOPTIONS="
     jpeg? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
     tiff? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
 "
+
 # sdl: support dropped until someone takes care
 
 # Note: if X or fbcon usegflag are enabled, links will be built in graphic
@@ -48,6 +50,13 @@ DEPENDENCIES="
         gpm? ( sys-libs/gpm )
         virtual/libssl
 "
+
+BUGS_TO="coldwind@exherbo.org"
+
+REMOTE_IDS="freecode:links"
+UPSTREAM_CHANGELOG="http://links.twibright.com/download/ChangeLog"
+
+WORK="${WORKBASE}/${MY_PNV}"
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BRAILLE_HOWTO KEYS SITES )
 
