@@ -24,7 +24,6 @@ MYOPTIONS="
     apache [[ description = [ Build PHP for the Apache webserver. ] ]]
     pear [[ description = [ Support for using the PHP Extension and Application Repository (PEAR). ] requires = [ php_extensions: pcre xml ] ]]
     fpm [[ description = [ Build alternative FastCGI implementation (FastCGI Process Manager) for heavy-loaded sites. ] ]]
-    systemd [[ description = [ Install systemd service file for php-fpm. ] requires = fpm ]]
     ( apache fpm ) [[ number-selected = at-most-one ]]
 
     (
@@ -307,7 +306,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 
 if ever at_least 5.5.9; then
     DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
-        "systemd fpm-systemd"
+        "fpm fpm-systemd"
     )
 else
     DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
