@@ -26,7 +26,6 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     pam
-    systemd
     ( linguas: ca cs da de eo es eu fi fr gl hr it ja nb nl pl pt_BR ru sl sr sv tr uk vi zh_CN )
 "
 
@@ -74,13 +73,11 @@ src_install() {
         pamd_mimic_system sudo auth auth account password session
     fi
 
-    if option systemd; then
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        hereins ${PN}.conf <<EOF
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins ${PN}.conf <<EOF
 d /run/sudo 0711 root root
 D /run/sudo/ts 0700 root root
 EOF
-    fi
 
     edo rmdir "${IMAGE}"/run/{sudo,}
 }
