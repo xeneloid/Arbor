@@ -15,10 +15,7 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    (
-        cron [[ description = [ Install launcher script to cron.daily path ] ]]
-        systemd [[ description = [ Use a systemd timer unit to rotate your logs (recommended) ] ]]
-    ) [[ number-selected = at-most-one ]]
+    cron [[ description = [ Install launcher script to cron.daily path ] ]]
 "
 
 DEPENDENCIES="
