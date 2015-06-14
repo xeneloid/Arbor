@@ -1,8 +1,7 @@
 # Copyright 2013 Jorge Aparicio
 # Distributed under the terms of the GNU General Public License v2
 
-require pypi
-require setup-py [ import=setuptools multibuild=false blacklist=3.1 ]
+require pypi setup-py [ import=setuptools multibuild=false blacklist=3.1 ]
 
 SUMMARY="A git command for submitting branches to Gerrit"
 DESCRIPTION="
@@ -17,10 +16,10 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="Apache-2.0"
 SLOT="0"
-PLATFORMS="~amd64 ~arm"
+PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 
-# TODO Enable tests (too many missing dependencies)
+# "Running tests for git-review means running a local copy of Gerrit"
 RESTRICT="test"
 
 DEPENDENCIES="
