@@ -37,7 +37,7 @@ REMOTE_IDS="sourceforge:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout systemd"
+MYOPTIONS="baselayout"
 
 DEPENDENCIES="
     build:
@@ -161,7 +161,7 @@ dracut_src_prepare() {
 }
 
 dracut_src_install() {
-    option systemd && export systemdsystemunitdir="${SYSTEMDSYSTEMUNITDIR}"
+    export systemdsystemunitdir="${SYSTEMDSYSTEMUNITDIR}"
 
     default
 
