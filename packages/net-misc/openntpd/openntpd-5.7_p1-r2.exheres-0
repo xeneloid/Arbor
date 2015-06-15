@@ -12,12 +12,16 @@ DOWNLOADS="ftp://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/${NTP_PNV}.tar.gz"
 LICENCES="BSD-2 BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="baselayout"
+MYOPTIONS="
+    baselayout
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        virtual/libssl
         group/ntp
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         user/ntp
 "
 
