@@ -1,4 +1,4 @@
-# Copyright 2008-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Copyright 2011 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'openssh-5.0_p1-r1.ebuild' from Gentoo, which is:
@@ -39,7 +39,6 @@ MYOPTIONS="
     ldns [[ description = [ Use ldns for DNSSEC support ] ]]
     pam
     readline [[ description = [ Use libedit for tab completion in sftp ] ]]
-    systemd
     X
 "
 
@@ -187,12 +186,10 @@ openssh_src_install() {
     fi
 
     install_systemd_files
-    if option systemd ; then
-        dobin "${FILES}"/sshd-keygen.sh
+    dobin "${FILES}"/sshd-keygen.sh
 
-        # fix installed service files to use correct host
-        edo sed -e "s#/usr/host/#/usr/$(exhost --target)/#g" -i "${IMAGE}/${SYSTEMDSYSTEMUNITDIR}"/*.service
-    fi
+    # fix installed service files to use correct host
+    edo sed -e "s#/usr/host/#/usr/$(exhost --target)/#g" -i "${IMAGE}/${SYSTEMDSYSTEMUNITDIR}"/*.service
 
     # Delete empty dir.
     [[ -d ${IMAGE}/run ]] && edo rmdir "${IMAGE}"/run
