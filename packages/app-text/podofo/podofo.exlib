@@ -24,8 +24,9 @@ UPSTREAM_RELEASE_NOTES="http://sourceforge.net/p/podofo/mailman/message/32576719
 LICENCES="GPL-2 LGPL-2"
 SLOT="0"
 MYOPTIONS="
-        graph [[ description = [ Support for graphs using boost ] ]]
-        lua [[ description = [ Support Lua plan files for imposition ] ]]
+    graph [[ description = [ Support for graphs using boost ] ]]
+    lua   [[ description = [ Support Lua plan files for imposition ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -36,9 +37,10 @@ DEPENDENCIES="
         media-libs/libpng:=[>=1.2]
         media-libs/tiff[>=3.8.2-r1]
         net-dns/libidn
-        virtual/libssl
         graph? ( dev-libs/boost[>=1.38.0] )
         lua? ( dev-lang/lua:5.1[>=5.1.4] ) [[ note = [ The :5.1 is probably only cmake's fault ] ]]
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 #    test:
 #        dev-cpp/cppunit[>=1.12.1]
