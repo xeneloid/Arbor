@@ -24,6 +24,7 @@ MYOPTIONS="
     session-management [[
         description = [ enable utmp/wtmp record updates via libutempter ]
     ]]
+    systemd
     udev [[
         description = [ Enable udev support (*only* ever disable this to break a dependency cycle) ]
         note = [ Usually, we hard-enable udev. This option is *solely* to break
@@ -144,6 +145,7 @@ util-linux_src_configure() {
         --without-selinux \
         --without-slang \
         --without-smack \
+        --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR} \
         $(for tool in "${enabled_tools[@]}" ; do echo --enable-${tool} ; done) \
         $(for tool in "${disabled_tools[@]}" ; do echo --disable-${tool} ; done) \
         $(for tool in "${conflicts[@]}" ; do echo --disable-${tool} ; done) \
@@ -152,7 +154,6 @@ util-linux_src_configure() {
         $(option_enable session-management utmpdump) \
         $(option_with session-management utempter) \
         $(option_with systemd) \
-        $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}) \
         $(option_with udev)
 }
 
