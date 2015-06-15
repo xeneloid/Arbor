@@ -49,6 +49,7 @@ MYOPTIONS="
     ] ]]
     qt4      [[ description = [ Build the Qt4-based wpa_gui program ] ]]
     systemd  [[ requires = dbus ]]
+   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -59,7 +60,10 @@ DEPENDENCIES="
         sys-libs/readline
         dbus? ( sys-apps/dbus )
         gnutls? ( dev-libs/gnutls )
-       !gnutls? ( virtual/libssl )
+       !gnutls? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         pcap? (
             dev-libs/libdnet
             dev-libs/libpcap
