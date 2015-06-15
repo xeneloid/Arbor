@@ -37,6 +37,7 @@ MYOPTIONS="
     tk
     webdav [[ requires = curl description = [ Adds support for pushing using http:// and https:// transports ] ]]
     xinetd
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 exparam -b htmldocs && MYOPTIONS+=" doc"
 
@@ -44,9 +45,10 @@ DEPENDENCIES="
     build+run:
         dev-lang/perl:=[>=5.7.3]
         sys-libs/zlib
-        virtual/libssl
         curl? ( net-misc/curl )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         tk? (
           dev-lang/tcl[>=8.4]
           dev-lang/tk[>=8.4]
