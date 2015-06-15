@@ -21,7 +21,6 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     avahi
     dbus
-    systemd
 "
 
 DEPENDENCIES="
@@ -96,12 +95,10 @@ src_install() {
 
     install_systemd_files
 
-    if option systemd ; then
-        edo sed -e 's:cups.service:org.cups.cupsd.service:g' \
-                -i "${IMAGE}"/usr/$(exhost --target)/lib/systemd/system/cups-browsed.service
-    fi
+    edo sed -e 's:cups.service:org.cups.cupsd.service:g' \
+            -i "${IMAGE}"/usr/$(exhost --target)/lib/systemd/system/cups-browsed.service
 
-    if option systemd && ! option avahi ; then
+    if ! option avahi ; then
         edo sed -e 's: avahi-daemon.service::g' \
                 -i "${IMAGE}"/usr/$(exhost --target)/lib/systemd/system/cups-browsed.service
     fi
