@@ -27,6 +27,7 @@ MYOPTIONS="
     ncurses
     readline
     tk
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 tag_number=$(ever replace_all '_' ${PV})
@@ -44,10 +45,11 @@ DEPENDENCIES="
         dev-libs/libffi
         dev-libs/libyaml
         sys-libs/zlib
-        virtual/libssl
         berkdb? ( sys-libs/db:= )
         gdbm? ( sys-libs/gdbm )
         ncurses? ( sys-libs/ncurses )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         readline? ( sys-libs/readline )
         tk? ( dev-lang/tk )
 "
