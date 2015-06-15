@@ -119,14 +119,13 @@ cyrus-sasl_src_install() {
 
     pamd_mimic_system saslauthd auth auth account session
 
-    if option systemd; then
-        install_systemd_files
-        insinto /etc/conf.d
-        newins "${FILES}"/saslauthd-confd saslauthd.conf
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        hereins saslauthd.conf <<EOF
+    # systemd
+    install_systemd_files
+    insinto /etc/conf.d
+    newins "${FILES}"/saslauthd-confd saslauthd.conf
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins saslauthd.conf <<EOF
 d /run/saslauthd 0750 root root
 EOF
-    fi
 }
 
