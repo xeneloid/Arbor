@@ -18,6 +18,7 @@ MYOPTIONS="
     expat
     gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     libproxy [[ description = [ Support for automatic configuration management through libproxy ] ]]
+   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -27,11 +28,15 @@ DEPENDENCIES="
         sys-libs/zlib
        !expat? ( dev-libs/libxml2:2.0 )
         expat? ( dev-libs/expat )
-       !gnutls? ( virtual/libssl )
+       !gnutls? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         gnutls? ( dev-libs/gnutls )
         libproxy? ( net-libs/libproxy:1 )
     test:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
