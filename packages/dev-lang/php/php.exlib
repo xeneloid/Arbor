@@ -61,6 +61,9 @@ MYOPTIONS="
             xmlrpc        [[ description = [ Support for writing XML-RPC servers and clients. ] ]]
             xsl           [[ description = [ Include XSL support. ] ]]
     )
+
+    php_extensions:ftp? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    php_extensions:ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 if ! ever at_least 5.5.9; then
@@ -82,7 +85,10 @@ DEPENDENCIES="
         apache? ( www-servers/apache[>=2.2.11] )
         php_extensions:curl? ( net-misc/curl[>=7.19.4] )
         php_extensions:berkdb? ( sys-libs/db:=[>=4.6.21] )
-        php_extensions:ftp? ( virtual/libssl )
+        php_extensions:ftp? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         php_extensions:gd? (
             media-libs/freetype:2
             media-libs/jpeg:=[>=6b]
@@ -118,10 +124,11 @@ DEPENDENCIES="
         php_extensions:readline? ( sys-libs/readline[>=5.2_p12] )
         php_extensions:recode? ( app-text/recode[>=3.6] )
         php_extensions:ssl? (
-            virtual/libssl
             php_extensions:imap? (
                 dev-libs/c-client[>=2007e][ssl(+)]
             )
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
         )
         php_extensions:tidy? ( app-text/tidy[>=20080116] )
         php_extensions:unixodbc? ( dev-db/unixODBC[>=2.2.14] )
