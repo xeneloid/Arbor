@@ -26,6 +26,8 @@ LICENCES="GPL-2"
 SLOT="0"
 LANGS="ca cs es fr it ja ru"
 MYOPTIONS="
+    acl [[ description = [ Support POSIX ACL when authenticating with the CUPS daemon ] ]]
+    avahi [[ description = [ Enable DNS Service Discovery (DNS_SD) support (printer sharing using Avahi) ] ]]
     baselayout
     dbus
     debug
@@ -33,10 +35,9 @@ MYOPTIONS="
     pam
     perl
     python
-    xinetd
-    acl [[ description = [ Support POSIX ACL when authenticating with the CUPS daemon ] ]]
-    avahi [[ description = [ Enable DNS Service Discovery (DNS_SD) support (printer sharing using Avahi) ] ]]
+    systemd
     tcpd [[ description = [ Use TCP Wrappers to restrict access to cupsd ] ]]
+    xinetd
     linguas: ( ${LANGS} )
 "
 
