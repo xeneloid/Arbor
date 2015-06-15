@@ -74,29 +74,29 @@ dbus_src_configure() {
 
     # Testing code (--enable-tests) disabled since building with tests support
     # creates an insecure (sic upstream), non-production use library
-    econf                                                \
-        --localstatedir=/var                             \
-        --enable-inotify                                 \
-        --enable-xml-docs                                \
-        --with-console-auth-dir=/run/console/            \
-        --with-dbus-user=messagebus                      \
-        --with-session-socket-dir=/tmp                   \
-        --with-system-pid-file=/run/dbus.pid             \
-        --with-system-socket=/run/dbus/system_bus_socket \
-        --disable-apparmor                               \
-        --disable-ducktype-docs                          \
-        --disable-libaudit                               \
-        --disable-selinux                                \
-        --disable-static                                 \
-        --disable-tests                                  \
-        $(option_enable debug asserts)                   \
-        $(option_enable debug verbose-mode)              \
-        $(option_enable doc doxygen-docs)                \
-        $(option_enable systemd)                         \
-        $(option_enable systemd user-session)            \
-        $(option_with X x)                               \
-        $(option_with systemd systemdsystemunitdir ${SYSTEMDSYSTEMUNITDIR}) \
-        $(option_with systemd systemduserunitdir ${SYSTEMDUSERUNITDIR})
+    econf                                                   \
+        --localstatedir=/var                                \
+        --enable-inotify                                    \
+        --enable-xml-docs                                   \
+        --with-console-auth-dir=/run/console/               \
+        --with-dbus-user=messagebus                         \
+        --with-session-socket-dir=/tmp                      \
+        --with-system-pid-file=/run/dbus.pid                \
+        --with-system-socket=/run/dbus/system_bus_socket    \
+        --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR} \
+        --with-systemduserunitdir=${SYSTEMDUSERUNITDIR}     \
+        --disable-apparmor                                  \
+        --disable-ducktype-docs                             \
+        --disable-libaudit                                  \
+        --disable-selinux                                   \
+        --disable-static                                    \
+        --disable-tests                                     \
+        $(option_enable debug asserts)                      \
+        $(option_enable debug verbose-mode)                 \
+        $(option_enable doc doxygen-docs)                   \
+        $(option_enable systemd)                            \
+        $(option_enable systemd user-session)               \
+        $(option_with X x)
 
     esandbox disallow_net 'unix-abstract:/tmp/dbus-fake-socket-*'
 }
