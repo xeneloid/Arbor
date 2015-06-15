@@ -10,11 +10,14 @@ SUMMARY="Perl extension for using OpenSSL"
 LICENCES="|| ( BSD-3 openssl )"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
     test:
         dev-perl/Test-Exception
         dev-perl/Test-NoWarnings
