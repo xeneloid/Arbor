@@ -22,7 +22,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/changelog"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="baselayout systemd"
+MYOPTIONS="baselayout"
 
 DEPENDENCIES="
     run:
@@ -45,9 +45,7 @@ src_install() {
 
     install_systemd_files
 
-    if option systemd ; then
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        newins etc/systemd/laptop-mode.conf.tmpfiles laptop-mode.conf
-    fi
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    newins etc/systemd/laptop-mode.conf.tmpfiles laptop-mode.conf
 }
 
