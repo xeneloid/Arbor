@@ -284,11 +284,9 @@ wpa_supplicant_src_install() {
         popd
     fi
 
-    if option systemd; then
-        insinto "${SYSTEMDSYSTEMUNITDIR}"
-        doins "${WORK}"/systemd/{wpa_supplicant@,wpa_supplicant-nl80211@,wpa_supplicant-wired@}.service
-        option dbus && doins "${WORK}"/systemd/wpa_supplicant.service
-    fi
+    insinto "${SYSTEMDSYSTEMUNITDIR}"
+    doins "${WORK}"/systemd/{wpa_supplicant@,wpa_supplicant-nl80211@,wpa_supplicant-wired@}.service
+    option dbus && doins "${WORK}"/systemd/wpa_supplicant.service
 
     if option baselayout ; then
         exeinto /etc/wpa_supplicant
