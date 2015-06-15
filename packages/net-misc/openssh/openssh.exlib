@@ -40,6 +40,7 @@ MYOPTIONS="
     pam
     readline [[ description = [ Use libedit for tab completion in sftp ] ]]
     X
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 if [[ -n ${X509_VERSION} ]]; then
@@ -59,10 +60,11 @@ DEPENDENCIES="
         user/sshd
         sys-apps/shadow
         sys-libs/zlib[>=1.2.3]
-        virtual/libssl
         gtk? ( x11-libs/gtk+:2 )
         kerberos? ( app-crypt/heimdal )
         ldns? ( net-libs/ldns )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         readline? ( dev-libs/libedit )
         pam? ( sys-libs/pam[>=0.78] )
         X? ( x11-apps/xauth )
