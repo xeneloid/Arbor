@@ -9,6 +9,7 @@ MYOPTIONS="
     ares [[ description = [ Enabled c-ares posix-threaded dns support, disables curl's own threaded resolver ] ]]
     gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     idn
+   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 DEPENDENCIES="
     build:
@@ -20,7 +21,10 @@ DEPENDENCIES="
         net-libs/libssh2[>=1.2.8]
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
-       !gnutls? ( virtual/libssl )
+       !gnutls? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         gnutls? (
             dev-libs/gnutls[>=2.12.14]
             dev-libs/nettle
