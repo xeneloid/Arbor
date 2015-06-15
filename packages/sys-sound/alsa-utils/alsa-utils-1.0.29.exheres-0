@@ -50,7 +50,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-alsaconf
     --disable-xmlto
     --with-alsactl-lock-dir=/run/lock
-    --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR}"
+    --with-systemdsystemunitdir="${SYSTEMDSYSTEMUNITDIR}"
     --with-udev-rules-dir="${UDEVRULESDIR}"
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( alsaloop )
