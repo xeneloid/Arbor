@@ -37,6 +37,7 @@ MYOPTIONS="acl xattr
     nettle [[ description = [ Add support for cryptography using nettle ] ]]
     ssl    [[ description = [ Add support for cryptography using openssl ] ]]
     ( nettle ssl ) [[ number-selected = at-most-one ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -47,7 +48,10 @@ DEPENDENCIES="
         dev-libs/libxml2:=
         acl? ( sys-apps/acl )
         nettle? ( dev-libs/nettle )
-        ssl? ( virtual/libssl )
+        ssl? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         xattr? ( sys-apps/attr )
 "
 
