@@ -31,9 +31,6 @@ DOWNLOADS="${source_uri} ${ports_uri}"
 LICENCES="|| ( GPL-3 GPL-2 ) || ( LGPL-3 LGPL-2.1 )"
 SLOT="0"
 MYOPTIONS="
-    systemd [[
-        description = [ Install systemd service file for name service cache daemon (nscd) ]
-    ]]
     ( platform: amd64 arm x86 )
     ( linguas:
         be bg ca cs da de el en_GB eo es fi fr gl hr hu id it ja ko lt nb nl pl pt_BR ru rw sk sv tr
@@ -222,11 +219,9 @@ glibc_src_install() {
     doins "${conf_files[@]}"
 
     # systemd units
-    if option systemd ; then
-        insinto "/usr/$(exhost --target)/lib/tmpfiles.d"
-        doins "${FILES}/systemd/nscd.conf"
-        install_systemd_files
-    fi
+    insinto "/usr/$(exhost --target)/lib/tmpfiles.d"
+    doins "${FILES}/systemd/nscd.conf"
+    install_systemd_files
 
     # configure default locale
     hereenvd 02locale <<-EOF
