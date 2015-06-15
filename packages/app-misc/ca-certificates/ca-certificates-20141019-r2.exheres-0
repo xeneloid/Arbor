@@ -11,13 +11,16 @@ DOWNLOADS="mirror://debian/pool/main/c/${PN}/${PN}_${PV}_all.deb"
 LICENCES="GPL-2 MPL-2.0"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
         sys-apps/coreutils[>=6.10]
     run:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
     install+run:
         sys-apps/debianutils [[ note = [ update-ca-certificates needs run-parts from debianutils ] ]]
 "
