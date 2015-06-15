@@ -16,13 +16,17 @@ DOWNLOADS="http://files.randombit.net/${PN}/${MY_PNV}.tbz"
 
 LICENCES="BSD-2"
 SLOT="$(ever at_least 1.10.0 && ever range 1-2 || echo 0)"
-MYOPTIONS="gmp"
+MYOPTIONS="
+    gmp
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 ever at_least 1.10.0 && MYOPTIONS+=" boost [[ description = [ Builds Boost.Python wrapper ] ]] doc"
 
 DEPENDENCIES="
     build+run:
-        virtual/libssl
         gmp? ( dev-libs/gmp:=[>=4.1] )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 if ever at_least 1.10.0 ; then
