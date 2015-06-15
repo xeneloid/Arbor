@@ -27,6 +27,7 @@ SLOT="0"
 MYOPTIONS="
     kerberos
     ldap
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -35,7 +36,8 @@ DEPENDENCIES="
         sys-libs/pam
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap )
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( saslauthd )
