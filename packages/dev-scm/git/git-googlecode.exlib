@@ -218,14 +218,12 @@ git-googlecode_src_install() {
         newins "${FILES}"/git-daemon.xinetd git-daemon
     fi
 
-    if option systemd ; then
-        hereconfd ${PN}-daemon.conf <<EOF
+    hereconfd ${PN}-daemon.conf <<EOF
 GIT_OPTS="/var/git"
 
 GIT_USER="nobody"
 GIT_GROUP="nobody"
 EOF
-    fi
     install_systemd_files
 
     keepdir /usr/share/${PN}/templates/branches
