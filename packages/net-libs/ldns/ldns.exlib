@@ -7,11 +7,14 @@ DOWNLOADS="http://www.nlnetlabs.nl/downloads/ldns/${PNV}.tar.gz"
 
 LICENCES="BSD-3"
 SLOT="0"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
