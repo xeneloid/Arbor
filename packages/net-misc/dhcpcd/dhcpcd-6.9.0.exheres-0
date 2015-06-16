@@ -1,5 +1,5 @@
 # Copyright 2007 Bryan Østergaard
-# Copyright 2010 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service
@@ -41,9 +41,9 @@ src_install() {
 
     install_systemd_files
 
-    option systemd && edo sed \
+    edo sed \
         -e "s:/usr/bin:/usr/$(exhost --target)/bin:" \
-        -i "${IMAGE}"/${SYSTEMDSYSTEMUNITDIR}/${PN}.service
+        -i "${IMAGE}"/"${SYSTEMDSYSTEMUNITDIR}"/${PN}.service
 
     keepdir /var/lib/dhcpcd
 }
