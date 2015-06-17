@@ -23,6 +23,7 @@ MYOPTIONS="debug gpgme idn sasl
     ) [[ number-selected = exactly-one ]]
     debug [[ description = [ Add debugging support and -d switch ] ]]
     gpgme [[ description = [ Enable support for gpgme ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -32,11 +33,12 @@ DEPENDENCIES="
         dev-libs/libxslt
         sys-devel/gettext
     build+run:
-        virtual/libssl
         gdbm? ( sys-libs/gdbm )
         gpgme? ( app-crypt/gpgme )
         idn? ( net-dns/libidn )
         ncurses? ( sys-libs/ncurses )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         sasl? ( net-libs/cyrus-sasl )
         slang? ( sys-libs/slang )
         tokyocabinet? ( dev-db/tokyocabinet )
