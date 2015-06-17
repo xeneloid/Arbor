@@ -23,6 +23,7 @@ MYOPTIONS="
     baselayout
     milter [[ description = [ antivirus scanner using mail-filter/libmilter ] ]]
     unrar [[ description = [ build libclamunrar to enable scanning rar archives ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 # Sydbox violations, failures (last checked: 0.98.4)
@@ -36,11 +37,12 @@ DEPENDENCIES="
         dev-libs/json-c [[ note = [ optional; for file property meta data collecting ] ]]
         dev-libs/libxml2:2.0 [[ note = [ optional; for DMG and XAR support ] ]]
         sys-libs/ncurses [[ note = [ optional; for clamdtop ] ]]
-        virtual/libssl
         milter? (
             mail-filter/libmilter
             net-misc/curl [[ note = [ for following mail URLs ] ]]
         )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         group/clamav
         user/clamav
     test:
