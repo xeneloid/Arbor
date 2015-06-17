@@ -24,7 +24,7 @@ UPSTREAM_RELEASE_NOTES="${UPSTREAM_DOCUMENTATION}/whatsnew.html"
 
 LICENCES="GPL-2"
 SLOT="0"
-LANGS="ca cs es fr it ja ru"
+LANGS="ca cs de es fr it ja ru"
 MYOPTIONS="
     acl [[ description = [ Support POSIX ACL when authenticating with the CUPS daemon ] ]]
     avahi [[ description = [ Enable DNS Service Discovery (DNS_SD) support (printer sharing using Avahi) ] ]]
