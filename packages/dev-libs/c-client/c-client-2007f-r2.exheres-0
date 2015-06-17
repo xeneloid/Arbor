@@ -15,12 +15,15 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="as-is"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
         sys-libs/pam[>=0.72]
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
