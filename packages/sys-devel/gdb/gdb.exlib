@@ -66,6 +66,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-install-libiberty
 )
 
+# People reported parallel build failures ( 7.9.1 )
+DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
+
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( gdb sim )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( CONTRIBUTE )
 
