@@ -1,5 +1,7 @@
-# Copyright 2009, 2010 Ingmar Vanhassel
+# Copyright 2009-2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
+
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="A library implementing the SSH2 protocol"
 HOMEPAGE="http://www.${PN}.org"
@@ -27,16 +29,17 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-hidden-symbols
     --disable-examples-build
+    --disable-clear-memory
     --disable-static
     --with-libz
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( '!gcrypt openssl' 'gcrypt libgcrypt' )
 
 src_prepare() {
-    default
-
     # keyboard-interactive tests fail: Failed requesting pty
     edo sed -e "s:ssh2.sh::" \
-        -i tests/Makefile.{am,in}
+        -i tests/Makefile.am
+
+    autotools_src_prepare
 }
 
