@@ -13,11 +13,14 @@ LICENCES="BSD-3"
 
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=(
