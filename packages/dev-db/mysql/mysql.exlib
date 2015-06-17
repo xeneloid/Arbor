@@ -40,6 +40,7 @@ MYOPTIONS="
     embedded-server [[ description = [ The embedded MySQL server library, a full-featured MySQL server that can be run inside a client application ] ]]
     sphinx [[ description = [ Add the Sphinx Search Engine with fulltext search support (external engine) ] ]]
     tcpd
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -48,7 +49,8 @@ DEPENDENCIES="
         user/${PN}
         dev-libs/libaio
         sys-libs/zlib[>=1.2.3]
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         tcpd? ( sys-apps/tcp-wrappers )
         !dev-db/mariadb [[
             description = [ MariaDB is a drop-in replacement for MySQL with same binary names ]
@@ -229,12 +231,10 @@ EOF
 
     install_systemd_files
 
-    if option systemd ; then
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        hereins ${PN}.conf <<EOF
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins ${PN}.conf <<EOF
 d /run/mysqld 0755 mysql mysql
 EOF
-    fi
 }
 
 mysql_pkg_postinst() {
