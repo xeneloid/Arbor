@@ -19,6 +19,7 @@ MYOPTIONS="
     ldap
     mysql    [[ description = [ Support using MySQL for mail user authentication ] ]]
     postgres [[ description = [ Support using PostgreSQL for mail user authentication ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -28,9 +29,10 @@ DEPENDENCIES="
         dev-libs/gmp:=
         net-libs/cyrus-sasl
         sys-libs/gdbm
-        virtual/libssl
         ldap? ( net-directory/openldap )
         mysql? ( dev-db/mysql )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         postgres? ( dev-db/postgresql )
     run:
         user/courier
