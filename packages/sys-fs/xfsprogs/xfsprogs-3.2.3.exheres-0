@@ -25,6 +25,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS+=(
     --enable-gettext
     --disable-editline
     --disable-readline
+    --disable-static
 )
 DEFAULT_SRC_INSTALL_PARAMS+=( DIST_ROOT="${IMAGE}" install-dev )
 
