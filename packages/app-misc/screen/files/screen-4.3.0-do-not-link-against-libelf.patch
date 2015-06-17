@@ -19,13 +19,13 @@ https://galileo.mailstation.de/gerrit/#/c/1275/ (Exherbo)
 From: Ivan Diorditsa <ivan.diorditsa@gmail.com>
 Signed-off-by: Amadeusz Sławiński <amade@asmblr.net>
 ---
- src/configure.in | 8 --------
+ screen-4.3.0/configure.ac | 8 --------
  1 file changed, 8 deletions(-)
 
-diff --git a/src/configure.in b/src/configure.in
+diff --git screen-4.3.0/configure.ac screen-4.3.0/configure.ac
 index 87fd43b..e5d8676 100644
---- a/src/configure.in
-+++ b/src/configure.in
+--- screen-4.3.0/configure.ac
++++ screen-4.3.0/configure.ac
 @@ -201,14 +201,6 @@ AC_EGREP_CPP(yes,
  #endif
  ], LIBS="$LIBS -lsocket -linet";seqptx=1)

@@ -5,8 +5,3 @@ require gnu [ suffix=gz ] screen
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p2 "${FILES}/${PV}/do-not-break-scrollback-in-xterm.patch"
-    -p2 "${FILES}/${PV}/do-not-link-against-libelf.patch"
-)
-
