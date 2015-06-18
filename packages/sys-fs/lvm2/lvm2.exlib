@@ -1,11 +1,11 @@
-# Copyright 2008 Kim Højgaard-Hansen
+# Copyright 2008 Kim Højgaard-Hansen <kimrhh@exherbo.org>
 # Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service udev-rules
 
 # fixes malloc() detection avoiding undefined reference to `rpl_malloc'
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
 
 export_exlib_phases src_configure src_install
 
@@ -29,6 +29,7 @@ MYOPTIONS="
     baselayout
     dmeventd [[ description = [ DM event daemon to monitor active mapped devices ] ]]
     fsadm [[ description = [ Utility to resize or check filesystem on a device ] ]]
+    systemd
 "
 
 UPSTREAM_RELEASE_NOTES="https://git.fedorahosted.org/cgit/${PN}.git/tree/WHATS_NEW?id=v${PV//./_}"
