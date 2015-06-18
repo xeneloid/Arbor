@@ -1,5 +1,5 @@
 # Copyright 2009 Timothy Redaelli <timothy@redaelli.eu>
-# Copyright 2013-2014 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2013-2015 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'mdadm-3.0.ebuild', which is:
 #     Copyright 1999-2009 Gentoo Foundation
@@ -28,6 +28,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="baselayout"
 
+# Tests shouldn't be run on systems with active mdraid devices, since
+# they mess with values in /proc and run on the system mdraid devices.
+RESTRICT="test"
+
 DEPENDENCIES="
     build:
         virtual/pkg-config
@@ -36,10 +40,6 @@ DEPENDENCIES="
     suggestion:
         virtual/mta [[ description = [ Send reports via email ] ]]
 "
-
-# Tests shouldn't be run on systems with active mdraid devices, since
-# they mess with values in /proc and run on the system mdraid devices.
-RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-3.3.2-mdmonitor-service.patch
@@ -75,12 +75,10 @@ src_install() {
         newconfd "${FILES}"/mdraid.confd mdraid
     fi
 
-    if option systemd ; then
-            insinto /usr/$(exhost --target)/lib/tmpfiles.d
-            hereins ${PN}.conf <<EOF
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins ${PN}.conf <<EOF
 d /run/mdadm 0710 root root -
 EOF
-    fi
 
     # Debian checkarray script
     dobin ${WORKBASE}/debian/checkarray
