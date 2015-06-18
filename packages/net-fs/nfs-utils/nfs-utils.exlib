@@ -1,7 +1,7 @@
 # Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ project=nfs ] systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ]
+require sourceforge [ project=nfs ] systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.12 ] ]
 
 export_exlib_phases src_prepare src_install pkg_postinst
 
@@ -54,10 +54,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-statduser=nobody
     --with-statedir=/var/lib/nfs
+    --with-systemd=${SYSTEMDSYSTEMUNITDIR}
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
-    "systemd systemd ${SYSTEMDSYSTEMUNITDIR}"
     "tcpd tcp-wrappers"
 )
 
