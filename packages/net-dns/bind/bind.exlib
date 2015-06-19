@@ -37,19 +37,21 @@ MYOPTIONS="
     mysql [[ requires = [ -threads ] ]]
     postgres [[ description = [ Adds support for the PostgreSQL backend. ] ]]
     threads [[ requires = [ -mysql ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
     build+run:
         dev-libs/json-c
         dev-libs/libxml2:2.0
-        virtual/libssl
         berkdb? ( sys-libs/db:= )
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         ldap? ( net-directory/openldap )
         mysql? ( dev-db/mysql )
         postgres? ( dev-db/postgresql )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         threads? ( sys-libs/libcap[>=2.1.0] )
         group/named
         user/named
