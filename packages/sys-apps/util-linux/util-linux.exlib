@@ -164,14 +164,10 @@ util-linux_src_install() {
     edo chown uuidd:uuidd "${IMAGE}"/var/lib/libuuid
     edo chmod 2775 "${IMAGE}"/var/lib/libuuid
 
-    if option systemd; then
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        hereins uuidd.conf <<EOF
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins uuidd.conf <<EOF
 d /run/uuidd 2755 uuidd uuidd
 EOF
-    else
-        edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib/systemd{/system,}
-    fi
 
     # color customization support
     keepdir /etc/terminal-colors.d
