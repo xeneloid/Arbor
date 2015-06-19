@@ -63,12 +63,10 @@ lm_sensors_src_prepare() {
         edo sed -e 's:^#\(PROG_EXTRA\):\1:' -i "${WORK}"/Makefile
     fi
 
-    if option systemd; then
-        edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/lm_sensors.service
-        edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/fancontrol.service
-        edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/sensord:/etc/conf.d/sensord.conf:' -i "${WORK}"/prog/init/sensord.service
-        edo sed -e 's:\(/etc/conf.d/lm_sensors\):\1.conf:g' -i "${WORK}"/prog/detect/sensors-detect
-    fi
+    edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/lm_sensors.service
+    edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/fancontrol.service
+    edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/sensord:/etc/conf.d/sensord.conf:' -i "${WORK}"/prog/init/sensord.service
+    edo sed -e 's:\(/etc/conf.d/lm_sensors\):\1.conf:g' -i "${WORK}"/prog/detect/sensors-detect
 }
 
 lm_sensors_src_install() {
@@ -85,16 +83,13 @@ lm_sensors_src_install() {
         fi
     fi
 
-    if option systemd ; then
-        insinto ${SYSTEMDSYSTEMUNITDIR}
-        doins prog/init/lm_sensors.service
-        doins prog/init/fancontrol.service
-        doins prog/init/sensord.service
-        insinto /etc/conf.d
-        doins "${FILES}"/lm_sensors.conf
-    fi
+    insinto ${SYSTEMDSYSTEMUNITDIR}
+    doins prog/init/lm_sensors.service
+    doins prog/init/fancontrol.service
+    doins prog/init/sensord.service
+    insinto /etc/conf.d
+    doins "${FILES}"/lm_sensors.conf
 
-    docinto developers
-    dodoc doc/developers/applications
+    docinto developers dodoc doc/developers/applications
 }
 
