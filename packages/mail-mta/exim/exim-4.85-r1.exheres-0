@@ -21,6 +21,7 @@ MYOPTIONS="baselayout dnsdb doc dovecot-sasl embedded-perl exiscan lmtp mbx nis 
     exiscan       [[ description = [ Adds support for content filtering ] ]]
     lmtp          [[ description = [ Adds support for lmtp ] ]]
     mbx           [[ description = [ Adds support for UW's mbx format ] ]]
+    ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 PLATFORMS="~amd64 ~x86"
 
@@ -31,7 +32,10 @@ DEPENDENCIES="
         pam? ( sys-libs/pam )
         embedded-perl? ( dev-lang/perl:= )
         sasl? ( net-libs/cyrus-sasl )
-        ssl? ( virtual/libssl )
+        ssl? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         tcpd? ( sys-apps/tcp-wrappers )
         group/mail
         user/mail
