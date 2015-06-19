@@ -73,10 +73,8 @@ dhcp_src_install() {
     fi
 
     install_systemd_files
-    if option systemd; then
-        insinto /etc/conf.d
-        doins "${FILES}"/systemd/dhcpd.conf
-    fi
+    insinto /etc/conf.d
+    doins "${FILES}"/systemd/dhcpd.conf
 
     # install dhcp client script
     newbin client/scripts/linux dhclient-script
