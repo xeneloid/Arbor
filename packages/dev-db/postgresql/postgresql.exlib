@@ -241,13 +241,11 @@ postgresql_src_compile() {
 postgresql_src_install() {
     default
 
-    if option systemd; then
-        install_systemd_files
-        insinto /usr/$(exhost --target)/lib/tmpfiles.d
-        hereins postgresql.conf <<EOF
+    install_systemd_files
+    insinto /usr/$(exhost --target)/lib/tmpfiles.d
+    hereins postgresql.conf <<EOF
 d /run/postgresql 0770 postgres postgres
 EOF
-    fi
 
     postgresql_src_emake_contrib install
 }
