@@ -17,12 +17,16 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     gcrypt [[ description = [ use libgcrypt instead of openssl ] ]]
+    !gcrypt? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
     build+run:
         sys-libs/zlib
-        !gcrypt? ( virtual/libssl )
+        !gcrypt? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         gcrypt? ( dev-libs/libgcrypt )
 "
 
