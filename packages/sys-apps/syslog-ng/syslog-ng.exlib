@@ -22,7 +22,9 @@ MYOPTIONS="baselayout caps pcre systemd tcpd vim-syntax
     json    [[ description = [ Ingest and produce json-formatted log data ] ]]
     mongodb [[ description = [ Write logs to a mongodb instance ] ]]
     sql     [[ description = [ Write logs to an SQL server ] ]]
-    smtp    [[ description = [ Send mail as part of the logging pipeline ] ]]"
+    smtp    [[ description = [ Send mail as part of the logging pipeline ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 RESTRICT="test"
 # Fails to compile
 #    pacct   [[ description = [ Read process accounting logs (experimental) ] ]]
@@ -39,11 +41,12 @@ DEPENDENCIES="
         dev-libs/ivykis[>=0.36.1]
         sys-apps/eventlog[>=0.2.12]
         sys-devel/bison
-        virtual/libssl
         caps? ( sys-libs/libcap )
         json? ( dev-libs/json-c[>=0.9] )
         mongodb? ( net-libs/libmongo-client[>=0.1.6] )
         pcre? ( dev-libs/pcre[>=6.1] )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         smtp? ( net-libs/libesmtp )
         sql? ( dev-libs/libdbi[>=0.8.0] )
         systemd? ( sys-apps/systemd[>=31] )
