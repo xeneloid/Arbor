@@ -21,6 +21,7 @@ PLATFORMS="~x86 ~amd64"
 
 MYOPTIONS="
     gcrypt [[ description = [ Use Libgcrypt instead of OpenSSL ] ]]
+    !gcrypt? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -31,7 +32,10 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         net-libs/libnl:3.0
-        !gcrypt? ( virtual/libssl )
+        !gcrypt? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         gcrypt? ( dev-libs/libgcrypt )
 "
 
