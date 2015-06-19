@@ -19,6 +19,7 @@ MYOPTIONS="
         nettle [[ description = [ Use nettle library as crypto backend ] ]]
         openssl [[ description = [ Use openssl library as crypto backend ] ]]
     ) [[ number-selected = exactly-one ]]
+    openssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 # nss backend needs static lib
@@ -33,7 +34,10 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt[>=1.6.1]
                   dev-libs/libgpg-error )
         nettle? ( dev-libs/nettle[>=2.6] )
-        openssl? ( virtual/libssl )
+        openssl? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         python? ( dev-lang/python:=[>=2.6] )
 "
 
