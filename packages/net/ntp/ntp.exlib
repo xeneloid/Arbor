@@ -27,14 +27,17 @@ UPSTREAM_RELEASE_NOTES="http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS
 
 LICENCES="BSD-3 BSD-4 GPL-2 MIT"
 SLOT="0"
-MYOPTIONS="baselayout caps debug parse-clocks"
+MYOPTIONS="baselayout caps debug parse-clocks
+( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
         sys-libs/ncurses[>=5.2]
         sys-libs/readline[>=4.1]
-        virtual/libssl
         caps? ( sys-libs/libcap )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         group/${PN}
         user/${PN}
 "
