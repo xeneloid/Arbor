@@ -139,14 +139,6 @@ if ever at_least 221 ; then
             efi? ( sys-boot/gnu-efi )
     "
 else
-    if ! ever at_least 220 ; then
-        MYOPTIONS+="gobject-introspection"
-        DEPENDENCIES+="
-            build+run:
-                dev-libs/glib:2[>=2.26]
-                gobject-introspection? ( gnome-desktop/gobject-introspection:1[>=1.31.1] )
-        "
-    fi
     DEPENDENCIES+="
         suggestion:
             efi? (
@@ -325,18 +317,10 @@ systemd_src_configure() {
 
     if ever at_least 221 ; then
         myconfig+=( $(option_enable efi gnuefi) )
-    elif ever at_least 220 ; then
+    else
         myconfig+=( --disable-gudev )
         # src/boot/efi is missing from 220 tarball
         myconfig+=( --disable-gnuefi )
-    else
-        myconfig+=( --enable-gudev )
-        myconfig+=( $(option_enable gobject-introspection introspection) )
-
-        # workaround 215+ build issue: https://bugs.gentoo.org/show_bug.cgi?id=516346
-        myconfig+=( --enable-dependency-tracking )
-
-        edo mkdir -p src/gudev
     fi
 
     econf "${myconfig[@]}"
@@ -407,13 +391,6 @@ systemd_src_install() {
     keepdir /usr/${host}/lib/systemd/system-sleep
 
     alternatives_for "${alternatives[@]}"
-
-    # Install pc-file to arch dependent location, since udevdir is /usr/${host}/lib/udev
-    # https://bugs.freedesktop.org/show_bug.cgi?id=89769
-    if ! ever at_least 220; then
-        edo mv "${IMAGE}"/usr/share/pkgconfig/udev.pc "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig
-        edo rmdir "${IMAGE}"/usr/share/pkgconfig
-    fi
 
     # Don't install funny RPM macros.
     if [[ -d "${IMAGE}"/etc/rpm ]]; then
