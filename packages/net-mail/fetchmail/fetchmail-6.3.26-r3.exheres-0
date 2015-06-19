@@ -11,13 +11,16 @@ HOMEPAGE="http://www.${PN}.info/"
 LICENCES="GPL-2 public-domain"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="tk"
+MYOPTIONS="tk
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
         sys-devel/gettext
     build+run:
-        virtual/libssl
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         tk? ( dev-lang/python:=[tk] )"
 
 
