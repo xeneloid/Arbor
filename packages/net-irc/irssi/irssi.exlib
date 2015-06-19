@@ -10,6 +10,7 @@ SLOT="0"
 MYOPTIONS="perl proxy socks
     bot [[ description = [ Run an irssi module, such as a bot, without a UI ] ]]
     dane [[ description = [ DNSSEC DANE support for validating certificates ] ]]
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -18,8 +19,9 @@ DEPENDENCIES="
     build+run:
         dev-libs/glib:2[>=2.6.0]
         sys-libs/ncurses
-        virtual/libssl
         perl? ( dev-lang/perl:= )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         socks? ( net-proxy/dante )
 "
 
