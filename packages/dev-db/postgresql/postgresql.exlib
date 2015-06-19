@@ -44,6 +44,7 @@ MYOPTIONS="
     perl [[ description = [ Support for both PL/Perl and Pl/PerlU server-side programming languages ] ]]
     python [[ description = [ Support for PL/Python (only the \"untrusted\" version) server-side programming language ] ]]
     readline [[ description = [ Used only by the client psql for history control and autocomplete funcionality ] ]]
+    ssl
     tcl [[ description = [ Support for both PL/Tcl and PL/TclU server-side programming languages ] ]]
     xml [[ description = [ Add core support for XML data type ] ]]
     ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
