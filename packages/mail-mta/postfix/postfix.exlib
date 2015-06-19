@@ -26,6 +26,7 @@ MYOPTIONS="
     mysql      [[ description = [ Support using a MySQL database as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
     postgresql [[ description = [ Support using a PostgreSQL database as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
     ssl        [[ description = [ Support making SSL connections to remote servers and clients ] ]]
+    ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -43,7 +44,10 @@ DEPENDENCIES="
             virtual/mysql
         )
         postgresql? ( dev-db/postgresql )
-        ssl? ( virtual/libssl )
+        ssl? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
     suggestion:
         net-mail/dovecot [[ description = [ Used for SASL support without cyrus-sasl ] ]]
 "
