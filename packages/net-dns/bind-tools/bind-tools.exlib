@@ -25,6 +25,7 @@ MYOPTIONS="
     geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
     idn
     kerberos
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -32,10 +33,11 @@ DEPENDENCIES="
         dev-libs/json-c
         dev-libs/libxml2:2.0
         sys-libs/readline
-        virtual/libssl
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         kerberos? ( virtual/kerberos )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 # Tons of sandbox violations.
