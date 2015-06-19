@@ -22,14 +22,19 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="Sendmail"
 
 SLOT="0"
-MYOPTIONS="baselayout ldap mbox nis sasl sockets ssl tcpd"
+MYOPTIONS="baselayout ldap mbox nis sasl sockets ssl tcpd
+    ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+"
 
 DEPENDENCIES="
     build+run:
         sys-libs/db:=[>=4.6]
         ldap? ( net-directory/openldap[>=2.4] )
         sasl? ( net-libs/cyrus-sasl[>=2.1.22] )
-        ssl? ( virtual/libssl )
+        ssl? (
+            providers:libressl? ( dev-libs/libressl:= )
+            providers:openssl? ( dev-libs/openssl )
+        )
         tcpd? ( sys-apps/tcp-wrappers )
         group/mail
         group/smmsp
