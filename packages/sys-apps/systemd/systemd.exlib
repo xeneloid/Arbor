@@ -44,11 +44,10 @@ MYOPTIONS="
     ]]
     gcrypt [[ description = [ Enable cryptographically secured journal files ] ]]
     gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
-    gtk-doc
     idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
     journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
-    kdbus [[ description = [ HIGHLY EXPERIMENTAL, INSECURE: Use the kernel D-Bus implementation ] ]]
+    kdbus [[ description = [ Use the kernel D-Bus implementation by default ] ]]
     lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
@@ -58,6 +57,12 @@ MYOPTIONS="
     zsh-completion
     ( linguas: ${LANGUAGES[@]} )
 "
+
+if ! ever at_least 221 ; then
+    MYOPTIONS+="
+        gtk-doc
+    "
+fi
 
 DEPENDENCIES="
     build:
@@ -69,10 +74,6 @@ DEPENDENCIES="
         sys-devel/gettext
         sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
-        gtk-doc? (
-            app-doc/gtk-doc-autotools[>=1.18]
-            dev-libs/libxslt
-        )
         python? (
             dev-python/lxml[python_abis:*(-)?]
         )
@@ -147,6 +148,10 @@ else
                     url  = [ http://www.freedesktop.org/wiki/Software/systemd/BootLoaderInterface ]
                 ]]
             )
+            gtk-doc? (
+                app-doc/gtk-doc-autotools[>=1.18]
+                dev-libs/libxslt
+            )
     "
 fi
 
@@ -190,10 +195,12 @@ systemd_src_prepare() {
         expatch -p1 "${FILES}"/patches-${PV}
     fi
 
-    if option gtk-doc ; then
-        edo gtkdocize --copy --docdir docs/
-    else
-        edo echo 'EXTRA_DIST =' > docs/gtk-doc.make
+    if ! ever at_least 221 ; then
+        if option gtk-doc ; then
+            edo gtkdocize --copy --docdir docs/
+        else
+            edo echo 'EXTRA_DIST =' > docs/gtk-doc.make
+        fi
     fi
 
     if ! option gcrypt ; then
@@ -274,7 +281,6 @@ systemd_src_configure() {
         --enable-zlib
         --disable-audit
         --disable-apparmor
-        --disable-chkconfig
         --disable-ima
         --disable-libiptc
         --disable-selinux
@@ -298,7 +304,6 @@ systemd_src_configure() {
         $(option_enable efi)
         $(option_enable gcrypt)
         $(option_enable gnutls)
-        $(option_enable gtk-doc)
         $(option_enable idn libidn)
         $(option_enable journal-gateway microhttpd)
         $(option_enable journal-push libcurl)
@@ -316,9 +321,14 @@ systemd_src_configure() {
     )
 
     if ever at_least 221 ; then
-        myconfig+=( $(option_enable efi gnuefi) )
+        myconfig+=(
+            $(option_enable efi gnuefi)
+        )
     else
-        myconfig+=( --disable-gudev )
+        myconfig+=(
+            --disable-gudev
+            $(option_enable gtk-doc)
+        )
         # src/boot/efi is missing from 220 tarball
         myconfig+=( --disable-gnuefi )
     fi
