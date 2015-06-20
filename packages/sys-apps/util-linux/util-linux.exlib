@@ -169,6 +169,10 @@ util-linux_src_install() {
 d /run/uuidd 2755 uuidd uuidd
 EOF
 
+    if ! option systemd; then
+        edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib/systemd{/system,}
+    fi
+
     # color customization support
     keepdir /etc/terminal-colors.d
 
