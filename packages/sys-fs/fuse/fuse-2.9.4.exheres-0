@@ -11,8 +11,6 @@ also aims to provide a secure method for non privileged users to
 create and mount their own filesystem implementations.
 "
 
-REMOTE_IDS+=" freecode:${PN}"
-
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
