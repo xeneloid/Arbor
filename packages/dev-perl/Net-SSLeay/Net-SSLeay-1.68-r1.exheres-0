@@ -26,3 +26,10 @@ DEPENDENCIES="
 
 DEFAULT_SRC_COMPILE_PARAMS=( OPTIMIZE="${CFLAGS}" )
 
+src_prepare() {
+    # https://rt.cpan.org/Public/Bug/Display.html?id=105182
+    edo sed -e 's/tests => 123/tests => 122/' \
+            -e '/like(my $key_pem4 = Net::SSLeay::PEM_get_string_PrivateKey($pk,"password",$alg2)/d' \
+            -i t/local/33_x509_create_cert.t
+}
+
