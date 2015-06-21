@@ -90,6 +90,7 @@ lm_sensors_src_install() {
     insinto /etc/conf.d
     doins "${FILES}"/lm_sensors.conf
 
-    docinto developers dodoc doc/developers/applications
+    docinto developers
+    dodoc doc/developers/applications
 }
 
