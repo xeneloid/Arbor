@@ -21,6 +21,7 @@ ever at_least 3.4.1 && MYOPTIONS+=" idn"
 
 DEPENDENCIES="
     build:
+        dev-libs/gmp:=
         sys-devel/automake:*[>=1.11.4]
         doc? ( dev-doc/gtk-doc[>=1.1] )
     build+run:
