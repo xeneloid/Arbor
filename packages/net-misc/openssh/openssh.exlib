@@ -61,7 +61,7 @@ DEPENDENCIES="
         sys-apps/shadow
         sys-libs/zlib[>=1.2.3]
         gtk? ( x11-libs/gtk+:2 )
-        kerberos? ( app-crypt/heimdal )
+        kerberos? ( virtual/kerberos )
         ldns? ( net-libs/ldns )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
