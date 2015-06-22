@@ -30,12 +30,12 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-docs
-    --disable-publican
     --disable-refdocs
     --disable-rpath
     --disable-server
     --disable-sqlite
     --disable-virt
+    --with-dracutstap=/usr/$(exhost --target)/lib/dracut/modules.d/99stap
     --without-avahi
     --without-dyninst
     --without-java
