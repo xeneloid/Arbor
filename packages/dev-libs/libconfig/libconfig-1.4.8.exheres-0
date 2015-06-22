@@ -17,7 +17,7 @@ MYOPTIONS=""
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/${PN}_manual.html [[ lang = en description = [ Manual ] ]]"
 
 DEPENDENCIES="
-  build:
-    dev-util/pkg-config
+    build:
+        virtual/pkg-config
 "
 
