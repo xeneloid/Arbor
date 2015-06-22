@@ -7,9 +7,8 @@ require curl
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     ares [[ description = [ Enabled c-ares posix-threaded dns support, disables curl's own threaded resolver ] ]]
-    gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     idn
-   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 DEPENDENCIES="
     build:
@@ -21,15 +20,13 @@ DEPENDENCIES="
         net-libs/libssh2[>=1.2.8]
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
-       !gnutls? (
-            providers:libressl? ( dev-libs/libressl:= )
-            providers:openssl? ( dev-libs/openssl )
-        )
-        gnutls? (
+        idn? ( net-dns/libidn )
+        providers:gnutls? (
             dev-libs/gnutls[>=2.12.14]
             dev-libs/nettle
         )
-        idn? ( net-dns/libidn )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -44,8 +41,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ares '!ares threaded-resolver' )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'idn libidn'
-    '!gnutls ssl' '!gnutls ca-path /etc/ssl/certs'
-    gnutls 'gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
+    'providers:gnutls gnutls'
+    'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
+    '!providers:gnutls ssl'
+    '!providers:gnutls ca-path /etc/ssl/certs'
 )
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES=( docs/ )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BINDINGS DISTRO FEATURES INTERNALS MANUAL RESOURCES TheArtOfHttpScripting )
