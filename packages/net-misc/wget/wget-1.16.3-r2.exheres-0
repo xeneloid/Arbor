@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=xz ]
+require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
 SUMMARY="Wget is a package for retrieving files using HTTP, HTTPS and FTP"
 
@@ -11,9 +12,8 @@ LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
-    gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     idn    [[ description = [ Enable support for internationalized domain names ] ]]
-   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -24,16 +24,14 @@ DEPENDENCIES="
         dev-libs/pcre
         sys-apps/util-linux [[ note = [ for libuuid ] ]]
         sys-libs/zlib
-       !gnutls? (
-            providers:libressl? ( dev-libs/libressl:= )
-            providers:openssl? ( dev-libs/openssl )
-        )
-        gnutls? (
+        providers:gnutls? (
             dev-libs/gmp:=
             dev-libs/gnutls
             dev-libs/libtasn1
             dev-libs/nettle
         )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
         idn? ( net-dns/libidn )
     test:
         dev-perl/HTTP-Daemon
@@ -48,7 +46,7 @@ src_configure() {
         --enable-nls
         --disable-assert
         --with-libuuid
-        --with-ssl=$(optionv gnutls || echo openssl)
+        --with-ssl=$(option providers:gnutls gnutls openssl)
         --with-zlib
         --without-libpsl
         $(option_enable idn iri)
