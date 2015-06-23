@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
 SUMMARY="neon is an HTTP and WebDAV client library"
 HOMEPAGE="http://www.webdav.org/${PN}"
@@ -16,9 +17,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
     expat
-    gnutls [[ description = [ Use GnuTLS instead of OpenSSL ] ]]
     libproxy [[ description = [ Support for automatic configuration management through libproxy ] ]]
-   !gnutls? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -28,12 +28,10 @@ DEPENDENCIES="
         sys-libs/zlib
        !expat? ( dev-libs/libxml2:2.0 )
         expat? ( dev-libs/expat )
-       !gnutls? (
-            providers:libressl? ( dev-libs/libressl:= )
-            providers:openssl? ( dev-libs/openssl )
-        )
-        gnutls? ( dev-libs/gnutls )
         libproxy? ( net-libs/libproxy:1 )
+        providers:gnutls? ( dev-libs/gnutls )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
     test:
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
@@ -58,7 +56,7 @@ src_configure() {
         $(option_with !expat libxml2)
         $(option_with expat)
         $(option_with libproxy)
-        --with-ssl=$(option gnutls && echo gnutls || echo openssl)
+        --with-ssl=$(option providers:gnutls && echo gnutls || echo openssl)
     )
     econf ${myconf[@]}
 }
