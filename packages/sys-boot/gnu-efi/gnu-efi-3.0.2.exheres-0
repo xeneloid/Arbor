@@ -4,13 +4,13 @@
 
 require sourceforge
 
-SUMMARY="Library to create EFI executables"
+SUMMARY="Development libraries and headers for EFI"
 DESCRIPTION="
 Develop EFI applications for IA-64 (IPF), IA-32 (x86), and x86_64 platforms using the GNU toolchain
 and the EFI development environment.
 "
 
-LICENCES="GPL-2"
+LICENCES="BSD-3 BSD-4"
 SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS=""
@@ -20,7 +20,7 @@ DEPENDENCIES="
         sys-apps/pciutils
 "
 
-WORK="${WORKBASE}/${PNV%u}"
+WORK=${WORKBASE}/${PNV%u}
 
 MAKE_PARAMS=(
     ARCH=x86_64
