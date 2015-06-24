@@ -40,6 +40,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-0.29.4-sydbox.patch
     "${FILES}"/${PNV}-addr_reverse-test-accept-fqdn.patch
+    "${FILES}"/0001-pkg-config-is-a-tool.patch
 )
 AT_M4DIR=( macros )
 
