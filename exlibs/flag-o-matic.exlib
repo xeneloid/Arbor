@@ -423,6 +423,21 @@ raw-ldflags() {
     echo "$@"
 }
 
+# Helper for cross variables, we really need something for this because
+# it takes a lot of lines to get this done thanks to bash's indirection
+# Example: print-flags $(exhost --build) CFLAGS LDFLAGS
+print-flags() {
+    illegal_in_global_scope
+
+    [[ ${#} -lt 2 ]] && die "print-flags requires at least two arguments"
+
+    local prefix=${1//-/_} flag; shift
+    for flag in "${@}"; do
+        flag=${prefix}_${flag}
+        echo ${!flag}
+    done
+}
+
 # Some tests for when we screw with things and want to make
 # sure we didn't break anything
 #TESTS() {
