@@ -29,7 +29,7 @@ DEPENDENCIES="
        !expat? ( dev-libs/libxml2:2.0 )
         expat? ( dev-libs/expat )
         libproxy? ( net-libs/libproxy:1 )
-        providers:gnutls? ( dev-libs/gnutls )
+        providers:gnutls? ( dev-libs/gnutls[<3.4] )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
     test:
