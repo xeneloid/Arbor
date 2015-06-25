@@ -32,7 +32,7 @@ Microsoft CAB format (read only)
 HOMEPAGE="http://www.${PN}.org"
 DOWNLOADS="${HOMEPAGE}/downloads/${PNV}.tar.gz"
 
-LICENCES="BSD-3"
+LICENCES="BSD-2 BSD-3 public-domain"
 SLOT="0"
 MYOPTIONS="acl xattr
     nettle [[ description = [ Add support for cryptography using nettle ] ]]
