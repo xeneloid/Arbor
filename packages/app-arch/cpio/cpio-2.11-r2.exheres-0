@@ -3,6 +3,7 @@
 
 require gnu [ suffix=bz2 ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require alternatives
 
 SUMMARY="Archive manager for cpio archives"
 
@@ -37,5 +38,12 @@ src_configure() {
     esandbox hack_toolong
     default
     esandbox nohack_toolong
+}
+
+src_install() {
+    default
+    alternatives_for cpio ${PN} 50  \
+        /usr/$(exhost --target)/bin/cpio    gcpio \
+        /usr/share/man/man1/cpio.1          gcpio.1
 }
 
