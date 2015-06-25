@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require option-renames [ renames=[ 'openssl ssl' ] ]
+require alternatives
 
 SUMMARY="C library for reading and writing tar, cpio, zip, ISO, and other archive formats"
 DESCRIPTION="
@@ -35,7 +36,7 @@ LICENCES="BSD-3"
 SLOT="0"
 MYOPTIONS="acl xattr
     nettle [[ description = [ Add support for cryptography using nettle ] ]]
-    ssl    [[ description = [ Add support for cryptography using openssl ] ]]
+    ssl    [[ description = [ Add support for cryptography using libssl ] ]]
     ( nettle ssl ) [[ number-selected = at-most-one ]]
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
@@ -72,4 +73,11 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     nettle
     'ssl openssl'
 )
+
+src_install() {
+    default
+    alternatives_for tar ${PN} 10   \
+        /usr/$(exhost --target)/bin/tar bsdtar  \
+        /usr/share/man/man1/tar.1       /usr/share/man/man1/bsdtar.1
+}
 
