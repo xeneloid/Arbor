@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=xz ]
+require alternatives
 
 SUMMARY="Tar archiver"
 
@@ -28,5 +29,12 @@ src_test() {
 
 src_test_expensive() {
     emake check TESTSUITEFLAGS='-k sparse03'
+}
+
+src_install() {
+    default
+    alternatives_for tar ${PN} 50 \
+        /usr/$(exhost --target)/bin/tar gtar    \
+        /usr/share/man/man1/tar.1       gtar.1
 }
 
