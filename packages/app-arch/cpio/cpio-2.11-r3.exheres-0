@@ -42,7 +42,7 @@ src_configure() {
 
 src_install() {
     default
-    alternatives_for cpio ${PN} 50  \
+    alternatives_for cpio ${PN} 200  \
         /usr/$(exhost --target)/bin/cpio    gcpio \
         /usr/share/man/man1/cpio.1          gcpio.1
 }
