@@ -33,7 +33,7 @@ src_test_expensive() {
 
 src_install() {
     default
-    alternatives_for tar ${PN} 50 \
+    alternatives_for tar ${PN} 200 \
         /usr/$(exhost --target)/bin/tar gtar    \
         /usr/share/man/man1/tar.1       gtar.1
 }
