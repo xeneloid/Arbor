@@ -37,10 +37,10 @@ index e9d65dc..b80be1a 100644
 +/* exherbo specific paths */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-uknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-unknown-linux-gnueabi/lib/"
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_2 "/arm-uknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/arm-unknown-linux-gnueabi/lib/"
 +
 +#undef GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
 +#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/usr/arm-unknown-linux-gnueabi/lib/ld-linux.so.3"
