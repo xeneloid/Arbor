@@ -3,7 +3,7 @@
 
 require binutils
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-2.25-disable-failing-gold-test.patch
