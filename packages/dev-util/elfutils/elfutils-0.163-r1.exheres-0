@@ -28,6 +28,10 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-fix-build-with-Os.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=eu-
     --enable-nls
