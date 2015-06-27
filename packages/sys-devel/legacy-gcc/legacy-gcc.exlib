@@ -20,7 +20,7 @@ LICENCES="GPL-2"
 SLOT="$(ever range 1-2)"
 
 CROSS_COMPILE_TARGETS="
-    arm-exherbo-linux-gnueabi
+    arm-unknown-linux-gnueabi
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
 "

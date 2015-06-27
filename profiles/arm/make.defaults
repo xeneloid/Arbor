@@ -7,7 +7,7 @@ FILESYSTEM_LAYOUT="cross"
 
 # these variables may be overridden by the user
 
-CHOST="arm-exherbo-linux-gnueabi"
+CHOST="arm-unknown-linux-gnueabi"
 CFLAGS="-Os -pipe"
 CXXFLAGS="-Os -pipe"
 

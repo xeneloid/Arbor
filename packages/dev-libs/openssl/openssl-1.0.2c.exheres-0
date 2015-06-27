@@ -45,7 +45,7 @@ _openssl_host_os() {
     #   x86:linux-elf # TODO(compnerd) ICC should be linux-ia32-icc
     # )
     case "$(exhost --target)" in
-    arm-exherbo-linux-gnueabi|armv7-unknown-linux-gnueabi)
+    arm-unknown-linux-gnueabi|armv7-unknown-linux-gnueabi)
         echo linux-armv4
     ;;
     i686-pc-linux-gnu)
