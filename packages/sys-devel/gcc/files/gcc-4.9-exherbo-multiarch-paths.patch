@@ -40,16 +40,16 @@ index f1f3448..4858402 100644
 + */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-exherbo-linux-gnueabi/lib/"
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_2 "/arm-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/arm-exherbo-linux-gnueabi/lib/"
 +
 +#undef GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
-+#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/usr/arm-unknown-linux-gnueabi/lib/ld-linux.so.3"
++#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/usr/arm-exherbo-linux-gnueabi/lib/ld-linux.so.3"
 +
 +#undef GLIBC_DYNAMIC_LINKER_HARD_FLOAT
-+#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/arm-unknown-linux-gnueabi/lib/ld-linux-armhf.so.3"
++#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/arm-exherbo-linux-gnueabi/lib/ld-linux-armhf.so.3"
 +
 diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
 index 2bf361a..b290992 100644

@@ -28,10 +28,10 @@ index 3053d9b..d1e6bde 100644
             ToolChain.getArch() == llvm::Triple::thumb) {
      if (ToolChain.getTriple().getEnvironment() == llvm::Triple::GNUEABIHF)
 -      return "/lib/ld-linux-armhf.so.3";
-+      return "/usr/arm-unknown-linux-gnueabi/lib/ld-linux-armhf.so.3";
++      return "/usr/arm-exherbo-linux-gnueabi/lib/ld-linux-armhf.so.3";
      else
 -      return "/lib/ld-linux.so.3";
-+      return "/usr/arm-unknown-linux-gnueabi/lib/ld-linux.so.3";
++      return "/usr/arm-exherbo-linux-gnueabi/lib/ld-linux.so.3";
    } else if (ToolChain.getArch() == llvm::Triple::armeb ||
               ToolChain.getArch() == llvm::Triple::thumbeb) {
      if (ToolChain.getTriple().getEnvironment() == llvm::Triple::GNUEABIHF)
