@@ -5,8 +5,3 @@ ACCEPT_PLATFORMS="armv7"
 
 FILESYSTEM_LAYOUT="cross"
 
-# these variables may be overridden by the user
-
-CHOST="armv7-unknown-linux-gnueabi"
-CFLAGS="-pipe -march=armv7 -g -Os"
-CXXFLAGS="-pipe -march=armv7 -g Os"

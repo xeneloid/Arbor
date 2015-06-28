@@ -1,0 +1,5 @@
+# these variables may be overridden by the user
+
+CHOST="armv7-unknown-linux-gnueabihf"
+CFLAGS="-pipe -g -Os -march=armv7 -mfloat-abi=hard"
+CXXFLAGS="-pipe -g -Os -march=armv7 -mfloat-abi=hard"
