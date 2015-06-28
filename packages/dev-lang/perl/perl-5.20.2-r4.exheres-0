@@ -5,14 +5,12 @@
 # Based in part upon 'perl-5.8.8-r4.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
-perl_cross=0.9.6
-
-require perl-5 [ Module_Build_pv=0.4003 cross_perl_ver=[ ${perl_cross} ] ]
+require perl-5 [ Module_Build_pv=0.4003 cross_perl_ver=[ 0.9.7 ] ]
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p1 "${FILES}"/${PNV}-${perl_cross}-use-LD-instead-of-CC-in-direct-library-test.patch
+    "${FILES}"/204977fe3cd976d4fda5e6524d485a6279ab1b55.patch
     -p1 "${FILES}"/${PN}-5.11.3-Remove-Syslog-tests.patch
     -p1 "${FILES}"/${PN}-Fix-Errno.pm-generation-for-gcc-5.0.patch
     -p2 "${FILES}"/IO-skip-test.patch
