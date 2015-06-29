@@ -3,7 +3,7 @@
 
 require gcc
 
-PLATFORMS="~x86 ~amd64"
+PLATFORMS="~x86 ~amd64 ~armv7"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
