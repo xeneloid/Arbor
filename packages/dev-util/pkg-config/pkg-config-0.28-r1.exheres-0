@@ -50,8 +50,8 @@ src_configure() {
         # PKG_CONFIG_ALLOW_SYSTEM_LIBS=true makes sure -L/usr/lib gets added during
         # migration to /usr/host/lib
             PKG_CONFIG_ALLOW_SYSTEM_LIBS=true                                \
-            PKG_CONFIG=${PKG_CONFIG:-${CHOST}-pkg-config}                    \
-            PKG_CONFIG_LIBDIR=/usr/${CHOST}/lib/pkgconfig:/usr/lib/pkgconfig \
+            PKG_CONFIG=${PKG_CONFIG:-$(exhost --target)-pkg-config}                    \
+            PKG_CONFIG_LIBDIR=/usr/$(exhost --target)/lib/pkgconfig:/usr/lib/pkgconfig \
         econf                                                                \
             --with-pc-path=${pc_path}                                        \
             --with-system-include-path=/usr/${target}/include                \
@@ -97,7 +97,7 @@ src_install() {
         edo cd "${WORKBASE}/build/${target}"
         emake -j1 DESTDIR="${IMAGE}" install
 
-        alternatives+=( /usr/${CHOST}/bin/${target}-${PN} ${target}-${PN}.pkg-config )
+        alternatives+=( /usr/$(exhost --target)/bin/${target}-${PN} ${target}-${PN}.pkg-config )
     done
 
     alternatives_for "${alternatives[@]}"
