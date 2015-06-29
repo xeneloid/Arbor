@@ -4,7 +4,7 @@
 require glibc [ source_uri="mirror://gnu/${PN}/${PNV}.tar.xz" \
                 minimum_kernel_version="2.6.34" ]
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 MYOPTIONS+="
     ( linguas: ia sl uk )
