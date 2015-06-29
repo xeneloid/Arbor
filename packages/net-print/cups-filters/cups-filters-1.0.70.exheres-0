@@ -79,6 +79,7 @@ src_configure() {
         --with-jpeg
         --with-pdftops=hybrid
         --with-png
+        --with-shell=/usr/$(exhost --target)/bin/bash
         --with-test-font-path=/usr/share/fonts/X11/dejavu/DejaVuSans.ttf
         --with-tiff
         --without-php
