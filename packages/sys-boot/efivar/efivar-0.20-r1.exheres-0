@@ -28,3 +28,8 @@ DEPENDENCIES="
         dev-libs/popt
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/054a52e338d460b4529b92fdd11aa07342d626ee.patch
+    "${FILES}"/pr26.patch
+)
+

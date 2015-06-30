@@ -1,0 +1,89 @@
+Upstream:
+https://github.com/rhinstaller/efivar/issues/20
+https://github.com/rhinstaller/efivar/commit/624237e6d5c8b84cbf7aeaf8d43b5d38f63da66d#commitcomment-11914165
+https://github.com/rhinstaller/efivar/pull/26/commits
+
+From b55fcd523c8b1f7d33f6bec6596238b79b66cb7f Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Mon, 29 Jun 2015 14:24:32 -0400
+Subject: [PATCH 1/3] libefivar: Make sure EFIVAR_LIBS gets passed to the
+ linker
+
+Resolves #20.
+---
+ src/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Makefile b/src/Makefile
+index 2e883a3..59ed95d 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -34,6 +34,7 @@ EFIBOOT_DEPS = \
+ 	include/efivar/.efivar-loadopt.h.P
+ 
+ libefivar.a :: $(EFIVAR_OBJECTS)
++libefivar.so.$(VERSION) : LIBS = $(EFIVAR_LIBS)
+ libefivar.so.$(VERSION) : $(EFIVAR_OBJECTS)
+ 
+ libefiboot.a :: $(EFIBOOT_OBJECTS)
+
+From e9626bda6fe09892ee5ed73931995f99829334b7 Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Mon, 29 Jun 2015 14:32:08 -0400
+Subject: [PATCH 2/3] Utilize Requires.private and Libs.private in pkgconfig
+ files
+
+---
+ src/efiboot.pc.in | 4 ++--
+ src/efivar.pc.in  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/efiboot.pc.in b/src/efiboot.pc.in
+index 6e51346..e6ffc14 100644
+--- a/src/efiboot.pc.in
++++ b/src/efiboot.pc.in
+@@ -6,6 +6,6 @@ includedir=/usr/include
+ Name: efiboot
+ Description: UEFI Boot variable support
+ Version: @@VERSION@@
+-Requires:
+-Libs: -L${libdir} -ldl -lefivar -lefiboot
++Requires.private: efivar
++Libs: -L${libdir} -lefiboot
+ Cflags: -I${includedir}/efivar
+diff --git a/src/efivar.pc.in b/src/efivar.pc.in
+index 0cb3c23..1ea7deb 100644
+--- a/src/efivar.pc.in
++++ b/src/efivar.pc.in
+@@ -6,6 +6,6 @@ includedir=/usr/include
+ Name: efivar
+ Description: UEFI Variable Management
+ Version: @@VERSION@@
+-Requires:
+-Libs: -L${libdir} -ldl -lefivar
++Libs: -L${libdir} -lefivar
++Libs.private: -ldl
+ Cflags: -I${includedir}/efivar
+
+From a9c00fbe46a29355f235924fef41f0e3f747ba5b Mon Sep 17 00:00:00 2001
+From: Mike Gilbert <floppym@gentoo.org>
+Date: Mon, 29 Jun 2015 22:52:53 -0400
+Subject: [PATCH 3/3] libefiboot: Link against libefivar
+
+---
+ src/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index 59ed95d..96e5191 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -38,7 +38,7 @@ libefivar.so.$(VERSION) : LIBS = $(EFIVAR_LIBS)
+ libefivar.so.$(VERSION) : $(EFIVAR_OBJECTS)
+ 
+ libefiboot.a :: $(EFIBOOT_OBJECTS)
+-libefiboot.so.$(VERSION) : $(EFIBOOT_OBJECTS)
++libefiboot.so.$(VERSION) : $(EFIBOOT_OBJECTS) libefivar.so
+ 
+ efivar : efivar.o libefivar.so
+ 	$(CCLD) $(ccldflags) -L. -lefivar -o $@ $^ \

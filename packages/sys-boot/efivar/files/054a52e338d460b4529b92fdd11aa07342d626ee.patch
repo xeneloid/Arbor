@@ -1,0 +1,181 @@
+From 054a52e338d460b4529b92fdd11aa07342d626ee Mon Sep 17 00:00:00 2001
+From: Peter Jones <pjones@redhat.com>
+Date: Wed, 17 Jun 2015 13:16:56 -0400
+Subject: [PATCH] Do a better job of setting SONAME right.
+
+Soname should be libfoo.MAJOR not libfoo.MAJOR.MINOR, and we should have
+symlinks for all of those things.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
+---
+ .gitignore        |  2 +-
+ Make.defaults     |  2 --
+ Make.rules        | 11 +++++++----
+ Make.version      |  3 +++
+ Makefile          |  9 +++++----
+ docs/Makefile     |  1 +
+ src/Makefile      | 14 +++++++-------
+ src/test/Makefile |  1 +
+ 8 files changed, 25 insertions(+), 18 deletions(-)
+ create mode 100644 Make.version
+
+diff --git a/.gitignore b/.gitignore
+index 5f5c750..e8d2781 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -7,7 +7,7 @@
+ *.S
+ !src/guids.S
+ *.so
+-*.so.?
++*.so.*
+ *.tar.*
+ .*.c.P
+ .*.h.P
+diff --git a/Make.defaults b/Make.defaults
+index 6899773..2ed36f8 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -23,5 +23,3 @@ ccldflags := $(cflags) $(CCLDFLAGS) $(LDFLAGS) \
+ 	$(if $(filter $(CCLD),clang),$(clang_ccldflags),) \
+ 	$(if $(filter $(CCLD),gcc),$(gcc_ccldflags),)
+ LIBFLAGS += -shared
+-
+-SONAME_VERSION := 0
+diff --git a/Make.rules b/Make.rules
+index d8b1bb4..b9b9c03 100644
+--- a/Make.rules
++++ b/Make.rules
+@@ -4,11 +4,14 @@
+ % : %.o
+ 	$(CCLD) $(ccldflags) -o $@ $^ $(foreach lib,$(LIBS),-l$(lib))
+ 
+-%.so.$(SONAME_VERSION) : 
+-	$(CCLD) $(cflags) -Wl,-soname,$@ $(ccldflags) $(LIBFLAGS) $^ -o $@ $(foreach lib,$(LIBS),-l$(lib))
++%.so.$(VERSION) :
++	$(CCLD) $(cflags) -Wl,-soname,$(patsubst %.so.$(VERSION),%.so.$(MAJOR_VERSION),$@) $(ccldflags) $(LIBFLAGS) $^ -o $@ $(foreach lib,$(LIBS),-l$(lib))
+ 
+-%.so : %.so.$(SONAME_VERSION)
+-	ln -sf $^ $@
++%.so : %.so.$(VERSION)
++	ln -sf $< $@
++
++%.so.$(MAJOR_VERSION) : %.so.$(VERSION)
++	ln -sf $< $@
+ 
+ %.o: %.c
+ 	$(CC) $(cflags) $(CPPFLAGS) -c -o $@ $<
+diff --git a/Make.version b/Make.version
+new file mode 100644
+index 0000000..f0c75ed
+--- /dev/null
++++ b/Make.version
+@@ -0,0 +1,3 @@
++MAJOR_VERSION = 0
++MINOR_VERSION = 20
++VERSION = $(MAJOR_VERSION).$(MINOR_VERSION)
+diff --git a/Makefile b/Makefile
+index 5449912..eeee7dd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,22 +1,23 @@
+ TOPDIR = $(shell echo $$PWD)
+ 
++include $(TOPDIR)/Make.version
++
+ SUBDIRS := src docs
+-VERSION := 0.20
+ 
+ all : $(SUBDIRS) efivar.spec
+ 
+ efivar efivar-static :
+-	$(MAKE) -C src TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) VERSION=$(VERSION) $@
++	$(MAKE) -C src TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) $@
+ 
+ $(SUBDIRS) :
+-	$(MAKE) -C $@ TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) VERSION=$(VERSION)
++	$(MAKE) -C $@ TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH)
+ 
+ clean :
+ 	@set -e ; for x in $(SUBDIRS) ; do $(MAKE) -C $${x} TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) $@ ; done
+ 	@rm -vf efivar.spec
+ 
+ install :
+-	@set -e ; for x in $(SUBDIRS) ; do $(MAKE) -C $${x} TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) VERSION=$(VERSION) DESTDIR=$(DESTDIR) includedir=$(includedir) bindir=$(bindir) libdir=$(libdir) PCDIR=$(PCDIR) $@ ; done
++	@set -e ; for x in $(SUBDIRS) ; do $(MAKE) -C $${x} TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) DESTDIR=$(DESTDIR) includedir=$(includedir) bindir=$(bindir) libdir=$(libdir) PCDIR=$(PCDIR) $@ ; done
+ 
+ test : all
+ 	@set -e ; for x in $(SUBDIRS) ; do $(MAKE) -C $${x} TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/$@/ ARCH=$(ARCH) $@ ; done
+diff --git a/docs/Makefile b/docs/Makefile
+index e58e9f0..a3c9de1 100644
+--- a/docs/Makefile
++++ b/docs/Makefile
+@@ -2,6 +2,7 @@ SRCDIR = .
+ TOPDIR = $(SRCDIR)/..
+ 
+ include $(TOPDIR)/Make.defaults
++include $(TOPDIR)/Make.version
+ 
+ MAN1TARGETS = efivar.1
+ MAN3TARGETS = efi_append_variable.3 \
+diff --git a/src/Makefile b/src/Makefile
+index f8ac6bd..2e883a3 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -2,8 +2,9 @@ SRCDIR = $(realpath .)
+ TOPDIR = $(realpath ..)
+ 
+ include $(TOPDIR)/Make.defaults
++include $(TOPDIR)/Make.version
+ 
+-LIBTARGETS = libefivar.so.$(SONAME_VERSION) libefiboot.so.$(SONAME_VERSION)
++LIBTARGETS = $(foreach x,libefivar libefiboot,$(x).so.$(VERSION) $(x).so.$(MAJOR_VERSION))
+ PCTARGETS = efivar.pc efiboot.pc
+ BINTARGETS = efivar
+ INCTARGETS = include/efivar/efivar-guids.h
+@@ -33,12 +34,10 @@ EFIBOOT_DEPS = \
+ 	include/efivar/.efivar-loadopt.h.P
+ 
+ libefivar.a :: $(EFIVAR_OBJECTS)
+-
+-libefivar.so.$(SONAME_VERSION) :: $(EFIVAR_OBJECTS)
++libefivar.so.$(VERSION) : $(EFIVAR_OBJECTS)
+ 
+ libefiboot.a :: $(EFIBOOT_OBJECTS)
+-
+-libefiboot.so.$(SONAME_VERSION) :: $(EFIBOOT_OBJECTS)
++libefiboot.so.$(VERSION) : $(EFIBOOT_OBJECTS)
+ 
+ efivar : efivar.o libefivar.so
+ 	$(CCLD) $(ccldflags) -L. -lefivar -o $@ $^ \
+@@ -82,7 +81,7 @@ deps : $(EFIVAR_DEPS) $(EFIBOOT_DEPS) $(MAKEGUIDS_DEPS)
+ -include $(MAKEGUIDS_DEPS)
+ 
+ clean : 
+-	@rm -rfv *~ *.o *.a *.so *.so.$(SONAME_VERSION) .*.c.P .*.h.P $(PCTARGETS) $(BINTARGETS) $(INCTARGETS) *.bin guid-symbols.S makeguids include/efivar/.*.h.P $(LIBTARGETS)
++	@rm -rfv *~ *.o *.a *.so *.so.$(MAJOR_VERSION) *.so.$(VERSION) .*.c.P .*.h.P $(PCTARGETS) $(BINTARGETS) $(INCTARGETS) *.bin guid-symbols.S makeguids include/efivar/.*.h.P $(LIBTARGETS)
+ 	@$(MAKE) -C test TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/src/ $@
+ 
+ install : all
+@@ -94,7 +93,8 @@ install : all
+ 	$(foreach x, $(wildcard $(TOPDIR)/src/include/efivar/*.h), $(INSTALL) -m 644 $(x) $(DESTDIR)$(includedir)/efivar/$(notdir $(x));)
+ 	$(INSTALL) -d -m 755 $(DESTDIR)$(bindir)
+ 	$(foreach x, $(BINTARGETS), $(INSTALL) -m 755 $(x) $(DESTDIR)$(bindir);)
+-	$(foreach x, $(wildcard *.so.$(SONAME_VERSION)), ln -fs $(x) $(patsubst %.so.$(SONAME_VERSION),%.so,$(DESTDIR)$(libdir)/$(x));)
++	$(foreach x, $(wildcard *.so.$(VERSION)), ln -fs $(x) $(patsubst %.so.$(VERSION),%.so,$(DESTDIR)$(libdir)/$(x));)
++	$(foreach x, $(wildcard *.so.$(VERSION)), ln -fs $(x) $(patsubst %.so.$(VERSION),%.so.$(MAJOR_VERSION),$(DESTDIR)$(libdir)/$(x));)
+ 
+ test :all
+ 	$(MAKE) -C test TOPDIR=$(TOPDIR) SRCDIR=$(TOPDIR)/src/ $@
+diff --git a/src/test/Makefile b/src/test/Makefile
+index 0e94ad1..4c2a18f 100644
+--- a/src/test/Makefile
++++ b/src/test/Makefile
+@@ -2,6 +2,7 @@ SRCDIR = $(realpath .)
+ TOPDIR = $(realpath $(SRCDIR)/../..)
+ 
+ include $(TOPDIR)/Make.defaults
++include $(TOPDIR)/Make.version
+ 
+ ccldflags += -L$(TOPDIR)/src/ -Wl,-rpath=$(TOPDIR)/src/
+ LIBS=efivar
