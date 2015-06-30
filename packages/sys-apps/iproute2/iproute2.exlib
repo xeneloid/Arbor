@@ -42,10 +42,18 @@ DEPENDENCIES="
         berkdb? ( sys-libs/db:= )
 "
 
+if ever at_least 4.1.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            net-libs/libmnl
+    "
+fi
+
 DEFAULT_SRC_COMPILE_PARAMS+=(
     CC="${CC}"
     HOSTCC="${CC}"
     AR="${AR}"
+    KERNEL_INCLUDE=/usr/$(exhost --target)/include
     LIBDIR=/usr/$(exhost --target)/lib
     IPT_LIB_DIR=/usr/$(exhost --target)/lib
 )
