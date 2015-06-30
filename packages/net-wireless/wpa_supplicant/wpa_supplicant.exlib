@@ -38,7 +38,7 @@ MYOPTIONS="
     dbus     [[ description = [ Enable the DBus control interface ] ]]
     eap-fast [[
         description = [ Enable EAP-FAST authentication method ]
-        requires = [ -providers:gnutls ]
+        requires = [ providers: -gnutls ]
     ]]
     nl80211  [[ description = [ Support the new 802.11 netlink interface ] ]]
     pcap     [[ description = [
