@@ -3,7 +3,7 @@
 
 export_exlib_phases src_prepare src_install
 
-require github [ user=vathpela release=${PNV} suffix=tar.bz2 ]
+require github [ user=rhinstaller release=${PNV} suffix=tar.bz2 ]
 
 SUMMARY="Linux user-space application to modify the Intel Extensible Firmware Interface (EFI) Boot Manager"
 
@@ -13,9 +13,10 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
-        sys-apps/pciutils
-        sys-boot/efivar
+        sys-boot/efivar[>=0.19]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Set-pkg-config-binary-as-variable.patch )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     EXTRA_CFLAGS="${CFLAGS}"
@@ -24,6 +25,8 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 efibootmgr_src_prepare() {
     edo sed -e s/-Werror// \
             -i Makefile
+
+    default
 }
 
 efibootmgr_src_install() {
