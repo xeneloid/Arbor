@@ -1,4 +1,4 @@
-# Copyright 2007 Bryan Østergaard
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=xz ]
@@ -15,7 +15,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.19.4]
     build+run:
         dev-lang/perl:*[>=5.7.3]
         dev-perl/libintl-perl
