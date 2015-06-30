@@ -24,7 +24,7 @@ DEPENDENCIES="
 "
 
 ninja_src_compile() {
-    edo ./bootstrap.py --verbose
+    edo ./configure.py --bootstrap --verbose
     edo ./ninja manual
     elisp-optional_src_compile
 }
