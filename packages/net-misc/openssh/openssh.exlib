@@ -71,7 +71,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-6.3_p1-allow-host-prefixed-ar.patch
     -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
 )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
