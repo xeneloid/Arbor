@@ -1,0 +1,87 @@
+# Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2010 Cecil Curry <leycec@gmail.com>
+# Copyright 2015 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'doxygen-1.5.5.ebuild' from Gentoo, which is:
+#     Copyright 1999-2008 Gentoo Foundation.
+
+require cmake [ api=2 ]
+
+SUMMARY="Documentation system for C++, C, Java, Objective-C, Python, IDL, and other languages"
+HOMEPAGE="http://www.doxygen.org/"
+DOWNLOADS="http://ftp.stack.nl/pub/users/dimitri/${PNV}.src.tar.gz
+    doc? ( http://ftp.stack.nl/pub/users/dimitri/${PN}_manual-${PV}.pdf.zip )"
+
+REMOTE_IDS="freecode:${PN}"
+
+DOXYGEN_DOCUMENTATION_HOME="http://www.stack.nl/~dimitri/${PN}"
+UPSTREAM_DOCUMENTATION="
+${DOXYGEN_DOCUMENTATION_HOME}/faq.html    [[ description = [ Doxygen FAQ ] lang = en ]]
+${DOXYGEN_DOCUMENTATION_HOME}/manual.html [[ description = [ Doxygen Manual ] lang = en ]]
+"
+UPSTREAM_RELEASE_NOTES="${DOXYGEN_DOCUMENTATION_HOME}/changelog.html"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    doc
+    dot      [[ description = [ Use the dot tool from graphviz to generate more advanced diagrams
+                                and graphs ] ]]
+    examples [[ description = [ Build doxyapp ] ]]
+    qt4      [[ description = [ Build doxywizard ] ]]
+"
+
+DEPENDENCIES="
+    build:
+        dev-lang/perl:*
+        dev-lang/python:*
+        sys-devel/bison
+        sys-devel/flex
+        doc? ( app-arch/unzip )
+    build+run:
+        app-text/ghostscript
+        qt4? ( x11-libs/qt:4[>=4.3.0] )
+    run:
+        dot? (
+            media-gfx/graphviz[>=1.8.10]
+            media-libs/freetype:2
+        )
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-1.8.10-doc.patch
+    "${FILES}"/379af51e874f86f4f5477e18fd1cf405fe6d8c85.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS+=(
+    -Dbuild_doc:BOOL=TRUE
+    -Dbuild_search:BOOL=FALSE
+    -Duse_libclang:BOOL=FALSE
+    -Duse_sqlite3:BOOL=FALSE
+)
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( LANGUAGE.HOWTO )
+
+src_configure() {
+    CMAKE_SRC_CONFIGURE_PARAMS+=(
+        -Dbuild_app:BOOL=$(option examples TRUE FALSE)
+        -Dbuild_wizard:BOOL=$(option qt4 TRUE FALSE)
+        -Dbuild_xmlparser:BOOL=$(option examples TRUE FALSE)
+    )
+
+    cmake_src_configure
+}
+
+src_install() {
+    cmake_src_install
+
+    if option doc; then
+        insinto /usr/share/doc/${PNVR}
+        doins "${WORKBASE}"/${PN}_manual-${PV}.pdf
+    fi
+
+    edo rm "${IMAGE}"/usr/share/man/man1/doxy{indexer,search}.1
+    option qt4 || edo rm "${IMAGE}"/usr/share/man/man1/doxywizard.1
+}
+

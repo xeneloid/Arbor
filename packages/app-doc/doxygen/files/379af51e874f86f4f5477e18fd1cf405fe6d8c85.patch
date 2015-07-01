@@ -1,0 +1,398 @@
+From 379af51e874f86f4f5477e18fd1cf405fe6d8c85 Mon Sep 17 00:00:00 2001
+From: Adrian Negreanu <adrian.m.negreanu@intel.com>
+Date: Tue, 16 Jun 2015 14:50:21 +0300
+Subject: [PATCH] doc: generate Doxygen's documentation.
+
+Add a sepparate project for Doxygen's documentation.
+tested on linux(gmake) and windows(nmake) [thanks albert]
+
+* use configure_files to avoid different $ semantics when COMMAND lines
+  are expanded in build files. ($$var vs. \$var)
+* nmake/gmake no longer needed by cmake, when building doc.
+* explicitly copy doc files into build directory to make it clear what
+  stage uses what files.
+
+Documentation can be built either from top directory or from doc/.
+When building from top directory, doxygen is built before, automatically.
+You can do it with:
+   mkdir build/ && cd $_
+   cmake -Dbuild_doc=1 ..   # add -G"NMake Makefiles" for nmake
+   make docs
+
+When building from doc/, doxygen is needed in PATH (find_package is
+used).
+You can do it with:
+   mkdir doc/build && cd $_
+   cmake -Dbuild_doc=1 ..   # add -G"NMake Makefiles" for nmake
+   make docs
+---
+ CMakeLists.txt             |   4 +-
+ cmake/run_translator.cmake |   2 +-
+ cmake/version.cmake        |   2 +-
+ doc/.gitignore             |   1 -
+ doc/CMakeLists.txt         | 223 ++++++++++++++++++++++++++++++---------------
+ doc/doxygen.1              |   4 +-
+ doc/doxygen_manual.tex     |   2 +-
+ doc/doxyindexer.1          |   2 +-
+ doc/doxysearch.1           |   2 +-
+ doc/doxywizard.1           |   2 +-
+ 11 files changed, 161 insertions(+), 85 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b0def45..1efd606 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,7 +25,7 @@ option(win_static      "Link with /MT in stead of /MD on windows" OFF)
+ option(english_only    "Only compile in support for the English language" OFF)
+ 
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+-set(SOURCE "${CMAKE_SOURCE_DIR}")
++set(TOP "${CMAKE_SOURCE_DIR}")
+ include(version)
+ 
+ set(sqlite3  "0" CACHE INTERNAL "used in settings.h")
+@@ -66,8 +66,6 @@ include_directories(${ICONV_INCLUDE_DIR})
+ 
+ 
+ #set(DOXYDOCS ${CMAKE_SOURCE_DIR}/doc CACHE INTERNAL "Path to doxygen docs")
+-set(DOC_INSTALL_DIR "share/doc/packages/doxygen" CACHE STRING "Relative path where to install the documentation")
+-set(EXAMPLE_DIR ${CMAKE_SOURCE_DIR}/examples)
+ set(DOXYDOCS ${PROJECT_BINARY_DIR}/doc)
+ set(ENV{DOXYGEN_DOCDIR} ${DOXYDOCS})
+ set(GENERATED_SRC "${CMAKE_BINARY_DIR}/generated_src" CACHE INTERNAL "Stores generated files")
+diff --git a/cmake/run_translator.cmake b/cmake/run_translator.cmake
+index 618bb82..d1b187c 100644
+--- a/cmake/run_translator.cmake
++++ b/cmake/run_translator.cmake
+@@ -1,4 +1,4 @@
+-include(${SOURCE}/cmake/version.cmake)
++include(${TOP}/cmake/version.cmake)
+ find_program(PYTHON NAMES python)
+ execute_process(
+     COMMAND ${PYTHON} ${CMAKE_SOURCE_DIR}/translator.py
+diff --git a/cmake/version.cmake b/cmake/version.cmake
+index 48de7b2..b59aa29 100644
+--- a/cmake/version.cmake
++++ b/cmake/version.cmake
+@@ -1,2 +1,2 @@
+-file (STRINGS "${SOURCE}/VERSION" VERSION)
++file (STRINGS "${TOP}/VERSION" VERSION)
+ set(ENV{VERSION} "${VERSION}")
+diff --git a/doc/.gitignore b/doc/.gitignore
+index d1d1371..751553b 100644
+--- a/doc/.gitignore
++++ b/doc/.gitignore
+@@ -1,2 +1 @@
+ *.bak
+-mailto.txt
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index af557d8..089e16b 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -1,88 +1,169 @@
++# vim:ts=4:sw=4:expandtab:autoindent:
++#
++# Copyright (C) 1997-2015 by Dimitri van Heesch.
++#
++# Permission to use, copy, modify, and distribute this software and its
++# documentation under the terms of the GNU General Public License is hereby
++# granted. No representations are made about the suitability of this software
++# for any purpose. It is provided "as is" without express or implied warranty.
++# See the GNU General Public License for more details.
++#
++# Documents produced by Doxygen are derivative works derived from the
++# input used in their production; they are not affected by this license.
++
++cmake_minimum_required(VERSION 2.8.12)
++project(doxygen_doc)
++
+ if (build_doc)
+ 
++set(TOP ${PROJECT_SOURCE_DIR}/..)
++include (${TOP}/cmake/version.cmake)
++string(TIMESTAMP DATE "%d-%m-%Y")
++
++find_package(PythonInterp REQUIRED)
+ find_program(EPSTOPDF NAMES epstopdf )
+-find_program(SED NAMES sed )
+-find_program(MAKE NAMES make gmake nmake )
++find_program(PDFLATEX NAMES pdflatex )
++find_program(MAKEINDEX NAMES makeindex )
++
++if (doxygen_BINARY_DIR)
++    set(DOXYGEN_EXECUTABLE ${doxygen_BINARY_DIR}/bin/doxygen)
++else()
++    # when building only the doxygen_doc, from the doc/ directory, the
++    # doxygen project variables are unknown so look for doxygen in PATH
++    find_package(Doxygen)
++endif()
+ 
+-file(GLOB DOC_FILES "*")
+-file(GLOB LANG_FILES "${CMAKE_SOURCE_DIR}/src/translator_??.h")
++set(DOC_INSTALL_DIR "share/doc/packages/doxygen" CACHE STRING "Relative path where to install the documentation")
++set(EXAMPLE_DIR ${TOP}/examples)
++set(DOC_FILES
++        arch.doc
++        archoverview.eps
++        archoverview.gif
++        autolink.doc
++        changelog.doc
++        commands.doc
++        custcmd.doc
++        customize.doc
++        diagrams.doc
++        docblocks.doc
++        Doxyfile
++        doxygen_manual.css
++        doxygen_usage.doc
++        doxywizard_expert.png
++        doxywizard.gif
++        doxywizard_main.png
++        doxywizard_menu.png
++        doxywizard_page1.png
++        doxywizard_page2.png
++        doxywizard_page3.png
++        doxywizard_page4.png
++        doxywizard_usage.doc
++        external.doc
++        extsearch.doc
++        extsearch_flow.dot
++        extsearch_flow.eps
++        extsearch_flow.png
++        faq.doc
++        features.doc
++        formulas.doc
++        grouping.doc
++        htmlcmds.doc
++        index.doc
++        index.hhp.txt
++        infoflow.eps
++        infoflow.fig
++        infoflow.png
++        install.doc
++        install_prefix
++        language.tpl
++        lists.doc
++        maintainers.txt
++        markdown.doc
++        output.doc
++        perlmod.doc
++        perlmod_tree.doc
++        preprocessing.doc
++        searching.doc
++        starting.doc
++        translator.py
++        trouble.doc
++        xmlcmds.doc
++)
++file(GLOB LANG_FILES "${TOP}/src/translator_??.h")
+ 
+ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/man)
+ file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/src)
+-file(COPY ${CMAKE_SOURCE_DIR}/src/translator.h DESTINATION ${PROJECT_BINARY_DIR}/src)
+-file(COPY ${CMAKE_SOURCE_DIR}/src/translator_adapter.h DESTINATION ${PROJECT_BINARY_DIR}/src)
+-file(COPY ${LANG_FILES} DESTINATION ${PROJECT_BINARY_DIR}/src)
+-file(COPY ${CMAKE_SOURCE_DIR}/VERSION DESTINATION ${PROJECT_BINARY_DIR})
+-
+-# copy all doc files
+-add_custom_target(copy_docs)
+-foreach(doc_file ${DOC_FILES})
+-  add_custom_command(TARGET copy_docs PRE_BUILD
+-                     COMMAND ${CMAKE_COMMAND} -E
+-                         copy ${doc_file} ${DOXYDOCS})
+-endforeach()
+-
+-add_custom_target(docs
+-	COMMENT "Generating documentation in ${DOXYDOCS}"
+-	COMMAND ${EXECUTABLE_OUTPUT_PATH}/doxygen
+-	COMMAND ${CMAKE_COMMAND} -E remove_directory ../latex/refman.tex
+-	COMMAND ${CMAKE_COMMAND} -E copy doxygen_logo.gif ../html
+-	COMMAND ${CMAKE_COMMAND} -E copy doxygen_logo_low.gif ../html
+-	COMMAND ${CMAKE_COMMAND} -E copy Makefile.latex ../latex/Makefile
+-	COMMAND ${SED} -e "s/\$VERSION/${VERSION}/g" doxygen_manual.tex > ../latex/doxygen_manual.tex
+-	COMMAND ${SED} -e "s/\$VERSION/${VERSION}/g" doxygen.sty > ../latex/doxygen.sty
+-	COMMAND ${EPSTOPDF} doxygen_logo.eps --outfile=../latex/doxygen_logo.pdf
+-        COMMAND ${MAKE} -C ../latex > latex_out.txt
+-	DEPENDS doxygen copy_docs ${PROJECT_BINARY_DIR}/doc/language.doc config.doc examples
+-                "${PROJECT_BINARY_DIR}/man/doxygen.1"
+-                "${PROJECT_BINARY_DIR}/man/doxywizard.1"
+-                "${PROJECT_BINARY_DIR}/man/doxysearch.1"
+-                "${PROJECT_BINARY_DIR}/man/doxyindexer.1"
+-	WORKING_DIRECTORY ${DOXYDOCS}
+-	VERBATIM
+-	)
+-
+-# language.doc
+-add_custom_command(
+-        COMMAND ${CMAKE_COMMAND} "-DSOURCE=${CMAKE_SOURCE_DIR}" -P ${CMAKE_SOURCE_DIR}/cmake/run_translator.cmake
+-	DEPENDS ${DOXYDOCS}/translator.py
+-	DEPENDS maintainers.txt language.tpl translator.py
+-	OUTPUT ${PROJECT_BINARY_DIR}/doc/language.doc
+-	WORKING_DIRECTORY ${DOXYDOCS}
+-)
+-set_source_files_properties(${DOXYDOCS}/language.doc PROPERTIES GENERATED 1)
+-
+-# config.doc
+-add_custom_command(
+-	COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/src/configgen.py -doc ${CMAKE_SOURCE_DIR}/src/config.xml > config.doc
+-	DEPENDS ${CMAKE_SOURCE_DIR}/src/config.xml ${CMAKE_SOURCE_DIR}/src/configgen.py
+-	OUTPUT config.doc
+-	WORKING_DIRECTORY ${DOXYDOCS}
+-)
+-set_source_files_properties(${DOXYDOCS}/config.doc PROPERTIES GENERATED 1)
+-
+-string(TIMESTAMP TODAY "%d-%m-%Y")
+-
++file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/doc)
++
++file(COPY ${TOP}/VERSION                  DESTINATION ${PROJECT_BINARY_DIR}/)
++file(COPY ${TOP}/src/translator.h         DESTINATION ${PROJECT_BINARY_DIR}/src/)
++file(COPY ${TOP}/src/translator_adapter.h DESTINATION ${PROJECT_BINARY_DIR}/src/)
++file(COPY ${LANG_FILES}                   DESTINATION ${PROJECT_BINARY_DIR}/src/)
++file(COPY ${DOC_FILES}                    DESTINATION ${PROJECT_BINARY_DIR}/doc/)
++file(COPY ${EXAMPLE_DIR}                  DESTINATION ${PROJECT_BINARY_DIR}/)
++
++configure_file(${PROJECT_SOURCE_DIR}/doxygen.sty        doc/doxygen.sty)
++configure_file(${PROJECT_SOURCE_DIR}/doxygen_manual.tex doc/doxygen_manual.tex)
++configure_file(${PROJECT_SOURCE_DIR}/doxygen.1          man/doxygen.1)
++configure_file(${PROJECT_SOURCE_DIR}/doxywizard.1       man/doxywizard.1)
++configure_file(${PROJECT_SOURCE_DIR}/doxysearch.1       man/doxysearch.1)
++configure_file(${PROJECT_SOURCE_DIR}/doxyindexer.1      man/doxyindexer.1)
++
++# doc/language.doc (see tag Doxyfile:INPUT)
+ add_custom_command(
+-	COMMAND ${SED} -e "s/DATE/${TODAY}/g" -e "s/VERSION/${VERSION}/g" doxygen.1 > "${PROJECT_BINARY_DIR}/man/doxygen.1"
+-        OUTPUT "${PROJECT_BINARY_DIR}/man/doxygen.1"
++        COMMAND ${PYTHON_EXECUTABLE} translator.py
++        DEPENDS maintainers.txt language.tpl translator.py
++        OUTPUT language.doc
++        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc
+ )
++set_source_files_properties(language.doc PROPERTIES GENERATED 1)
+ 
++# doc/config.doc (see tag Doxyfile:INPUT)
+ add_custom_command(
+-	COMMAND ${SED} -e "s/DATE/${TODAY}/g" -e "s/VERSION/${VERSION}/g" doxywizard.1 > "${PROJECT_BINARY_DIR}/man/doxywizard.1"
+-        OUTPUT "${PROJECT_BINARY_DIR}/man/doxywizard.1"
++        COMMAND ${PYTHON_EXECUTABLE}  ${TOP}/src/configgen.py -doc ${TOP}/src/config.xml > config.doc
++        DEPENDS ${TOP}/src/config.xml ${TOP}/src/configgen.py
++        OUTPUT config.doc
++        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/
+ )
+-
+-add_custom_command(
+-	COMMAND ${SED} -e "s/DATE/${TODAY}/g" -e "s/VERSION/${VERSION}/g" doxysearch.1 > "${PROJECT_BINARY_DIR}/man/doxysearch.1"
+-        OUTPUT "${PROJECT_BINARY_DIR}/man/doxysearch.1"
++set_source_files_properties(config.doc PROPERTIES GENERATED 1)
++################################################################################
++add_custom_target(run_doxygen
++        COMMENT "Generating Latex and HTML documentation."
++        COMMAND ${DOXYGEN_EXECUTABLE}
++        DEPENDS language.doc config.doc
++        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/doc/
+ )
++if (doxygen_BINARY_DIR)
++    # building from project `doxygen'
++    add_dependencies(run_doxygen
++       doxygen
++    )
++endif()
+ 
+-add_custom_command(
+-	COMMAND ${SED} -e "s/DATE/${TODAY}/g" -e "s/VERSION/${VERSION}/g" doxyindexer.1 > "${PROJECT_BINARY_DIR}/man/doxyindexer.1"
+-        OUTPUT "${PROJECT_BINARY_DIR}/man/doxyindexer.1"
++add_custom_target(doxygen_pdf
++        COMMENT "Generating Doxygen Manual PDF."
++        COMMAND ${CMAKE_COMMAND} -E remove_directory refman.tex
++        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/doc/doxygen_manual.tex  .
++        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/doc/doxygen.sty  .
++        COMMAND ${EPSTOPDF} ${PROJECT_SOURCE_DIR}/doxygen_logo.eps --outfile=doxygen_logo.pdf
++        COMMAND ${PDFLATEX}  doxygen_manual.tex
++        COMMAND ${MAKEINDEX} doxygen_manual.idx
++        COMMAND ${PDFLATEX}  doxygen_manual.tex
++        DEPENDS run_doxygen
++        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/latex
+ )
+-
++add_custom_target(docs
++        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/doxygen_logo.gif      html/
++        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/doxygen_logo_low.gif  html/
++        DEPENDS ${PROJECT_BINARY_DIR}/man/doxygen.1
++                ${PROJECT_BINARY_DIR}/man/doxywizard.1
++                ${PROJECT_BINARY_DIR}/man/doxysearch.1
++                ${PROJECT_BINARY_DIR}/man/doxyindexer.1
++                doxygen_pdf
++        VERBATIM
++        )
++
++################################################################################
+ install(FILES
+         "${PROJECT_BINARY_DIR}/man/doxygen.1"
+         "${PROJECT_BINARY_DIR}/man/doxywizard.1"
+@@ -101,4 +182,4 @@ install(DIRECTORY
+         DESTINATION "${CMAKE_INSTALL_PREFIX}/${DOC_INSTALL_DIR}"
+ )
+ 
+-endif()
++endif(build_doc)
+diff --git a/doc/doxygen.1 b/doc/doxygen.1
+index 6861c22..1deb7b6 100644
+--- a/doc/doxygen.1
++++ b/doc/doxygen.1
+@@ -1,4 +1,4 @@
+-.TH DOXYGEN "1" "DATE" "doxygen VERSION" "User Commands"
++.TH DOXYGEN "1" "@DATE@" "doxygen @VERSION@" "User Commands"
+ .SH NAME
+ doxygen \- documentation system for various programming languages
+ .SH DESCRIPTION
+@@ -45,6 +45,6 @@ doxygen \fB\-e\fR rtf extensionsFile
+ If \fB\-s\fR is specified the comments in the config file will be omitted.
+ If configName is omitted `Doxyfile' will be used as a default.
+ .SH AUTHOR
+-Doxygen version VERSION, Copyright Dimitri van Heesch 1997-2015
++Doxygen version @VERSION@, Copyright Dimitri van Heesch 1997-2015
+ .SH SEE ALSO
+ doxywizard(1).
+diff --git a/doc/doxygen_manual.tex b/doc/doxygen_manual.tex
+index c97c5f0..9c649de 100644
+--- a/doc/doxygen_manual.tex
++++ b/doc/doxygen_manual.tex
+@@ -71,7 +71,7 @@
+ \begin{titlepage}
+ \includegraphics[width=\textwidth]{doxygen_logo}
+ \begin{center}
+-Manual for version $VERSION\\[2ex]
++Manual for version @VERSION@\\[2ex]
+ Written by Dimitri van Heesch\\[2ex]
+ \copyright 1997-\thisyear
+ \end{center}
+diff --git a/doc/doxyindexer.1 b/doc/doxyindexer.1
+index 7b7a298..ae4b282 100644
+--- a/doc/doxyindexer.1
++++ b/doc/doxyindexer.1
+@@ -1,4 +1,4 @@
+-.TH DOXYINDEXER "1" "DATE" "doxyindexer VERSION" "User Commands"
++.TH DOXYINDEXER "1" "@DATE@" "doxyindexer @VERSION@" "User Commands"
+ .SH NAME
+ doxyindexer \- creates a search index from raw search data
+ .SH SYNOPSIS
+diff --git a/doc/doxysearch.1 b/doc/doxysearch.1
+index da9ae05..a00124f 100644
+--- a/doc/doxysearch.1
++++ b/doc/doxysearch.1
+@@ -1,4 +1,4 @@
+-.TH DOXYSEARCH "1" "DATE" "doxysearch.cgi VERSION" "User Commands"
++.TH DOXYSEARCH "1" "@DATE@" "doxysearch.cgi @VERSION@" "User Commands"
+ .SH NAME
+ doxysearch.cgi \- search engine used for searching in doxygen documentation.
+ .SH SYNOPSIS
+diff --git a/doc/doxywizard.1 b/doc/doxywizard.1
+index e3f23c0..9f57701 100644
+--- a/doc/doxywizard.1
++++ b/doc/doxywizard.1
+@@ -1,4 +1,4 @@
+-.TH DOXYWIZARD "1" "DATE" "doxywizard VERSION" "User Commands"
++.TH DOXYWIZARD "1" "@DATE@" "doxywizard @VERSION@" "User Commands"
+ .SH NAME
+ doxywizard \- a tool to configure and run doxygen on your source files
+ .SH SYNOPSIS
