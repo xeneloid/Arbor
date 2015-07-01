@@ -8,7 +8,8 @@ require openssh [ X509_version=8.2 ]
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+# patch fails to apply if you just append to the variable
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/openssh-6.3_p1-allow-host-prefixed-ar.patch
-    ${DEFAULT_SRC_PREPARE_PATCHES[@]}
+    "${DEFAULT_SRC_PREPARE_PATCHES[@]}"
 )
