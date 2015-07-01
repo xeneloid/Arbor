@@ -1,4 +1,4 @@
-# Copyright 2007 Bryan Østergaard
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -24,10 +24,6 @@ DEPENDENCIES="
 "
 
 WORK=${WORKBASE}/${MY_PNV}
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${MY_PNV}-patch{01,02,03,04,05,06,07,08,09,10}.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-shared )
 
