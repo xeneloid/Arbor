@@ -183,6 +183,8 @@ gcc_src_configure() {
                 $(if [[ ${target} == armv7* ]] ; then
                     # TODO(compnerd) use the variant agnostic architecture by default
                     echo --with-arch=armv7-a
+                  else
+                    die "unsupported target: ${target}; please update GCC patch"
                   fi)                                       \
                 $(if [[ ${target} == arm*-*-*-*hf ]] ; then
                     echo --with-float=hard
