@@ -5,7 +5,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="Utilities for process information including ps, top and kill"
 HOMEPAGE="https://gitlab.com/procps-ng/procps"
-DOWNLOADS="${HOMEPAGE}/repository/archive.tar.gz?ref=v${PV} -> ${PNV}.tar.gz"
+DOWNLOADS="${HOMEPAGE}/repository/archive.tar.bz2?ref=v${PV} -> ${PNV}.tar.bz2"
 
 LICENCES="GPL-2 LGPL-2"
 SLOT="0"
