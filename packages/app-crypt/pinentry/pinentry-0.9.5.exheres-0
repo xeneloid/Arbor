@@ -21,6 +21,8 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
+        dev-libs/libassuan[>=2.1.0]
+        dev-libs/libgpg-error[>=1.16]
         sys-libs/ncurses
         caps? ( sys-libs/libcap )
         gnome? ( gnome-desktop/gcr )
@@ -32,8 +34,7 @@ DEPENDENCIES="
 AT_M4DIR=( m4 )
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-Use-PKG_PROG_PKG_CONFIG.patch
-    "${FILES}"/444598586d0abf70d5a27d2aafcd6c14989621db.patch
+    "${FILES}"/${PN}-0.9.4-Use-PKG_PROG_PKG_CONFIG.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -41,6 +42,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-fallback-curses
     --enable-pinentry-curses
     --enable-pinentry-tty
+    --disable-inside-emacs
+    --disable-pinentry-emacs
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     "gnome pinentry-gnome3"
