@@ -30,6 +30,10 @@ DEPENDENCIES="
             description = [ procps now provides uptime ]
             resolution = upgrade-blocked-before
         ]]
+        !sys-apps/coreutils[<8.23-r4]  [[
+            description = [ conflicts with uptime alternatives ]
+            resolution = uninstall-blocked-after
+        ]]
     test:
         dev-util/dejagnu
 "
