@@ -57,6 +57,12 @@ src_install() {
     insinto /etc
     doins "${WORKBASE}"/inittab
 
+    edo mkdir -p "${IMAGE}"/usr/$(exhost --target)/{bin,include}
+    edo mv "${IMAGE}"/usr/bin/* "${IMAGE}"/usr/$(exhost --target)/bin/
+    edo mv "${IMAGE}"/bin/* "${IMAGE}"/usr/$(exhost --target)/bin/
+    edo mv "${IMAGE}"/sbin/* "${IMAGE}"/usr/$(exhost --target)/bin/
+    edo mv "${IMAGE}"/usr/include/* "${IMAGE}"/usr/$(exhost --target)/include/
+
     if option baselayout ; then
         doinitd "${WORKBASE}"/{reboot,shutdown}.sh
     fi
@@ -64,37 +70,38 @@ src_install() {
     # alternatives
     local a t alternatives=( init ${PN} 10 )
     for a in halt init poweroff reboot runlevel shutdown telinit; do
-        if [[ -L "${IMAGE}"/sbin/${a} ]]; then
-            t=$(readlink "${IMAGE}"/sbin/${a})
-            edo rm "${IMAGE}"/sbin/${a}
+        if [[ -L "${IMAGE}"/usr/$(exhost --target)/bin/${a} ]]; then
+            t=$(readlink "${IMAGE}"/usr/$(exhost --target)/bin/${a})
+            edo rm "${IMAGE}"/usr/$(exhost --target)/bin/${a}
         else
             t=${a}
         fi
-        alternatives+=( /sbin/${a} ${PN}.${t}
+        alternatives+=( /usr/$(exhost --target)/bin/${a} ${PN}.${t}
                         /usr/share/man/man8/${a}.8 ${PN}.${a}.8 )
     done
     alternatives+=( /usr/share/man/man5/inittab.5 ${PN}.inittab.5 )
     alternatives_for "${alternatives[@]}"
 
     # wall is provided by util-linux
-    edo rm "${IMAGE}"/usr/bin/wall "${IMAGE}"/usr/share/man/man1/wall.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/wall "${IMAGE}"/usr/share/man/man1/wall.1
 
     # mountpoint is provided by util-linux
-    edo rm "${IMAGE}"/bin/mountpoint "${IMAGE}"/usr/share/man/man1/mountpoint.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/mountpoint "${IMAGE}"/usr/share/man/man1/mountpoint.1
 
     # sulogin is provided by util-linux
-    edo rm "${IMAGE}"/sbin/sulogin "${IMAGE}"/usr/share/man/man8/sulogin.8
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/sulogin "${IMAGE}"/usr/share/man/man8/sulogin.8
 
     # utmpdump is provided by util-linux
-    edo rm "${IMAGE}"/usr/bin/utmpdump "${IMAGE}"/usr/share/man/man1/utmpdump.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/utmpdump "${IMAGE}"/usr/share/man/man1/utmpdump.1
 
     # mesg is provided by util-linux
-    edo rm "${IMAGE}"/usr/bin/mesg "${IMAGE}"/usr/share/man/man1/mesg.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/mesg "${IMAGE}"/usr/share/man/man1/mesg.1
 
     # last and lastb are provided by util-linux
-    edo rm "${IMAGE}"/usr/bin/last{,b} "${IMAGE}"/usr/share/man/man1/last{,b}.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/last{,b} "${IMAGE}"/usr/share/man/man1/last{,b}.1
 
     edo find "${IMAGE}" -type d -empty -delete
+
 }
 
 pkg_postinst() {
