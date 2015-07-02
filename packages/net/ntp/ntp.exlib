@@ -20,7 +20,7 @@ Positioning Service (GPS) receiver, for example.
 HOMEPAGE="http://www.${PN}.org/"
 DOWNLOADS="
     http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}$(ever major)/${PN}-${PV:0:3}/${MY_PNV}.tar.gz
-    mirror://gentoo/${MY_PNV}-manpages.tar.bz2
+    http://dev.exherbo.org/~tanderson/${MY_PNV}-manpages.tar.bz2
 "
 
 UPSTREAM_RELEASE_NOTES="http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS"
