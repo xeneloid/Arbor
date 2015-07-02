@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require alternatives
 
 SUMMARY="Utilities for process information including ps, top and kill"
 HOMEPAGE="https://gitlab.com/procps-ng/procps"
@@ -79,5 +80,13 @@ src_install() {
     expart documentation /usr/share/{doc,man}
     expart libraries /usr/$(exhost --target)/lib
     expart development /usr/$(exhost --target)/{include,lib/pkgconfig}
-}
 
+    if option parts:binaries;then
+        alternatives_for uptime ${PN} 100   \
+            /usr/$(exhost --target)/bin/uptime  uptime.${PN}
+    fi
+    if option parts:documentation;then
+        alternatives_for uptime ${PN} 100   \
+            /usr/share/man/man1/uptime.1        uptime.${PN}.1
+    fi
+}
