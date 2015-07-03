@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://git.gnome.org/browse/glib-networking/commit/?h=f395185318a70e2f3cd4d76aff1ec58644b8c0b3
+
 From f395185318a70e2f3cd4d76aff1ec58644b8c0b3 Mon Sep 17 00:00:00 2001
 From: Michael Catanzaro <mcatanzaro@gnome.org>
 Date: Tue, 9 Dec 2014 20:08:32 +0100
