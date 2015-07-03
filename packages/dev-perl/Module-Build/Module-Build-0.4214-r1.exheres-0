@@ -8,6 +8,10 @@ SUMMARY="Build and install Perl modules"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
+DEPENDENCIES="
+    build+run:
+        dev-perl/CPAN-Meta[>=2.142060]
+"
 
 src_install() {
     perl-module_src_install
