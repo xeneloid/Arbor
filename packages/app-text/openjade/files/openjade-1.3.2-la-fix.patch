@@ -1,3 +1,5 @@
+Upstream: unknown
+
 --- jade/Makefile.sub.orig	2002-11-15 23:46:50.000000000 +0100
 +++ jade/Makefile.sub	2006-04-30 19:48:30.000000000 +0200
 @@ -4,7 +4,8 @@
