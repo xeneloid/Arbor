@@ -1,4 +1,5 @@
-Source: Gentoo
+Upstream: no
+Source: https://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/dev-libs/pth/files/pth-2.0.5-parallelfix.patch
 Reason: Make `make all` parallel build safe.
 
 --- Makefile.in.orig	2005-11-08 05:58:55.000000000 +1100

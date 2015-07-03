@@ -1,4 +1,5 @@
-Source: Gentoo bug 131234
+Upstream: no
+Source: https://bugs.gentoo.org/show_bug.cgi?id=131234
 Reason: dev-libs/pth hangs checking for sigaltstack
 
 diff -urNp pth-2.0.6.old/aclocal.m4 pth-2.0.6/aclocal.m4

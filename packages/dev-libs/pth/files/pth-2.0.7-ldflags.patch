@@ -1,4 +1,5 @@
-Source: Nicked from Gentoo, bug 127916.
+Upstream: no
+Source: https://bugs.gentoo.org/127916
 Reason: Respect user's LDFLAGS.
 
 Index: pth-2.0.6/Makefile.in
