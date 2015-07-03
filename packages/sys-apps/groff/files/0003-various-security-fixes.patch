@@ -1,3 +1,6 @@
+Upstream: unknown
+Source: http://pkgs.fedoraproject.org/cgit/groff.git/tree/0003-various-security-fixes.patch
+
 From 8989e9e33080ed5a6e940bfbca3a4ef28b3264b5 Mon Sep 17 00:00:00 2001
 From: Jan Vcelak <jvcelak@redhat.com>
 Date: Tue, 1 Jan 2013 15:35:04 +0100
