@@ -1,3 +1,6 @@
+Upstream: no, Exherbo specific
+Reason: sydbox blacklists 127.0.0.1:80
+
 From 3563551b5f9d1d0be2feb461a4892159f4e9d888 Mon Sep 17 00:00:00 2001
 From: "Wulf C. Krueger" <philantrop@exherbo.org>
 Date: Fri, 30 Mar 2012 23:07:42 +0200
