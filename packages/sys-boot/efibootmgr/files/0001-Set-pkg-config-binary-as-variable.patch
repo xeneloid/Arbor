@@ -1,3 +1,6 @@
+Upstream: submitted for review
+Source: https://github.com/rhinstaller/efibootmgr/pull/37
+
 From 7dd88f975774cb379284a3de819232dcce3ca8fd Mon Sep 17 00:00:00 2001
 From: Timo Gurr <timo.gurr@gmail.com>
 Date: Tue, 30 Jun 2015 11:33:14 +0200
