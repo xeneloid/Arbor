@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=75adf430d2d7ee16eaf3166680de83b498444720
+
 From 75adf430d2d7ee16eaf3166680de83b498444720 Mon Sep 17 00:00:00 2001
 From: Evangelos Foutras <evangelos@foutrelis.com>
 Date: Tue, 10 Feb 2015 03:22:58 +0000

@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=49ca74fb26ce91b00de6df7bcae7ee2923f5f047
+
 From 49ca74fb26ce91b00de6df7bcae7ee2923f5f047 Mon Sep 17 00:00:00 2001
 From: Florian Weimer <fweimer@redhat.com>
 Date: Wed, 11 Jun 2014 23:12:52 +0200

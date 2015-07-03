@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://sourceware.org/git/gitweb.cgi?p=glibc.git;a=commit;h=95f5a9a866695da4e038aa4e6ccbbfd5d9cf63b7
+
 From e0e57680b6741ee5d8a33c17fdcc248763daa393 Mon Sep 17 00:00:00 2001
 From: Joseph Myers <joseph@codesourcery.com>
 Date: Tue, 3 Jul 2012 19:14:59 +0000
