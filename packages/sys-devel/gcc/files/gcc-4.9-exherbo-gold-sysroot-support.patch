@@ -1,3 +1,6 @@
+Upstream: no
+Reason: Causes breakage with gold linker without patch
+
 From 279a4f4da0274171b6e7cb924aa4a654fa89f917 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Fri, 3 Apr 2015 16:17:39 -0700
