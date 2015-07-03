@@ -1,6 +1,5 @@
-let the active locale work its magic
-
-http://bugs.gentoo.org/146315
+Upstream: unknown
+Source: http://bugs.gentoo.org/146315
 
 --- man-1.6f/configure
 +++ man-1.6f/configure
