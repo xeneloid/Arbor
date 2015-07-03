@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=be955b2984822e2a66176bccb3e0dbaf9cd569b6
+
 From be955b2984822e2a66176bccb3e0dbaf9cd569b6 Mon Sep 17 00:00:00 2001
 From: Dave Taht <dave.taht@bufferbloat.net>
 Date: Thu, 6 Nov 2014 08:10:14 -0800
