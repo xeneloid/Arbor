@@ -1,3 +1,6 @@
+Upstream: yes and merged
+Source: https://github.com/telmich/gpm/commit/01373f6fd5dd274116c8ec693245677dbf5390e6
+
 From 01373f6fd5dd274116c8ec693245677dbf5390e6 Mon Sep 17 00:00:00 2001
 From: Mike Frysinger <vapier@gentoo.org>
 Date: Sun, 28 Oct 2012 07:25:40 -0400
