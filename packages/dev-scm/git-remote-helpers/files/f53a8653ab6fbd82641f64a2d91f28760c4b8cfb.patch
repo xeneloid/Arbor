@@ -1,3 +1,5 @@
+Upstream: yes
+Source: https://github.com/felipec/git-remote-bzr/commit/f53a8653ab6fbd82641f64a2d91f28760c4b8cfb
 Reason: This commit is wrong for exherbo, we guarantee en_US.UTF-8, en_GB.UTF-8, but not C.UTF-8
         Thus we revert it with patch -R.
 
