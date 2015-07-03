@@ -56,7 +56,7 @@ index e9d65dc..72618f4 100644
 +#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/usr/armv7-unknown-linux-gnueabi/lib/ld-linux.so.3"
 +
 +#undef GLIBC_DYNAMIC_LINKER_HARD_FLOAT
-+#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-gnueabi/lib/ld-linux-armhf.so.3"
++#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-gnueabihf/lib/ld-linux-armhf.so.3"
 +
 diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
 index 1279cba..31937a2 100644
