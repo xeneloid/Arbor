@@ -17,17 +17,20 @@ pkg-config.
 "
 DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.bz2"
 
+CROSS_COMPILE_TARGETS="
+    arm-exherbo-linux-gnueabi
+    armv7-unknown-linux-gnueabi
+    armv7-unknown-linux-gnueabihf
+    i686-pc-linux-gnu
+    x86_64-pc-linux-gnu
+"
+
 LICENCES="as-is"
 SLOT="0"
 PLATFORMS="~amd64 ~armv7"
 MYOPTIONS="
-    ( targets:
-        arm-exherbo-linux-gnueabi
-        armv7-unknown-linux-gnueabi
-        armv7-unknown-linux-gnueabihf
-        i686-pc-linux-gnu
-        x86_64-pc-linux-gnu
-    )
+    targets:
+        ${CROSS_COMPILE_TARGETS}
 "
 
 DEPENDENCIES="
