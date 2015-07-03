@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://git.savannah.gnu.org/cgit/make.git/commit/?id=292da6f6867b75a5af7ddbb639a1feae022f438f
+
 From 292da6f6867b75a5af7ddbb639a1feae022f438f Mon Sep 17 00:00:00 2001
 From: Paul Smith <psmith@gnu.org>
 Date: Mon, 20 Oct 2014 05:54:56 +0000
