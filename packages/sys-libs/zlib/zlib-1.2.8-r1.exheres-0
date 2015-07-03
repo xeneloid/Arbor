@@ -4,7 +4,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 # TODO(compnerd) work out-of-tree builds
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
 
 SUMMARY="A free compression library unencumbered by patents"
 HOMEPAGE="http://www.zlib.net"
