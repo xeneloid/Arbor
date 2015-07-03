@@ -1,5 +1,6 @@
+Upstream: submitted
 Author: Richard Purdie
-Source: GCC Bugzilla (PR55930)
+Source: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55930
 -- 
 --- gcc-4.8.1.orig/libatomic/Makefile.am	2013-01-14 18:16:23.000000000 +0000
 +++ gcc-4.8.1.orig/libatomic/Makefile.am	2013-09-22 10:38:18.904064750 +0000
