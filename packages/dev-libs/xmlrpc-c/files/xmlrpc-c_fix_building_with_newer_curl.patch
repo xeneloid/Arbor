@@ -1,6 +1,7 @@
-# Source: written by Anders Ladegaard Marchsteiner <alm.anma@gmail.com>
-# Upstream: no, but solution found from this mailing list: http://mail-index.netbsd.org/current-users/2011/07/03/msg017003.html
-# Reason: To fix build with newer curl.
+Source: written by Anders Ladegaard Marchsteiner <alm.anma@gmail.com>
+Upstream: no, but solution found from this mailing list: http://mail-index.netbsd.org/current-users/2011/07/03/msg017003.html
+Reason: To fix build with newer curl.
+
 diff -Naur a/lib/curl_transport/xmlrpc_curl_transport.c b/lib/curl_transport/xmlrpc_curl_transport.c
 --- a/lib/curl_transport/xmlrpc_curl_transport.c	2011-12-03 21:56:02.622993493 +0000
 +++ b/lib/curl_transport/xmlrpc_curl_transport.c	2011-12-03 21:59:26.193979573 +0000
