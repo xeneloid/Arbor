@@ -55,36 +55,38 @@ alternatives_for() {
 
     while (( $# >= 2 )); do
         src=${1//+(\/)/\/}; target=${2//+(\/)/\/}
+        shift 2
         if [[ ${src} != /* ]]; then
             eerror "Source path must be absolute, but got ${src}"
             ((ret++))
+            continue
+        fi
 
-        else
-            local reltarget= dir=${ALTERNATIVES_DIR}/${alternative}/${provider}${src%/*}
-            while [[ -n ${dir} ]]; do
-                reltarget+=../
-                dir=${dir%/*}
-            done
+        local reltarget= dir=${ALTERNATIVES_DIR}/${alternative}/${provider}${src%/*}
+        while [[ -n ${dir} ]]; do
+            reltarget+=../
+            dir=${dir%/*}
+        done
 
-            reltarget=${reltarget%/}
-            [[ ${target} == /* ]] || reltarget+=${src%/*}/
-            reltarget+=${target}
-            dodir "${ALTERNATIVES_DIR}/${alternative}/${provider}${src%/*}"
-            dosym "${reltarget}" "${ALTERNATIVES_DIR}/${alternative}/${provider}${src}"
+        reltarget=${reltarget%/}
+        [[ ${target} == /* ]] || reltarget+=${src%/*}/
+        reltarget+=${target}
+        dodir "${ALTERNATIVES_DIR}/${alternative}/${provider}${src%/*}"
+        dosym "${reltarget}" "${ALTERNATIVES_DIR}/${alternative}/${provider}${src}"
 
-            # say ${IMAGE}/sbin/init exists and links to /bin/systemd (which doesn't exist yet)
-            # the -e test will fail, so check for -L also
-            if [[ -e ${IMAGE}${src} || -L ${IMAGE}${src} ]]; then
-                local fulltarget=${target}
-                [[ ${fulltarget} != /* ]] && fulltarget=${src%/*}/${fulltarget}
-                if [[ -e ${IMAGE}${fulltarget} || -L ${IMAGE}${fulltarget} ]]; then
-                    die "${src} defined as provider for ${fulltarget}, but both already exist in \${IMAGE}"
-                else
-                    edo mv "${IMAGE}${src}" "${IMAGE}${fulltarget}"
-                fi
+        # say ${IMAGE}/sbin/init exists and links to /bin/systemd (which doesn't exist yet)
+        # the -e test will fail, so check for -L also
+        if [[ -e ${IMAGE}${src} || -L ${IMAGE}${src} ]]; then
+            local fulltarget=${target}
+            [[ ${fulltarget} != /* ]] && fulltarget=${src%/*}/${fulltarget}
+            if [[ -e ${IMAGE}${fulltarget} || -L ${IMAGE}${fulltarget} ]]; then
+                eerror "${src} defined as provider for ${fulltarget}, but both already exist in \${IMAGE}"
+                ((ret++))
+                continue
+            else
+                edo mv "${IMAGE}${src}" "${IMAGE}${fulltarget}"
             fi
         fi
-        shift 2
     done
 
     [[ ${ret} -eq 0 ]] || die "Errors detected for ${provider}, provided for ${alternative}"
