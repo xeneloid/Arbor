@@ -1,3 +1,5 @@
+Upstream: no, Exherbo specific
+
 --- rpcbind-0.2.0/src/rpcbind.c
 +++ rpcbind-0.2.0/src/rpcbind.c
 @@ -93,7 +93,7 @@ char *rpcbinduser = NULL;
