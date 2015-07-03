@@ -1,3 +1,6 @@
+Upstream: submitted
+Source: https://github.com/doxygen/doxygen/pull/358
+
 From 379af51e874f86f4f5477e18fd1cf405fe6d8c85 Mon Sep 17 00:00:00 2001
 From: Adrian Negreanu <adrian.m.negreanu@intel.com>
 Date: Tue, 16 Jun 2015 14:50:21 +0300
