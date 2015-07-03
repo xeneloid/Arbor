@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://anonscm.debian.org/cgit/bash-completion/bash-completion.git/commit/?id=a9c556ccad819869a6a5d932aac0a75a99372f08
+
 From a9c556ccad819869a6a5d932aac0a75a99372f08 Mon Sep 17 00:00:00 2001
 From: Barry Warsaw <barry@python.org>
 Date: Wed, 17 Sep 2014 19:32:43 +0300
