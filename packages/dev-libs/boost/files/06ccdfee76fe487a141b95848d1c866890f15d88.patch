@@ -1,3 +1,6 @@
+Upstream: no
+Source: https://svn.boost.org/trac/boost/ticket/10100#comment:7
+
 From 06ccdfee76fe487a141b95848d1c866890f15d88 Mon Sep 17 00:00:00 2001
 From: Evangelos Foutras <evangelos@foutrelis.com>
 Date: Thu, 6 Nov 2014 09:19:26 +0200
@@ -7,7 +10,7 @@ boost::weak_ptr started being used in commit a0bf2d1 (Disconnect slots
 associated with signals2::trackable immediately) but the matching header
 wasn't included.
 
-https://svn.boost.org/trac/boost/ticket/10100#comment:7
+    https://svn.boost.org/trac/boost/ticket/10100#comment:7
 ---
  boost/signals2/trackable.hpp | 1 +
  1 file changed, 1 insertion(+)
