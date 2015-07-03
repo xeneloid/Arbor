@@ -1,3 +1,5 @@
+Upstream: yes
+
 diff -Naur quazip-0.7.1/CMakeLists.txt quazip-code-258-trunk/CMakeLists.txt
 --- quazip-0.7.1/CMakeLists.txt	2013-11-18 18:37:54.000000000 +0100
 +++ quazip-code-258-trunk/CMakeLists.txt	2015-02-06 16:45:25.000000000 +0100
