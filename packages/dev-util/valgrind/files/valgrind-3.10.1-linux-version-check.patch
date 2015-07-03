@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://repo.or.cz/w/valgrind.git/commit/1b6df6a3b42ed408aa97b50fec36959a926ee267
+
 From bf803555d10b5b4c9223b24bf13845ee88d8f3b5 Mon Sep 17 00:00:00 2001
 From: cborntra <cborntra@a5019735-40e9-0310-863c-91ae7b9d1cf9>
 Date: Mon, 23 Feb 2015 20:19:03 +0000
