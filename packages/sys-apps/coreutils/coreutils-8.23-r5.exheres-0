@@ -4,7 +4,7 @@
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ] coreutils
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 # random failures for some tests (with sydbox), at least:
 # test-fchownat test-fdutimensat test-getaddrinfo test-getlogin test-linkat test-symlinkat test-unlinkat test-utimensat
