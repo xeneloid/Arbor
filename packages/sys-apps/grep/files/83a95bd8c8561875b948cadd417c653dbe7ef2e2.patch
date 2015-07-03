@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://git.savannah.gnu.org/cgit/grep.git/commit/?id=83a95bd8c8561875b948cadd417c653dbe7ef2e2
+
 From 83a95bd8c8561875b948cadd417c653dbe7ef2e2 Mon Sep 17 00:00:00 2001
 From: Yuliy Pisetsky <ypisetsky@fb.com>
 Date: Thu, 01 Jan 2015 23:36:55 +0000
