@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://github.com/sofar/xorg-launch-helper/pull/4
+
 From f2e78889d729eacaf342d0957d486115a2d25b2f Mon Sep 17 00:00:00 2001
 From: Alex Richardson <arichardson.kde@googlemail.com>
 Date: Sun, 31 Mar 2013 21:31:56 +0200
