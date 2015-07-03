@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://repo.or.cz/w/libtar.git/commit/e4c1f2974258d6a325622cfd712873d49b5e7a73
+
 From e4c1f2974258d6a325622cfd712873d49b5e7a73 Mon Sep 17 00:00:00 2001
 From: Chris Frey <cdfrey@foursquare.net>
 Date: Thu, 24 Oct 2013 18:52:44 -0400

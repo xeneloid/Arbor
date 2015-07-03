@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://repo.or.cz/w/libtar.git/commit/ec613af2e9371d7a3e1f7c7a6822164a4255b4d1
+
 From ec613af2e9371d7a3e1f7c7a6822164a4255b4d1 Mon Sep 17 00:00:00 2001
 From: Kamil Dudka <kdudka@redhat.com>
 Date: Wed, 23 Oct 2013 15:04:22 +0200

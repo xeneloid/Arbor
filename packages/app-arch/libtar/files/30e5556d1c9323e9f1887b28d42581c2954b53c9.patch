@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://repo.or.cz/w/libtar.git/commit/30e5556d1c9323e9f1887b28d42581c2954b53c9
+
 From 30e5556d1c9323e9f1887b28d42581c2954b53c9 Mon Sep 17 00:00:00 2001
 From: Hans de Goede <j.w.r.degoede@hhs.nl>
 Date: Tue, 15 Oct 2013 14:39:04 +0200

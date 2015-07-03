@@ -1,3 +1,6 @@
+Upstream: yes
+Source: http://repo.or.cz/w/libtar.git/commit/f3c711cf3054ff366a1a3500cdc8c64ecc2d2da6
+
 From f3c711cf3054ff366a1a3500cdc8c64ecc2d2da6 Mon Sep 17 00:00:00 2001
 From: Huzaifa Sidhpurwala <huzaifas@fedoraproject.org>
 Date: Tue, 15 Oct 2013 20:05:04 -0400
