@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://github.com/rhinstaller/efivar/commit/054a52e338d460b4529b92fdd11aa07342d626ee
+
 From 054a52e338d460b4529b92fdd11aa07342d626ee Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Wed, 17 Jun 2015 13:16:56 -0400
