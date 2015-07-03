@@ -1,3 +1,6 @@
+Upstream: no
+Source: https://bugs.gentoo.org/show_bug.cgi?id=213759
+
 diff -Naurp ftjam-2.5.3rc2-orig/Jambase ftjam-2.5.3rc2/Jambase
 --- ftjam-2.5.3rc2-orig/Jambase	2007-06-05 08:20:19.000000000 -0600
 +++ ftjam-2.5.3rc2/Jambase	2008-07-21 19:26:02.000000000 -0600
