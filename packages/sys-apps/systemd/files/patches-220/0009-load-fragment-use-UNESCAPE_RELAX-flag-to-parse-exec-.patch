@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://github.com/systemd/systemd/commit/22874a348fb1540c1a2b7907748fc57c9756a7ed
+
 From 22874a348fb1540c1a2b7907748fc57c9756a7ed Mon Sep 17 00:00:00 2001
 From: Daniel Mack <daniel@zonque.org>
 Date: Mon, 1 Jun 2015 17:49:04 +0200
