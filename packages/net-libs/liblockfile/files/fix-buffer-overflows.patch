@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://bugs.launchpad.net/ubuntu/+source/liblockfile/+bug/1011477
+
 Description: Fix buffer overflows when building strings
  The first occurs in lockfile_create_save_tmplock() when building the
  filename for the temporary lock file. The p buffer may not be large enough to

@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=688074
+
 From: Yao Zhao <yao.zhao@windriver.com>
 Subject: [PATCH]liblockfile's nfslib compile
 
