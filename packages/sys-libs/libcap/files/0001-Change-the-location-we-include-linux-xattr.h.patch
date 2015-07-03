@@ -1,3 +1,6 @@
+Upstream: yes
+Source: https://git.kernel.org/cgit/linux/kernel/git/morgan/libcap.git/commit/?id=84fb6007dcc7f6b6da9f6dab77a487c22b6c7beb
+
 From 84fb6007dcc7f6b6da9f6dab77a487c22b6c7beb Mon Sep 17 00:00:00 2001
 From: Andrew G Morgan <morgan@kernel.org>
 Date: Sun, 9 Mar 2014 16:33:15 -0700
