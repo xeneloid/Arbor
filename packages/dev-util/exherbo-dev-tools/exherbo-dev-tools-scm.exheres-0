@@ -1,11 +1,11 @@
 # Copyright 2014-2015 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://git.exherbo.org/${PN}.git"
+SCM_REPOSITORY="https://git.exherbo.org/${PN}.git"
 require scm-git
 
 SUMMARY="Scripts, snippets or tools helpful for working on packages"
-HOMEPAGE="http://www.exherbo.org"
+HOMEPAGE="https://www.exherbo.org"
 
 LICENCES="GPL-2"
 SLOT="0"
