@@ -8,7 +8,7 @@ SUMMARY="Tar archiver"
 
 LICENCES="( GPL-3 ) [[ last-checked = 1.28 ]]"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="acl"
 
 DEPENDENCIES="
