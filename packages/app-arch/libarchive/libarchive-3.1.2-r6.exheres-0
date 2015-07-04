@@ -3,7 +3,7 @@
 
 require libarchive autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-Limit-write-requests-to-at-most-INT_MAX.patch
