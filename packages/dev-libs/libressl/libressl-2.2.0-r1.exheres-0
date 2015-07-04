@@ -29,7 +29,7 @@ SLOT="${LIBCRYPTO_SOVER}.${LIBSSL_SOVER}.${LIBTLS_SOVER}"
 # for a clean upgrade path from 2.2.0
 [[ "${SLOT}" == "33.32.3" ]] && SLOT="0"
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~armv7"
 MYOPTIONS=""
 
 DEPENDENCIES="
