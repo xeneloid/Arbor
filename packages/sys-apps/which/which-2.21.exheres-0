@@ -13,7 +13,7 @@ environment variable PATH using the same algorithm as bash.
 
 LICENCES="GPL-3"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
