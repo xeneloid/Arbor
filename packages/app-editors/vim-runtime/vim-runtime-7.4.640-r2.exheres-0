@@ -8,7 +8,7 @@ require vim
 SUMMARY="vim and gvim shared files"
 
 SLOT="${VIM_VERSION}"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEPENDENCIES+="
     build+run:
