@@ -10,7 +10,7 @@ DOWNLOADS="mirror://debian/pool/main/c/${PN}/${PN}_${PV}_all.deb"
 
 LICENCES="GPL-2 MPL-2.0"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
