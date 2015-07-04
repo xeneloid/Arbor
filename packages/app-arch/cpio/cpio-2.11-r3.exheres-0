@@ -9,7 +9,7 @@ SUMMARY="Archive manager for cpio archives"
 
 LICENCES="( GPL-3 ) [[ last-checked = 2.11 ]]"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
