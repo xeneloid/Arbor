@@ -5,7 +5,7 @@ require dwz
 
 LICENCES="GPL-3"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEFAULT_SRC_COMPILE_PARAMS=( CFLAGS="${CFLAGS}" )
