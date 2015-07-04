@@ -9,7 +9,7 @@ perl_cross=0.9.6
 
 require perl-5 [ Module_Build_pv=0.4003 cross_perl_ver=[ ${perl_cross} ] ]
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     -p1 "${FILES}"/${PNV}-${perl_cross}-use-LD-instead-of-CC-in-direct-library-test.patch
