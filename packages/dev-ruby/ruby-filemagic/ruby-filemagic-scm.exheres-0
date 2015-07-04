@@ -1,12 +1,9 @@
 # Copyright 2010 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-SCM_REPOSITORY="git://github.com/ricardochimal/ruby-filemagic.git"
-
-require scm-git
+require github [ user=ricardochimal ]
 
 SUMMARY="Ruby FileMagic Library Bindings"
-HOMEPAGE="https://github.com/ricardochimal/${PN}"
 
 LICENCES="as-is"
 SLOT="0"
