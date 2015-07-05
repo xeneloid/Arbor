@@ -37,7 +37,7 @@ DEPENDENCIES="
         smartcard? ( dev-libs/libusb:0.1 )
     recommendation:
         app-crypt/pinentry [[ description = [
-            Provides GTK+, QT, and ncurses password prompts
+            Provides GTK+, Qt, and ncurses password prompts
         ] ]]
         smartcard? ( sys-apps/pcsc-lite ) [[ description = [
             Provides the default pcsc library for accessing smartcards
