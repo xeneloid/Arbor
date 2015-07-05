@@ -70,6 +70,13 @@ boost_src_configure() {
         --with-toolset=cross
     )
 
+    # Work around Qt4's moc failing to do proper macro substitution. We can
+    # drop this when we remove Qt4 because Qt5 implemented it. See
+    # https://bugreports.qt.io/browse/QTBUG-22829 for details.
+    edo sed -e '1 i#ifndef Q_MOC_RUN' \
+            -e '$ a#endif' \
+            -i boost/type_traits/detail/has_binary_operator.hpp
+
     # Patch the patch to use the right compiler
     edo sed -e "s:x86_64-pc-linux-gnu-\(.*\):$(exhost --target)-\1:g" \
             -i tools/build/src/engine/build.jam \
