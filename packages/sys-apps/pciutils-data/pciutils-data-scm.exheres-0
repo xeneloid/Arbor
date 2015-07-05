@@ -1,28 +1,29 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="PCI ID data pciutils"
-HOMEPAGE="http://pci-ids.ucw.cz/"
+HOMEPAGE="https://pci-ids.ucw.cz/"
 DOWNLOADS=""
 
-LICENCES="GPL-2"
+LICENCES="|| ( BSD-3 GPL-2 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="
-    build:
-        net-misc/wget
-"
+DEPENDENCIES=""
 
 WORK="${WORKBASE}"
 
 src_fetch_extra() {
-    edo wget -O "${FETCHEDDIR}"/pci.ids http://pci-ids.ucw.cz/v2.2/pci.ids
+    for path in ${PALUDIS_FETCHERS_DIRS[@]};do
+        export PATH="${PATH}:${path}"
+    done
+    dohttps ${HOMEPAGE}/v2.2/pci.ids "${FETCHEDDIR}"/pci.ids
 }
 
 src_unpack() {
-    cp "${FETCHEDDIR}"/pci.ids .
+    edo cp "${FETCHEDDIR}"/pci.ids .
     [[ -s pci.ids ]] || die "pci.ids is not usable"
 }
 
