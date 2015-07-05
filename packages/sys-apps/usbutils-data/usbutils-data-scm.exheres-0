@@ -1,29 +1,30 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="USB ID data for usbutils"
 HOMEPAGE="http://www.linux-usb.org"
 DOWNLOADS=""
 
-LICENCES="GPL-2"
+LICENCES="|| ( BSD-3 GPL-2 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="
-    build:
-        net-misc/wget
-"
+DEPENDENCIES=""
 
 WORK="${WORKBASE}"
 
 src_fetch_extra() {
-    edo wget -O "${FETCHEDDIR}"/usb.ids http://www.linux-usb.org/usb.ids
+    for path in ${PALUDIS_FETCHERS_DIRS[@]};do
+        export PATH="${PATH}:${path}"
+    done
+    dohttps https://usb-ids.gowdy.us/usb.ids "${FETCHEDDIR}"/usb.ids
 }
 
 src_unpack() {
-    cp "${FETCHEDDIR}"/usb.ids .
-    [[ -s usb.ids ]] || die "usb.ids is not usuable"
+    edo cp "${FETCHEDDIR}"/usb.ids .
+    [[ -s usb.ids ]] || die "usb.ids is not usable"
 }
 
 src_install() {
