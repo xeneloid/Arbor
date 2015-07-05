@@ -49,6 +49,7 @@ MYOPTIONS="
     journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
     kdbus [[ description = [ Use the kernel D-Bus implementation by default ] ]]
     lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
+    nat [[ description = [ Enable minimal firewall support for NAT ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
@@ -103,6 +104,7 @@ DEPENDENCIES="
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
         journal-push? ( net-misc/curl )
         lz4? ( app-arch/lz4 )
+        nat? ( net-firewall/iptables )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
         seccomp? ( sys-libs/libseccomp[>=1.0.0] )
@@ -282,7 +284,6 @@ systemd_src_configure() {
         --disable-audit
         --disable-apparmor
         --disable-ima
-        --disable-libiptc
         --disable-selinux
         --disable-smack
         --disable-terminal
@@ -309,6 +310,7 @@ systemd_src_configure() {
         $(option_enable journal-push libcurl)
         $(option_enable kdbus)
         $(option_enable lz4)
+        $(option_enable nat libiptc)
         $(option_enable polkit)
         $(option_enable python python-devel)
         $(option_enable qrencode)
