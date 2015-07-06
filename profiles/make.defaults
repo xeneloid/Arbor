@@ -8,8 +8,6 @@ CONFIG_PROTECT_MASK="/etc/env.d /etc/xdg"
 # module that doesn't already have suitable bytecode written
 PYTHONDONTWRITEBYTECODE=1
 
-CROSS_COMPILE_TARGETS="arm-exherbo-linux-gnueabi armv7-unknown-linux-gnueabi i686-pc-linux-gnu x86_64-pc-linux-gnu"
-
 MULTIBUILD_CLASSES="LUA_ABIS PYTHON_ABIS"
 
 CROSS_COMPILE_TOOLS="AR:ar AS:as CC:gcc CPP:cpp CXX:g++ FORTRAN:gfortran LD:ld NM:nm OBJCOPY:objcopy OBJDUMP:objdump PKG_CONFIG:pkg-config RANLIB:ranlib"
