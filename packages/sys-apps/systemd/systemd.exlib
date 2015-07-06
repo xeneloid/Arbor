@@ -13,14 +13,19 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.
 
 export_exlib_phases pkg_pretend pkg_setup src_prepare src_configure src_test src_install pkg_postinst
 
-SUMMARY="${PN} is a(n) (init) system and session manager for Linux"
+SUMMARY="${PN} System and Service Manager"
 DESCRIPTION="
-${PN} is a(n) (init) system and session manager for Linux. It provides aggressive
-parallelization capabilities, uses socket and D-Bus activation for starting services,
-offers on-demand starting of daemons, keeps track of processes using Linux cgroups,
-supports snapshotting and restoring of the system state, maintains mount and
-automount points and implements an elaborate transactional dependency-based service
-control logic.
+systemd is a suite of basic building blocks for a Linux system. It provides a system
+and service manager that runs as PID 1 and starts the rest of the system. systemd
+provides aggressive parallelization capabilities, uses socket and D-Bus activation
+for starting services, offers on-demand starting of daemons, keeps track of processes
+using Linux control groups, supports snapshotting and restoring of the system state,
+maintains mount and automount points and implements an elaborate transactional
+dependency-based service control logic. Other parts include a logging daemon, utilities
+to control basic system configuration like the hostname, date, locale, maintain a
+list of logged-in users and running containers and virtual machines, system accounts,
+runtime directories and settings, and daemons to manage simple network configuration,
+network time synchronization, log forwarding, and name resolution.
 SysVinit compatibility is deactivated in our package because we don't want it nor
 do we support it.
 "
