@@ -201,8 +201,7 @@ cups_src_test() {
 }
 
 #cups_src_test_expensive() {
-#    if option multibuild_c:"${MULTIBUILD_C_DEFAULT_TARGET}" ; then
-#        edo cd "${WORKBASE}/C/${MULTIBUILD_C_DEFAULT_TARGET}/${PNV}"
+#    if exhost --is-native ; then
 #        # 4 = comprehensive testsuite
 #        emake test
 #        edo cd test
