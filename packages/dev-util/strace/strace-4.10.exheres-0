@@ -16,7 +16,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/files/${PN}/${PV}/README-${PV}.txt/view"
 REMOTE_IDS="freecode:${PN}"
 
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
