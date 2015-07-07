@@ -93,6 +93,7 @@ git-remote-helpers_src_prepare() {
         fi
         if option mercurial; then
             edo mv git-remote-hg-${PV} git-remote-hg
+            expatch -dgit-remote-hg "${FILES}"/0001-Fix-compatibility-with-Mercurial-3.2-${PV}.patch
 
             # Broken tests (last checked: 0.2)
             edo sed -i -e "s:\(test_expect_\)success \('light tag sets author'\):\1failure \2:" git-remote-hg/test/main.t

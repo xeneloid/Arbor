@@ -1,0 +1,57 @@
+Upstream: being reviewed
+Source: https://github.com/felipec/git-remote-hg/pull/28
+
+From f58458c451fecfa36e3c66164d7bd2e2c7e60da6 Mon Sep 17 00:00:00 2001
+From: Max Horn <max@quendi.de>
+Date: Sun, 9 Nov 2014 16:18:24 +0100
+Subject: [PATCH] Fix compatibility with Mercurial 3.2
+
+---
+ git-remote-hg | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/git-remote-hg b/git-remote-hg
+index 39923d0..a05ba0e 100755
+--- a/git-remote-hg
++++ b/git-remote-hg
+@@ -426,7 +426,12 @@ def get_repo(url, alias):
+             peer = hg.peer(repo.ui, {}, url)
+         except:
+             die('Repository error')
+-        repo.pull(peer, heads=None, force=True)
++
++        if check_version(3, 2):
++            from mercurial import exchange
++            exchange.pull(repo, peer, heads=None, force=True)
++        else:
++            repo.pull(peer, heads=None, force=True)
+ 
+         updatebookmarks(repo, peer)
+ 
+@@ -799,7 +804,11 @@ def parse_commit(parser):
+     def getfilectx(repo, memctx, f):
+         of = files[f]
+         if 'deleted' in of:
+-            raise IOError
++            # the file is not available anymore - was deleted
++            if check_version(3, 2):
++                return None
++            else:
++                raise IOError
+         if 'ctx' in of:
+             return of['ctx']
+         is_exec = of['mode'] == 'x'
+@@ -1025,7 +1034,9 @@ def push_unsafe(repo, remote, parsed_refs, p_revs):
+     if not checkheads(repo, remote, p_revs):
+         return None
+ 
+-    if check_version(3, 0):
++    if check_version(3, 2):
++        cg = changegroup.getchangegroup(repo, 'push', heads=list(p_revs), common=common)
++    elif check_version(3, 0):
+         cg = changegroup.getbundle(repo, 'push', heads=list(p_revs), common=common)
+     else:
+         cg = repo.getbundle('push', heads=list(p_revs), common=common)
+-- 
+2.4.5
+
