@@ -10,7 +10,7 @@ else
     myexparam ports_uri=""
 fi
 
-require multibuild flag-o-matic systemd-service [ systemd_files=[ nscd.service ] ] kernel
+require flag-o-matic systemd-service [ systemd_files=[ nscd.service ] ] kernel
 require toolchain-funcs
 
 export_exlib_phases pkg_pretend pkg_setup src_unpack src_prepare src_configure src_install pkg_preinst pkg_postinst
