@@ -64,12 +64,6 @@ MYOPTIONS="
     ( linguas: ${LANGUAGES[@]} )
 "
 
-if ! ever at_least 221 ; then
-    MYOPTIONS+="
-        gtk-doc
-    "
-fi
-
 DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
@@ -103,6 +97,7 @@ DEPENDENCIES="
         ]]
         acl? ( sys-apps/acl )
         cryptsetup? ( sys-fs/cryptsetup[>=1.6.0] )
+        efi? ( sys-boot/gnu-efi )
         gcrypt? ( dev-libs/libgcrypt )
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
         idn? ( net-dns/libidn )
@@ -140,27 +135,6 @@ DEPENDENCIES="
         sys-apps/kexec-tools [[ description = [ Support for systemctl kexec - booting a kernel immediately, skipping the BIOS ] ]]
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
 "
-
-if ever at_least 221 ; then
-    DEPENDENCIES+="
-        build+run:
-            efi? ( sys-boot/gnu-efi )
-    "
-else
-    DEPENDENCIES+="
-        suggestion:
-            efi? (
-                sys-boot/gummiboot [[
-                    note = [ Systemd can receive performance data and other information from supported bootloaders ]
-                    url  = [ http://www.freedesktop.org/wiki/Software/systemd/BootLoaderInterface ]
-                ]]
-            )
-            gtk-doc? (
-                app-doc/gtk-doc-autotools[>=1.18]
-                dev-libs/libxslt
-            )
-    "
-fi
 
 AT_M4DIR=( m4 )
 
@@ -200,14 +174,6 @@ systemd_pkg_setup() {
 systemd_src_prepare() {
     if [[ -d ${FILES}/patches-${PV} ]]; then
         expatch -p1 "${FILES}"/patches-${PV}
-    fi
-
-    if ! ever at_least 221 ; then
-        if option gtk-doc ; then
-            edo gtkdocize --copy --docdir docs/
-        else
-            edo echo 'EXTRA_DIST =' > docs/gtk-doc.make
-        fi
     fi
 
     if ! option gcrypt ; then
@@ -308,6 +274,7 @@ systemd_src_configure() {
         $(option_enable bootchart)
         $(option_enable cryptsetup libcryptsetup)
         $(option_enable efi)
+        $(option_enable efi gnuefi)
         $(option_enable gcrypt)
         $(option_enable gnutls)
         $(option_enable idn libidn)
@@ -326,19 +293,6 @@ systemd_src_configure() {
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
-
-    if ever at_least 221 ; then
-        myconfig+=(
-            $(option_enable efi gnuefi)
-        )
-    else
-        myconfig+=(
-            --disable-gudev
-            $(option_enable gtk-doc)
-        )
-        # src/boot/efi is missing from 220 tarball
-        myconfig+=( --disable-gnuefi )
-    fi
 
     econf "${myconfig[@]}"
 }
