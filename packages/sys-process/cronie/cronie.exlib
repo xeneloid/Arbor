@@ -73,7 +73,7 @@ cronie_src_install() {
     option baselayout && newinitd "${FILES}"/cronie.bl1 cronie
 
     install_systemd_files
-    option systemd && doconfd "${FILES}"/systemd/cronie.conf
+    doconfd "${FILES}"/systemd/cronie.conf
 
     # alternatives
     local alternatives=(
