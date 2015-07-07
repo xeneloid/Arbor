@@ -4,7 +4,7 @@
 
 export_exlib_phases src_test
 
-SUMMARY="Sydbox the other sandbox"
+SUMMARY="Sydbox, the other sandbox"
 DESCRIPTION="Sydbox is a ptrace based sandbox for Linux."
 ever is_scm || DOWNLOADS="https://dev.exherbo.org/~alip/${PN}/${PNV}.tar.bz2"
 
