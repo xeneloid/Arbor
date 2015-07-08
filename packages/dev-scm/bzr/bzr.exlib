@@ -72,7 +72,18 @@ bzr_src_test_expensive() {
 
     # Some tests expect the usual pyc compiling behaviour.
     python_enable_pyc
-    edo "${PYTHON}" bzr --no-plugins selftest
+    LC_ALL=C edo "${PYTHON}" bzr --no-plugins selftest \
+        -x blackbox \
+        -x per_transport \
+        -x test_config \
+        -x test_email_message \
+        -x test_http \
+        -x test_osutils.TestWin32Funcs \
+        -x test_selftest.TestActuallyStartBzrSubprocess \
+        -x test_smart_transport.TestSmartTCPServer \
+        -x test_transport.TestSSHConnections \
+        -x test_transport.TestWin32LocalTransport \
+        -x test_urlutils.TestUrlToPath
     # Just to make sure we don't hit any errors on later stages.
     python_disable_pyc
 
