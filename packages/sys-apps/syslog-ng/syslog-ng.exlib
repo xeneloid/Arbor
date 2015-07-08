@@ -1,11 +1,11 @@
-# Copyright 2007 Bryan Østergaard
-# Copyright 2009-2011 Wulf C. Krueger
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2009-2011 Wulf C. Krueger <philantrop@exherbo.org>
 # Copyright 2011,2013 Alex Elsayed <eternaleye@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'syslog-ng-2.0.9.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require systemd-service
+require systemd-service [ systemd_files=[ contrib/systemd/syslog-ng.service ] ]
 
 export_exlib_phases src_install pkg_postinst
 
@@ -17,12 +17,18 @@ REMOTE_IDS="freecode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout caps pcre systemd tcpd vim-syntax
+MYOPTIONS="
     amqp    [[ description = [ Output logs over AMQP ] ]]
+    baselayout
+    caps
     json    [[ description = [ Ingest and produce json-formatted log data ] ]]
     mongodb [[ description = [ Write logs to a mongodb instance ] ]]
+    pcre
     sql     [[ description = [ Write logs to an SQL server ] ]]
     smtp    [[ description = [ Send mail as part of the logging pipeline ] ]]
+    systemd
+    tcpd
+    vim-syntax
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 RESTRICT="test"
