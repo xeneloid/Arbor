@@ -1,4 +1,4 @@
-# Copyright 2007 Bryan Østergaard
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Copyright 2010-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -13,7 +13,7 @@ for which other DHCP clients require third party tools.
 "
 BASE_URI="http://roy.marples.name"
 HOMEPAGE="${BASE_URI}/projects/${PN}"
-DOWNLOADS="${BASE_URI}/downloads/${PN}/${PNV}.tar.bz2"
+DOWNLOADS="${BASE_URI}/downloads/${PN}/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
