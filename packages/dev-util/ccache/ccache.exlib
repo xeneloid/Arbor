@@ -1,4 +1,4 @@
-# Copyright 2008 Bo Ørsted Andresen
+# Copyright 2008 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Inspired from Gentoo's ccache-2.4-r7.ebuild which is:
 #   Copyright 1999-2008 Gentoo Foundation
@@ -6,8 +6,8 @@
 MY_PNV=${PNV/_pre/pre}
 
 SUMMARY="Compiler cache"
-HOMEPAGE="http://${PN}.samba.org"
-DOWNLOADS="http://samba.org/ftp/${PN}/${MY_PNV}.tar.xz"
+HOMEPAGE="https://${PN}.samba.org"
+DOWNLOADS="https://samba.org/ftp/${PN}/${MY_PNV}.tar.xz"
 
 MY_PV=$(ever replace_all _)
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/releasenotes.html#_${PN}_${MY_PV%_0}"
@@ -22,3 +22,4 @@ DEPENDENCIES="
 "
 
 WORK=${WORKBASE}/${MY_PNV}
+
