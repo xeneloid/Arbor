@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service [ systemd_files=[ dhcpd.service ] ] \
-        autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
+        autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.12 ] ]
 
 export_exlib_phases src_prepare src_install pkg_postinst
 
