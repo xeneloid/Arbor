@@ -1,0 +1,33 @@
+From cc85d56245a21e458dbc955fbf94fa9b3bfb9e33 Mon Sep 17 00:00:00 2001
+From: David Herrmann <dh.herrmann@gmail.com>
+Date: Fri, 10 Jul 2015 14:53:08 +0200
+Subject: [PATCH] logind: allow greeters to take over VTs
+
+Make sure a greeter can forcefully spawn a session on a VT that is
+in-use. A recent patch prevented this (this used to be possible for all
+session types) as it is highly fragile. However, as it turns out,
+greeters seem to rely on that feature. Therefore, make sure we allow it
+explicitly for greeters.
+---
+ src/login/logind-dbus.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/login/logind-dbus.c b/src/login/logind-dbus.c
+index cd9cab7..ca435df 100644
+--- a/src/login/logind-dbus.c
++++ b/src/login/logind-dbus.c
+@@ -699,9 +699,12 @@ static int method_create_session(sd_bus_message *message, void *userdata, sd_bus
+          * after the user-session and want the user-session to take
+          * over the VT. We need to support this for
+          * backwards-compatibility, so make sure we allow new sessions
+-         * on a VT that a greeter is running on.
++         * on a VT that a greeter is running on. Furthermore, to allow
++         * re-logins, we have to allow a greeter to take over a used VT for
++         * the exact same reasons.
+          */
+-        if (vtnr > 0 &&
++        if (c != SESSION_GREETER &&
++            vtnr > 0 &&
+             vtnr < m->seat0->position_count &&
+             m->seat0->positions[vtnr] &&
+             m->seat0->positions[vtnr]->class != SESSION_GREETER)
