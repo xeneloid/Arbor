@@ -1,4 +1,4 @@
-# Copyright 2007 Bryan Østergaard
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Small utility displaying info about file formats"
@@ -17,6 +17,7 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAINT PORTING )
 
 src_install() {
     default
+
     edo rmdir "${IMAGE}"/usr/share/man/man5
 
     expart binaries /usr/$(exhost --target)/bin
