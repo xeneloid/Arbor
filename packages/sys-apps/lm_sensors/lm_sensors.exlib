@@ -18,7 +18,7 @@ utilities to acquire data on the environmental conditions of the hardware. ${PN}
 also provides a user-space access library and a sample text-oriented utility built
 on top of said library to display sensor data.
 "
-HOMEPAGE="http://www.lm-sensors.org/"
+HOMEPAGE="http://www.lm-sensors.org"
 DOWNLOADS="http://dl.lm-sensors.org/lm-sensors/releases/${PNV}.tar.bz2"
 
 BUGS_TO="philantrop@exherbo.org"
@@ -38,7 +38,7 @@ DEPENDENCIES="
         dev-lang/perl:*
 "
 
-DEFAULT_SRC_COMPILE_PARAMS=( AR=${AR} CC="${CC}" )
+DEFAULT_SRC_COMPILE_PARAMS=( AR="${AR}" CC="${CC}" )
 
 DEFAULT_SRC_INSTALL_PARAMS=(
     PREFIX=/usr/$(exhost --target)
@@ -64,7 +64,6 @@ lm_sensors_src_prepare() {
     fi
 
     edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/lm_sensors.service
-    edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/lm_sensors:/etc/conf.d/lm_sensors.conf:' -i "${WORK}"/prog/init/fancontrol.service
     edo sed -e '/EnvironmentFile=/s:/etc/sysconfig/sensord:/etc/conf.d/sensord.conf:' -i "${WORK}"/prog/init/sensord.service
     edo sed -e 's:\(/etc/conf.d/lm_sensors\):\1.conf:g' -i "${WORK}"/prog/detect/sensors-detect
 }
