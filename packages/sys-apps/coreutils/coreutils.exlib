@@ -1,5 +1,5 @@
-# Copyright 2007-2009 Bryan Østergaard
-# Copyright 2009 Ingmar Vanhassel
+# Copyright 2007-2009 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
@@ -15,14 +15,17 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="GPL-3"
 SLOT="0"
-MYOPTIONS="acl caps gmp xattr
+MYOPTIONS="
+    acl
+    caps
     gmp [[ description = [ The utilities time, factor and expr support arbitrarily large numbers ] ]]
+    xattr
 "
 
 DEPENDENCIES="
     build:
         dev-lang/perl:* [[ description = [ needed by help2man & colour stuff ] ]]
-        sys-devel/gettext[>=0.18.1]
+        sys-devel/gettext[>=0.19.2]
     build+run:
         acl? ( sys-apps/acl )
         caps? ( sys-libs/libcap )
@@ -40,12 +43,6 @@ DEPENDENCIES="
         sys-apps/sydbox[>=0.6.8] [[ note = [ tests fail with sydbox older than 0.6.8 ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Disable-tests-that-fail-with-sydbox.patch
-    "${FILES}"/0001-Disable-test-bind-and-test-connect-which-both-want-t.patch
-    "${FILES}"/b469fa044a81762a9eb0da92b4fb47467154c4f1.patch
-)
-
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     acl
     "caps libcap"
@@ -62,7 +59,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 AT_M4DIR=( m4 )
 
 coreutils_src_prepare() {
-    autotools_src_prepare
+    default
 
     # The help2man step loves to fail if done during cross-compiles and for chroots.
     # Don't try rebuilding the man pages which we pre-generate and put into a
