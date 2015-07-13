@@ -276,6 +276,8 @@ systemd_src_configure() {
         --with-sysvinit-path=""
         --with-sysvrcnd-path=""
         --with-tty-gid=5
+        # TODO: temp ntp servers, must be updated to the vendor pool when available
+        --with-ntp-servers="0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org"
         $(option_enable acl)
         $(option_enable bootchart)
         $(option_enable cryptsetup libcryptsetup)
@@ -585,6 +587,10 @@ systemd_pkg_postinst() {
         ewarn "to keep using those, you need to mask 80-net-setup-link.rules since systemd-209"
         ewarn "now. cf. http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/"
     fi
+
+    einfo "By default timesyncd uses {0..3}.pool.ntp.org servers. You can set closer"
+    einfo "servers by using continent pools. Check out"
+    einfo "http://support.ntp.org/bin/view/Servers/NTPPoolServers for more info"
 
     local cruft=(
         "${ROOT}"/etc/init.d/sysinit.bash
