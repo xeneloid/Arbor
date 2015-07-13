@@ -44,7 +44,7 @@ WORK="${WORKBASE}/${MY_PNV}/unix"
 RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    -p2 "${FILES}/${PNV}-fontconfig-underlinking.patch"
+    -p2 "${FILES}/${PNV}-pkg-config.patch"
 )
 
 src_configure() {
