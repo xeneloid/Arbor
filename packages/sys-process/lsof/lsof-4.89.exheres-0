@@ -1,4 +1,4 @@
-# Copyright 2007 Bo Ørsted Andresen
+# Copyright 2007 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV="${PNV/-/_}"
@@ -23,7 +23,7 @@ PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
 DEPENDENCIES=""
 
-# The tests are broken as of 4.88
+# The tests are broken, last checked: 4.89
 RESTRICT="test"
 
 WORK=${WORKBASE}/${MY_PNV}_src
