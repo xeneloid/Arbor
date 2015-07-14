@@ -35,7 +35,7 @@ MYOPTIONS=""
 DEPENDENCIES="
     build+run:
         !dev-libs/openssl [[
-            description = [ LibreSSL is a drop-in replacement for OpenSSL with same library name ]
+            description = [ LibreSSL is a fork of OpenSSL that provides the same libraries ]
             resolution = uninstall-blocked-after
         ]]
 "
