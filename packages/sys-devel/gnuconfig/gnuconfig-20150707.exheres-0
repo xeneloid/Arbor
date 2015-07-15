@@ -1,9 +1,9 @@
-# Copyright 2007 Bryan Østergaard
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="GNU config.guess and config.sub scripts"
 HOMEPAGE="https://savannah.gnu.org/projects/config"
-DOWNLOADS="https://dev.exherbo.org/~tgurr/distfiles/${PN}/${PNV}.tar.bz2"
+DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
 
 LICENCES="GPL-2"
 SLOT="0"
