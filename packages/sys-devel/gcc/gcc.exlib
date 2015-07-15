@@ -244,11 +244,11 @@ gcc_src_install() {
         edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV}"
         if [[ ${target} == ${CHOST} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
-            for tool in c++-${SLOT} cpp-${SLOT} g++-${SLOT} gcov-${SLOT} gfortran-${SLOT} ; do
+            for tool in cpp-${SLOT} gcov-${SLOT} ; do
                 edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
                 nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
-            for tool in gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} ; do
+            for tool in c++-${SLOT} g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
                 edo rm "${IMAGE}/usr/${CHOST}/bin/${tool}"
                 nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
             done
