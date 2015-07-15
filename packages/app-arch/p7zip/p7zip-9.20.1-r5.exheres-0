@@ -51,8 +51,8 @@ src_prepare() {
             -e "s:-m64 ::g" \
             -e "/^OPTFLAGS/s:-O::" \
             -e "/ALLFLAGS/s:-s ::" \
-            -e "s:^CC=[^ ]\+\? \(.*\):CC=$(exhost --tool-prefix)gcc ${CFLAGS} \1:" \
-            -e "s:^CXX=[^ ]\+\? \(.*\):CXX=$(exhost --tool-prefix)g++ ${CXXFLAGS} \1:" \
+            -e "s:^CC=[^ ]\+\? \(.*\):CC=$(exhost --tool-prefix)cc ${CFLAGS} \1:" \
+            -e "s:^CXX=[^ ]\+\? \(.*\):CXX=$(exhost --tool-prefix)c++ ${CXXFLAGS} \1:" \
             -i makefile.machine
 
     edo sed -i -e "/strip/d" install.sh
