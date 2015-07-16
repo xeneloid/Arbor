@@ -1,0 +1,37 @@
+Upstream: yes
+
+From 182247ea923895e6078a292c2a2754af222d1d27 Mon Sep 17 00:00:00 2001
+From: Johannes Nixdorf <mixi@exherbo.org>
+Date: Thu, 16 Jul 2015 12:49:53 +0200
+Subject: [PATCH] build-sys: use 'test -f' instead of AC_CHECK_FILE
+
+AC_CHECK_FILE fails when cross-compiling. It is intended to be used to
+check for files that are used at runtime during build time (e.g.
+/etc/passwd, /dev/*) [1]. For files which are only used at build time
+'test -f' is sufficient.
+
+[1]: https://lists.gnu.org/archive/html/autoconf/2000-10/msg00018.html
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a16ca63..7a10211 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1151,10 +1151,10 @@ AS_IF([test "x$enable_gnuefi" != "xno"], [
+         have_efi_lds=no
+         AC_ARG_WITH(efi-ldsdir,
+                 AS_HELP_STRING([--with-efi-ldsdir=PATH], [Path to EFI lds directory]),
+-                [EFI_LDS_DIR="$withval" && AC_CHECK_FILE([${EFI_LDS_DIR}/elf_${EFI_ARCH}_efi.lds],
++                [EFI_LDS_DIR="$withval" && AS_IF([test -f "${EFI_LDS_DIR}/elf_${EFI_ARCH}_efi.lds"],
+                         [have_efi_lds=yes])],
+                 [AS_FOR([DIR], [EFI_LDS_DIR], ["${EFI_LIB_DIR}/gnuefi" "${EFI_LIB_DIR}"],
+-                        [AC_CHECK_FILE([${EFI_LDS_DIR}/elf_${EFI_ARCH}_efi.lds],
++                        [AS_IF([test -f "${EFI_LDS_DIR}/elf_${EFI_ARCH}_efi.lds"],
+                                        [have_efi_lds=yes && break])])])
+         AS_IF([test "x$have_efi_lds" = xyes],
+               [AC_SUBST([EFI_LDS_DIR])],
+-- 
+2.5.0
+

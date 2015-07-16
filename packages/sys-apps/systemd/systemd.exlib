@@ -287,6 +287,8 @@ systemd_src_configure() {
         --disable-smack
         --with-certificate-root=/etc/ssl
         --with-debug-tty=/dev/tty9
+        --with-efi-includedir=/usr/$(exhost --target)/include
+        --with-efi-libdir=/usr/$(exhost --target)/lib
         --with-kbd-loadkeys=/bin/loadkeys
         --with-kbd-setfont=/bin/setfont
         --with-pamconfdir=/etc/pam.d
