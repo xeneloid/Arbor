@@ -1,0 +1,50 @@
+# Copyright 2013 Tod Jackson <tod.jackson@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+MYPNV="${PN}${PV}"
+WORK="${WORKBASE}/${MYPNV//./-}"
+
+SUMMARY="Classic text-based web browser"
+HOMEPAGE="http://lynx.isc.org"
+DOWNLOADS="${HOMEPAGE}/${MYPNV}/${MYPNV}.tar.gz"
+
+LICENCES="GPL-2"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        sys-libs/ncurses
+        providers:gnutls? ( dev-libs/gnutls )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-cgi-links
+    --enable-file-upload
+    --enable-ipv6
+    --enable-nls
+    --hates=docdir
+    --sysconfdir='/etc/lynx'
+    --with-pkg-config=$(type -fPp ${PKG_CONFIG})
+    --with-screen=ncursesw
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    'providers:gnutls gnutls'
+    '!providers:gnutls ssl'
+)
+
+src_prepare() {
+    edo intltoolize --force --automake --copy
+}
+
+src_install() {
+    default
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share/
+}
+
