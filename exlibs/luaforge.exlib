@@ -16,13 +16,7 @@ run:
     dev-lang/lua
 "
 
-export_exlib_phases src_prepare src_install
-
-luaforge_src_prepare() {
-    if [[ -f config ]] ; then
-        edo sed -i -e "s,/lib/,/${LIBDIR}/," config
-    fi
-}
+export_exlib_phases src_install
 
 luaforge_src_install() {
     emake PREFIX="${IMAGE}/usr" install
