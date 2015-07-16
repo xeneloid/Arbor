@@ -37,7 +37,7 @@
 #           but not both at the same time. If you want to build for 32 and 64 bit,
 #           you have to set multibuild=false here.
 #           Also, all of your python dependencies will have to be multibuild=false
-#           because they need to be installed to the ${LIBDIR} with the right bitness.
+#           because they need to be installed to the libdir with the right bitness.
 #
 #   multiunpack, work
 #     see easy-multibuild.exlib
