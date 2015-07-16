@@ -3,20 +3,3 @@
 
 require multibuild
 
-get_libdir() {
-    ewarn "get_libdir is deprecated"
-    [[ ${EXHERES_PHASE} == metadata || -n ${LIBDIR} ]] || die "LIBDIR is unset, invalid profile"
-    echo "${LIBDIR}"
-}
-
-get_all_libdirs() {
-    ewarn "get_all_libdirs is deprecated"
-
-    local target libdir
-    for target in ${MULTIBUILD_C_TARGETS} ; do
-        # libdir is a locked var, no need to use multibuild_get_all_var
-        libdir=MULTIBUILD_C_${target}_PROFILE_LIBDIR
-        echo ${!libdir}
-    done
-}
-
