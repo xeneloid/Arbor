@@ -1,4 +1,4 @@
-# Copyright 2008 Anders Ossowicki
+# Copyright 2008 Anders Ossowicki <arkanoid@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require perl-module [ module_author=SHLOMIF ]
@@ -11,6 +11,6 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        dev-perl/Module-Build
+        dev-perl/Module-Build[>=0.2808]
 "
 
