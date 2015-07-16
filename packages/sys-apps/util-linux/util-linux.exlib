@@ -28,10 +28,11 @@ MYOPTIONS="
     udev [[
         description = [ Enable udev support (*only* ever disable this to break a dependency cycle) ]
         note = [ Usually, we hard-enable udev. This option is *solely* to break
-                 a dep-cycle between systemd/udev->util-linux->systemd/udev.
+                 a dep-cycle between udev->util-linux->udev.
                  Do NOT introduce new udev options.
         ]
     ]]
+    udev? ( ( providers: eudev systemd ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -76,7 +77,10 @@ DEPENDENCIES="
         sys-libs/zlib
         session-management? ( x11-libs/libutempter )
         systemd? ( sys-apps/systemd )
-        udev? ( sys-apps/systemd )
+        udev? (
+            providers:eudev? ( sys-apps/eudev )
+            providers:systemd? ( sys-apps/systemd )
+        )
     test:
         sys-apps/bc
 "
