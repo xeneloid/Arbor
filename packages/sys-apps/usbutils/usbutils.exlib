@@ -13,14 +13,18 @@ DOWNLOADS="mirror://kernel/linux/utils/usb/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="python"
+MYOPTIONS="
+    python
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
         virtual/pkg-config[>=0.9.0]
     build+run:
-        sys-apps/systemd[>=196]
         virtual/usb:1
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd[>=196] )
     run:
         python? (
             dev-lang/python:2.7
