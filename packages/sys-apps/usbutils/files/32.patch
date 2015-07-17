@@ -1,0 +1,25 @@
+Source: https://github.com/gregkh/usbutils/pull/32
+Upstream: sent for review
+
+From 94dc1c48df559b8e7077497a7f47201e4987cfd7 Mon Sep 17 00:00:00 2001
+From: Kylie McClain <somasis@exherbo.org>
+Date: Thu, 16 Jul 2015 23:34:16 -0400
+Subject: [PATCH] Makefile: install pkgconfig file to arch-dependent location
+
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index bece3b3..67def60 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -48,7 +48,7 @@ lsusb.8: $(srcdir)/lsusb.8.in
+ usb-devices.1: $(srcdir)/usb-devices.1.in
+ 	sed 's|VERSION|$(VERSION)|g' $< >$@
+ 
+-pkgconfigdir = $(datarootdir)/pkgconfig
++pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = usbutils.pc
+ 
+ usbutils.pc: $(srcdir)/usbutils.pc.in
