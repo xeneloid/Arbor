@@ -22,6 +22,7 @@ DEPENDENCIES="
         dev-lang/perl:* [[ note = [ for ./vers_string script ] ]]
     build+run:
         net-directory/openldap[>=2.4.21]
+        sys-libs/pam
 "
 
 BUGS_TO="djc@djc.id.au"
@@ -30,7 +31,7 @@ DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/pam_ldap-185-vers_string.patch )
 
 src_configure() {
     econf \
-        --libdir=/${LIBDIR} \
+        --libdir=/usr/$(exhost --target)/lib \
         --with-ldap-lib=openldap \
         $(option_enable ssl)
 }
