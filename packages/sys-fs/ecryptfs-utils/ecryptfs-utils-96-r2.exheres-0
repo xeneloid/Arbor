@@ -78,12 +78,12 @@ src_install() {
     default
 
     # Empty directory install in case python is disabled.
-    find "${IMAGE}"/usr/${LIBDIR}/python* -type d -empty -delete
+    find "${IMAGE}"/usr/$(exhost --target)/lib/python* -type d -empty -delete
 }
 
 pkg_postinst() {
     elog "To use pam_ecryptfs.so to automount partitions on user login, do:"
-    elog "chmod u+s /sbin/mount.ecryptfs_private"
+    elog "chmod u+s /usr/$(exhost --target)/bin/mount.ecryptfs_private"
     elog "This exheres does not do it on behalf of you for good reason!"
 }
 
