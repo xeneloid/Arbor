@@ -14,6 +14,5 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     # TODO(sardemff7) Submit upstream
     "${FILES}"/0001-configure.ac-Use-PKG_CONFIG-everywhere.patch
     "${FILES}"/0002-configure.ac-Use-prefixed-AR.patch
-    "${FILES}"/922352bcfbd41912559919fc6bef1f89406881c7.patch
 )
 
