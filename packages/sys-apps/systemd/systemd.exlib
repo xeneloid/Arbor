@@ -211,8 +211,8 @@ systemd_src_prepare() {
     edo sed -i -e '/test-cap-list/s:test-cap-list:$(NULL):' Makefile.am
     edo sed -i -e '/sysv-generator-test.py/s:sysv-generator-test.py:$(NULL):' Makefile.am
     edo sed -i -e '/test-condition/s:test-condition:$(NULL):' Makefile.am
-    edo sed -i -e '/test-path/s:test-path :$(NULL):' Makefile.am
-    edo sed -i -e '/test-pty/s:test-pty :$(NULL):' Makefile.am
+    edo sed -i -e '/test-path/s:test-path[^ ]*:$(NULL):' Makefile.am
+    edo sed -i -e '/test-pty/s:test-pty[^ ]*:$(NULL):' Makefile.am
     edo sed -i -e '/test\/$(NULL) \\/d' Makefile.am
 
     edo intltoolize --force --automake
