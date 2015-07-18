@@ -1,12 +1,11 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
+require gitlab [ user=procps-ng tag=v${PV} ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 require alternatives
 
 SUMMARY="Utilities for process information including ps, top and kill"
-HOMEPAGE="https://gitlab.com/procps-ng/procps"
-DOWNLOADS="${HOMEPAGE}/repository/archive.tar.bz2?ref=v${PV} -> ${PNV}.tar.bz2"
 
 LICENCES="GPL-2 LGPL-2"
 SLOT="0"
@@ -54,8 +53,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( systemd )
 
 AT_M4DIR=( m4 )
-
-WORK=${WORKBASE}/${PN}.git
 
 src_prepare() {
     # misc/git-version-gen only works from a checkout, not a snapshot
