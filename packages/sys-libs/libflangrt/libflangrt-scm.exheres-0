@@ -2,10 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require github [ user='llvm-flang' ]
-require cmake
+require cmake [ api=2 ]
 
 SUMMARY="flang Fortran Runtime Library"
-HOMEPAGE="https://github.com/llvm-flang/libflangrt"
 
 LICENCES="UoI-NCSA"
 SLOT="0"
