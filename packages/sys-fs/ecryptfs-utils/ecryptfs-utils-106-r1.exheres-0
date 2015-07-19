@@ -17,6 +17,7 @@ MYOPTIONS="
     pkcs11  [[ description = [ Build pkcs11-helper key module ]
                requires    = [ openssl ]
             ]]
+    setuid  [[ description = [ Allow mount.ecryptfs_private to run as root, for auto-mounting of home on login ] ]]
     openssl? (
         ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
     )
@@ -79,11 +80,14 @@ src_install() {
 
     # Empty directory install in case python is disabled.
     find "${IMAGE}"/usr/$(exhost --target)/lib/python* -type d -empty -delete
+
+    option setuid && edo chmod 4755 "${IMAGE}"/usr/$(exhost --target)/bin/mount.ecryptfs_private
 }
 
 pkg_postinst() {
-    elog "To use pam_ecryptfs.so to automount partitions on user login, do:"
-    elog "chmod u+s /usr/$(exhost --target)/bin/mount.ecryptfs_private"
-    elog "This exheres does not do it on behalf of you for good reason!"
+    if option setuid;then
+        einfo "You should read /usr/share/doc/${PNVR}/README's PAM MODULE section"
+        einfo "if you wish to encrypt and auto-mount your home directory on login."
+    fi
 }
 
