@@ -28,7 +28,7 @@ REMOTE_IDS="freecode:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="jadetex [[ description = [ Install docbook2{dvi,pdf,ps} (requires jadetex) ] ]]"
 
 DEPENDENCIES="
