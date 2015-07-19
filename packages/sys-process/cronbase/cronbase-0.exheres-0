@@ -7,7 +7,7 @@ DOWNLOADS="https://dev.exherbo.org/~philantrop/distfiles/vixie-cron-4.1-exherbo-
 
 LICENCES="as-is"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
