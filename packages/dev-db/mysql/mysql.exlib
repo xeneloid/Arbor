@@ -102,6 +102,9 @@ mysql_pkg_pretend() {
 mysql_src_prepare() {
     default
 
+    # https://bugs.mysql.com/bug.php?id=72353
+    edo sed -i -e "s:\(LIBEVENT_LIBRAR\)IES:\1Y:" "${WORKBASE}"/${PNV}/cmake/libevent.cmake
+
     option sphinx && edo ln -s "${WORKBASE}"/sphinx-${SPHINX_PV}-release/mysqlse "${WORKBASE}"/${PNV}/storage/sphinx
 }
 
