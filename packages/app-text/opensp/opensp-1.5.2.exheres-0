@@ -14,7 +14,7 @@ SUMMARY="A free, object-oriented toolkit for SGML parsing and entity management"
 
 LICENCES="JamesClark"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="doc"
 
 DEPENDENCIES="
