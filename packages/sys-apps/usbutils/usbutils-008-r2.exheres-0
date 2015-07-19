@@ -5,7 +5,7 @@
 
 require usbutils
 
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/32.patch
