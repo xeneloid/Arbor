@@ -33,7 +33,7 @@ DEPENDENCIES="
 
 MYOPTIONS="gtk-doc"
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~armv7"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-blkid
