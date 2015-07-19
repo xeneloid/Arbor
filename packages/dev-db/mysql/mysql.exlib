@@ -38,6 +38,7 @@ MYOPTIONS="
     baselayout
     debug
     embedded-server [[ description = [ The embedded MySQL server library, a full-featured MySQL server that can be run inside a client application ] ]]
+    memcached [[ description = [ Enable using memcached for InnoDb tables (don't know it? Don't enable it.) ] ]]
     sphinx [[ description = [ Add the Sphinx Search Engine with fulltext search support (external engine) ] ]]
     tcpd
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
@@ -60,6 +61,8 @@ DEPENDENCIES="
             description = [ Percona-Server is a drop-in replacement for MySQL with same binary names ]
             resolution = manual
         ]]
+    recommendation:
+        memcached? ( net/memcached )
     suggestion:
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
@@ -180,6 +183,12 @@ mysql_src_configure() {
     if option sphinx ; then
         cmakeargs+=(
             -DWITH_SPHINX_STORAGE_ENGINE:BOOL=TRUE
+        )
+    fi
+
+    if option memcached ; then
+        cmakeargs+=(
+            -DWITH_INNODB_MEMCACHED:BOOL=TRUE
         )
     fi
 
