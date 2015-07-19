@@ -257,5 +257,13 @@ mysql_pkg_postinst() {
         elog "mysql> INSTALL PLUGIN SPHINX SONAME 'ha_sphinx.so';"
         elog ""
     fi
+
+    if option memcached ; then
+        elog "In order to finalise your installation of the memcached plugin, you must install"
+        elog "it in MySQL using the following command as an administrative user:"
+        elog ""
+        elog "mysql> install plugin daemon_memcached soname "libmemcached.so";"
+        elog ""
+    fi
 }
 
