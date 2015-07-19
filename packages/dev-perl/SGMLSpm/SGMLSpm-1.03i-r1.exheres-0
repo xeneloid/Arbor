@@ -10,7 +10,7 @@ SUMMARY="Perl module for postprocessing the output from the sgmls and nsgmls par
 
 REMOTE_IDS="cpan:SGMLSpm"
 
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 
 WORK="${WORKBASE}/${PN}"
 SLOT="0"
