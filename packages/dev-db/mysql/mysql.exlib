@@ -62,7 +62,7 @@ DEPENDENCIES="
             resolution = manual
         ]]
     recommendation:
-        memcached? ( net/memcached )
+        memcached? ( net/memcached [[ description = [ The option provides the bundled memcached but you might want to use a stand-alone memcached as well ] ]] )
     suggestion:
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
