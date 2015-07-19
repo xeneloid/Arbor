@@ -4,5 +4,5 @@
 
 require docbook-sgml-dtd
 
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 
