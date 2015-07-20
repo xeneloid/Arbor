@@ -5,5 +5,5 @@ require icu
 
 SLOT="55.1"
 
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 
