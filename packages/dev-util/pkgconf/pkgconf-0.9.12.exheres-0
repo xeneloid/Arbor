@@ -81,6 +81,23 @@ src_compile() {
     done
 }
 
+src_test() {
+    local target=
+
+    for target in ${CROSS_COMPILE_TARGETS};do
+        if option !targets:${target};then
+            echo "     Cross-Compile Target: ${target} (disabled)"
+            continue
+        fi
+
+        echo "     Cross-Compile Target: ${target}"
+
+        edo cd "${WORKBASE}/build/${target}"
+        edo cp -vr "${WORKBASE}"/${PNV}/tests/* ./tests/
+        default
+    done
+}
+
 src_install() {
     local alternatives=( pkg-config ${PN} 0 )
     local target=
