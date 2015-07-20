@@ -10,7 +10,14 @@ fi
 
 SUMMARY="Intel CILK Runtime Library"
 LICENCES="GPL-2"
-SLOT="$(ever range 1-2)"
+# Upstream did some version bikeshedding, 5.x. are bugfix releases.
+if ever at_least 6.0 ; then
+    SLOT="$(ever major)"
+elif ever at_least 5.2 ; then
+    SLOT=5.1
+else
+    SLOT="$(ever range 1-2)"
+fi
 
 MYOPTIONS=""
 
