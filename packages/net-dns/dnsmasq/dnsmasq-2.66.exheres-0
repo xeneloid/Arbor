@@ -60,7 +60,7 @@ src_compile() {
     option conntrack && COPTS="${COPTS} -DHAVE_CT"
     option idn && COPTS="${COPTS} -DHAVE_IDN"
     emake \
-        PREFIX=/usr/$(exhost --target)
+        PREFIX=/usr/$(exhost --target) \
         CC="${CC}" \
         CFLAGS="${CFLAGS}" \
         COPTS="${COPTS}" \
