@@ -25,6 +25,11 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${PN}/source
 WORK_HOST=${WORKBASE}/${PN}-host/source
 
+icu_src_prepare() {
+    # Fix bug compiling on Raspberry Pi - https://www.raspberrypi.org/forums/viewtopic.php?f=33&t=50181
+    edo sed -e '/LDFLAGSICUDT=/d' -i "config/mh-linux"
+}
+
 icu_src_configure() {
     if exhost --is-native -q; then
         econf
