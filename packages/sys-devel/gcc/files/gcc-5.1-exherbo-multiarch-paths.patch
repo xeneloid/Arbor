@@ -1,6 +1,6 @@
 Upstream: no, Exherbo specific
 
-From ac60ad40f1bf3285dc9ad7ab4cf84407da5700fe Mon Sep 17 00:00:00 2001
+From ee2b3e37ebfe0480af862df5e8fc2a697042c4ae Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Sun, 1 Mar 2015 17:47:15 -0800
 Subject: [PATCH] exherbo multi-arch paths
@@ -15,7 +15,7 @@ Subject: [PATCH] exherbo multi-arch paths
  6 files changed, 86 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index cb08a5c..d639bef 100644
+index 3ede69b..92ec98c 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
 @@ -227,7 +227,7 @@ default_use_cxa_atexit=no
@@ -28,7 +28,7 @@ index cb08a5c..d639bef 100644
  
  # Don't carry these over build->host->target.  Please.
 diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-index e9d65dc..72618f4 100644
+index e9d65dc..56ed051 100644
 --- a/gcc/config/arm/linux-eabi.h
 +++ b/gcc/config/arm/linux-eabi.h
 @@ -120,3 +120,26 @@
@@ -59,13 +59,13 @@ index e9d65dc..72618f4 100644
 +#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-gnueabihf/lib/ld-linux-armhf.so.3"
 +
 diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
-index 1279cba..31937a2 100644
+index 49ad954..ce85a33 100644
 --- a/gcc/config/arm/linux-elf.h
 +++ b/gcc/config/arm/linux-elf.h
-@@ -118,3 +118,19 @@
- /* Add .note.GNU-stack.  */
- #undef NEED_INDICATE_EXEC_STACK
- #define NEED_INDICATE_EXEC_STACK	1
+@@ -124,3 +124,19 @@
+    to COPY relocated symbol in the executable.  See PR65780.  */
+ #undef TARGET_BINDS_LOCAL_P
+ #define TARGET_BINDS_LOCAL_P default_binds_local_p_2
 +
 +/* exherbo specific paths */
 +/*
@@ -153,5 +153,5 @@ index 0879e7e..06651f0 100644
 +#define GNU_USER_DYNAMIC_LINKER64 "/usr/powerpc64-unknown-linux-gnueabi/lib/ld64.so.1"
 +
 -- 
-2.4.2
+2.4.6
 
