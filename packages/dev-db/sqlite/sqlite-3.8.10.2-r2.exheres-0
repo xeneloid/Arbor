@@ -103,6 +103,15 @@ src_configure() {
     default
 }
 
+# NOTE(somasis): tests attempt to link with host tcl when cross-compiling
+src_test() {
+    if exhost --is-native;then
+        default
+    else
+        echo "cross compiling, skipping tests"
+    fi
+}
+
 src_install() {
     if expecting_tests ; then
         emake DESTDIR="${IMAGE}" HAVE_TCL="" install
