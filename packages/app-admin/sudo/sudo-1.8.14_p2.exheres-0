@@ -41,6 +41,7 @@ WORK=${WORKBASE}/${MY_PNV}
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
+    --enable-tmpfiles.d=/usr/$(exhost --target)/lib/tmpfiles.d
     --disable-static
     --with-all-insults
     --with-env-editor
@@ -59,7 +60,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( pam )
 
-#OPTIONS is a var in the makefile
+# OPTIONS is a var in the makefile
 DEFAULT_SRC_COMPILE_PARAMS=( OPTIONS= )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( TROUBLESHOOTING UPGRADE )
@@ -72,12 +73,6 @@ src_install() {
     if option pam ; then
         pamd_mimic_system sudo auth auth account password session
     fi
-
-    insinto /usr/$(exhost --target)/lib/tmpfiles.d
-    hereins ${PN}.conf <<EOF
-d /run/sudo 0711 root root
-D /run/sudo/ts 0700 root root
-EOF
 
     edo rmdir "${IMAGE}"/run/{sudo,}
 }
