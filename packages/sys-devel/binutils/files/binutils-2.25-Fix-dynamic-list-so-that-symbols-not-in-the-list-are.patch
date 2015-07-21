@@ -1,4 +1,4 @@
-Upstream: yes
+Upstream: yes, in master, not in binutils-2_25-branch though
 Reason: https://sourceware.org/bugzilla/show_bug.cgi?id=16992
 
 From e9c1bdad269c0c3352eebcc9481ed65144001b0b Mon Sep 17 00:00:00 2001
