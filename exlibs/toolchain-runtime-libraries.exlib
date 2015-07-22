@@ -27,6 +27,7 @@ symlink_dynamic_libs() {
     edo pushd "${IMAGE}"/usr/$(exhost --target)/lib
 
     for name in "${names[@]}"; do
+        target_so=
         # In each iteration, create a link from ${target_so} to the longer versioned ${provider_so}.
         # Use alternatives-light so that the symlinks always point to the latest version that
         # is reachable from the current prefix. There might be a libfoo.so.1 and libfoo.so.2,
