@@ -1,11 +1,13 @@
 # Copyright 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
+COMMIT_ID=0907a9034eaf2a57e8e4a9439f793f3f05d446cd
+
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Tar file manipulation API"
 HOMEPAGE="http://repo.or.cz/w/${PN}.git"
-DOWNLOADS="${HOMEPAGE}/snapshot/0907a9034eaf2a57e8e4a9439f793f3f05d446cd.tar.gz -> ${PNV}.tar.gz"
+DOWNLOADS="${HOMEPAGE}/snapshot/${COMMIT_ID}.tar.gz -> ${PNV}.tar.gz"
 
 LICENCES="UoI-NCSA"
 SLOT="0"
@@ -32,7 +34,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
 DEFAULT_SRC_INSTALL_PARAMS=( INSTALL_PROGRAM=install )
 
-WORK=${WORKBASE}/${PN}
+WORK=${WORKBASE}/${PN}-${COMMIT_ID:0:7}
 
 src_prepare() {
     edo sed \
