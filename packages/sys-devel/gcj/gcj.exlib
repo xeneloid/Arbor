@@ -253,7 +253,7 @@ gcj_src_install() {
             nonfatal edo rm "${IMAGE}"/usr/share/info/${i}{,-${SLOT}}.info
         done
         for i in c++ cpp g++ gcc gcc-ar gcc-nm gcc-ranlib gcov gcov-tool ; do
-            edo rm "${IMAGE}"/usr/$(exhost --target)/bin/${i}-${SLOT}
+            nonfatal edo rm "${IMAGE}"/usr/$(exhost --target)/bin/${i}-${SLOT}
             nonfatal edo rm "${IMAGE}"/usr/share/man/man1/${i}{,-${SLOT}}.1
         done
         edo rm -r "${IMAGE}"/usr/share/man/man7
