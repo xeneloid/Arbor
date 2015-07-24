@@ -1,4 +1,4 @@
-# Copyright 2009 Ingmar Vanhassel
+# Copyright 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require wafsamba
@@ -25,5 +25,13 @@ src_install() {
     waf_src_install
 
     dosym /usr/$(exhost --target)/lib/{libtalloc.so.${PV},libtalloc.so}
+}
+
+src_test() {
+    # same workaround reported for ldb: https://bugzilla.samba.org/show_bug.cgi?id=9787
+    edo ln -s libtalloc.so bin/default/libtalloc.so.$(ever major)
+    edo ln -s libpytalloc-util.so bin/default/libpytalloc-util.so.$(ever major)
+
+    waf_src_test
 }
 
