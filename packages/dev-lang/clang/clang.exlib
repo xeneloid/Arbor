@@ -38,9 +38,19 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/clang-3.5.0-lit.cfg-use-PATH.patch
-    "${FILES}"/0001-exherbo-multi-arch-paths.patch
-    "${FILES}"/0002-Install-cmake-files-to-lib-cmake-clang.patch
 )
+
+if ever is_scm ; then
+    DEFAULT_SRC_PREPARE_PATCHES+=(
+        "${FILES}"/0001-exherbo-multi-arch-paths-scm.patch
+        "${FILES}"/0002-Install-cmake-files-to-lib-cmake-clang-scm.patch
+    )
+else
+    DEFAULT_SRC_PREPARE_PATCHES+=(
+        "${FILES}"/0001-exherbo-multi-arch-paths.patch
+        "${FILES}"/0002-Install-cmake-files-to-lib-cmake-clang.patch
+    )
+fi
 
 clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
