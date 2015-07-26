@@ -1,4 +1,5 @@
 Upstream: yes
+Source: https://github.com/libarchive/libarchive/commit/22531545514043e04633e1c015c7540b9de9dbe4
 Reason: CVE-2013-0211
 
 From 22531545514043e04633e1c015c7540b9de9dbe4 Mon Sep 17 00:00:00 2001
@@ -30,6 +31,3 @@ index eede5e0..be85621 100644
  	archive_clear_error(&a->archive);
  	return ((a->format_write_data)(a, buff, s));
  }
--- 
-2.0.0
-
