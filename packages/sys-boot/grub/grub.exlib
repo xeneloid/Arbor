@@ -16,6 +16,7 @@ MYOPTIONS="
     efi           [[ description = [ Build for EFI platform ] ]]
     grub-mount    [[ description = [ FUSE driver for filesystems that GRUB understands ] ]]
     mkfont        [[ description = [ Build grub-mkfont which can create GRUB font files ] ]]
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
 # TODO: needs qemu-system-i386
@@ -35,9 +36,10 @@ DEPENDENCIES="
         )
     build+run:
         app-arch/xz
-        sys-apps/systemd
         sys-devel/gettext [[ note = [ required for grub-mkconfig, grep gettext in /etc/grub.d ] ]]
         !sys-boot/grub-static [[ description = [ /sbin/grub-install collides ] resolution = manual ]]
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd )
     run:
         efi? ( sys-boot/efibootmgr )
     suggestion:
