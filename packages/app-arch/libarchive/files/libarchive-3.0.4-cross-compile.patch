@@ -1,4 +1,4 @@
-Upstream: submitted
+Upstream: yes
 Source: https://github.com/libarchive/libarchive/pull/583
 
 From f7b0a9f3f6dd0cdaa7a097623896b0a1f56ee249 Mon Sep 17 00:00:00 2001
