@@ -54,6 +54,11 @@ DEPENDENCIES="
             providers:openssl? ( dev-libs/openssl )
         )
         xattr? ( sys-apps/attr )
+    run:
+        !app-arch/tar[<1.28-r2] [[
+            description = [ Alternatives conflict before tar-1.28-r2 ]
+            resolution = upgrade-blocked-before
+        ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
