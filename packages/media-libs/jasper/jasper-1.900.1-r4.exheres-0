@@ -1,10 +1,10 @@
 # Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.12 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.12 ] ]
 
 SUMMARY="Software-based implementation of the codec specified in the JPEG-2000 Part-1 standard"
-HOMEPAGE="http://www.ece.uvic.ca/~mdadams/jasper/"
+HOMEPAGE="http://www.ece.uvic.ca/~mdadams/${PN}"
 DOWNLOADS="${HOMEPAGE}/software/${PNV}.zip
      mirror://gentoo/${PNV}-fixes-20120611.patch.bz2"
 # Patches by Redhat to fix a number of security issues: Gentoo #222819. Upstream status unknown (dead?)
@@ -36,5 +36,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${WORKBASE}"/${PNV}-fixes-20120611.patch
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( opengl )
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-shared )
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-shared
+    --disable-static
+)
 
