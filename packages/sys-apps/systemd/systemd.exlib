@@ -292,7 +292,6 @@ systemd_src_configure() {
         $(option_enable lz4)
         $(option_enable nat libiptc)
         $(option_enable polkit)
-        $(option_enable python python-devel)
         $(option_enable qrencode)
         $(option_enable seccomp)
         $(option_enable xkbcommon)
@@ -301,6 +300,14 @@ systemd_src_configure() {
         $(option_with python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
+
+    if ever at_least 223; then
+        # Let systemd's configure get the gcc provided ones for slim lto objects
+        unset AR NM RANLIB
+    else
+        # TODO: when we remove systemd < 223, update the description of the python option
+        myconfig+=( $(option_enable python python-devel) )
+    fi
 
     econf "${myconfig[@]}"
 }
