@@ -32,7 +32,7 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 
 lmdb_src_install() {
     # The makefile expects existing directories
-    edo mkdir -p "${IMAGE}"/usr/$(exhost --target)/{bin,lib/debug,include} \
+    edo mkdir -p "${IMAGE}"/usr/$(exhost --target)/{bin,lib,include} \
                  "${IMAGE}"/usr/share/man/man1
 
     default
