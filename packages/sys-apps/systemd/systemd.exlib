@@ -594,7 +594,7 @@ systemd_pkg_postinst() {
         ewarn "now. cf. http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/"
     fi
 
-    einfo "By default timesyncd uses {0..3}.pool.ntp.org servers. You can set closer"
+    einfo "By default timesyncd uses {0..3}.exherbo.pool.ntp.org servers. You can set closer"
     einfo "servers by using continent pools. Check out"
     einfo "http://support.ntp.org/bin/view/Servers/NTPPoolServers for more info"
 
