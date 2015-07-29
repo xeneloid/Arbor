@@ -1,0 +1,30 @@
+# Copyright 2015 Quentin “Sardem FF7” Glidic <sardemff7@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+CMAKE_SOURCE=${WORK}/scripts
+
+require github [ user=zeux tag=v${PV} ] cmake [ api=2 ]
+
+SUMMARY="Light-weight, simple and fast XML parser for C++ with XPath support"
+DESCRIPTION="
+pugixml is a light-weight C++ XML processing library. It features:
+
+- DOM-like interface with rich traversal/modification capabilities
+- Extremely fast non-validating XML parser which constructs the DOM tree from an XML file/buffer
+- XPath 1.0 implementation for complex data-driven tree queries
+- Full Unicode support with Unicode interface variants and automatic encoding conversions
+"
+
+LICENCES="MIT"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+BUGS_TO="sardemff7@exherbo.org"
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_SHARED_LIBS:BOOL=TRUE
+    -DBUILD_TESTS:BOOL=TRUE
+)
+
