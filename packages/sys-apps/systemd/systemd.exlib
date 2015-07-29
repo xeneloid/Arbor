@@ -263,7 +263,6 @@ systemd_src_configure() {
         --disable-ima
         --disable-selinux
         --disable-smack
-        --disable-terminal
         --with-certificate-root=/etc/ssl
         --with-debug-tty=/dev/tty9
         --with-kbd-loadkeys=/bin/loadkeys
@@ -307,6 +306,7 @@ systemd_src_configure() {
     else
         # TODO: when we remove systemd < 223, update the description of the python option
         myconfig+=( $(option_enable python python-devel) )
+        myconfig+=( --disable-terminal )
     fi
 
     econf "${myconfig[@]}"
