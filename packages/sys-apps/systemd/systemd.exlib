@@ -275,8 +275,7 @@ systemd_src_configure() {
         --with-sysvinit-path=""
         --with-sysvrcnd-path=""
         --with-tty-gid=5
-        # TODO: temp ntp servers, must be updated to the vendor pool when available
-        --with-ntp-servers="0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org 3.pool.ntp.org"
+        --with-ntp-servers="0.exherbo.pool.ntp.org 1.exherbo.pool.ntp.org 2.exherbo.pool.ntp.org 3.exherbo.pool.ntp.org"
         $(option_enable acl)
         $(option_enable bootchart)
         $(option_enable cryptsetup libcryptsetup)
