@@ -52,5 +52,11 @@ EOF
 
     alternatives_for ntpd ${PN} 1 /usr/$(exhost --target)/bin/ntpd ${PN}
     alternatives_for ntpd ${PN} 1 /usr/share/man/man8/ntpd.8 ${PN}
-}
 
+    edo sed 's/# use a random selection.*/# use a random time server from the Exherbo vendor pool/
+/servers pool.ntp.org/c \
+servers 0.exherbo.pool.ntp.org\
+servers 1.exherbo.pool.ntp.org\
+servers 2.exherbo.pool.ntp.org\
+servers 3.exherbo.pool.ntp.org' -i "${IMAGE}"/etc/ntpd.conf
+}
