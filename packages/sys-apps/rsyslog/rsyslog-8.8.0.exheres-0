@@ -47,7 +47,7 @@ DEPENDENCIES="
         dev-libs/libestr[>=0.1.9]
         gnutls? ( dev-libs/gnutls )
         kerberos? ( app-crypt/heimdal )
-        mysql? ( dev-db/mysql )
+        mysql? ( virtual/mysql )
         postgresql? ( dev-db/postgresql )
         relp? ( net-libs/librelp[>=1.2.5] )
         systemd? ( sys-apps/systemd[>=209] )
