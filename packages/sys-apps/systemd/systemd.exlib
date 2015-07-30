@@ -533,7 +533,7 @@ EOT
         fi
     done
 
-    if option python ; then
+    if ! ever at_least 223 && option python ; then
         python_bytecompile
     fi
 }
