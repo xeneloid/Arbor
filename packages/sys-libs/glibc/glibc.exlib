@@ -182,6 +182,7 @@ EOF
             $(ever at_least 2.18 && echo --enable-pt_chown)         \
             $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons) \
             $(ever at_least 2.21 && echo --disable-werror)          \
+            $(ever at_least 2.21 && echo --without-gd)              \
             --enable-stackguard-randomization                       \
             --enable-lock-elision=no                                \
             --with-headers=/usr/${target}/include
