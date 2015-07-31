@@ -10,7 +10,7 @@ require bash-completion elisp-optional [ source_directory=Auxiliary ]
 export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
 SUMMARY="Cross platform Make"
-HOMEPAGE="http://www.cmake.org"
+HOMEPAGE="http://www.cmake.org/"
 DOWNLOADS="${HOMEPAGE}/files/v$(ever range 1-2)/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
@@ -19,43 +19,29 @@ LICENCES="BSD-3"
 SLOT="0"
 MYOPTIONS="
     doc
+    bootstrap [[ description = [ Use the internal jsoncpp (it needs cmake to build itself) ] ]]
     qt4
-    qt5   [[ description = [ Build against Qt5 instead of Qt4. ] ]]
+    qt5       [[ description = [ Build against Qt5 instead of Qt4. ] ]]
     vim-syntax
 
     ( qt4 qt5 )  [[ number-selected = at-most-one ]]
 "
-
-ever at_least 3.2.1 && MYOPTIONS+="
-    bootstrap [[ description = [ Use the internal jsoncpp (it needs cmake to build itself) ] ]]"
 
 DEPENDENCIES="
     build:
         doc? ( dev-python/Sphinx[>=1.2.2][python_abis:2.7] )
     build+run:
         app-arch/bzip2
-        app-arch/libarchive
+        app-arch/libarchive[>=3.0.0]
         app-arch/xz
         dev-libs/expat[>=2.0.1]
         dev-libs/libxml2:2.0[>=2.6.28]
         net-misc/curl[>=7.16.4][ssl(+)]
+        sys-libs/ncurses
+        !bootstrap? ( dev-libs/jsoncpp[>=0.6.0] )
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
-
-if ever at_least 3.2.1 ; then
-    DEPENDENCIES+="
-        build+run:
-            app-arch/libarchive[>=3.0.0]
-            sys-libs/ncurses
-           !bootstrap? ( dev-libs/jsoncpp[>=0.6.0] )
-    "
-else
-    DEPENDENCIES+="
-        build+run:
-            app-arch/libarchive
-    "
-fi
 
 BASH_COMPLETIONS=(
     Auxiliary/bash-completion/cmake
@@ -114,7 +100,7 @@ cmake-build_src_configure() {
         --mandir=/../share/man                                                  \
         --verbose                                                               \
         $(option doc && echo "--sphinx-man")                                    \
-        $(ever at_least 3.2.1 && option bootstrap --no-system-jsoncpp --system-jsoncpp) \
+        $(option bootstrap --no-system-jsoncpp --system-jsoncpp)                \
         --                                                                      \
         -DCMAKE_C_COMPILER:PATH="${CC}"                                         \
         -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                      \
