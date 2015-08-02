@@ -11,6 +11,7 @@ PLATFORMS="~amd64"
 
 DEPENDENCIES="
     build:
+        app-text/docbook-xml-dtd:4.4
         app-text/docbook-xsl-stylesheets
         dev-libs/libxml2:*
         dev-libs/libxslt
