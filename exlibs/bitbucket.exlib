@@ -4,29 +4,48 @@
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam pn=${MY_PN:-${PN}}
+myexparam pv=${MY_PV:-${PV}}
+myexparam pnv=$(exparam pn)-$(exparam pv)
 myexparam user=$(exparam pn)
 
+myexparam download=${BITBUCKET_DOWNLOAD}
 myexparam rev=${BITBUCKET_REVISION}
-#myexparam tag=${BITBUCKET_TAG:-${MY_PV:-${PV}}}
+myexparam tag=${BITBUCKET_TAG:-$(exparam pv)}
 
 # branch can only be used for scm versions
 myexparam branch=${BITBUCKET_BRANCH}
+myexparam type=hg
 
-myexparam pv=${MY_PV:-${PV}}
+myexparam suffix=tar.gz # bitbucket supports tar.gz, tar.bz2, zip
 
 HOMEPAGE="https://bitbucket.org/$(exparam user)/$(exparam pn)"
 
-if ever is_scm ; then
-    SCM_REPOSITORY="https://bitbucket.org/$(exparam user)/$(exparam pn).git"
-    exparam -v SCM_BRANCH branch
-    require scm-git
-else
-    if [[ -n $(exparam rev) ]] ; then
-        exparam -v what rev
-        work="$(exparam user)-$(exparam pn)-${what}"
-        WORK="${WORKBASE}/${work}"
-    fi
+case $(exparam type) in
+    hg|git)
+        true
+    ;;
+    *)
+        die "bitbucket.exlib: Invalid SCM type; valid types are hg or git"
+    ;;
+esac
 
-    DOWNLOADS="https://bitbucket.org/$(exparam user)/$(exparam pn)/get/${what}.tar.bz2 -> ${PNV}.tar.bz2"
+if ever is_scm; then
+    SCM_REPOSITORY="${HOMEPAGE}"
+    [[ $(exparam type) == git ]] && SCM_REPOSITORY="${SCM_REPOSITORY}.git"
+    exparam -v SCM_BRANCH branch
+    require scm-$(exparam type)
+else
+    if [[ -n $(exparam download) ]];then
+        what="downloads/$(exparam download).$(exparam suffix)"
+    elif [[ -n $(exparam rev) ]]; then
+        work="$(exparam user)-$(exparam pn)-$(exparam rev)"
+        WORK="${WORKBASE}/${work}"
+        what="get/$(exparam rev).$(exparam suffix)"
+    elif [[ -n $(exparam tag) ]];then
+        work="$(exparam user)-$(exparam pn)-$(exparam tag)"
+        WORK="${WORKBASE}/${work}"
+        what="get/$(exparam tag).$(exparam suffix)"
+    fi
+    DOWNLOADS="${HOMEPAGE}/${what} -> $(exparam pnv).$(exparam suffix)"
 fi
 
