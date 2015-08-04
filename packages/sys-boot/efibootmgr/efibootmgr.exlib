@@ -16,10 +16,9 @@ DEPENDENCIES="
         sys-boot/efivar[>=0.19]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Set-pkg-config-binary-as-variable.patch )
-
 DEFAULT_SRC_COMPILE_PARAMS=(
     EXTRA_CFLAGS="${CFLAGS}"
+    PKG_CONFIG="${PKG_CONFIG}"
 )
 
 efibootmgr_src_prepare() {

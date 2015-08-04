@@ -5,3 +5,4 @@ require efibootmgr
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Set-pkg-config-binary-as-variable.patch )
