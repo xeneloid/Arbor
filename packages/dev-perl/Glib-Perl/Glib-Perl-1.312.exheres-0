@@ -20,7 +20,7 @@ DEPENDENCIES="
         dev-perl/ExtUtils-Depends[>=0.301]
         dev-perl/ExtUtils-PkgConfig[>=1.11]
     build+run:
-        dev-libs/glib:2
+        dev-libs/glib:2[>=2.24]
 "
 
 WORK=${WORKBASE}/${MY_PNV}
