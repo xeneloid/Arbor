@@ -48,7 +48,6 @@ MYOPTIONS="
         Include GSM SIM/USIM interface for GSM/UMTS authentication algorithm (for EAP-SIM/EAP-AKA)
     ] ]]
     qt4      [[ description = [ Build the Qt4-based wpa_gui program ] ]]
-    systemd  [[ requires = dbus ]]
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
