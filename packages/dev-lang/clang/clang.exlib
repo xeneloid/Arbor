@@ -62,6 +62,16 @@ clang_src_prepare() {
     edo sed -e 's/@DOT@//g' -i docs/doxygen.cfg.in
     default
 
+    if [[ $(exhost --target) == arm* ]];then
+        edo sed -e "s/@@ARMHF_TARGET@@/$(exhost --target)/"   \
+                -e "s/@@ARM_TARGET@@/$(exhost --target | sed 's/hf$//')/" \
+                -i lib/Driver/Tools.cpp
+    else
+        edo sed -e "s/@@ARMHF_TARGET@@/arm-unknown-linux-gnueabihf/"    \
+                -e "s/@@ARM_TARGET@@/arm-unknown-linux-gnueabi/"    \
+                -i lib/Driver/Tools.cpp
+    fi
+
     edo popd
 }
 
