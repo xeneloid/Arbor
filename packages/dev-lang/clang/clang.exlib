@@ -33,7 +33,22 @@ DEPENDENCIES="
     build+run:
         dev-lang/llvm[~${LLVM_PVR}]
     run:
-       sys-libs/libgcc:*
+        sys-libs/libgcc:*
+"
+
+# clang is a cross compiler and can compile for any target without a
+# new binary being compiled for the target. this is only used for the
+# creation of the symlinks for targets; /usr/${CHOST}/bin/${target}-clang
+CROSS_COMPILE_TARGETS="
+    armv7-unknown-linux-gnueabi
+    armv7-unknown-linux-gnueabihf
+    i686-pc-linux-gnu
+    x86_64-pc-linux-gnu
+    powerpc64-unknown-linux-gnu
+"
+
+MYOPTIONS="
+    ( targets: ${CROSS_COMPILE_TARGETS} )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -130,5 +145,12 @@ clang_src_install() {
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
     edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
+
+    edo pushd "${IMAGE}"/usr/$(exhost --target)/bin
+    for target in ${CROSS_COMPILE_TARGETS};do
+        if option targets:${target};then
+            edo ln -s clang ${target}-clang
+        fi
+    done
 }
 
