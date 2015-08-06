@@ -1,0 +1,13 @@
+# Copyright 2014 William Orr <will@worrbase.com>
+# Copyright 2015 Johannes Nixdorf <mixi@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+# the information is in ${subdir}/VERSION
+LIBCRYPTO_VER=35.0.0
+LIBSSL_VER=35.0.0
+LIBTLS_VER=6.0.0
+
+require libressl
+
+PLATFORMS="~amd64 ~armv7"
+
