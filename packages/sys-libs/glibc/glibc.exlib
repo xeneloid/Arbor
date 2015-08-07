@@ -157,35 +157,49 @@ libc_cv_prog_ld_gnu=yes
 EOF
     fi
 
+    local myconf=()
+
+    myconf+=(
+        --build=${build}
+        --cache-file=config.cache
+        --datarootdir=/usr/share
+        --host=${target}
+        --libdir=/usr/${target}/lib
+        --localedir=/usr/share/locale
+        --localstatedir=/var/$(exhost --target)
+        --prefix=/usr/${target}
+        --sysconfdir=/etc
+        --enable-kernel=${MINIMUM_KERNEL_VERSION}
+        --enable-lock-elision=no
+        --enable-obsolete-rpc
+        --enable-stackguard-randomization
+        --with-headers=/usr/${target}/include
+        $(ever at_least 2.18 && echo --enable-pt_chown)
+        $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons)
+        $(ever at_least 2.21 && echo --disable-werror)
+        $(ever at_least 2.21 && echo --without-gd)
+    )
+
+    if ever at_least 2.22 ; then
+        if [[ $(exhost --target) == x86_64-pc-linux-gnu ]] ; then
+            myconf+=( --enable-mathvec )
+        else
+            myconf+=( --disable-mathvec )
+        fi
+    fi
+
     # TODO(compnerd) determine how to handle non-gcc compilers
     # NOTE(compnerd) export readelf and NM explicitly because the immensely dumb configure
     # script does not bother to check for the prefixed tools!
-    edo env                                                         \
-    NM="${target}-nm"                                               \
-    READELF="${target}-readelf"                                     \
-    BUILD_CC="${build}-gcc"                                         \
-    CC="${target}-gcc"                                              \
-    CPP="/usr/${build}/bin/${target}-cpp"                           \
-    CXX="/usr/${build}/bin/${target}-g++"                           \
-        "${WORKBASE}/${PNV}/configure"                              \
-            --cache-file=config.cache                               \
-            --build=${build}                                        \
-            --host=${target}                                        \
-            --prefix=/usr/${target}                                 \
-            --datarootdir=/usr/share                                \
-            --libdir=/usr/${target}/lib                             \
-            --localedir=/usr/share/locale                           \
-            --localstatedir=/var/$(exhost --target)                 \
-            --sysconfdir=/etc                                       \
-            --enable-kernel=${MINIMUM_KERNEL_VERSION}               \
-            --enable-obsolete-rpc                                   \
-            $(ever at_least 2.18 && echo --enable-pt_chown)         \
-            $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons) \
-            $(ever at_least 2.21 && echo --disable-werror)          \
-            $(ever at_least 2.21 && echo --without-gd)              \
-            --enable-stackguard-randomization                       \
-            --enable-lock-elision=no                                \
-            --with-headers=/usr/${target}/include
+    edo env \
+        NM="${target}-nm" \
+        READELF="${target}-readelf" \
+        BUILD_CC="${build}-gcc" \
+        CC="${target}-gcc" \
+        CPP="/usr/${build}/bin/${target}-cpp" \
+        CXX="/usr/${build}/bin/${target}-g++" \
+        "${WORKBASE}/${PNV}/configure" \
+        "${myconf[@]}"
 }
 
 glibc_src_install() {
