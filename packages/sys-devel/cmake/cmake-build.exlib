@@ -49,6 +49,13 @@ BASH_COMPLETIONS=(
     'Auxiliary/bash-completion/ctest ctest'
 )
 
+# TODO: Tests are broken because of the multiarch migration. One problem is,
+# that we probably need to figure out a way to pass our arch prefixed tools to
+# the relevant tests. Additionally cmake isn't really verbose about what's
+# wrong. So better disable them for now until someone finds time to fix them
+# (heirecka).
+RESTRICT="test"
+
 VIMFILE="${PN}.vim"
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
