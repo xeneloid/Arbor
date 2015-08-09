@@ -17,7 +17,7 @@ if [[ -z ${WANT_AUTOMAKE} || ${WANT_AUTOMAKE} == latest ]]; then
     vs=( ${AUTOMAKE_WRAPPER_PATH}/${AUTOMAKE_PROGRAM}-* )
     if [[ ${#vs[@]} > 0 ]]; then
         vs=( $( IFS=$'\n'; echo "${vs[*]##*${AUTOMAKE_PROGRAM}-}" | tr '.' ' ' | sort -k 1rn -k 2rn | tr ' ' '.') )
-        [[ -x "${AUTOMAKE_WRAPPER_PATH}"/"${AUTOMAKE_PROGRAM}-${vs[0]})" ]] && WANT_AUTOMAKE=${vs[0]}
+        [[ -x "$(type -P ${AUTOMAKE_PROGRAM}-${vs[0]})" ]] && WANT_AUTOMAKE=${vs[0]}
     fi
     unset vs
 fi
