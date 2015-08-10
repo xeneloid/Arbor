@@ -1,0 +1,29 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require pam systemd-service
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user='lxc' tag="v${PV}" ]
+
+SUMMARY="Control Group manager"
+SLOT="0"
+LICENCES="LGPL-2.1"
+
+MYOPTIONS=""
+
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    build:
+        sys-apps/help2man
+    build+run:
+        sys-apps/dbus[>=1.2.16]
+        sys-libs/libnih[>=1.0.3]
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-distro=Exherbo
+    --with-init-script=systemd
+    --with-pamdir=$(getpam_mod_dir)
+)
+
