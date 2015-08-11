@@ -8,5 +8,5 @@ PLATFORMS="~amd64 ~arm ~x86"
 # Parallel make fails in doc/
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
-WORK=${WORKBASE}/${PN}-$(ever range 1-3)
+WORK=${WORKBASE}/${PN}-$(ever range 1-4)
 
