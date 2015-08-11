@@ -206,5 +206,16 @@ openssh_pkg_postinst() {
     fi
     ewarn "Please be aware users need a valid shell in /etc/passwd"
     ewarn "in order to be allowed to login."
+
+    if ever at_least 7.0 ; then
+        ewarn "Please note that the default for the sshd_config(5) PermitRootLogin"
+        ewarn "option has changed from 'yes' to 'prohibit-password'."
+
+        ewarn "Please note that support for ssh-dss, ssh-dss-cert-* host and user"
+        ewarn "keys is disabled by default at run-time."
+
+        ewarn "Please note that Support for the 1024-bit diffie-hellman-group1-sha1"
+        ewarn "key exchange is disabled by default at run-time."
+    fi
 }
 
