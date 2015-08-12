@@ -2,14 +2,8 @@
 # Distributed under the terms of the GNU General Public License
 
 require bash-completion gnome.org [ suffix=.tar.xz ]
-if ! ever at_least 0.23; then
-    myexparam valac_slot
-    exparam -v valac_slot valac_slot
-
-    require vala [ vala_dep=false vala_slots=[ $(exparam valac_slot) ] ]
-fi
 require gtk-icon-cache test-dbus-daemon
-ever at_least 0.17 && require gsettings
+require gsettings
 
 export_exlib_phases src_test src_install
 
@@ -40,24 +34,13 @@ dconf_src_test() {
 }
 
 dconf_src_install() {
-    if ever at_least 0.17; then
-        gsettings_src_install
-    else
-        default
-    fi
+    gsettings_src_install
 
     hereenvd 80dconf-databases << EOF
 CONFIG_PROTECT_MASK="/etc/dconf/db"
 EOF
 
-    if ever at_least 0.7.4 && ! ever at_least 0.13 ; then
-        dobashcompletion "${IMAGE}"/dconf-bash-completion.sh
-        edo rm "${IMAGE}"/dconf-bash-completion.sh
-    fi
-
-    if ever at_least 0.14 ; then
-        dobashcompletion "${WORK}/bin/completion/dconf"
-        edo rm "${IMAGE}/dconf"
-    fi
+    dobashcompletion "${WORK}/bin/completion/dconf"
+    edo rm "${IMAGE}/dconf"
 }
 
