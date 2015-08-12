@@ -7,6 +7,7 @@ MY_PNV=Glib-${PV}
 require perl-module [ module_author=XAOC ]
 
 SUMMARY="Glib - Perl wrappers for the GLib utility and Object libraries"
+
 REMOTE_IDS="sourceforge:gtk2-perl"
 
 LICENCES="LGPL-2.1"
@@ -16,11 +17,11 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        dev-util/pkg-config
         dev-perl/ExtUtils-Depends[>=0.301]
         dev-perl/ExtUtils-PkgConfig[>=1.11]
+        virtual/pkg-config
     build+run:
-        dev-libs/glib:2[>=2.24]
+        dev-libs/glib:2[>=2.28.0]
 "
 
 WORK=${WORKBASE}/${MY_PNV}
