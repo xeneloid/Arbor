@@ -2,13 +2,9 @@
 # Copyright 2010 Brett Witherspoon <spoonb@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 ] ]
+require alternatives autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.12 ] ]
 
-if ever at_least 0.13 ; then
-    require gnome.org [ suffix=.tar.xz ]
-else
-    require gnome.org
-fi
+require gnome.org [ suffix=.tar.xz ]
 
 export_exlib_phases src_test src_install
 
@@ -28,11 +24,11 @@ DEPENDENCIES="
     build+run:
         dev-libs/glib:2[>=2.25.9]
     test:
+        gnome-desktop/gobject-introspection:*
         sys-apps/dbus
-        $(ever at_least 0.14.1 && echo 'gnome-desktop/gobject-introspection:*')
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--disable-unversioned' '--enable-vapigen' )
+DEFAULT_SRC_CONFIGURE_PARAMS=( '--disable-unversioned' )
 
 vala_build_src_test() {
     unset DISPLAY
@@ -49,16 +45,12 @@ vala_build_src_install() {
 
     edo pushd "${IMAGE}"
 
-    if ! ever at_least 0.14.2 ; then
-        edo mv usr/share/aclocal/vala.m4 usr/share/aclocal/vala-${SLOT##*.}.m4
-    else
-        edo mkdir usr/share/aclocal/
-        edo cp "${WORK}"/vala.m4 usr/share/aclocal/vala-${SLOT##*.}.m4
-        if ever at_least 0.16; then
-            edo cp "${WORK}"/vapigen/vapigen.m4 usr/share/aclocal/vapigen-${SLOT}.m4
-            edo mkdir usr/share/vala/
-            edo cp "${WORK}"/vapigen/Makefile.vapigen usr/share/vala/Makefile.vapigen-${SLOT}
-        fi
+    edo mkdir usr/share/aclocal/
+    edo cp "${WORK}"/vala.m4 usr/share/aclocal/vala-${SLOT##*.}.m4
+    if ever at_least 0.16; then
+        edo cp "${WORK}"/vapigen/vapigen.m4 usr/share/aclocal/vapigen-${SLOT}.m4
+        edo mkdir usr/share/vala/
+        edo cp "${WORK}"/vapigen/Makefile.vapigen usr/share/vala/Makefile.vapigen-${SLOT}
     fi
 
     alternatives+=( /usr/$(exhost --target)/bin/vala valac-${SLOT} )
@@ -67,12 +59,10 @@ vala_build_src_install() {
         target=${src/-${SLOT}}
         alternatives+=( /${target} ${src##*/} )
     done
-    if ever at_least 0.16.0; then
-        for src in usr/share/pkgconfig/vapigen-${SLOT}.pc usr/share/aclocal/vapigen-${SLOT}.m4 \
-                   usr/share/vala/Makefile.vapigen-${SLOT} ; do
-            alternatives+=( /${src/-${SLOT}} ${src##*/} )
-        done
-    fi
+    for src in usr/share/pkgconfig/vapigen-${SLOT}.pc usr/share/aclocal/vapigen-${SLOT}.m4 \
+               usr/share/vala/Makefile.vapigen-${SLOT} ; do
+        alternatives+=( /${src/-${SLOT}} ${src##*/} )
+    done
     edo popd
 
     alternatives_for ${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
