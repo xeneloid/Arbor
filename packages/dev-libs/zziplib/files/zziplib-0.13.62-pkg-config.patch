@@ -1,0 +1,34 @@
+Source: Timo Gurr <tgurr@exherbo.org
+Upstream: Reported, https://sourceforge.net/p/zziplib/feature-requests/6/
+Reason: Use PKG_CONFIG to find the pkg-config executable
+
+diff -Naur zziplib-0.13.62/configure.ac zziplib-0.13.62.new/configure.ac
+--- zziplib-0.13.62/configure.ac	2012-03-11 21:28:35.000000000 +0100
++++ zziplib-0.13.62.new/configure.ac	2015-08-12 14:48:59.086093688 +0200
+@@ -257,7 +257,7 @@
+ if test "$enable_sdl" = "no" ; then
+    AC_MSG_RESULT([no, disabled])
+ else
+-   enable_sdl=`pkg-config --modversion sdl 2>/dev/null`
++   enable_sdl=`$PKG_CONFIG --modversion sdl 2>/dev/null`
+    if test -z "$enable_sdl"; then
+       enable_sdl=`sdl-config --version 2>/dev/null`
+       SDL_GENERATE="sdl-uninstalled.pc"
+diff -Naur zziplib-0.13.62/SDL/Makefile.am zziplib-0.13.62.new/SDL/Makefile.am
+--- zziplib-0.13.62/SDL/Makefile.am	2010-05-08 16:13:53.000000000 +0200
++++ zziplib-0.13.62.new/SDL/Makefile.am	2015-08-12 14:53:58.000000000 +0200
+@@ -8,10 +8,10 @@
+ check_PROGRAMS = zzcatsdl
+ 
+ zzcatsdl_SOURCES = SDL_rwops_zzcat.c SDL_rwops_zzip.c
+-ZZIP_CFLAGS= `export PKG_CONFIG_PATH=../zzip; pkg-config zziplib --cflags` 
+-ZZIP_LIBS= `export PKG_CONFIG_PATH=../zzip; pkg-config zziplib --libs`
+-SDL_CFLAGS= `export PKG_CONFIG_PATH=.; pkg-config sdl --cflags` 
+-SDL_LIBS= `export PKG_CONFIG_PATH=.; pkg-config sdl --libs`
++ZZIP_CFLAGS= `export PKG_CONFIG_PATH=../zzip; $(PKG_CONFIG) zziplib --cflags` 
++ZZIP_LIBS= `export PKG_CONFIG_PATH=../zzip; $(PKG_CONFIG) zziplib --libs`
++SDL_CFLAGS= `export PKG_CONFIG_PATH=.; $(PKG_CONFIG) sdl --cflags` 
++SDL_LIBS= `export PKG_CONFIG_PATH=.; $(PKG_CONFIG) sdl --libs`
+ CFLAGS= -I$(srcdir) $(ZZIP_CFLAGS) $(SDL_CFLAGS)
+ LIBS= $(ZZIP_LIBS) $(SDL_LIBS)
+ 

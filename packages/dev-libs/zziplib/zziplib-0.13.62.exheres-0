@@ -1,8 +1,7 @@
 # Copyright 2008, 2009 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 ] ]
-require sourceforge
+require sourceforge autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="A library to read zip files"
 DESCRIPTION="
@@ -20,17 +19,21 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-libs/zlib
-        sdl? ( media-libs/SDL )
+        sdl? ( media-libs/SDL:0 )
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES+=( sdl )
-DEFAULT_SRC_TEST_PARAMS+=( -j1 )
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-ldflags.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-0.13.62-pkg-config.patch )
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( sdl )
+
+DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
 AT_M4DIR=( m4 )
 
 src_configure() {
     export ac_cv_path_XMLTO=""
+
     default
 }
 
