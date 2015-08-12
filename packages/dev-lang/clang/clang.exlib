@@ -140,6 +140,7 @@ clang_src_install() {
     for target in ${CROSS_COMPILE_TARGETS};do
         if option targets:${target};then
             edo ln -s clang ${target}-clang
+            edo ln -s clang++ ${target}-clang++
         fi
     done
 }
