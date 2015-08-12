@@ -1,0 +1,50 @@
+From 2e51033317f1a5e9770bbe56adfc44d753d16173 Mon Sep 17 00:00:00 2001
+From: Emmanuel Leblond <emmanuel.leblond@gmail.com>
+Date: Sun, 9 Aug 2015 00:31:31 +0200
+Subject: [PATCH] Fix .so generation rule and bumb it version number (fix #65
+ and #66)
+
+---
+ Makefile | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 2c69fe1..54a03ba 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,6 +1,7 @@
+ #
+ # iniparser Makefile
+ #
++.PHONY: example libiniparser.so
+ 
+ # Compiler settings
+ CC      ?= gcc
+@@ -22,6 +23,9 @@ SHLD = ${CC} ${CFLAGS}
+ LDSHFLAGS = -shared -Wl,-Bsymbolic
+ LDFLAGS += -Wl,-rpath -Wl,/usr/lib -Wl,-rpath,/usr/lib
+ 
++# .so.0 is for version 3.x, .so.1 is 4.x
++SONAME_CURRENT ?= 1
++
+ # Set RANLIB to ranlib on systems that require it (Sun OS < 4, Mac OSX)
+ # RANLIB  = ranlib
+ RANLIB = true
+@@ -59,8 +63,8 @@ libiniparser.a:	$(OBJS)
+ 	$(QUIET_RANLIB)$(RANLIB) $@
+ 
+ libiniparser.so:	$(OBJS)
+-	$(QUIET_LINK)$(SHLD) $(LDSHFLAGS) $(LDFLAGS) -o $@.0 $(OBJS) \
+-		-Wl,-soname=`basename $@`.0
++	$(QUIET_LINK)$(SHLD) $(LDSHFLAGS) $(LDFLAGS) -o $@.$(SONAME_CURRENT) $(OBJS) \
++		-Wl,-soname=`basename $@`.$(SONAME_CURRENT)
+ 
+ clean:
+ 	$(RM) $(OBJS)
+@@ -78,6 +82,5 @@ docs:
+ check: libiniparser.so
+ 	@(cd test ; $(MAKE))
+ 
+-.PHONY: example
+ example: libiniparser.a
+ 	@(cd example ; $(MAKE))	

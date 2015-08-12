@@ -1,0 +1,29 @@
+From e24843be23b9808074c321cb4511e4e01c180069 Mon Sep 17 00:00:00 2001
+From: Emmanuel Leblond <emmanuel.leblond@gmail.com>
+Date: Sun, 9 Aug 2015 00:18:05 +0200
+Subject: [PATCH] Make -O2/-g addition in CFLAGS optional (fix #64)
+
+---
+ Makefile | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 78708a5..2c69fe1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -7,11 +7,13 @@ CC      ?= gcc
+ 
+ CFLAGS  += -fPIC -Wall -Wextra -ansi -pedantic
+ ifndef DEBUG
+-CFLAGS	+= -O2
++ADDITIONAL_CFLAGS  ?= -O2
+ else
+-CFLAGS  += -g
++ADDITIONAL_CFLAGS  ?= -g
+ endif
+ 
++CFLAGS += ${ADDITIONAL_CFLAGS}
++
+ # Ar settings to build the library
+ AR	    ?= ar
+ ARFLAGS = rcv
