@@ -163,32 +163,45 @@ cmake_with() {
 #    CMAKE_SRC_CONFIGURE_OPTION_WANTS
 #    CMAKE_SRC_CONFIGURE_OPTION_WITHS
 #    CMAKE_SRC_CONFIGURE_TESTS
+# Additionally it supports a '--hates' parameter analog to the one in econf, which can be used to disable
+# some of the default options that are always passed to the cmake call. This should only be used if a
+# project does not accept a specific option and fails to build as a result of it beeing used.
+# Example: To block '-DCMAKE_BUILD_TYPE:STRING=None' pass '--hates=CMAKE_BUILD_TYPE' to ecmake.
+#          '--hates' can be passed directly or via CMAKE_SRC_CONFIGURE_PARAMS.
 ecmake() {
     illegal_in_global_scope
 
-    local cmakeargs
+    local arg= default_args=() cmake_args=() hates=()
+
+    for arg in "${@}" ; do
+        case "${arg}" in
+            --hates=*) hates+=( "${arg#--hates=}" ) ;;
+            *) cmake_args+=( "${arg}" ) ;;
+        esac
+    done
 
     # All default CMAKE_BUILD_TYPEs come with default CFLAGS, CXXFLAGS, which are *appended* to
     # CMAKE_C_FLAGS, CMAKE_CXX_FLAGS if a given build type is used. Thus they override users' settings,
     # and mustn't be used.
-    cmakeargs=(
-        ${CMAKE_NO_COLOR:--DCMAKE_COLOR_MAKEFILE:BOOL=TRUE}
-        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE
-        ${CMAKE_SILENT:+-DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE}
-        -DCMAKE_BUILD_TYPE:STRING='None'
-        -DCMAKE_C_FLAGS:STRING="${CFLAGS}"
-        -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS}"
-        -DCMAKE_AR:PATH="${AR}"
-        -DCMAKE_RANLIB:PATH="${RANLIB}"
-        -DCMAKE_NM:PATH="${NM}"
-        -DCMAKE_C_COMPILER:PATH="${CC}"
-        -DCMAKE_CXX_COMPILER:PATH="${CXX}"
-        -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX:=/usr/$(exhost --target)}"
-        -DCMAKE_SYSTEM_PREFIX_PATH:PATH="${PREFIX:=/usr/$(exhost --target)}"
-        -DCMAKE_INSTALL_LIBDIR:STRING='lib'
-        -DCMAKE_INSTALL_DATAROOTDIR:PATH=/usr/share/
-        -DCMAKE_INSTALL_FULL_DATAROOTDIR:PATH=/usr/share/
-    )
+    for arg in ${CMAKE_NO_COLOR:--DCMAKE_COLOR_MAKEFILE:BOOL=TRUE}                   \
+               -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE                                    \
+               ${CMAKE_SILENT:+-DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE}                  \
+               -DCMAKE_BUILD_TYPE:STRING='None'                                      \
+               -DCMAKE_C_FLAGS:STRING="${CFLAGS}"                                    \
+               -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS}"                                \
+               -DCMAKE_AR:PATH="${AR}"                                               \
+               -DCMAKE_RANLIB:PATH="${RANLIB}"                                       \
+               -DCMAKE_NM:PATH="${NM}"                                               \
+               -DCMAKE_C_COMPILER:PATH="${CC}"                                       \
+               -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                    \
+               -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX:=/usr/$(exhost --target)}"      \
+               -DCMAKE_SYSTEM_PREFIX_PATH:PATH="${PREFIX:=/usr/$(exhost --target)}"  \
+               -DCMAKE_INSTALL_LIBDIR:STRING='lib'                                   \
+               -DCMAKE_INSTALL_DATAROOTDIR:PATH=/usr/share/                          \
+               -DCMAKE_INSTALL_FULL_DATAROOTDIR:PATH=/usr/share/ ; do
+        local parameter=${arg%%:*}
+        has ${parameter#-D} "${hates[@]}" || default_args+=( "${arg}" )
+    done
 
     local cmake_api
     exparam -v cmake_api api
@@ -199,14 +212,14 @@ ecmake() {
                 edo pushd "${ECMAKE_BUILD_DIR}" || return 1
             fi
 
-            edo cmake "${cmakeargs[@]}" "$@" "${WORK}" || return 1
+            edo cmake "${default_args[@]}" "${cmake_args[@]}" "${WORK}" || return 1
 
             if [[ -d ${ECMAKE_BUILD_DIR} ]]; then
                 edo popd
             fi
             ;;
         2)
-            edo cmake "${cmakeargs[@]}" "$@" "${CMAKE_SOURCE:-${WORK}}" || return 1
+            edo cmake "${default_args[@]}" "${cmake_args[@]}" "${CMAKE_SOURCE:-${WORK}}" || return 1
             ;;
     esac
 }
