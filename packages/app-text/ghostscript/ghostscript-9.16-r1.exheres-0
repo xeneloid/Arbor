@@ -46,11 +46,12 @@ DEPENDENCIES="
         )
     run:
         app-text/poppler-data[>=0.4.4] [[ note = [ CMap encoding data ] ]]
-        fonts/urw-fonts[>=20150122] [[ note = [ PostScript standard fonts ] ]]
+        fonts/urw-fonts[>=20150629] [[ note = [ PostScript standard fonts ] ]]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-9.16-system-zlib.patch
+    "${FILES}"/${PN}-9.16-fontmap.patch
 )
 
 src_prepare() {
