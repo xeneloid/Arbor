@@ -118,10 +118,8 @@ alternatives_pkg_postinst() {
     for a in "${ALTERNATIVES_PROVIDED[@]}"; do
         alt="${a%:*}"
         provider="${a#*:}"
-        if [[ ${alt} != _* && ( ! -f "${ROOT}/usr/share/eclectic/modules/auto/${alt}.eclectic" \
-            || "$(source "${ROOT}/usr/share/eclectic/modules/auto/${alt}.eclectic" &>/dev/null; echo "${VERSION}")" \
-                -ne "${module_version}" ) ]]; then
-            einfo "Creating alternatives module for ${alt}"
+        if [[ ${alt} != _* ]]; then
+            [[ -f "${ROOT}/usr/share/eclectic/modules/auto/${alt}.eclectic" ]] || einfo "Creating alternatives module for ${alt}"
             if [[ ! -d ${ROOT}/usr/share/eclectic/modules/auto ]]; then
                 install -d "${ROOT}"/usr/share/eclectic/modules/auto || eerror "Could not create eclectic modules dir"
             fi
