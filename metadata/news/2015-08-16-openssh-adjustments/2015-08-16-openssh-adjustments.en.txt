@@ -1,0 +1,28 @@
+Title: OpenSSH 7.0 Adjustments
+Author: Thomas Anderson <tanderson@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-08-16
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: net-misc/openssh
+
+Several changes of note have occurred with the recent release of Openssh 7.0[1].
+Of particular importance are the following changes:
+
+ * Support for the 1024-bit diffie-hellman-group1-sha1 key exchange
+   is disabled by default at run-time. It may be re-enabled manually[2].
+
+ * Support for ssh-dss, ssh-dss-cert-* host and user keys is disabled
+   by default at run-time. These may be re-enabled manually[2].
+
+ * The default for the sshd_config(5) PermitRootLogin option has
+   changed from "yes" to "prohibit-password".
+
+ * PermitRootLogin=without-password/prohibit-password now bans all
+   interactive authentication methods, allowing only public-key,
+   hostbased and GSSAPI authentication (previously it permitted
+   keyboard-interactive and password-less authentication if those
+   were enabled).
+
+[1]: http://www.openssh.com/txt/release-7.0
+[2]: http://www.openssh.com/legacy.html
