@@ -16,22 +16,22 @@ tc-is-cross-compiler() {
 
 cc-is-clang() {
     illegal_in_global_scope
-    [[ $("${CC}" --version | head -1) == clang* ]]
+    "${CC}" -x c -dM -E /dev/null -o - | grep -q __clang__
 }
 
 cc-is-gcc() {
     illegal_in_global_scope
-    [[ $("${CC}" --version | head -1) == *GCC* ]]
+    ! cc-is-clang && "${CC}" -x c -dM -E /dev/null -o - | grep -q __GNUC__
 }
 
 cxx-is-clang() {
     illegal_in_global_scope
-    [[ $("${CXX}" --version | head -1) == clang* ]]
+    "${CXX}" -x c++ -dM -E /dev/null -o - | grep -q __clang__
 }
 
 cxx-is-gcc() {
     illegal_in_global_scope
-    [[ $("${CXX}" --version | head -1) == *GCC* ]]
+    ! cxx-is-clang && "${CXX}" -x c++ -dM -E /dev/null -o - | grep -q __GNUC__
 }
 
 # Returns the version as by `$CC -dumpversion`
