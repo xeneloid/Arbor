@@ -42,6 +42,7 @@ MYOPTIONS="
     acl
     bash-completion
     bootchart [[ description = [ Enable integrated bootchart by Auke Kok ] ]]
+    compat-libs [[ description = [ Install legacy compat libs (libsystemd-{daemon,id128,journal,login}) ] ]]
     cryptsetup [[ description = [ Enable systemd's minimal cryptsetup unit generator ] ]]
     efi [[
         description = [ EFI information in various tools and mounting of efivars during boot ]
@@ -228,7 +229,6 @@ systemd_src_configure() {
         --enable-binfmt
         --enable-blkid
         --enable-bzip2
-        --enable-compat-libs
         --enable-coredump
         --enable-dbus
         --enable-elfutils
@@ -280,6 +280,7 @@ systemd_src_configure() {
         --with-ntp-servers="0.exherbo.pool.ntp.org 1.exherbo.pool.ntp.org 2.exherbo.pool.ntp.org 3.exherbo.pool.ntp.org"
         $(option_enable acl)
         $(option_enable bootchart)
+        $(option_enable compat-libs)
         $(option_enable cryptsetup libcryptsetup)
         $(option_enable efi)
         $(option_enable efi gnuefi)
