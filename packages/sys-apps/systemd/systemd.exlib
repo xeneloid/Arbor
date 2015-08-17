@@ -8,7 +8,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.
         test-dbus-daemon \
         udev-rules \
         pam \
-        python [ blacklist="3.1" multibuild=false with_opt=true option_name=$(ever at_least 223 && echo man-index || echo python) ] \
+        python [ blacklist="3.1" multibuild=false with_opt=true option_name="man-index" ] \
         toolchain-funcs
 
 export_exlib_phases pkg_pretend pkg_setup src_prepare src_configure src_test src_install pkg_postinst
@@ -54,6 +54,7 @@ MYOPTIONS="
     journal-push [[ description = [ Support pushing journal data to a remote system ] ]]
     kdbus [[ description = [ Use the kernel D-Bus implementation by default ] ]]
     lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
+    man-index [[ description = [ Build the man page index ] ]]
     nat [[ description = [ Enable minimal firewall support for NAT ] ]]
     polkit [[ description = [ Use PolicyKit for privileged operations ] ]]
     qrencode [[ description = [ For transferring the journal verification key to a smartphone ] ]]
@@ -62,16 +63,6 @@ MYOPTIONS="
     zsh-completion
     ( linguas: ${LANGUAGES[@]} )
 "
-
-if ever at_least 223; then
-    MYOPTIONS+="
-        man-index [[ description = [ Build the man page index ] ]]
-    "
-else
-    MYOPTIONS+="
-        python [[ description = [ Build the man page index and systemd-python (bindings) ] ]]
-    "
-fi
 
 DEPENDENCIES="
     build:
@@ -83,6 +74,9 @@ DEPENDENCIES="
         sys-devel/gettext
         sys-kernel/linux-headers[>=3.10]
         virtual/pkg-config[>=0.20]
+        man-index? (
+            dev-python/lxml[python_abis:*(-)?]
+        )
     build+run:
         app-arch/xz
         dev-util/elfutils[>=0.158]
@@ -145,22 +139,6 @@ DEPENDENCIES="
         sys-apps/kexec-tools [[ description = [ Support for systemctl kexec - booting a kernel immediately, skipping the BIOS ] ]]
         sys-boot/dracut [[ description = [ Easily create an initramfs (if in doubt, don't take this) ] ]]
 "
-
-if ever at_least 223; then
-    DEPENDENCIES+="
-        build:
-            man-index? (
-                dev-python/lxml[python_abis:*(-)?]
-            )
-    "
-else
-    DEPENDENCIES+="
-        build:
-            python? (
-                dev-python/lxml[python_abis:*(-)?]
-            )
-    "
-fi
 
 AT_M4DIR=( m4 )
 
@@ -319,18 +297,12 @@ systemd_src_configure() {
         $(option_enable xkbcommon)
         $(option_with bash-completion bashcompletiondir /usr/share/bash-completion/completions)
         $(option_with gcrypt libgcrypt-prefix /usr/$(exhost --target))
+        $(option_with man-index python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
 
-    if ever at_least 223; then
-        # Let systemd's configure get the gcc provided ones for slim lto objects
-        unset AR NM RANLIB
-        myconfig+=( $(option_with man-index python) )
-    else
-        myconfig+=( $(option_with python) )
-        myconfig+=( $(option_enable python python-devel) )
-        myconfig+=( --disable-terminal )
-    fi
+    # Let systemd's configure get the gcc provided ones for slim lto objects
+    unset AR NM RANLIB
 
     econf "${myconfig[@]}"
 }
@@ -556,10 +528,6 @@ EOT
             edo find "${IMAGE}"/usr/share/locale -type d -empty -delete
         fi
     done
-
-    if ! ever at_least 223 && option python ; then
-        python_bytecompile
-    fi
 }
 
 systemd_pkg_postinst() {
