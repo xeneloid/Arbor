@@ -8,6 +8,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.
         test-dbus-daemon \
         udev-rules \
         pam \
+        option-renames [ renames=[ 'journal-push libcurl' ] ] \
         python [ blacklist="3.1" multibuild=false with_opt=true option_name="man-index" ] \
         toolchain-funcs
 
@@ -165,6 +166,8 @@ systemd_pkg_pretend() {
         eerror "You're using gcc-$(gcc-fullversion). ${PNV} requires gcc-4.9.x. Set your compiler to 4.9 by using eclectic gcc"
         die "${PNV} requires gcc-4.9.x"
     fi
+
+    option-renames_pkg_pretend
 }
 
 systemd_pkg_setup() {
