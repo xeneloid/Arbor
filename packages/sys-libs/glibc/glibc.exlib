@@ -76,6 +76,10 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 )
 
 glibc_pkg_pretend() {
+    if ! cc-is-gcc ; then
+        die "Building glibc with a compiler other than GCC is very likely to break your system. Aborting."
+    fi
+
     if ! kernel_version_at_least $MINIMUM_KERNEL_VERSION ; then
         ewarn "Your currently booted kernel-version is to old ($(uname -r))."
         ewarn "If you continue you will probably break your system."
