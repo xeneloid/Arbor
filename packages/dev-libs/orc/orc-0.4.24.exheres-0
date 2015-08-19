@@ -9,7 +9,7 @@ available in SIMD architectures, including saturated addition and subtraction, a
 operations.
 "
 HOMEPAGE="http://code.entropywave.com/projects/orc/"
-DOWNLOADS="http://gstreamer.freedesktop.org/src/${PN}/${PNV}.tar.gz"
+DOWNLOADS="http://gstreamer.freedesktop.org/src/${PN}/${PNV}.tar.xz"
 
 LICENCES="BSD-2 BSD-3"
 SLOT="0.4"
