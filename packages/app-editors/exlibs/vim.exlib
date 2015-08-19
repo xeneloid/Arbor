@@ -21,7 +21,7 @@
 
 #require vim/doc flag-o-matic fdo-mime bash-completion
 require vim-doc flag-o-matic alternatives
-require github [ pn=vim tag=v$(ever replace_all -) ]
+require github [ pn=vim tag=v${PV} ]
 
 [[ "${PN}" != 'vim-runtime' ]] && require python [ blacklist="3.1" multibuild=false with_opt=true ]
 [[ "${PN}" != 'gvim' ]] && require bash-completion
