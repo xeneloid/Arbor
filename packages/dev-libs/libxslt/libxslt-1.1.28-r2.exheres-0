@@ -3,7 +3,8 @@
 # Based in part upon 'libxslt-1.1.23.ebuild', which is:
 #   Copyright 1999-2008 Gentoo Foundation
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ] python
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
+require python [ with_opt=true blacklist=3 multibuild=false ]
 
 SUMMARY="XSLT libraries and tools"
 HOMEPAGE="http://www.xmlsoft.org/XSLT/"
@@ -18,7 +19,7 @@ DEPENDENCIES="
     build+run:
         dev-libs/libxml2:2.0[>=2.6.27]
         crypt? ( dev-libs/libgcrypt[>=1.1.92] )
-        python? ( dev-lang/python:= )
+        python? ( dev-lang/python:=[>=2&<3] )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -38,7 +39,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "crypt crypto"
     "debug"
     "debug mem-debug"
-    "python python /usr/$(exhost --target)"
+    "python python /usr/$(exhost --target)/bin/python2"
 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( FEATURES )
 
