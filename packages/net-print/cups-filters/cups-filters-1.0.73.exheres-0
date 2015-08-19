@@ -21,6 +21,7 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     avahi
     dbus
+    ldap
 "
 
 DEPENDENCIES="
@@ -43,6 +44,7 @@ DEPENDENCIES="
             net-print/cups[avahi]
         )
         dbus? ( sys-apps/dbus )
+        ldap? ( net-directory/openldap )
         !app-text/ghostscript[<9.09] [[
             description = [ cups-filters now provides gstopxl and gstoraster ]
             resolution = upgrade-blocked-before
@@ -59,8 +61,6 @@ DEPENDENCIES="
         net-print/foomatic-db      [[ note = [ for non-PostScript printers ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}"/${PNV}-r7371.patch )
-
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 src_prepare() {
@@ -74,7 +74,7 @@ src_configure() {
     local args=(
         --enable-imagefilters
         --disable-static
-        --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')cups" \
+        --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')$(option ldap && echo 'ldap ')cups"
         --with-cups-domainsocket=/run/cups/cups.sock
         --with-cups-rundir=/run/cups
         --with-fontdir=fonts/conf.avail
@@ -88,6 +88,7 @@ src_configure() {
         --without-rcdir
         $(option_enable avahi)
         $(option_enable dbus)
+        $(option_enable ldap)
     )
 
     econf "${args[@]}"
