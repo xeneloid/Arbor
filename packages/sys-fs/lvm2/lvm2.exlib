@@ -80,6 +80,10 @@ WORK=${WORKBASE}/LVM2.${PV}
 lvm2_src_install() {
     default
 
+    emake DESTDIR="${IMAGE}" install_systemd_generators
+    emake DESTDIR="${IMAGE}" install_systemd_units
+    emake DESTDIR="${IMAGE}" install_tmpfiles_configuration
+
     install_systemd_files
 
     if option baselayout; then
