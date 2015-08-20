@@ -1,7 +1,7 @@
 # Copyright 2013 Ankur Kothari
 # Distributed under the terms of the GNU General Public License v2
 
-SUMMARY="A lightweight, fast, simple standard libc library"
+SUMMARY="A lightweight, fast, and simple standard libc library"
 HOMEPAGE="http://www.musl-libc.org/"
 
 if ever is_scm ; then
@@ -18,7 +18,31 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
-MUSL_PREFIX=/usr/musl
+src_configure() {
+    if [[ $(exhost --target) == *-*musl* ]];then
+        myconf=(
+            --disable-gcc-wrapper
+            --prefix=/usr/$(exhost --target)
+        )
+    else
+        myconf=(
+            --enable-gcc-wrapper
+            --prefix=/usr/$(exhost --target)/musl
+        )
+    fi
+    export CROSS_COMPILE=$(exhost --tool-prefix)
+    edo ./configure \
+        --syslibdir=/usr/$(exhost --target)/lib     \
+        --target=$(exhost --target)                 \
+        ${myconf[@]}
+}
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --prefix=${MUSL_PREFIX} --syslibdir=/${LIBDIR} )
-
+src_install() {
+    default
+    if [[ $(exhost --target) != *-*musl* ]];then
+        edo cd "${IMAGE}"/usr/$(exhost --target)/musl/bin
+        edo sed -e "s|^exec|REALGCC=\${REALGCC:-$(exhost --tool-prefix)gcc};&|" \
+                -i musl-gcc
+        edo mv musl-gcc $(exhost --tool-prefix)gcc
+    fi
+}
