@@ -62,7 +62,8 @@ export_exlib_phases src_unpack
 
 gitlab_src_unpack() {
     default
-    if [[ "${GITLAB_TYPE}" == ref ]];then
+    # only set WORK if it hasn't been set away from the default value
+    if [[ "${GITLAB_TYPE}" == ref && "${WORK}" == "${WORKBASE}/${PNV}" ]];then
         WORK=( "${WORKBASE}"/${GITLAB_PN}-${GITLAB_REF}-* )
         if [[ "${#WORK[*]}" -ne 1 ]];then
             die "There shouldn't be more than one directory in the downloaded archive. You might need to redownload the distfile."
