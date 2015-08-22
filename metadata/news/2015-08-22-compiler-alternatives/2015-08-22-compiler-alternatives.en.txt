@@ -1,0 +1,28 @@
+Title: C, C++, and Fortran compiler alternatives have been created
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-08-22
+Revision: 1
+News-Item-Format: 1.0
+
+Alternatives for the C, C++, and Fortran compilers have been created, and
+we now have support for using different compilers as system compilers.
+This means that you can compile packages (and your own code) with compilers
+other than GCC, such as Clang, without having to set environment variables
+manually. Right now Clang is the only offered alternative, as it's the best
+alternative to GCC that is around right now.
+
+As you may know, Clang still has issues compiling some packages, and as such
+we still recommend that you use GCC if you are not comfortable dealing with
+and fixing compiler errors relating to Clang's differences in functionality
+from GCC.
+
+If you don't have Clang installed, this won't affect you, as GCC is the
+default system-wide C compiler and will stay there for the forseeable future.
+
+You can see the newly created alternatives with `eclectic cc list`,
+`eclectic c++ list`, and `eclectic fortran list`.
+
+Right now there is no alternative to gfortran, so if you feel the desire to
+use a different Fortran compiler, send patches in for the alternative desired.
+
