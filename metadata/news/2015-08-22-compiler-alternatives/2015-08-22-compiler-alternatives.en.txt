@@ -4,6 +4,9 @@ Content-Type: text/plain
 Posted: 2015-08-22
 Revision: 1
 News-Item-Format: 1.0
+Display-If-Installed: dev-lang/clang[<3.6.1-r3]
+Display-If-Installed: sys-devel/gcc[<4.9.2-r7&<5]
+Display-If-Installed: sys-devel/gcc:5.1[<5.2.0-r1&>4]
 
 Alternatives for the C, C++, and Fortran compilers have been created, and
 we now have support for using different compilers as system compilers.
