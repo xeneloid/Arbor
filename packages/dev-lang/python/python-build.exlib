@@ -163,6 +163,7 @@ python-build_src_install() {
 
     target=$(exhost --target)
     # alternatives handling
+    eval ALTERNATIVES_python$(ever major)_DESCRIPTION="Default\ python$(ever major)\ version"
     alternatives=("${PN}$(ever major)" "${SLOT}" "${SLOT}")
 
     # for backward compatibility, have plat-linux3 and plat-linux2 folders
