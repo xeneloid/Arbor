@@ -5,7 +5,7 @@
 require systemd-service udev-rules
 
 # fixes malloc() detection avoiding undefined reference to `rpl_malloc'
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_configure src_install
 
@@ -49,6 +49,7 @@ RESTRICT="test"
 
 lvm2_src_configure() {
     local myconf=(
+        RUN_DIR=/run
         --enable-applib
         --enable-blkid_wiping
         --enable-cmdlib
@@ -63,7 +64,10 @@ lvm2_src_configure() {
         --with-default-run-dir=/run/lvm
         --with-tmpfilesdir=/usr/$(exhost --target)/lib/tmpfiles.d
         --with-udevdir="${UDEVRULESDIR}"
+        --disable-lockd-dlm
+        --disable-lockd-sanlock
         --disable-lvmetad
+        --disable-lvmpolld
         --disable-nls
         --disable-selinux
         --disable-static_link
