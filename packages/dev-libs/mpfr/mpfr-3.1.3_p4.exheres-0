@@ -25,6 +25,10 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${MY_PNV}
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${MY_PNV}-patch{01,02,03,04}.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-shared )
 
 src_install() {
