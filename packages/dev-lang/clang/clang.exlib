@@ -22,15 +22,14 @@ HOMEPAGE="http://clang.llvm.org/"
 
 LICENCES="UoI-NCSA"
 SLOT="0"
-MYOPTIONS=""
 
 LLVM_PVR=${PV}
 
 DEPENDENCIES="
     build:
         dev-lang/perl:*
-        dev-python/Sphinx
         sys-devel/flex
+        doc? ( dev-python/Sphinx )
     build+run:
         dev-lang/llvm[~${LLVM_PVR}]
     run:
@@ -57,6 +56,7 @@ CROSS_COMPILE_TARGETS="
 "
 
 MYOPTIONS="
+    doc
     ( targets: ${CROSS_COMPILE_TARGETS} )
 "
 
@@ -106,9 +106,11 @@ clang_src_configure() {
 clang_src_compile() {
     default
 
-    edo pushd "${CMAKE_SOURCE}"/docs
-    emake -f Makefile.sphinx man html
-    edo popd
+    if option doc; then
+        edo pushd "${CMAKE_SOURCE}"/docs
+        emake -f Makefile.sphinx man html
+        edo popd
+    fi
 }
 
 clang_src_test() {
@@ -124,10 +126,13 @@ clang_src_install() {
     edo rm -R "${IMAGE}"/usr/$(exhost --target)/include/clang/Config
 
     edo pushd "${CMAKE_SOURCE}"
-    edo pushd docs/_build
-    doman man/*
-    dodoc -r html
-    edo popd
+
+    if option doc; then
+        edo pushd docs/_build
+        doman man/*
+        dodoc -r html
+        edo popd
+    fi
 
     edo pushd tools
     insinto /usr/share/clang-analyzer
@@ -145,9 +150,11 @@ clang_src_install() {
     edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
     edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 
-    edo pushd "${IMAGE}"/usr/share/man/man1
-    edo ln -s clang.1 clang++.1
-    edo popd
+    if option doc; then
+        edo pushd "${IMAGE}"/usr/share/man/man1
+        edo ln -s clang.1 clang++.1
+        edo popd
+    fi
 
     local cc_alternatives=() cxx_alternatives=()
     for target in ${CROSS_COMPILE_TARGETS};do
@@ -156,10 +163,12 @@ clang_src_install() {
             edo ln -s clang ${target}-clang
             edo ln -s clang++ ${target}-clang++
             edo popd
-            edo pushd "${IMAGE}"/usr/share/man/man1
-            edo ln -s clang.1 ${target}-clang.1
-            edo ln -s clang++.1 ${target}-clang++.1
-            edo popd
+            if option doc; then
+                edo pushd "${IMAGE}"/usr/share/man/man1
+                edo ln -s clang.1 ${target}-clang.1
+                edo ln -s clang++.1 ${target}-clang++.1
+                edo popd
+            fi
             cc_alternatives+=(
                 /usr/$(exhost --target)/bin/${target}-cc        ${target}-clang
                 /usr/share/man/man1/${target}-cc.1              ${target}-clang.1
