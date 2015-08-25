@@ -1,5 +1,5 @@
-# Copyright 2007, 2008 Richard Brown
-# Copyright 2009, 2010 Ingmar Vanhassel
+# Copyright 2007, 2008 Richard Brown <rbrown@exherbo.org>
+# Copyright 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2013 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'ruby-1.8.6_p111.ebuild' from Gentoo, which is:
