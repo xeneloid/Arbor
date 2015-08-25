@@ -1,10 +1,10 @@
-# Copyright 2007 Bryan Østergaard
-# Copyright 2008 Richard Brown
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2008 Richard Brown <rbrown@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'debianutils-2.28.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require debian-upstream
+require debian-upstream [ suffix=.tar.xz ]
 
 SUMMARY="Miscellaneous utilities specific to Debian"
 DESCRIPTION="
@@ -13,7 +13,7 @@ DESCRIPTION="
 * savelog: save a log file
 * tempfile: create a temporary file in a safe manner
 "
-HOMEPAGE="http://packages.debian.org/${PN}"
+HOMEPAGE="https://packages.debian.org/${PN}"
 
 REMOTE_IDS="freecode:${PN}"
 
@@ -26,6 +26,8 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
+
+WORK=${WORKBASE}/${PN}
 
 src_install() {
     dobin tempfile run-parts installkernel savelog
