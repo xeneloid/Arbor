@@ -34,11 +34,11 @@ DEPENDENCIES="
         dev-lang/llvm[~${LLVM_PVR}]
     run:
         sys-libs/libgcc:*
-        !sys-devel/gcc:4.9[<4.9.2-r7] [[
+        !sys-devel/gcc:4.9[<4.9.2-r8] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
-        !sys-devel/gcc:5.2[<5.2.0-r1] [[
+        !sys-devel/gcc:5.2[<5.2.0-r2] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
@@ -121,6 +121,9 @@ clang_src_test() {
 
 clang_src_install() {
     default
+    edo pushd "${IMAGE}"/usr/$(exhost --target)/bin
+    ln -s clang clang-cpp
+    edo popd
 
     # the sole file here, config.h, is explicitly not installed
     edo rm -R "${IMAGE}"/usr/$(exhost --target)/include/clang/Config
@@ -150,39 +153,42 @@ clang_src_install() {
     edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
     edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 
-    if option doc; then
+    if option doc;then
         edo pushd "${IMAGE}"/usr/share/man/man1
         edo ln -s clang.1 clang++.1
+        edo ln -s clang.1 clang-cpp.1
         edo popd
     fi
 
-    local cc_alternatives=() cxx_alternatives=()
+    local cc_alternatives=() cxx_alternatives=() cpp_alternatives=()
     for target in ${CROSS_COMPILE_TARGETS};do
         if option targets:${target};then
             edo pushd "${IMAGE}"/usr/$(exhost --target)/bin
             edo ln -s clang ${target}-clang
+            edo ln -s clang-cpp ${target}-clang-cpp
             edo ln -s clang++ ${target}-clang++
             edo popd
-            if option doc; then
+            if option doc;then
                 edo pushd "${IMAGE}"/usr/share/man/man1
                 edo ln -s clang.1 ${target}-clang.1
+                edo ln -s clang-cpp.1 ${target}-clang-cpp.1
                 edo ln -s clang++.1 ${target}-clang++.1
                 edo popd
+                cc_alternatives+=(  /usr/share/man/man1/${target}-cc.1  ${target}-clang.1 )
+                cxx_alternatives+=( /usr/share/man/man1/${target}-c++.1 ${target}-clang++.1 )
+                cpp_alternatives+=( /usr/share/man/man1/${target}-cpp.1 ${target}-clang-cpp.1 )
             fi
-            cc_alternatives+=(
-                /usr/$(exhost --target)/bin/${target}-cc        ${target}-clang
-                /usr/share/man/man1/${target}-cc.1              ${target}-clang.1
-            )
-            cxx_alternatives+=(
-                /usr/$(exhost --target)/bin/${target}-c++       ${target}-clang++
-                /usr/share/man/man1/${target}-c++.1             ${target}-clang++.1
-            )
+            cc_alternatives+=(  /usr/$(exhost --target)/bin/${target}-cc  ${target}-clang   )
+            cxx_alternatives+=( /usr/$(exhost --target)/bin/${target}-c++ ${target}-clang++ )
+            cpp_alternatives+=( /usr/$(exhost --target)/bin/${target}-cpp ${target}-clang-cpp )
         fi
     done
 
     ALTERNATIVES_cc_DESCRIPTION="System-wide C compiler"
     ALTERNATIVES_cxx_DESCRIPTION="System-wide C++ compiler"
-    alternatives_for cc     clang   100 "${cc_alternatives[@]}"
-    alternatives_for c++    clang++ 100 "${cxx_alternatives[@]}"
+    ALTERNATIVES_cpp_DESCRIPTION="System-wide C pre-processor"
+    alternatives_for cc     clang       100 "${cc_alternatives[@]}"
+    alternatives_for c++    clang++     100 "${cxx_alternatives[@]}"
+    alternatives_for cpp    clang-cpp   100 "${cpp_alternatives[@]}"
 }
 
