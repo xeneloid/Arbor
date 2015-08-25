@@ -21,15 +21,12 @@ to be run from cron.
 sadf(1) displays data collected by sar in multiple formats (CSV, XML, etc.) This
 is useful to load performance data into a database, or import them in a spreadsheet
 to make graphs.
+tapestat(1) reports statistics for tapes connected to the system.
 "
 HOMEPAGE="http://pagesperso-orange.fr/sebastien.godard"
-DOWNLOADS="
-    ${HOMEPAGE}/${PNV}.tar.gz
-    ftp://ibiblio.org/pub/linux/system/status/${PNV}.tar.gz
-"
+DOWNLOADS="${HOMEPAGE}/${PNV}.tar.xz"
 
 BUGS_TO="philantrop@exherbo.org"
-REMOTE_IDS=""
 
 UPSTREAM_CHANGELOG="${HOMEPAGE}/changelog.html [[ lang = en ]]"
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/documentation.html [[ lang = en ]]"
