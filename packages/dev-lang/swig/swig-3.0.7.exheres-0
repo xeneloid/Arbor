@@ -24,6 +24,8 @@ MYOPTIONS="
     ruby
 "
 
+RESTRICT="test"
+
 # TODO: python3 has an extra switch
 DEPENDENCIES="
     build+run:
@@ -37,16 +39,15 @@ DEPENDENCIES="
         perl? ( dev-perl/Test-Simple )
 "
 
-RESTRICT="test"
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-pcre
-    --without-{allegrocl,chicken,clisp,csharp,d,gcj,go,guile,java,javascript,mono,mzscheme,ocaml,octave,php,pike,python3,r,tcl}
+    --without-{allegrocl,chicken,clisp,csharp,d,gcj,go,guile,java,javascript,mono,mzscheme,ocaml,octave,php,pike,python3,r,scilab,tcl}
     --without-doc
     # Breaks tests
     --disable-ccache
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( lua "perl perl5" python ruby )
+
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( NEW FUTURE )
 
 src_test_expensive() {
