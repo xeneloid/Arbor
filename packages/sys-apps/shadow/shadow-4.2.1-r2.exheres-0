@@ -68,7 +68,6 @@ src_prepare() {
         -e '/^#MD5_CRYPT_ENAB/ s:^#::'    \
         etc/login.defs
 
-    mv configure.{in,ac} || die
     eautoreconf
 }
 
