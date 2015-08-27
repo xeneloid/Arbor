@@ -279,12 +279,23 @@ gcc_src_install() {
         shopt -q nullglob || unset_nullglob=1
         shopt -s nullglob
 
+        # allow for C pre-preprocessor alternatives to be set correctly
+        edo pushd usr/"${CHOST}"/bin
+        edo mv ${target}-cpp-${SLOT} ${target}-gcc-cpp-${SLOT}
+        nonfatal edo rm ${target}-cpp
+        edo popd
+        edo pushd usr/share/man/man1
+        edo mv ${target}-cpp-${SLOT}.1 ${target}-gcc-cpp-${SLOT}.1
+        nonfatal edo rm ${target}-cpp.1
+        edo popd
+
         for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
             alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
         done
 
         alternatives+=( "/usr/${CHOST}/bin/${target}-gcc" "${target}-gcc-${SLOT}" )
         alternatives+=( "/usr/${CHOST}/bin/${target}-gfortran" "${target}-gfortran-${SLOT}" )
+        alternatives+=( "/usr/${CHOST}/bin/${target}-gcc-cpp" "${target}-gcc-cpp-${SLOT}" )
 
         for man in usr/share/man/man*/*.*; do
             local ext=${man##*.}
@@ -318,8 +329,8 @@ gcc_src_install() {
             "/usr/share/man/man1/${target}-c++.1"   "${target}-g++.1"
         )
         cpp_alternatives+=(
-            "/usr/${CHOST}/bin/${target}-cpp"       "${target}-cpp-${SLOT}"
-            "/usr/share/man/man1/${target}-cpp.1"   "${target}-cpp-${SLOT}.1"
+            "/usr/${CHOST}/bin/${target}-cpp"       "${target}-gcc-cpp"
+            "/usr/share/man/man1/${target}-cpp.1"   "${target}-gcc-cpp.1"
         )
         fc_alternatives+=(
             "/usr/${CHOST}/bin/${target}-fc"        "${target}-gfortran"
@@ -335,7 +346,7 @@ gcc_src_install() {
     ALTERNATIVES_fc_DESCRIPTION="System-wide Fortran compiler"
     alternatives_for cc     gcc         1000    "${cc_alternatives[@]}"
     alternatives_for c++    g++         1000    "${cxx_alternatives[@]}"
-    alternatives_for cpp    cpp         1000    "${cpp_alternatives[@]}"
+    alternatives_for cpp    gcc-cpp     1000    "${cpp_alternatives[@]}"
     alternatives_for fc     gfortran    1000    "${fc_alternatives[@]}"
 
     edo find "${IMAGE}" -depth -type d -empty -delete
