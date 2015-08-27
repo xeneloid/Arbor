@@ -3,6 +3,8 @@
 # Based in part upon 'graphviz-2.18.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
+require python [ blacklist=3 with_opt=true multibuild=false ]
+
 SUMMARY="Open Source Graph Visualization Software"
 HOMEPAGE="http://www.graphviz.org"
 DOWNLOADS="${HOMEPAGE}/pub/${PN}/ARCHIVE/${PNV}.tar.gz"
@@ -10,11 +12,12 @@ DOWNLOADS="${HOMEPAGE}/pub/${PN}/ARCHIVE/${PNV}.tar.gz"
 LICENCES="EPL-1.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-# TODO: perl python ruby
+# TODO: perl ruby
 MYOPTIONS="
     gtk [[ description = [ Provides canvas support and cairo renderer ] ]]
     pdf
     postscript [[ description = [ Support for PostScript utilizing Ghostscript ] ]]
+    python
     svg [[ description = [ Support node shapes in svg output ] ]]
     webp [[ description = [ Support for the Webp image format ] ]]
     X
@@ -25,6 +28,7 @@ DEPENDENCIES="
         sys-devel/flex
         sys-devel/gettext
         virtual/pkg-config[>=0.20]
+        python? ( dev-lang/swig[python] )
     build+run:
         dev-libs/expat[>=2.0.0] [[ note = [ Required for HTML-like labels ] ]]
         dev-libs/glib:2[>=2.11]
@@ -45,12 +49,10 @@ TODO_DEPENDENCIES+="
     build:
         lua? ( dev-lang/swig[lua] )
         perl? ( dev-lang/swig[perl] )
-        python? ( dev-lang/swig[python] )
         ruby? ( dev-lang/swig[ruby] )
     build+run:
         lua? ( dev-lang/lua:= )
         perl? ( dev-lang/perl:= )
-        python? ( dev-lang/python:= )
         ruby? ( dev-lang/ruby:= )
 "
 
@@ -77,7 +79,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-ming
     --without-gtkgl
     # Need to fix install path for thests bindings
-    --disable-{perl,python,ruby}
+    --disable-{perl,ruby}
     # dev-lang/lua doesn't install a .so, -fPIC errors
     --disable-lua
     # No swig-bindings yet
@@ -89,9 +91,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 
 TODO_DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
-    perl python ruby
+    perl ruby
 )
 
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( python )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'gtk'
     'pdf poppler'
