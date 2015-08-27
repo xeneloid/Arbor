@@ -82,8 +82,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-privsep-path=/var/empty
     --with-privsep-user=sshd
     --with-md5-passwords
+    --with-openssl
     --with-ssl-engine
     --without-selinux
+    --without-ssh1
     LD="${CC}"
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(

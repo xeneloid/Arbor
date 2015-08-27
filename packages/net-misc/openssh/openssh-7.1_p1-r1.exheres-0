@@ -8,8 +8,3 @@ require openssh [ X509_version=8.6 ]
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
-DEFAULT_SRC_CONFIGURE_PARAMS+=(
-    --with-openssl
-    --with-ssh1
-)
-
