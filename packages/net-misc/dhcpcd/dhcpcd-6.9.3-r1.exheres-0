@@ -20,11 +20,14 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="BSD-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        sys-apps/systemd [[ note = [ for udev ] ]]
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
