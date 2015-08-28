@@ -1,6 +1,6 @@
 Upstream: no, Exherbo specific
 
-From b6b2c9e31933c05784d8b70f1b29c8ca3f01e875 Mon Sep 17 00:00:00 2001
+From 2f8c8d73205fa166319039855f7621a9c7b89032 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Sun, 1 Mar 2015 17:47:15 -0800
 Subject: [PATCH 2/3] exherbo multi-arch paths
