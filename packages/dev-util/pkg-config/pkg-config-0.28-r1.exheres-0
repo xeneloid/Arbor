@@ -16,7 +16,7 @@ CROSS_COMPILE_TARGETS="
 
 LICENCES="GPL-2"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     targets:
         ${CROSS_COMPILE_TARGETS}
