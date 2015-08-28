@@ -26,7 +26,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        dev-lang/python:*
+        dev-lang/python:*[>=2&<3]
         dev-python/M2Crypto
         net-wireless/wireless-regdb[>=2015.04.06-r1]
         virtual/pkg-config
@@ -44,6 +44,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-3.18-openssl.patch
     "${FILES}"/${PN}-3.18-libreg-link.patch
     "${FILES}"/${PN}-3.18-pkg-config.patch
+    "${FILES}"/${PN}-3.18-fix-python-shebang.patch
 )
 
 CRDA_DIR=/usr/share/crda
