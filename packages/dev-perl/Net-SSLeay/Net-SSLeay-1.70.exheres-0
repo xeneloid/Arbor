@@ -9,7 +9,7 @@ SUMMARY="Perl extension for using OpenSSL"
 
 LICENCES="|| ( BSD-3 openssl )"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
