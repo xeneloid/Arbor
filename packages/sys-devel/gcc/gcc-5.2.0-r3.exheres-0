@@ -6,6 +6,7 @@ require gcc
 PLATFORMS="~x86 ~amd64 ~armv7"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/${PN}-${SLOT}-musl-support.patch"
     "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
     "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
 )

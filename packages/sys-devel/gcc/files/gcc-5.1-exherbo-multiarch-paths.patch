@@ -1,21 +1,20 @@
 Upstream: no, Exherbo specific
 
-From ee2b3e37ebfe0480af862df5e8fc2a697042c4ae Mon Sep 17 00:00:00 2001
+From cf95f999ce96ffb58046b88eaa4ba92521e9dbda Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Sun, 1 Mar 2015 17:47:15 -0800
-Subject: [PATCH] exherbo multi-arch paths
+Subject: [PATCH 2/3] exherbo multi-arch paths
 
 ---
  gcc/config.gcc              |  2 +-
  gcc/config/arm/linux-eabi.h | 23 +++++++++++++++++++++++
- gcc/config/arm/linux-elf.h  | 16 ++++++++++++++++
- gcc/config/i386/linux.h     | 13 +++++++++++++
- gcc/config/i386/linux64.h   | 18 ++++++++++++++++++
+ gcc/config/i386/linux.h     | 22 ++++++++++++++++++++++
+ gcc/config/i386/linux64.h   | 34 ++++++++++++++++++++++++++++++++++
  gcc/config/rs6000/linux64.h | 15 +++++++++++++++
- 6 files changed, 86 insertions(+), 1 deletion(-)
+ 5 files changed, 95 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index 3ede69b..92ec98c 100644
+index fa81ca0..2160c3f 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
 @@ -227,7 +227,7 @@ default_use_cxa_atexit=no
@@ -28,7 +27,7 @@ index 3ede69b..92ec98c 100644
  
  # Don't carry these over build->host->target.  Please.
 diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-index e9d65dc..56ed051 100644
+index e9d65dc..2a80152 100644
 --- a/gcc/config/arm/linux-eabi.h
 +++ b/gcc/config/arm/linux-eabi.h
 @@ -120,3 +120,26 @@
@@ -40,16 +39,16 @@ index e9d65dc..56ed051 100644
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
 +#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-gnueabihf/lib/"
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-uknown-linux-gnueabihf/lib/"
 +#else
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-uknown-linux-gnueabi/lib/"
 +#endif
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
 +#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
-+#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-gnueabihf/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/armv7-uknown-linux-gnueabihf/lib/"
 +#else
-+#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-gnueabi/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/armv7-uknown-linux-gnueabi/lib/"
 +#endif
 +
 +#undef GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
@@ -58,67 +57,59 @@ index e9d65dc..56ed051 100644
 +#undef GLIBC_DYNAMIC_LINKER_HARD_FLOAT
 +#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-gnueabihf/lib/ld-linux-armhf.so.3"
 +
-diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
-index 49ad954..ce85a33 100644
---- a/gcc/config/arm/linux-elf.h
-+++ b/gcc/config/arm/linux-elf.h
-@@ -124,3 +124,19 @@
-    to COPY relocated symbol in the executable.  See PR65780.  */
- #undef TARGET_BINDS_LOCAL_P
- #define TARGET_BINDS_LOCAL_P default_binds_local_p_2
-+
-+/* exherbo specific paths */
-+/*
-+ * TODO(compnerd) consider dropping this hunk.  arm-linux-elf is not really
-+ * recommended and unused in exherbo, making this part of the patch superfluous
-+ */
-+
-+#undef STANDARD_STARTFILE_PREFIX_1
-+#define STANDARD_STARTFILE_PREFIX_1 "/usr/arm-unknown-linux-elf/lib/"
-+
-+#undef STANDARD_STARTFILE_PREFIX_2
-+#define STANDARD_STARTFILE_PREFIX_2 "/arm-unknown-linux-elf/lib/"
-+
-+#undef GLIBC_DYNAMIC_LINKER
-+#define GLIBC_DYNAMIC_LINKER "/usr/arm-unknown-linux-elf/lib/ld-linux.so.2"
-+
 diff --git a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
-index a100963..c3a9d9f 100644
+index 47df2f4..7ab47b1 100644
 --- a/gcc/config/i386/linux.h
 +++ b/gcc/config/i386/linux.h
-@@ -21,3 +21,16 @@ along with GCC; see the file COPYING3.  If not see
+@@ -24,3 +24,25 @@ along with GCC; see the file COPYING3.  If not see
  
- #define GNU_USER_LINK_EMULATION "elf_i386"
- #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-+
+ #define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
+ 
 +/* exherbo specific paths */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/i686-pc-linux-musl/lib/"
++#else
 +#define STANDARD_STARTFILE_PREFIX_1 "/usr/i686-pc-linux-gnu/lib/"
++#endif
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_2 "/i686-pc-linux-musl/lib/"
++#else
 +#define STANDARD_STARTFILE_PREFIX_2 "/i686-pc-linux-gnu/lib/"
++#endif
 +
 +#undef GLIBC_DYNAMIC_LINKER
 +#define GLIBC_DYNAMIC_LINKER "/usr/i686-pc-linux-gnu/lib/ld-linux.so.2"
 +
++#undef MUSL_DYNAMIC_LINKER
++#define MUSL_DYNAMIC_LINKER "/usr/i686-pc-linux-musl/lib/ld-musl-i386.so.1"
 +
 diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
-index a27d3be..f0d42a4 100644
+index 74180d8..ae5443b 100644
 --- a/gcc/config/i386/linux64.h
 +++ b/gcc/config/i386/linux64.h
-@@ -30,3 +30,21 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
- #define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
- #define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
- #define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
-+
+@@ -35,3 +35,37 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+ #define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-x86_64.so.1"
+ #define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
+ 
 +/* exherbo specific paths */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/x86_64-pc-linux-musl/lib/"
++#else
 +#define STANDARD_STARTFILE_PREFIX_1 "/usr/x86_64-pc-linux-gnu/lib/"
++#endif
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_2 "/x86_64-pc-linux-musl/lib/"
++#else
 +#define STANDARD_STARTFILE_PREFIX_2 "/x86_64-pc-linux-gnu/lib/"
++#endif
 +
 +#undef GLIBC_DYNAMIC_LINKER32
 +#define GLIBC_DYNAMIC_LINKER32 "/usr/x86_64-pc-linux-gnu/lib/ld-linux.so.2"
@@ -128,6 +119,15 @@ index a27d3be..f0d42a4 100644
 +
 +#undef GLIBC_DYNAMIC_LINKERX32
 +#define GLIBC_DYNAMIC_LINKERX32 "/usr/x86_64-pc-linux-gnu/lib/ld-linux-x32.so.2"
++
++#undef MUSL_DYNAMIC_LINKER32
++#define MUSL_DYNAMIC_LINKER32 "/usr/x86_64-pc-linux-musl/lib/ld-musl-i386.so.1"
++
++#undef MUSL_DYNAMIC_LINKER64
++#define MUSL_DYNAMIC_LINKER64 "/usr/x86_64-pc-linux-musl/lib/ld-musl-x86_64.so.1"
++
++#undef MUSL_DYNAMIC_LINKERX32
++#define MUSL_DYNAMIC_LINKERX32 "/usr/x86_64-pc-linux-musl/lib/ld-musl-x32.so.1"
 +
 diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
 index 0879e7e..06651f0 100644
@@ -153,5 +153,5 @@ index 0879e7e..06651f0 100644
 +#define GNU_USER_DYNAMIC_LINKER64 "/usr/powerpc64-unknown-linux-gnueabi/lib/ld64.so.1"
 +
 -- 
-2.4.6
+2.5.0
 
