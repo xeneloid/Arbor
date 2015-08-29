@@ -17,6 +17,7 @@ DEPENDENCIES="
         dev-libs/gmp:5
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/966737bd91ed.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-cxx --hates=docdir )
 
 src_configure() {
@@ -35,6 +36,7 @@ src_configure() {
 
     ABI=${abi}
 
+    CC_FOR_BUILD=$(exhost --build)-cc \
     default
 }
 

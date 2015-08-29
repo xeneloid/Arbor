@@ -52,6 +52,7 @@ src_configure() {
     done
     [[ -n ${abi} ]] || die "$(exhost --target) not currently supported"
 
+    CC_FOR_BUILD=$(exhost --build)-cc \
     default
 }
 
