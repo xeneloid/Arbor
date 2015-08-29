@@ -28,6 +28,9 @@ ncurses_pkg_pretend() {
         ewarn "To install a different major version of ncurses, you have to enable the compat-libs"
         ewarn "option and re-install all packages depending on ncurses before being able to disable"
         ewarn "it again, else bash and with it paludis will be broken."
+        ewarn "cave resolve -D ncurses nothing"
+        ewarn "You should also recompile readline and it's dependencies, else things like gcc and gmp"
+        ewarn "will be broken, and you'll be sad."
         die "Set the compat-libs option before doing a major version upgrade of ncurses."
     fi
 }
