@@ -23,7 +23,8 @@ DEPENDENCIES="
 ECONF_SOURCE=${WORK}
 
 ncurses_pkg_pretend() {
-    if ! option compat-libs && has_version ${CATEGORY}/${PN} && \
+    if exhost --is-native && ! option compat-libs && \
+        has_version ${CATEGORY}/${PN} && \
         ! has_version ${CATEGORY}/${PN}[=$(ever major)*] ; then
         ewarn "To install a different major version of ncurses, you have to enable the compat-libs"
         ewarn "option and re-install all packages depending on ncurses before being able to disable"
