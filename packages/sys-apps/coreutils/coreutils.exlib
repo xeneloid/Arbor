@@ -3,6 +3,7 @@
 # Copyright 2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require gnu [ suffix=xz ] alternatives
 
 export_exlib_phases src_prepare src_configure src_test src_test_expensive src_install pkg_preinst
@@ -43,6 +44,8 @@ DEPENDENCIES="
         sys-apps/sydbox[>=0.6.8] [[ note = [ tests fail with sydbox older than 0.6.8 ] ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PNV}-remove-man-page-generation.patch" )
+
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     acl
     "caps libcap"
@@ -64,16 +67,14 @@ coreutils_src_prepare() {
     # The help2man step loves to fail if done during cross-compiles and for chroots.
     # Don't try rebuilding the man pages which we pre-generate and put into a
     # separate tarball. Preparing the man pages tarball works like this:
-    # 1. Comment out the man-pages download above.
+    # 1. Comment out the man-pages download and patching above.
     # 2. cave resolve coreutils -z1x --abort-at-phase install
     # 3. From ${WORK}, take the .1 files in the man sub-directory
     # 4. Add all .1 files to coreutils-${PV}-man-pages.tar.xz, preserving the paths, e. g.
     #    coreutils-8.22/man.
     # 5. Upload it to dev.exherbo.org:/srv/www/dev.exherbo.org/distfiles/
 
-    # Touch the man pages to prevent rebuilding.
-    set -- man/*.x
-    edo touch ${@/%x/1}
+    eautoreconf
 }
 
 coreutils_src_configure() {
