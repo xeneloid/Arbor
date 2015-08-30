@@ -1,0 +1,39 @@
+Title: sys-libs/ncurses 6.0 update causes breakage
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-08-29
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: sys-libs/ncurses[<6]  
+
+sys-libs/ncurses has been upgraded to 6.0, a new major version of the library.
+
+Due to this, there's some work that should be done before you go forward and
+upgrade it to the newest version; ncurses is a part of many of the system's
+libraries and components, such as bash, and failure to heed this warning and
+follow the steps detailed here will break your system, and you will be upset.
+
+1. Install ncurses[compat-libs]
+
+    # cave resolve -1 ncurses[compat-libs]
+
+2. Reinstall all dependencies of ncurses
+
+    # cave resolve -D ncurses nothing
+
+3. Reinstall gcc, which seems to be indirect dependencies of ncurses
+
+    # cave resolve -1 gcc
+
+4. Reinstall ncurses without [compat-libs]
+
+    # cave resolve -1 ncurses
+
+5. Fix any broken links
+
+    # cave fix-linkage
+
+Any issues with this should be reported to IRC, but please make sure you follow
+these steps correctly first.
+
+
