@@ -4,7 +4,7 @@ Content-Type: text/plain
 Posted: 2015-08-29
 Revision: 1
 News-Item-Format: 1.0
-Display-If-Installed: sys-libs/ncurses[<6]  
+Display-If-Installed: sys-libs/ncurses[<6]
 
 sys-libs/ncurses has been upgraded to 6.0, a new major version of the library.
 
@@ -21,7 +21,7 @@ follow the steps detailed here will break your system, and you will be upset.
 
     # cave resolve -D ncurses nothing
 
-3. Reinstall gcc, which seems to be indirect dependencies of ncurses
+3. Reinstall gcc, which seems to be an indirect dependency of ncurses
 
     # cave resolve -1 gcc
 
