@@ -1,7 +1,8 @@
 # Copyright 2008, 2009 Mike Kelly <pioto@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require udev-rules github [ user=rickysarraf tag="upstream/${PV}" ] systemd-service [ systemd_files=[ etc/systemd/laptop-mode.service ] ]
+require udev-rules github [ user=rickysarraf tag=${PV} ] \
+    systemd-service [ systemd_files=[ etc/systemd/{laptop-mode.{service,timer},lmt-poll.service} ] ]
 
 SUMMARY="Laptop power saving package for Linux systems"
 DESCRIPTION="
