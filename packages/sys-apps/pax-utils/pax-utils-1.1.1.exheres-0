@@ -8,21 +8,33 @@ DOWNLOADS="mirror://gentoo/${PNV}.tar.xz"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="caps"
+MYOPTIONS="
+    caps
+    debug
+    seccomp [[ description = [ System call filtering support via seccomp ] ]]
+"
 
 DEPENDENCIES="
     build:
-        app-arch/xz
+        caps? ( virtual/pkg-config )
+        seccomp? ( virtual/pkg-config )
     build+run:
         caps? ( sys-libs/libcap )
+        seccomp? ( sys-libs/libseccomp )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --without-python )
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( caps )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    caps
+    debug
+    seccomp
+)
 
 src_prepare() {
     # py script is not compatible with cross, sh needs a tweak.
     edo rm -rf tests/lddtree
     edo sed -i -e "s/strings/$(exhost --tool-prefix)strings/" lddtree.sh
+
+    default
 }
 
