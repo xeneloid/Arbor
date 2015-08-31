@@ -18,12 +18,12 @@ were added.
 "
 HOMEPAGE="http://www.zsh.org/"
 DOWNLOADS="
-    ftp://ftp.zsh.org/pub/${PNV}.tar.bz2
-    http://www.zsh.org/pub/${PNV}.tar.bz2
-    mirror://sourceforge/${PN}/${PNV}.tar.bz2
+    ftp://ftp.zsh.org/pub/${PNV}.tar.xz
+    http://www.zsh.org/pub/${PNV}.tar.xz
+    mirror://sourceforge/${PN}/${PNV}.tar.xz
     doc? (
-        ftp://ftp.zsh.org/pub/${PNV}-doc.tar.bz2
-        mirror://sourceforge/${PN}/${PNV}-doc.tar.bz2
+        ftp://ftp.zsh.org/pub/${PNV}-doc.tar.xz
+        mirror://sourceforge/${PN}/${PNV}-doc.tar.xz
     )
 "
 

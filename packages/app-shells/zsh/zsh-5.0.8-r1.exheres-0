@@ -7,3 +7,13 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 UPSTREAM_RELEASE_NOTES="http://zsh.sourceforge.net/releases.html"
 
+DOWNLOADS="
+    ftp://ftp.zsh.org/pub/${PNV}.tar.bz2
+    http://www.zsh.org/pub/${PNV}.tar.bz2
+    mirror://sourceforge/${PN}/${PNV}.tar.bz2
+    doc? (
+        ftp://ftp.zsh.org/pub/${PNV}-doc.tar.bz2
+        mirror://sourceforge/${PN}/${PNV}-doc.tar.bz2
+    )
+"
+
