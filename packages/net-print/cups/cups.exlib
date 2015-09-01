@@ -14,7 +14,7 @@ export_exlib_phases src_prepare src_configure src_install src_test pkg_postinst 
 
 SUMMARY="Common UNIX Printing System"
 DESCRIPTION="A portable printing layer for UNIX®-based operating systems."
-HOMEPAGE="http://${PN}.org"
+HOMEPAGE="https://${PN}.org"
 DOWNLOADS="${HOMEPAGE}/software/${MY_PV}/${MY_PNV}-source.tar.bz2"
 
 REMOTE_IDS="freecode:${PN}"
@@ -171,8 +171,6 @@ cups_src_install() {
     echo "ServerName /run/cups/cups.sock" >> "${IMAGE}"/etc/cups/client.conf
 
     # cups-filters now provides these
-    edo rm "${IMAGE}"/usr/share/cups/banners/{classified,confidential,secret,standard,topsecret,unclassified}
-    edo rm "${IMAGE}"/usr/share/cups/data/testprint
     edo rmdir "${IMAGE}"/usr/share/cups/{banners,data}
 
     # directories are created automatically on startup
