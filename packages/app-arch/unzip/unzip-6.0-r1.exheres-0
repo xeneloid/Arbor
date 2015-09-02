@@ -3,6 +3,7 @@
 # Based in part upon 'unzip-5.52-r2.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
+require alternatives
 require flag-o-matic
 
 MY_PV="$(ever delete_all ${PV})"
@@ -63,5 +64,12 @@ src_compile() {
         -DLARGE_FILE_SUPPORT
 
     emake -f unix/Makefile ${target}
+}
+
+src_install() {
+    default
+    alternatives_for unzip ${PN} 1000   \
+        /usr/$(exhost --target)/bin/unzip unzip.unzip   \
+        /usr/share/man/man1/unzip.1 unzip.unzip.1
 }
 
