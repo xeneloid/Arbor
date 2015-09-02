@@ -5,6 +5,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 require debian-upstream [ suffix=.tar.xz ]
+require alternatives
 
 SUMMARY="Miscellaneous utilities specific to Debian"
 DESCRIPTION="
@@ -37,5 +38,8 @@ src_install() {
 
     doman "${WORK}"/{tempfile.1,run-parts.8,savelog.8,installkernel.8}
     dodoc "${WORK}"/debian/{changelog,control}
+
+    alternatives_for installkernel ${PN} 1000 \
+        /usr/$(exhost --target)/bin/installkernel installkernel.debianutils
 }
 
