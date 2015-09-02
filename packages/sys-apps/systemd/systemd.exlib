@@ -132,6 +132,10 @@ DEPENDENCIES="
         user/systemd-network [[ note = [ Required for systemd-networkd ] ]]
         user/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         user/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
+        !sys-apps/debianutils[<4.5.1-r1] [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
         !sys-apps/eudev [[
             description = [ ${PN} has a udev daemon which provides the same library and programms that eudev does ]
             resolution = manual
@@ -376,6 +380,9 @@ systemd_src_install() {
     keepdir /usr/${host}/lib/systemd/system-sleep
 
     alternatives_for "${alternatives[@]}"
+
+    alternatives_for installkernel ${PN} 100 \
+        /usr/$(exhost --target)/bin/installkernel kernel-install
 
     # Don't install funny RPM macros.
     if [[ -d "${IMAGE}"/etc/rpm ]]; then
