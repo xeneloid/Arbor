@@ -17,7 +17,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:gtar? ( app-arch/gtar )
+    providers:gtar? ( app-arch/tar )
     providers:libarchive? ( app-arch/libarchive )
 "
 
