@@ -1,0 +1,23 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: tar providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers:
+        gtar
+        libarchive
+    ) [[
+        *description = [ tar provider ]
+        number-selected = at-least-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:gtar? ( app-arch/gtar )
+    providers:libarchive? ( app-arch/libarchive )
+"
+
