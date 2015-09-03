@@ -10,22 +10,6 @@ fi
 
 SUMMARY="GNU OpenMP Runtime (libgomp)"
 LICENCES="GPL-2"
-# Upstream did some version bikeshedding, 5.x. are bugfix releases.
-if ever at_least 6.0 ; then
-    SLOT="$(ever major)"
-elif ever at_least 5.2 ; then
-    SLOT=5.1
-else
-    SLOT="$(ever range 1-2)"
-fi
-
-MYOPTIONS="
-    doc
-    (
-        linguas:
-            be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
-    )
-"
 
 DEPENDENCIES="
     build:
@@ -37,6 +21,35 @@ DEPENDENCIES="
             dev-util/xsltproc
             media-gfx/graphviz
         )
+"
+
+# Upstream did some version bikeshedding, 5.x. are bugfix releases.
+if ever at_least 6.0 ; then
+    SLOT="$(ever major)"
+    DEPENDENCIES+="
+        build:
+            sys-devel/gcc:${SLOT}
+    "
+elif ever at_least 5.2 ; then
+    SLOT=5.1
+    DEPENDENCIES+="
+        build:
+            sys-devel/gcc:${SLOT}[>=5.2.0-r5]
+    "
+else
+    SLOT="$(ever range 1-2)"
+    DEPENDENCIES+="
+        build:
+            sys-devel/gcc:${SLOT}[>=4.9.2-r9]
+    "
+fi
+
+MYOPTIONS="
+    doc
+    (
+        linguas:
+            be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
+    )
 "
 
 # Those tests previously only ran during gcc's test_expensive phase, however
@@ -58,6 +71,13 @@ libgomp_src_unpack() {
     mkdir -p "${WORK}"
 }
 
+libgomp_src_configure() {
+    CC=$(exhost --tool-prefix)gcc-${SLOT}       \
+    CPP=$(exhost --tool-prefix)gcc-cpp-${SLOT}  \
+    CXX=$(exhost --tool-prefix)g++-${SLOT}      \
+    default
+}
+
 libgomp_src_install() {
     default
 
@@ -71,5 +91,5 @@ libgomp_src_install() {
         /usr/share/info/${PN}.info ${PN}-${SLOT}.info
 }
 
-export_exlib_phases src_unpack src_install
+export_exlib_phases src_unpack src_configure src_install
 
