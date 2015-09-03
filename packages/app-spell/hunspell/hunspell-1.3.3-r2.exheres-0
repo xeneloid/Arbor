@@ -22,7 +22,7 @@ DEPENDENCIES="
     build+run:
         sys-libs/ncurses
     suggestion:
-        app-arch/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
+        virtual/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
