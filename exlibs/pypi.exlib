@@ -16,6 +16,6 @@ REMOTE_IDS+=" pypi:${PYPI_PN}"
 if has $(exparam suffix) zip ; then
     DEPENDENCIES+="
         build:
-            app-arch/unzip"
+            virtual/unzip"
 fi
 
