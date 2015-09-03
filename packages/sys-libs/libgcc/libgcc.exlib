@@ -10,26 +10,36 @@ fi
 
 SUMMARY="GCC C Runtime Library"
 LICENCES="GPL-2"
+
 # Upstream did some version bikeshedding, 5.x. are bugfix releases.
 if ever at_least 6.0 ; then
     SLOT="$(ever major)"
+    DEPENDENCIES="
+        build:
+            sys-devel/gcc:${SLOT}
+    "
 elif ever at_least 5.2 ; then
     SLOT=5.1
+    DEPENDENCIES="
+        build:
+            sys-devel/gcc:${SLOT}[>=5.2.0-r5]
+    "
 else
     SLOT="$(ever range 1-2)"
+    DEPENDENCIES="
+        build:
+            sys-devel/gcc:${SLOT}[>=4.9.2-r9]
+    "
 fi
+
+DEPENDENCIES+="
+    build:
+        sys-libs/libstdc++:${SLOT}
+"
 
 MYOPTIONS="
     linguas:
         be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
-"
-
-DEPENDENCIES="
-    build:
-        sys-devel/gcc:=
-        sys-libs/libstdc++:${SLOT}
-    build+run:
-        sys-libs/glibc
 "
 
 REMOTE_IDS="freecode:gcc"
@@ -43,12 +53,12 @@ WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
 # TODO(compnerd) find a way to expose build tools when cross-compiling and replace
 # {AR,RANLIB}_FOR_BUILD accordingly
 DEFAULT_SRC_CONFIGURE_PARAMS=( AR_FOR_BUILD=$(exhost --build)-ar
-                               CC_FOR_BUILD=$(exhost --build)-cc
+                               CC_FOR_BUILD=$(exhost --build)-gcc-${SLOT}
                                LD_FOR_BUILD=$(exhost --build)-ld
-                               CPP_FOR_BUILD=$(exhost --build)-cpp
+                               CPP_FOR_BUILD=$(exhost --build)-gcc-cpp-${SLOT}
                                RANLIB_FOR_BUILD=$(exhost --build)-ranlib
                                AS_FOR_TARGET=$(exhost --tool-prefix)as
-                               CC_FOR_TARGET=$(exhost --tool-prefix)cc
+                               CC_FOR_TARGET=$(exhost --tool-prefix)gcc-${SLOT}
                                LD_FOR_TARGET=$(exhost --tool-prefix)ld
                                --disable-bootstrap
                                --disable-multilib --with-multilib-list='' --enable-languages=c
@@ -83,6 +93,13 @@ libgcc_src_prepare() {
             -i "${ECONF_SOURCE}/gcc/configure"
 }
 
+libgcc_src_configure() {
+    CC=$(exhost --tool-prefix)gcc-${SLOT}       \
+    CPP=$(exhost --tool-prefix)gcc-cpp-${SLOT}  \
+    CXX=$(exhost --tool-prefix)g++-${SLOT}      \
+    default
+}
+
 libgcc_src_compile() {
     local build=$(exhost --build) ; build="${build//-/_}"
     local build_cflags_var=${build}_CFLAGS
@@ -90,9 +107,9 @@ libgcc_src_compile() {
     local build_cxxflags_var=${build}_CXXFLAGS
     local build_ldflags_var=${build}_LDFLAGS
     local LD_FOR_BUILD=$(exhost --build)-ld
-    local CC_FOR_BUILD=$(exhost --build)-cc
-    local CPP_FOR_BUILD=$(exhost --build)-cpp
-    local CXX_FOR_BUILD=$(exhost --build)-c++
+    local CC_FOR_BUILD=$(exhost --build)-gcc-${SLOT}
+    local CPP_FOR_BUILD=$(exhost --build)-gcc-cpp-${SLOT}
+    local CXX_FOR_BUILD=$(exhost --build)-g++-${SLOT}
 
     emake all-build-libiberty CFLAGS="${!build_cflags_var}" CPPFLAGS="${!build_cppflags_var}" \
         CXXFLAGS="${!build_cxxflags_var}" LDFLAGS="${!build_ldflags_var}" CPP=${CPP_FOR_BUILD}
@@ -110,7 +127,7 @@ libgcc_src_compile() {
         CXXFLAGS="${!build_cxxflags_var}"       \
         LDFLAGS="${!build_ldflags_var}"         \
         AS_FOR_TARGET=$(exhost --tool-prefix)as \
-        CC_FOR_TARGET=$(exhost --tool-prefix)cc \
+        CC_FOR_TARGET=$(exhost --tool-prefix)gcc-${SLOT} \
         LD_FOR_TARGET=$(exhost --tool-prefix)ld \
     edo "${ECONF_SOURCE}/gcc/configure"         \
             --host=$(exhost --build)            \
@@ -129,6 +146,17 @@ libgcc_src_compile() {
 
     edo mkdir -p "${WORK}/$(exhost --target)/libgcc"
     edo cd "${WORK}/$(exhost --target)/libgcc"
+        CC=${CC_FOR_BUILD}                       \
+        LD=${LD_FOR_BUILD}                       \
+        CPP=${CPP_FOR_BUILD}                     \
+        CXX=${CXX_FOR_BUILD}                     \
+        CFLAGS="${!build_cflags_var}"            \
+        CPPFLAGS="${!build_cppflags_var}"        \
+        CXXFLAGS="${!build_cxxflags_var}"        \
+        LDFLAGS="${!build_ldflags_var}"          \
+        AS_FOR_TARGET=$(exhost --tool-prefix)as  \
+        CC_FOR_TARGET=$(exhost --tool-prefix)gcc-${SLOT} \
+        LD_FOR_TARGET=$(exhost --tool-prefix)ld  \
     edo "${ECONF_SOURCE}/libgcc/configure"       \
             --build=$(exhost --build)            \
             --host=$(exhost --target)            \
@@ -149,5 +177,5 @@ libgcc_src_install() {
     slot_dynamic_libs ${SLOT} ${PN}_s
 }
 
-export_exlib_phases src_unpack src_prepare src_compile src_install
+export_exlib_phases src_unpack src_prepare src_configure src_compile src_install
 
