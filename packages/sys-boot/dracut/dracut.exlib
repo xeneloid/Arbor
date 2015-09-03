@@ -53,7 +53,7 @@ DEPENDENCIES="
     test:
         app-shells/dash
     recommendation:
-        sys-apps/sysvinit-tools [[
+        sys-process/procps [[
             description = [ Required by the base module for pidof if not using busybox ]
         ]]
     suggestion:
