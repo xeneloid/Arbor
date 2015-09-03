@@ -19,7 +19,7 @@ REMOTE_IDS="freecode:${PN}"
 
 LICENCES="BSD-2"
 SLOT="0"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "

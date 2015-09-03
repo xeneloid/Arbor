@@ -18,7 +18,7 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="LGPL-2"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS=""
 
 # Full tests (check) want to mount things, need root. Instead we only run partcheck.

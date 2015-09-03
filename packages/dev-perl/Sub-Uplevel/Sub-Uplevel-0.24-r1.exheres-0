@@ -6,6 +6,6 @@ require perl-module [ module_author=DAGOLDEN ]
 SUMMARY="Apparently run a function in a higher stack frame"
 
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS=""
 
