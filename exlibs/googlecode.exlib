@@ -20,6 +20,6 @@ REMOTE_IDS+=" googlecode:$(exparam project) "
 if has $(exparam suffix) zip; then
     DEPENDENCIES+="
         build:
-            app-arch/unzip"
+            virtual/unzip"
 fi
 
