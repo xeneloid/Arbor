@@ -21,6 +21,6 @@ REMOTE_IDS+=" sourceforge:$(exparam project) "
 if has $(exparam suffix) zip ; then
     DEPENDENCIES+="
         build:
-            app-arch/unzip"
+            virtual/unzip"
 fi
 
