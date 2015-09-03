@@ -18,7 +18,7 @@ MYOPTIONS="opengl"
 
 DEPENDENCIES="
     build:
-        app-arch/unzip
+        virtual/unzip
     build+run:
         media-libs/jpeg:=
         opengl? (
