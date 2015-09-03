@@ -50,7 +50,7 @@ DEPENDENCIES="
         sys-apps/systemd[>=199]
         sys-apps/util-linux
         sys-apps/kmod
-    build+test:
+    test:
         app-shells/dash
     recommendation:
         sys-apps/sysvinit-tools [[
