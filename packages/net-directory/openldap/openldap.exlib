@@ -3,7 +3,6 @@
 
 require systemd-service [ systemd_files=[ "slapd.service" ] ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ]
-
 export_exlib_phases src_prepare src_compile src_install src_test_expensive
 
 SUMMARY="An open source implementation of the Lightweight Directory Access Protocol"
@@ -17,6 +16,15 @@ The suite includes:
 HOMEPAGE="http://www.openldap.org"
 DOWNLOADS="ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/${PNV}.tgz"
 
+REMOTE_IDS="freecode:${PN}"
+
+UPSTREAM_CHANGELOG="${HOMEPAGE}/software/release/changes.html"
+UPSTREAM_DOCUMENTATION="
+${HOMEPAGE}/doc/admin/          [[ lang = en description = [ Administration guide ] ]]
+${HOMEPAGE}/faq/                [[ lang = en description = [ FAQ ] ]]
+${HOMEPAGE}/software/man.cgi    [[ lang = en description = [ Manual pages ] ]]
+"
+
 LICENCES="OpenLDAP-2.8"
 SLOT="0"
 MYOPTIONS="
@@ -28,19 +36,11 @@ MYOPTIONS="
 # Expensive tests
 RESTRICT="test"
 
-REMOTE_IDS="freecode:${PN}"
-
-UPSTREAM_CHANGELOG="${HOMEPAGE}/software/release/changes.html"
-UPSTREAM_DOCUMENTATION="
-${HOMEPAGE}/doc/admin/          [[ lang = en description = [ Administration guide ] ]]
-${HOMEPAGE}/faq/                [[ lang = en description = [ FAQ ] ]]
-${HOMEPAGE}/software/man.cgi    [[ lang = en description = [ Manual pages ] ]]
-"
-
 DEPENDENCIES="
     build+run:
         user/ldap
         group/ldap
+        dev-db/lmdb[>=0.9.16]
         dev-libs/gmp:=
         dev-libs/icu:=
         net-libs/cyrus-sasl[>=2.1.21]
@@ -84,6 +84,9 @@ openldap_src_prepare() {
 
     # Shared objects should have a+rx,u+w permissions
     edo sed -e '/LTINSTALL/s/-m 644/-m 755/' -i ./libraries/*/Makefile.in
+
+    # remove the bundled lmdb
+    edo rm -rf libraries/liblmdb
 
     eautoconf
 }
