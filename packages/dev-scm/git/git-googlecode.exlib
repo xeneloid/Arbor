@@ -137,7 +137,15 @@ git-googlecode_src_configure() {
     # script we cannot set --exec-prefix since that is not exposed through the
     # resulting Makefile but instead generated here by configure.
     emake configure
+
+    if ! exhost --is-native -q; then
+        myoptions+=( 'ac_cv_fread_reads_directories=no' )
+        myoptions+=( 'ac_cv_snprintf_returns_bogus=no' )
+    fi
+
     edo ./configure \
+        --build=$(exhost --build) \
+        --host=$(exhost --target) \
         --exec-prefix=/usr/$(exhost --target) \
         --prefix=/usr \
         --with-perl=/usr/$(exhost --build)/bin/perl \
