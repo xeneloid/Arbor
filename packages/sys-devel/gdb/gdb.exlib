@@ -61,6 +61,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-curses
     --with-expat
     --with-system-readline
+    --with-system-zlib
     # These are already installed by binutils:
     --disable-install-libbfd
     --disable-install-libiberty
