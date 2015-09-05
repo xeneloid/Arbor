@@ -1,0 +1,56 @@
+# Copyright 2015 Niels Ole Salscheider <niels_ole@salscheider-online.de>
+# Copyright 2012 Elias Pipping <pipping@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+if ever is_scm ; then
+    SCM_REPOSITORY="http://llvm.org/git/compiler-rt.git"
+
+    require scm-git
+else
+    MY_PNV=compiler-rt-${PV}.src
+    WORK=${WORKBASE}/${MY_PNV}
+
+    DOWNLOADS=http://llvm.org/releases/${PV}/compiler-rt-${PV}.src.tar.xz
+fi
+
+require cmake [ api=2 ]
+
+export_exlib_phases src_prepare src_configure
+
+SUMMARY="Sanitizer and profiling runtimes for clang"
+HOMEPAGE="http://compiler-rt.llvm.org/"
+
+LICENCES="|| ( MIT UoI-NCSA )"
+SLOT="0"
+
+LLVM_PVR=${PV}
+
+DEPENDENCIES="
+    build:
+        dev-lang/python:2.7
+    build+run:
+        dev-lang/clang[~${LLVM_PVR}]
+        dev-lang/llvm[~${LLVM_PVR}]
+"
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-cmake-path.patch
+)
+
+compiler-rt_src_prepare() {
+    edo pushd "${CMAKE_SOURCE}"
+    default
+
+    edo sed -e "s/\['nm', library\]/\['${NM}', library\]/" \
+            -i lib/sanitizer_common/scripts/gen_dynamic_list.py
+    edo popd
+}
+
+compiler-rt_src_configure() {
+    local version=$(llvm-config --version)
+    local args=(
+        -DCOMPILER_RT_INSTALL_PATH=/usr/$(exhost --target)/lib/clang/${version%svn}/
+    )
+
+    ecmake "${args[@]}"
+}
+

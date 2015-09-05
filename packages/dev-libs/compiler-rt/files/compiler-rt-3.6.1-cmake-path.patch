@@ -1,0 +1,28 @@
+Upstream: No
+Reason: We install the arch-dependant cmake files to lib instead of share
+
+From c7bd4be475835e653a27a9725128a3eae067ad35 Mon Sep 17 00:00:00 2001
+From: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date: Sat, 5 Sep 2015 11:00:57 +0200
+Subject: [PATCH] Adjust cmake path
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed4fe56..c6cded3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,7 +99,7 @@ else()
+ 
+   # Make use of LLVM CMake modules.
+   file(TO_CMAKE_PATH ${LLVM_BINARY_DIR} LLVM_BINARY_DIR_CMAKE_STYLE)
+-  set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR_CMAKE_STYLE}/share/llvm/cmake")
++  set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR_CMAKE_STYLE}/lib/cmake/llvm")
+   list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_PATH}")
+   # Get some LLVM variables from LLVMConfig.
+   include("${LLVM_CMAKE_PATH}/LLVMConfig.cmake")
+-- 
+2.5.1
+
