@@ -15,18 +15,18 @@ Also, search for LLVM's CMake files in this directory.
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 2ce621c..d8f7cb6 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -72,7 +72,7 @@ if( CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR )
+--- a/CMakeLists.txt  2015-06-12 12:33:38.000000000 -0400
++++ b/CMakeLists.txt  2015-09-05 02:21:53.276722764 -0400
+@@ -72,7 +72,7 @@
    find_program(LLVM_TABLEGEN_EXE "llvm-tblgen" ${LLVM_TOOLS_BINARY_DIR}
      NO_DEFAULT_PATH)
  
 -  set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR}/share/llvm/cmake")
-+  set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR}/lib${LLVM_LIBDIR_SUFFIX}/cmake/llvm")
++  set(LLVM_CMAKE_PATH "${LLVM_BINARY_DIR}/lib${LVM_LIBDIR_SUFFIX}/cmake/llvm")
    set(LLVMCONFIG_FILE "${LLVM_CMAKE_PATH}/LLVMConfig.cmake")
    if(EXISTS ${LLVMCONFIG_FILE})
      list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_PATH}")
-@@ -514,22 +514,22 @@ if (CLANG_BUILT_STANDALONE)
+@@ -531,7 +531,7 @@
    # Generate a list of CMake library targets so that other CMake projects can
    # link against them. LLVM calls its version of this file LLVMExports.cmake, but
    # the usual CMake convention seems to be ${Project}Targets.cmake.
@@ -35,15 +35,11 @@ index 2ce621c..d8f7cb6 100644
    set(clang_cmake_builddir "${CMAKE_BINARY_DIR}/${CLANG_INSTALL_PACKAGE_DIR}")
    get_property(CLANG_EXPORTS GLOBAL PROPERTY CLANG_EXPORTS)
    export(TARGETS ${CLANG_EXPORTS} FILE ${clang_cmake_builddir}/ClangTargets.cmake)
+@@ -542,12 +542,12 @@
  
--  # Install a <prefix>/share/clang/cmake/ClangConfig.cmake file so that
-+  # Install a <prefix>/lib/cmake/clang/ClangConfig.cmake file so that
-   # find_package(Clang) works. Install the target list with it.
    install(FILES
      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/ClangConfig.cmake
--    ${CLANG_BINARY_DIR}/share/clang/cmake/ClangTargets.cmake
 -    DESTINATION share/clang/cmake)
-+    ${CLANG_BINARY_DIR}/lib${LLVM_LIBDIR_SUFFIX}/cmake/clang/ClangTargets.cmake
 +    DESTINATION lib${LLVM_LIBDIR_SUFFIX}/cmake/clang)
  
    # Also copy ClangConfig.cmake to the build directory so that dependent projects
