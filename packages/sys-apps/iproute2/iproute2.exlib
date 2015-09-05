@@ -51,7 +51,7 @@ fi
 
 DEFAULT_SRC_COMPILE_PARAMS+=(
     CC="${CC}"
-    HOSTCC="${CC}"
+    HOSTCC="$(exhost --build)-cc"
     AR="${AR}"
     KERNEL_INCLUDE=/usr/$(exhost --target)/include
     LIBDIR=/usr/$(exhost --target)/lib
