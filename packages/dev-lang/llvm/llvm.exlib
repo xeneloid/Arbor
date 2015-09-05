@@ -4,7 +4,6 @@
 
 if ever is_scm ; then
     SCM_REPOSITORY="http://llvm.org/git/llvm.git"
-
     require scm-git
 else
     MY_PNV=${PNV}.src
@@ -13,8 +12,9 @@ else
     DOWNLOADS="http://llvm.org/releases/${PV}/${MY_PNV}.tar.${SUFFIX}"
 fi
 
-# Not checked against an older version of python
-require cmake [ api=2 ] setup-py [ import=distutils blacklist=3 has_bin=true has_lib=true multibuild=false ]
+# 3.7.0 - only works with python2, and attempting to build with python3 makes it use python2 anyway
+require cmake [ api=2 ]
+require setup-py [ import=distutils blacklist=3 has_bin=true has_lib=true multibuild=false ]
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
@@ -25,7 +25,7 @@ LICENCES="UoI-NCSA"
 SLOT="0"
 MYOPTIONS="
     asserts [[ description = [ Enable assertions ] ]]
-    shared-libs [[ description = [ Build libraries dynamically ] ]]
+    static [[ description = [ Build libraries statically ] ]]
 "
 
 DEPENDENCIES="
@@ -49,9 +49,6 @@ llvm_src_prepare() {
     expatch "${FILES}"/${PN}-fix-llvm-config.patch
     if ! ever is_scm ; then
         expatch "${FILES}"/0001-Install-cmake-files-to-lib-cmake-llvm.patch
-        expatch "${FILES}"/0001-lit-Make-the-gold-plugin-support-testing-work-with-a.patch
-        expatch "${FILES}"/0002-gold-Consolidate-the-gold-plugin-options-and-actuall.patch
-        expatch "${FILES}"/0001-CMake-Also-search-for-prefixed-versions-of-ld.gold.patch
     else
         expatch "${FILES}"/0001-Install-cmake-files-to-lib-cmake-llvm-v2.patch
     fi
@@ -64,8 +61,8 @@ llvm_src_configure() {
     # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
     # method is hidden; move the definition out of line, and export the interface
     local args=(
-        -DBUILD_SHARED_LIBS:BOOL=$(option shared-libs TRUE FALSE)
-        -DLLVM_BINUTILS_INCDIR:STRING=/usr/include
+        -DBUILD_SHARED_LIBS:BOOL=$(option static FALSE TRUE)
+        -DLLVM_BINUTILS_INCDIR:STRING=/usr/$(exhost --target)/include
         -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=$(exhost --target)
         -DLLVM_ENABLE_ASSERTIONS:BOOL=$(option asserts TRUE FALSE)
         -DLLVM_INCLUDE_TESTS:BOOL=TRUE
@@ -93,21 +90,6 @@ llvm_src_test() {
 
 llvm_src_install() {
     cmake_src_install
-
-    if ! ever is_scm; then
-        # prefix the llvm gtest copy so it doesn't clash with the system one
-        edo mkdir "${IMAGE}"/usr/$(exhost --target)/lib/llvm
-
-        local lib
-        for lib in "${IMAGE}"/usr/$(exhost --target)/lib/libgtest* ; do
-            lib=${lib#${IMAGE}/usr/$(exhost --target)/lib/}
-
-            edo mv "${IMAGE}"/usr/$(exhost --target)/lib/{,llvm/}${lib}
-            edo sed \
-                -e "s:lib/${lib}:lib/llvm/${lib}:g" \
-                -i "${IMAGE}"/usr/$(exhost --target)/lib/cmake/llvm/LLVMExports-none.cmake
-        done
-    fi
 
     # Use our system copy of llvm-lit instead of expecting the llvm sources to be present in the
     # file system. This is currently needed for clang.
