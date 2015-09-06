@@ -19,7 +19,7 @@ MYOPTIONS=""
 # FIXME: >=app-text/build-docbook-catalog-1.2 needed to run?
 DEPENDENCIES="
     build:
-      app-arch/unzip[>=5.41]
+      virtual/unzip
     build+run:
       app-text/docbook-xsl-stylesheets[>=1.65]
       app-text/build-docbook-catalog[>=1.2]
