@@ -44,7 +44,7 @@ DEPENDENCIES="
         )
     suggestion:
         app-arch/zip
-        app-arch/unzip
+        virtual/unzip
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
