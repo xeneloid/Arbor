@@ -38,7 +38,7 @@ DEPENDENCIES="
         dev-lang/python:*
         sys-devel/bison
         sys-devel/flex
-        doc? ( app-arch/unzip )
+        doc? ( virtual/unzip )
     build+run:
         app-text/ghostscript
         qt4? ( x11-libs/qt:4[>=4.3.0] )
