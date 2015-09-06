@@ -24,7 +24,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        app-arch/unzip
+        virtual/unzip
 "
 
 WORK=${WORKBASE}
