@@ -13,7 +13,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        app-arch/unzip
+        virtual/unzip
     build+run:
         dev-lang/perl:*"
 
