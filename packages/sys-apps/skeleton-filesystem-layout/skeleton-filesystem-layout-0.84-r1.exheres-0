@@ -47,12 +47,12 @@ pkg_pretend() {
 
 src_install() {
     insinto /usr/$(exhost --target)/lib
-    doins "${FILES}"/os-release
+    doins os-release
 
     insinto /etc
-    doins "${FILES}"/exherbo-release
+    doins exherbo-release
 
-    doins -r "${WORK}"/${PN}-base-etc-${BASE_TARBALL_PV}/*
+    doins -r "${WORK}"/${PN}-base-etc-${BASE_TARBALL_PV}/!(exherbo-release|os-release)
 }
 
 pkg_preinst() {
