@@ -17,14 +17,15 @@ MYOPTIONS=""
 DEPENDENCIES="
     build:
         dev-lang/nasm
+        !media-libs/jpeg [[
+            description = [ Both packages collide heavily ]
+            resolution = uninstall-blocked-after
+        ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=datarootdir
     --hates=docdir
-    --includedir=/usr/$(exhost --target)/include/jpeg-turbo/
-    --libdir=/usr/$(exhost --target)/lib/jpeg-turbo/
-    --program-suffix=-turbo
     --with-jpeg8
     --with-pic
 )
