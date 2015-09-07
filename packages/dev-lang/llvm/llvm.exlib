@@ -25,7 +25,7 @@ LICENCES="UoI-NCSA"
 SLOT="0"
 MYOPTIONS="
     asserts [[ description = [ Enable assertions ] ]]
-    static [[ description = [ Build libraries statically ] ]]
+    static  [[ description = [ Build libraries statically (recommended by upstream) ] ]]
 "
 
 DEPENDENCIES="
