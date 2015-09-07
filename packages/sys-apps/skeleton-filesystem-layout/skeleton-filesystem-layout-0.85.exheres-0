@@ -4,7 +4,7 @@
 
 require multibuild
 
-BASE_TARBALL_PV="0.7"
+BASE_TARBALL_PV="0.8"
 SUMMARY="Skeleton filesystem layout"
 HOMEPAGE="https://www.exherbo.org/"
 DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PN}-base-etc-${BASE_TARBALL_PV}.tar.xz"
@@ -46,13 +46,10 @@ pkg_pretend() {
 }
 
 src_install() {
-    insinto /usr/$(exhost --target)/lib
-    doins os-release
-
     insinto /etc
-    doins exherbo-release
-
-    doins -r "${WORK}"/${PN}-base-etc-${BASE_TARBALL_PV}/!(exherbo-release|os-release)
+    doins -r "${WORK}"/${PN}-base-etc-${BASE_TARBALL_PV}/*
+    edo mkdir -p "${IMAGE}"/usr/$(exhost --target)/lib
+    edo mv -v "${IMAGE}"/etc/os-release "${IMAGE}"/usr/$(exhost --target)/lib
 }
 
 pkg_preinst() {
