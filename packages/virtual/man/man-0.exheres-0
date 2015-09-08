@@ -1,0 +1,23 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: man providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers:
+        man
+        mandoc
+    ) [[
+        *description = [ man provider ]
+        number-selected = at-least-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:man? ( sys-apps/man )
+    providers:mandoc? ( sys-apps/mandoc )
+"
+
