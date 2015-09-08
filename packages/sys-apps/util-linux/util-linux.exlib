@@ -3,7 +3,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require bash-completion systemd-service
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_prepare src_configure src_install
 
@@ -74,6 +73,7 @@ DEPENDENCIES="
             note = [ this is required as most of the tools have been converted to use ncurses ]
         ]]
         sys-libs/pam
+        sys-libs/readline
         sys-libs/zlib
         session-management? ( x11-libs/libutempter )
         systemd? ( sys-apps/systemd )
@@ -89,11 +89,10 @@ DEFAULT_SRC_INSTALL_PARAMS=( usrsbin_execdir=/usr/$(exhost --target)/bin )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
 util-linux_src_prepare() {
-    edo sed -i "s:CPPFLAGS =:& -I/usr/$(exhost --target)/include/ncurses:" Makefile.am
-
     # disable failing tests
     edo rm tests/ts/fdisk/{gpt,mbr-{non,}dos-mode,sunlabel}
     edo rm tests/ts/ipcs/limits2
+    edo rm tests/ts/paths/built-in
     edo rm tests/expected/cal/bigyear
 
     # only works on btrfs, ext4, ocfs2, and xfs filesystems
@@ -101,7 +100,7 @@ util-linux_src_prepare() {
 
     option !session-management && edo rm -rf tests/ts/utmpdump
 
-    autotools_src_prepare
+    default
 }
 
 util-linux_src_configure() {
@@ -120,14 +119,13 @@ util-linux_src_configure() {
     local conflicts=( chfn-chsh kill login newgrp reset su vipw )
 
     # Deprecated Tools:
-    # deprecated-last is deprecated in favor of the new implementation merged from sysvinit
     # line is deprecated in favor of head
-    local deprecated=( deprecated-last line )
+    local deprecated=( line )
 
     local enabled_tools=(
-        agetty bfs cramfs eject fallocate fdformat fsck hwclock last losetup mesg minix
-        more mount mountpoint nsenter nologin partx pg pivot_root raw rename schedutils
-        setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl zramctl
+        agetty bfs cal cramfs eject fallocate fdformat fsck hwclock last losetup mesg minix more
+        mount mountpoint nsenter nologin partx pg pivot_root raw rename schedutils setpriv setterm
+        sulogin switch_root ul unshare uuidd wall wdctl zramctl
     )
 
     local disabled_tools=( pylibmount runuser write )
@@ -142,8 +140,15 @@ util-linux_src_configure() {
         --enable-libmount-force-mountinfo \
         --enable-libuuid \
         --enable-nls \
+        --enable-usrdir-path \
         --disable-static \
+        --with-cap-ng \
+        --with-libz \
         --with-ncurses \
+        --with-readline \
+        --with-termcap \
+        --with-tinfo \
+        --with-util \
         --without-audit \
         --without-python \
         --without-selinux \
