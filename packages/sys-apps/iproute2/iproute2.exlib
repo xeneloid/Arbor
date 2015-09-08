@@ -107,6 +107,10 @@ iproute2_src_configure() {
     if ever at_least 3.18.0 ; then
         edo echo 'HAVE_SELINUX:=n' >> Config
     fi
+
+    if ever at_least 4.2.0 ; then
+        edo echo 'HAVE_MNL:=y' >> Config
+    fi
 }
 
 iproute2_src_install() {
