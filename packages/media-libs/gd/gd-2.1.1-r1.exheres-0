@@ -19,6 +19,7 @@ MYOPTIONS="
     truetype
     webp [[ description = [ Support for the WebP image format ] ]]
     xpm
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -26,8 +27,9 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         fontconfig? ( media-libs/fontconfig )
-        media-libs/jpeg:=
         media-libs/libpng:=
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         tiff? ( media-libs/tiff )
         truetype? ( media-libs/freetype:2[>=2.1.10] )
         webp? ( media-libs/libvpx ) [[ note = [ Replaced by libwebp in git master ] ]]

@@ -10,7 +10,9 @@ SUMMARY="DjVu encoders and utilities"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS=""
+MYOPTIONS="
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
@@ -21,8 +23,9 @@ DEPENDENCIES="
             media-gfx/inkscape
         ) [[ note = [ for icon generation in desktopfiles/Makefile.in ] ]]
     build+run:
-        media-libs/jpeg:=[>=6b]
         media-libs/tiff
+        providers:ijg-jpeg? ( media-libs/jpeg:=[>=6b] )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(

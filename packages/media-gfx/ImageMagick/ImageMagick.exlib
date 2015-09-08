@@ -46,6 +46,8 @@ MYOPTIONS="
     truetype
     webp [[ description = [ Support for the Webp image format ] ]]
     wmf [[ description = [ Support for the Windows Metafile image format ] ]]
+
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
 # Multiple failures, possibly caused by sandbox
@@ -57,7 +59,6 @@ DEPENDENCIES="
         X? ( x11-proto/xextproto )
     build+run:
         dev-libs/libxml2:2.0[>=2.0.0]
-        media-libs/jpeg:=[>=6b]
         media-libs/libpng:=[>=1.0.0]
         X?  (
             x11-libs/libSM
@@ -78,6 +79,8 @@ DEPENDENCIES="
         pango? ( x11-libs/pango[>=1.28.1] )
         perl? ( dev-lang/perl:=[>=5.8.6] )
         postscript? ( app-text/ghostscript )
+        providers:ijg-jpeg? ( media-libs/jpeg:=[>=6b] )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         svg? (
             gnome-desktop/librsvg:2[>=2.9.0]
             x11-libs/cairo

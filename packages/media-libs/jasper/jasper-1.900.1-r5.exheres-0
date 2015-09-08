@@ -14,13 +14,15 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="Jasper-2.0"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="opengl"
+MYOPTIONS="
+    opengl
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build:
         virtual/unzip
     build+run:
-        media-libs/jpeg:=
         opengl? (
             x11-dri/freeglut
             x11-dri/mesa
@@ -30,6 +32,8 @@ DEPENDENCIES="
             x11-libs/libXmu
             x11-libs/libXt
         )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

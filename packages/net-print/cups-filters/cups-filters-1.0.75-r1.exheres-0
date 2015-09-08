@@ -22,6 +22,7 @@ MYOPTIONS="
     avahi
     dbus
     ldap
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -34,7 +35,6 @@ DEPENDENCIES="
         dev-libs/glib:2[>=2.30.2]
         media-libs/fontconfig[>=2.0.0]
         media-libs/freetype:2
-        media-libs/jpeg:=
         media-libs/lcms2
         media-libs/libpng:=
         media-libs/tiff
@@ -45,6 +45,8 @@ DEPENDENCIES="
         )
         dbus? ( sys-apps/dbus )
         ldap? ( net-directory/openldap )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         !app-text/ghostscript[<9.09] [[
             description = [ cups-filters now provides gstopxl and gstoraster ]
             resolution = upgrade-blocked-before

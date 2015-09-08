@@ -63,6 +63,7 @@ MYOPTIONS="
     )
 
     php_extensions:ftp? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    php_extensions:gd?  ( ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]] )
     php_extensions:ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
@@ -91,11 +92,12 @@ DEPENDENCIES="
         )
         php_extensions:gd? (
             media-libs/freetype:2
-            media-libs/jpeg:=[>=6b]
             media-libs/libpng:=[>=1.2.35]
             media-libs/libvpx
             media-libs/t1lib[>=5.1.2]
             x11-libs/libXpm[>=3.5.7]
+            providers:ijg-jpeg? ( media-libs/jpeg:=[>=6b] )
+            providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         )
         php_extensions:gdbm? ( sys-libs/gdbm[>=1.8.3] )
         php_extensions:imap? (

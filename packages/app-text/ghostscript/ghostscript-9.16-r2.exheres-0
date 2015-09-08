@@ -18,6 +18,7 @@ MYOPTIONS="
     idn
     gtk [[ requires = [ X ] ]]
     X
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
 # system openjpeg cannot be used; see http://bugs.ghostscript.com/show_bug.cgi?id=694449
@@ -31,7 +32,6 @@ DEPENDENCIES="
         media-libs/fontconfig
         media-libs/freetype:2[>=2.4.2]
         media-libs/jbig2dec
-        media-libs/jpeg:=
         media-libs/lcms2[>=2.5]
         media-libs/libpng:=[>=1.5.7]
         media-libs/tiff
@@ -40,6 +40,8 @@ DEPENDENCIES="
         dbus? ( sys-apps/dbus )
         gtk? ( x11-libs/gtk+:3 )
         idn? ( net-dns/libidn )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         X? (
             x11-libs/libXext
             x11-libs/libXt

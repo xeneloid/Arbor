@@ -9,13 +9,17 @@ SUMMARY="The Multiple Network Graphics reference library"
 LICENCES="ZLIB"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="lcms"
+MYOPTIONS="
+    lcms
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
+"
 
 DEPENDENCIES="
     build+run:
-        media-libs/jpeg:=
         sys-libs/zlib
         lcms? ( media-libs/lcms )
+        providers:ijg-jpeg? ( media-libs/jpeg:= )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
