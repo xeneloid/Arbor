@@ -22,7 +22,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 src_configure() {
     edo env                                       \
-        BUILD_CC="$(exhost --build)-gcc ${CLAGS}" \
+        BUILD_CC="$(exhost --build)-cc ${CFLAGS}" \
         DEFS="-I/usr/$(exhost --target)/include"  \
     "${WORK}/configure"                           \
             -default                              \
