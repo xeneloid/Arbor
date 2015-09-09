@@ -31,8 +31,10 @@ DEPENDENCIES="
         dev-libs/popt[>=1.7]
         sys-apps/util-linux [[ note = [ cryptsetup needs libuuid ] ]]
         sys-fs/lvm2 [[ note = [ cryptsetup needs device-mapper from the LVM2 package ] ]]
-        gcrypt? ( dev-libs/libgcrypt[>=1.6.1]
-                  dev-libs/libgpg-error )
+        gcrypt? (
+            dev-libs/libgcrypt[>=1.6.1]
+            dev-libs/libgpg-error
+        )
         nettle? ( dev-libs/nettle[>=2.6] )
         openssl? (
             providers:libressl? ( dev-libs/libressl:= )
