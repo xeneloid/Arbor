@@ -8,7 +8,7 @@ PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES+="
     build+run:
-        net-libs/libmnl
-        net-libs/libnfnetlink
+        net-libs/libmnl[>=1.0.3]
+        net-libs/libnfnetlink[>=1.0.0]
 "
 
