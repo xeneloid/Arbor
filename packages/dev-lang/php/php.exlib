@@ -1,9 +1,9 @@
 # Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-export_exlib_phases src_test_expensive src_install
+export_exlib_phases pkg_pretend src_prepare src_test_expensive src_install
 
-require systemd-service
+require systemd-service alternatives
 
 SUMMARY="PHP is a general-purpose scripting language especially suited for web development"
 DESCRIPTION="
@@ -18,7 +18,7 @@ HOMEPAGE="http://www.${PN}.net"
 DOWNLOADS="${HOMEPAGE}/distributions/${PNV}.tar.bz2"
 
 LICENCES="PHP-3"
-SLOT="0"
+SLOT="$(ever range 1-2)"
 MYOPTIONS="
     debug
     apache [[ description = [ Build PHP for the Apache webserver. ] ]]
@@ -136,6 +136,10 @@ DEPENDENCIES="
         php_extensions:unixodbc? ( dev-db/unixODBC[>=2.2.14] )
         php_extensions:xml? ( dev-libs/libxml2:2.0[>=2.7.2_p20081127] )
         php_extensions:xsl? ( dev-libs/libxslt[>=1.1.0] )
+        !dev-lang/php:0 [[
+            description = [ php is now slotted ]
+            resolution = uninstall-blocked-before
+        ]]
 "
 
 if ever at_least 5.6.4; then
@@ -158,8 +162,9 @@ RESTRICT="test"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
-    --libdir=/usr/share/${PN}
+    --libdir=/usr/share/${PN}-${SLOT}
     --localstatedir=/var
+    --program-suffix=-${SLOT}
     --enable-bcmath
     --enable-calendar
     --enable-cli
@@ -188,8 +193,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-embed
     --disable-embedded-mysqli
     --with-bz2
-    --with-config-file-path=/etc/${PN}
-    --with-config-file-scan-dir=/etc/${PN}
+    --with-config-file-path=/etc/${PN}-${SLOT}
+    --with-config-file-scan-dir=/etc/${PN}-${SLOT}
     --with-gettext
     --with-gmp
     --with-iconv
@@ -271,7 +276,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "apache apxs2"
-    pear
+    "pear pear /usr/share/pear-${SLOT}"
     "php_extensions:curl curl"
     "php_extensions:berkdb db4"
     "php_extensions:gd gd"
@@ -337,6 +342,36 @@ DEFAULT_SRC_INSTALL_EXCLUDE=(
     README.Zeus
 )
 
+check_legacy_conf_dir() {
+    [[ -d "${1}" && ! -L "${1}" ]] && elog "${1} is not a symlink, please rename it to ${1}-${SLOT}"
+}
+
+check_legacy_conf_file() {
+    [[ -f "${1}" && ! -L "${1}" ]] && elog "${1} is not a symlink, please rename it to ${1/.conf}-${SLOT}.conf"
+}
+
+check_legacy_config() {
+    local ret=0
+    check_legacy_conf_dir "/etc/php"                   && ret=1
+    check_legacy_conf_dir "/usr/share/php"             && ret=1
+    check_legacy_conf_dir "/usr/share/pear"            && ret=1
+    check_legacy_conf_file "/etc/pear.conf"            && ret=1
+    check_legacy_conf_file "/etc/php-fpm.conf"         && ret=1
+    check_legacy_conf_file "/etc/php-fpm.conf.default" && ret=1
+    return ${ret}
+}
+
+php_pkg_pretend() {
+    check_legacy_config || die "User interaction required"
+}
+
+php_src_prepare() {
+    default
+    edo sed -e "/include_dir=/s/php/&-${SLOT}/" -i scripts/php-config.in
+    edo sed -e "/includedir=/s/php/&-${SLOT}/" -i scripts/phpize.in
+    edo sed -e "s/ php-config,/ php-config-${SLOT},/" -i scripts/phpize.m4
+}
+
 php_src_test_expensive() {
     return
 
@@ -349,8 +384,10 @@ php_src_test_expensive() {
 
 php_src_install() {
     export PHP_PEAR_TEMP_DIR="/tmp"
-    export PHP_PEAR_CACHE_DIR="/var/cache/pear"
+    export PHP_PEAR_CACHE_DIR="/var/cache/pear-${SLOT}"
     export PHP_PEAR_DOWNLOAD_DIR="/tmp"
+
+    local alternatives=()
 
     # Needed but useless because we'll remove it later.
     if option apache; then
@@ -360,7 +397,7 @@ php_src_install() {
 
     # Allow installation of various PEAR extensions if PEAR is enabled.
     if option pear; then
-        esandbox allow /usr/share/pear/.lock
+        esandbox allow /usr/share/pear-${SLOT}/.lock
     fi
 
     default
@@ -377,21 +414,42 @@ php_src_install() {
     fi
 
     if option pear; then
-        keepdir /usr/share/pear/.registry/.channel.__uri
-        keepdir /usr/share/pear/.registry/.channel.{doc,pecl}.php.net
+        keepdir /usr/share/pear-${SLOT}/.registry/.channel.__uri
+        keepdir /usr/share/pear-${SLOT}/.registry/.channel.{doc,pecl}.php.net
     fi
 
-    dodir /etc/${PN}
-    insinto /etc/${PN}
+    alternatives+=(
+        /usr/$(exhost --target)/include/php php-${SLOT}
+        /usr/share/php                      php-${SLOT}
+    )
+
+    for bin in phar.phar phar php php-cgi php-config phpize; do
+        alternatives+=(
+            /usr/$(exhost --target)/bin/${bin} ${bin}-${SLOT}
+            /usr/share/man/man1/${bin}.1       ${bin}-${SLOT}.1
+        )
+    done
+
+    dodir /etc/${PN}-${SLOT}
+    insinto /etc/${PN}-${SLOT}
     newins php.ini-production php.ini
+    alternatives+=( /etc/php php-${SLOT} )
 
     if option pear; then
-        edo sed -i -e 's|^;\(include_path =\).*|\1 ".:/usr/share/pear:/usr/share/php:"|' "${IMAGE}"/etc/php/php.ini
+        edo sed -i -e 's|^;\(include_path =\).*|\1 ".:/usr/share/pear-'${SLOT}':/usr/share/php-'${SLOT}':"|' "${IMAGE}"/etc/php-${SLOT}/php.ini
         keepdir "${PHP_PEAR_CACHE_DIR}"
+        alternatives+=(
+            /etc/pear.conf  pear-${SLOT}.conf
+            /var/cache/pear pear-${SLOT}
+            /usr/share/pear pear-${SLOT}
+        )
+        for bin in pear peardev pecl; do
+            alternatives+=( /usr/$(exhost --target)/bin/${bin} ${bin}-${SLOT} )
+        done
     fi
 
     if option php_extensions:mysql ; then
-        edo sed -i -e 's:.*\(mysql.default_socket =\).*:\1 "/run/mysqld/mysqld.sock":' "${IMAGE}"/etc/php/php.ini
+        edo sed -i -e 's:.*\(mysql.default_socket =\).*:\1 "/run/mysqld/mysqld.sock":' "${IMAGE}"/etc/php-${SLOT}/php.ini
     fi
 
     if option apache; then
@@ -407,11 +465,23 @@ php_src_install() {
         fi
     fi
 
-    install_systemd_files
+    if option fpm; then
+        install_systemd_files
+        alternatives+=(
+            /usr/$(exhost --target)/bin/php-fpm     php-fpm-${SLOT}
+            /usr/share/man/man8/php-fpm.8           php-fpm-${SLOT}.8
+            /usr/share/fpm                          php-fpm-${SLOT}
+            /etc/php-fpm.conf                       php-fpm-${SLOT}.conf
+            /etc/php-fpm.conf.default               php-fpm-${SLOT}.conf.default
+            ${SYSTEMDSYSTEMUNITDIR}/php-fpm.service php-fpm-${SLOT}.service
+        )
+    fi
 
     # Set extension_dir path. Only replace the first occurence.
-    linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php/php.ini | head -1 | awk -F: '{ print $1}')
-    extension_dir=$(edo "${IMAGE}"/usr/$(exhost --target)/bin/php-config --extension-dir | sed -e 's/\//\\\//g')
-    edo sed -i -e "${linenum},${linenum} s/; extension_dir = \".\/\"/extension_dir = \"${extension_dir}\"/" "${IMAGE}"/etc/php/php.ini
+    linenum=$(edo grep -n "extension_dir" "${IMAGE}"/etc/php-${SLOT}/php.ini | head -1 | awk -F: '{ print $1}')
+    extension_dir=$(edo "${IMAGE}"/usr/$(exhost --target)/bin/php-config-${SLOT} --extension-dir | sed -e 's/\//\\\//g')
+    edo sed -i -e "${linenum},${linenum} s/; extension_dir = \".\/\"/extension_dir = \"${extension_dir}\"/" "${IMAGE}"/etc/php-${SLOT}/php.ini
+
+    alternatives_for ${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
 }
 
