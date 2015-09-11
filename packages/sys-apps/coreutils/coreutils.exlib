@@ -122,19 +122,6 @@ coreutils_src_install() {
     edo mv "${IMAGE}/usr/$(exhost --target)/bin/hostname" "${IMAGE}/usr/$(exhost --target)/bin/hostname.${PN}"
     edo mv "${IMAGE}/usr/share/man/man1/hostname.1" "${IMAGE}/usr/share/man/man1/hostname.${PN}.1"
 
-    for prog in "${IMAGE}"/usr/$(exhost --target)/bin/*;do
-        prog=${prog##*/}
-        case "${prog}" in
-            hostname|uptime)
-                true
-            ;;
-            *)  
-                alternatives_for coreutils ${PN} 1000   \
-                    /usr/$(exhost --target)/bin/${prog} g${prog}    \
-                    /usr/share/man/man1/${prog}.1       g${prog}.1
-            ;;
-        esac
-    done
     alternatives_for hostname   coreutils 100   \
         /usr/$(exhost --target)/bin/hostname    /usr/$(exhost --target)/bin/hostname.${PN}  \
         /usr/share/man/man1/hostname.1          /usr/share/man/man1/hostname.${PN}.1
