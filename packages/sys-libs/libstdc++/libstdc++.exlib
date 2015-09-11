@@ -20,7 +20,7 @@ DEPENDENCIES="
         doc? (
             app-doc/doxygen[>=1.5.1]
             dev-libs/libxml2
-            dev-util/xsltproc
+            dev-libs/libxslt
             media-gfx/graphviz
         )
 "
