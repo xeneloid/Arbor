@@ -2,6 +2,7 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
 require gnu [ suffix=bz2 ]
 
 SUMMARY="GNU sed stream editor"
@@ -19,7 +20,7 @@ DEPENDENCIES="
         acl? ( sys-apps/acl )
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-nls' '--without-included-gettext' )
+DEFAULT_SRC_CONFIGURE_PARAMS=( '--enable-nls' '--without-included-gettext' '--program-prefix=g' )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl )
 
 src_configure() {
@@ -33,6 +34,9 @@ src_configure() {
 
 src_install() {
     default
+
+    option parts:binaries && alternatives_for sed gnu 1000 /usr/$(exhost --target)/bin/sed gsed
+    option parts:documentation && alternatives_for sed gnu 1000 /usr/share/man/man1/sed.1 gsed.1
 
     expart binaries /usr/$(exhost --target)/bin
     expart documentation /usr/share/{doc,info,man}
