@@ -67,12 +67,12 @@ dnsmasq_make() {
         LDFLAGS="${LDFLAGS}"
     )
     local my_copts=(
-        $(option conntrack -DHAVE_CT)
+        $(option conntrack -DHAVE_CONNTRACK)
         $(option dbus -DHAVE_DBUS)
         $(option dnssec -DHAVE_DNSSEC)
         $(option idn -DHAVE_IDN)
     )
-    emake "${my_vars[@]}" COPTS="${my_copts[*]}" "${@}" 
+    emake "${my_vars[@]}" COPTS="${my_copts[*]}" "${@}"
 }
 
 src_compile() {
