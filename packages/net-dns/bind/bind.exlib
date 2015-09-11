@@ -48,7 +48,7 @@ DEPENDENCIES="
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         ldap? ( net-directory/openldap )
-        mysql? ( dev-db/mysql )
+        mysql? ( virtual/mysql )
         postgres? ( dev-db/postgresql )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
