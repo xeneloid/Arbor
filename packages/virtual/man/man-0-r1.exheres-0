@@ -19,5 +19,7 @@ MYOPTIONS="
 DEPENDENCIES="
     providers:man? ( sys-apps/man )
     providers:mandoc? ( sys-apps/mandoc )
+    recommendation:
+        sys-apps/man-pages
 "
 
