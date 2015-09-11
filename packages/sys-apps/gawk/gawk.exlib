@@ -66,7 +66,7 @@ gawk_src_install() {
 
     # NOTE(compnerd) awk symlink is managed via alternatives
     edo rm "${IMAGE}/usr/$(exhost --target)/bin/awk"
-    alternatives_for awk ${PN} 5 \
+    alternatives_for awk gnu 5 \
         /usr/$(exhost --target)/bin/awk ${PN} \
         /usr/share/man/man1/awk.1 ${PN}.1
 }
