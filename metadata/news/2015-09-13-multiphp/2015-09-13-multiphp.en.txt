@@ -1,0 +1,23 @@
+Title: MultiPHP
+Author: Marc-Antoine Perennou <keruspe@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-09-11
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/php
+
+Here comes multiphp.
+You will now be able to install multiple versions of php in parallel
+slots and install your dev-pecl/* stuff for several versions.
+
+The only manual action required is that if you currently are using
+php 5.6 for example, you have to do:
+
+mv /etc/php /etc/php-5.6
+mv /etc/pear.conf /etc/pear-5.6.conf
+
+The used suboption is "php_abis", currently supporting slots
+5.4, 5.5 and 5.6
+
+php-pecl.exlib gain one exparam:
+- php_abis: the list of supported slots (defaults to all)
