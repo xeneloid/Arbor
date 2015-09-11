@@ -27,7 +27,7 @@ MYOPTIONS="
     baselayout
     conntrack [[ description = [ Enables connection tracking via NetFilter ] ]]
     dbus
-    doc
+    dnssec [[ description = [ Support the Domain Name System Security Extensions ] ]]
     idn [[ description = [ Support international domain names ] ]]
     nls
     systemd [[ requires = [ dbus ] ]]
@@ -40,6 +40,10 @@ DEPENDENCIES="
     build+run:
         conntrack? ( net-libs/libnetfilter_conntrack )
         dbus? ( sys-apps/dbus )
+        dnssec? (
+            dev-libs/gmp:=
+            dev-libs/nettle
+        )
         idn? ( net-dns/libidn )
         nls? ( net-dns/libidn )
 "
@@ -54,21 +58,29 @@ src_prepare() {
             src/config.h
 }
 
+dnsmasq_make() {
+    local my_vars=(
+        PREFIX=/usr/$(exhost --target)
+        PKG_CONFIG="${PKG_CONFIG}"
+        CC="${CC}"
+        CFLAGS="${CFLAGS}"
+        LDFLAGS="${LDFLAGS}"
+    )
+    local my_copts=(
+        $(option conntrack -DHAVE_CT)
+        $(option dbus -DHAVE_DBUS)
+        $(option dnssec -DHAVE_DNSSEC)
+        $(option idn -DHAVE_IDN)
+    )
+    emake "${my_vars[@]}" COPTS="${my_copts[*]}" "${@}" 
+}
+
 src_compile() {
-    local COPTS=
-    option dbus && COPTS="-DHAVE_DBUS"
-    option conntrack && COPTS="${COPTS} -DHAVE_CT"
-    option idn && COPTS="${COPTS} -DHAVE_IDN"
-    emake \
-        PREFIX=/usr/$(exhost --target) \
-        CC="${CC}" \
-        CFLAGS="${CFLAGS}" \
-        COPTS="${COPTS}" \
-        all$(option nls && echo "-i18n")
+    dnsmasq_make all$(option nls -i18n)
 }
 
 src_install() {
-    emake -j3 DESTDIR="${IMAGE}" PREFIX=/usr BINDIR=/usr/$(exhost --target)/bin install$(option nls && echo "-i18n")
+    dnsmasq_make DESTDIR="${IMAGE}" PREFIX=/usr BINDIR=/usr/$(exhost --target)/bin install$(option nls -i18n)
 
     insinto /etc
     doins dnsmasq.conf
@@ -98,10 +110,7 @@ src_install() {
     fi
 
     emagicdocs
-
-    if option doc ; then
-        docinto html
-        dodoc *.html
-    fi
+    docinto html
+    dodoc *.html
 }
 
