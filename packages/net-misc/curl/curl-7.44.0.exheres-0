@@ -7,7 +7,7 @@ require curl
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ares [[ description = [ Enabled c-ares posix-threaded dns support, disables curl's own threaded resolver ] ]]
-    idn
+    idn kerberos ldap rtmp
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 DEPENDENCIES="
@@ -21,6 +21,9 @@ DEPENDENCIES="
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
         idn? ( net-dns/libidn )
+        kerberos? ( virtual/kerberos )
+        ldap? ( net-directory/openldap )
+        rtmp? ( media-video/rtmpdump )
         providers:gnutls? (
             dev-libs/gnutls[>=2.12.14]
             dev-libs/nettle
@@ -34,13 +37,18 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{dict,file,ftp,gopher,http,ipv6,imap,pop3,rtsp,smb,smtp,telnet,tftp,unix-sockets}
     --disable-static
     --disable-werror
-    --disable-{ldap,ldaps,sspi}
+    --disable-sspi
     --with-{libssh2,zlib}
-    --without-{axtls,ca-bundle,cyassl,gssapi,libmetalink,librtmp,nghttp2,nss,polarssl}
+    --without-{axtls,ca-bundle,cyassl,libmetalink,nghttp2,nss,polarssl}
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( ares '!ares threaded-resolver' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    ares '!ares threaded-resolver'
+    ldap 'ldap ldaps'
+)
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'idn libidn'
+    'kerberos gssapi'
+    'rtmp librtmp'
     'providers:gnutls gnutls'
     'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
     '!providers:gnutls ssl'
