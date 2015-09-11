@@ -1,6 +1,8 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require option-renames [ renames=[ 'providers:cpio providers:gnu' ] ]
+
 SUMMARY="Virtual: cpio providers"
 HOMEPAGE=""
 
@@ -8,7 +10,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~armv7"
 MYOPTIONS="
     ( providers:
-        cpio
+        gnu
         libarchive
     ) [[
         *description = [ cpio provider ]
@@ -17,7 +19,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:cpio? ( app-arch/cpio )
+    providers:gnu? ( app-arch/cpio )
     providers:libarchive? ( app-arch/libarchive )
 "
 
