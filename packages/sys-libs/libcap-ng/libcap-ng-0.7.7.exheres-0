@@ -27,7 +27,7 @@ DEPENDENCIES="
         python? ( dev-lang/swig )
     build+run:
         sys-apps/attr
-        python? ( dev-lang/python )
+        python? ( dev-lang/python:2.7 )
 "
 
 REMOTE_IDS="freecode:${PN}"
