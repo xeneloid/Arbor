@@ -1,16 +1,18 @@
 # Copyright 2010 Anders Ladegaard Marchsteiner <alm.anma@gmail.com>
+# Copyright 2015 Marc-Antoine Perennou <keruspe@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'php-pear.exlib', which is:
 #     Copyright 2009 Wulf C. Krueger <philantrop@exherbo.org>
 
-export_exlib_phases src_configure src_install
-
+# Specify whether the module is a "zend" module or a standard "module"
 myexparam module=extension
 
-DEPENDENCIES="
-    build+run:
-        dev-lang/php[pear]
-"
+# If the package doesn't support all php slots, you have to list
+# all supported slots yourself
+myexparam php_abis=[ 5.4 5.5 5.6 ]
+
+exparam -v PHP_MODULE_TYPE module
+exparam -v PHP_ABIS php_abis[@]
 
 fix_PECL_PV() {
     tmp="${PV}"
@@ -30,33 +32,60 @@ fix_PECL_PV() {
 
 UPSTREAM_CHANGELOG="http://pecl.php.net/package-changelog.php?package=${PN}&release=${PECL_PV}"
 
-WORK=${WORKBASE}/${PN}-${PECL_PV}
+MY_PNV="${PN}-${PECL_PV}"
 
-install_module_config() {
-    edo echo "extension = ${PN}.so" > "${IMAGE}"/etc/php/${PN}.ini
+MULTIBUILD_PHP_ABIS_TARGETS="${PHP_ABIS[@]}"
+
+require easy-multibuild [ classes=[ PHP_ABIS ] multiunpack=true work=${MY_PNV} ]
+
+php_myoptions() {
+    local abi
+    echo -n "( php_abis: "
+    for abi in "${PHP_ABIS[@]}"; do
+        echo -n "${abi} "
+    done
+    echo -n ") [[ number-selected = at-least-one ]]"
 }
 
-install_zend_config() {
-    extensionDir=$(php-config --extension-dir)
-    extensionFileName="${extensionDir}/${PN}.so"
-    edo echo "zend_extension = ${extensionFileName}" > "${IMAGE}"/etc/php/${PN}.ini
+php_dependencies() {
+    local abi
+    echo "("
+    for abi in "${PHP_ABIS[@]}"; do
+        echo "php_abis:${abi}? ( dev-lang/php:${abi}[pear] )"
+    done
+    echo ")"
 }
 
-php-pecl_src_configure() {
-    phpize
+MYOPTIONS="$(php_myoptions)"
 
+DEPENDENCIES="
+    build+run:
+    $(php_dependencies)
+"
+
+php-pecl_get_abi() {
+    illegal_in_global_scope
+
+    echo -n "${MULTIBUILD_PHP_ABIS_CURRENT_TARGET}"
+}
+
+prepare_one_multibuild() {
     default
+    edo phpize-$(php-pecl_get_abi)
 }
 
-php-pecl_src_install() {
-    exparam -v PHP_MODULE_TYPE module
+install_one_multibuild() {
+    local abi=$(php-pecl_get_abi)
+    local extensionDir extensionFileName
 
-    edo mkdir -p "${IMAGE}"/etc/php
+    edo mkdir -p "${IMAGE}"/etc/php-${abi}
 
     if [[ "$PHP_MODULE_TYPE" == "zend" ]] ; then
-        install_zend_config
+        extensionDir=$(php-config-${abi} --extension-dir)
+        extensionFileName="${extensionDir}/${PN}.so"
+        edo echo "zend_extension = ${extensionFileName}" > "${IMAGE}"/etc/php-${abi}/${PN}.ini
     elif [[ "$PHP_MODULE_TYPE" == "module" ]] ; then
-        install_module_config
+        edo echo "extension = ${PN}.so" > "${IMAGE}"/etc/php-${abi}/${PN}.ini
     else
         die "Invalid module type"
     fi
