@@ -1,6 +1,8 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require option-renames [ renames=[ 'providers:tar providers:gnu' ] ]
+
 SUMMARY="Virtual: tar providers"
 HOMEPAGE=""
 
@@ -8,7 +10,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~armv7"
 MYOPTIONS="
     ( providers:
-        tar
+        gnu
         libarchive
     ) [[
         *description = [ tar provider ]
@@ -17,7 +19,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:tar? ( app-arch/tar )
+    providers:gnu? ( app-arch/tar )
     providers:libarchive? ( app-arch/libarchive )
 "
 
