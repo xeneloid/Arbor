@@ -8,6 +8,7 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     ( providers:
+        busybox
         man
         man-db
         mandoc
@@ -18,6 +19,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    providers:busybox? ( sys-apps/busybox )
     providers:man? ( sys-apps/man )
     providers:man-db? ( sys-apps/man-db )
     providers:mandoc? ( sys-apps/mandoc )

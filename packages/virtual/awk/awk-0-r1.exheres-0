@@ -10,6 +10,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( providers:
+        busybox
         gnu
         mawk
     ) [[
@@ -19,6 +20,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( sys-apps/gawk )
     providers:mawk? ( sys-apps/mawk )
 "

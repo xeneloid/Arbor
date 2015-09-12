@@ -17,6 +17,7 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     ( providers:
+        busybox
         gnu
     ) [[
         *description = [ coreutils provider ]
@@ -25,6 +26,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( sys-apps/coreutils )
 "
 

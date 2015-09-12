@@ -8,6 +8,7 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     ( providers:
+        busybox
         gnu
     ) [[
         *description = [ sed provider ]
@@ -16,6 +17,7 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( sys-apps/sed )
 "
 
