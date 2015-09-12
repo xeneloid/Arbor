@@ -42,12 +42,12 @@ MYOPTIONS="
     truetype
     webp [[ description = [ Support for the WebP image format ] ]]
     wmf [[ description = [ Support for the Windows Metafile image format ] ]]
+    ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
     build+run:
         dev-libs/libxml2:2.0[>=2.7.8]
-        media-libs/jpeg:=[>=6b]
         media-libs/libpng:=
         X?  (
             x11-libs/libSM
@@ -73,6 +73,8 @@ DEPENDENCIES="
         )
         webp? ( media-libs/libwebp )
         wmf? ( media-libs/libwmf )
+        providers:ijg-jpeg? ( media-libs/jpeg:=[>=6b] )
+        providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
     suggestion:
         sci-apps/gnuplot [[ description = [ Support for reading GNUPlot files ] ]]
 "
