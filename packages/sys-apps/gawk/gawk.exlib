@@ -5,7 +5,7 @@
 require alternatives gnu [ suffix=xz ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-export_exlib_phases src_prepare src_compile src_install
+export_exlib_phases src_prepare src_compile src_test src_install
 
 SUMMARY="GNU awk implementation"
 
@@ -22,6 +22,9 @@ DEPENDENCIES="
         dev-libs/gmp:=
         dev-libs/mpfr:=
         sys-libs/readline
+    test:
+        app-admin/eclectic
+        sys-apps/coreutils
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -54,6 +57,11 @@ gawk_src_compile() {
         edo cd "${WORKBASE}"/filefuncs
         nonfatal emake AWKINCDIR="${WORK}" || die "filefuncs emake failed"
     fi
+}
+
+gawk_src_test() {
+    # gawk fails with non-gnu coreutils
+    PATH=$(eval $(eclectic coreutils script gnu);echo ${PATH}):${PATH} default
 }
 
 gawk_src_install() {
