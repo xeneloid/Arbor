@@ -335,7 +335,7 @@ systemd_src_test() {
 
 systemd_src_install() {
     local host=$(exhost --target) alternatives=(
-        init ${PN} 10
+        init ${PN} 1000
         /usr/share/man/man1/init.1 ${PN}.init.1
     )
 
