@@ -34,11 +34,11 @@ WORK="${WORKBASE}/${NTP_PNV}"
 
 src_install() {
     default
-    rmdir "${IMAGE}"/var{/run,/db,}
+    edo rmdir "${IMAGE}"/var{/run,/db,}
 
     install_systemd_files
 
-    if option baselayout ; then
+    if option baselayout; then
         newinitd "${FILES}/${PN}.rc" ${PN}
     fi
 
@@ -50,8 +50,8 @@ NTPD_HOME=/var/empty
 NTPD_OPTS=""
 EOF
 
-    alternatives_for ntpd ${PN} 1 /usr/$(exhost --target)/bin/ntpd ${PN}
-    alternatives_for ntpd ${PN} 1 /usr/share/man/man8/ntpd.8 ${PN}
+    alternatives_for ntpd ${PN} 500 /usr/$(exhost --target)/bin/ntpd    ${PN}   \
+                                    /usr/share/man/man8/ntpd.8          ${PN}
 
     edo sed 's/# use a random selection.*/# use a random time server from the Exherbo vendor pool/
 /servers pool.ntp.org/c \
