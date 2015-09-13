@@ -82,7 +82,7 @@ kmod_src_install() {
 
     # alternatives
     dodir /usr/${host}/bin
-    local a alternatives=( kmod-tools ${PN} 10 )
+    local a alternatives=( kmod-tools ${PN} 1000 )
     for a in depmod insmod modinfo modprobe lsmod rmmod; do
         dosym kmod /usr/${host}/bin/${a}
         alternatives+=(
