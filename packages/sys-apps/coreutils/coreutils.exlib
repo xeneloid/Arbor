@@ -33,6 +33,11 @@ DEPENDENCIES="
         caps? ( sys-libs/libcap )
         gmp? ( dev-libs/gmp:= )
         xattr? ( sys-apps/attr )
+    run:
+        !sys-apps/busybox[<1.23.2] [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
         !sys-apps/net-tools[<1.60_p20120127084908-r1]  [[
             description = [ used to install /bin/hostname ]
             resolution = uninstall-blocked-after
