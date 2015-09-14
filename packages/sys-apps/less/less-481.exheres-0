@@ -10,7 +10,7 @@ REMOTE_IDS="freecode:${PN}"
 
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/news.${PV}.html [[ lang = en ]]"
 
-LICENCES="BSD-2"
+LICENCES="|| ( BSD-2 GPL-3 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="parts: binaries configuration documentation"
