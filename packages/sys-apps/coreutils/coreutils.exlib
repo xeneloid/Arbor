@@ -6,7 +6,8 @@
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require gnu [ suffix=xz ] alternatives
 
-export_exlib_phases src_prepare src_configure src_test src_test_expensive src_install pkg_preinst
+export_exlib_phases src_{prepare,configure,test,test_expensive,install} \
+                    pkg_{preinst,postinst}
 
 SUMMARY="Core file, shell and text utilities expected to be on any system."
 
@@ -60,6 +61,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( gmp )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-install-program=arch,hostname
     --enable-largefile
+    --program-prefix=g
 )
 
 AT_M4DIR=( m4 )
@@ -115,33 +117,55 @@ coreutils_src_test_expensive() {
     edo popd
 }
 
+preinst=()
+
 coreutils_src_install() {
     default
 
     # sys-apps/shadow installs the same binary and manpage
     # since shadow deals with logins and such anyway, it is preferred
-    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/groups
-    edo rm "${IMAGE}"/usr/share/man/man1/groups.1
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/ggroups
+    edo rm "${IMAGE}"/usr/share/man/man1/ggroups.1
 
-    # NOTE(compnerd) do not provide a link for hostname.  /bin is part of ${PATH} by default, and
-    # allows for overloading of hostname from inetutils for a more feature-rich version if users
-    # desire.  Install the manpage as hostname.coreutils to avoid conflicting with inetutils since
-    # this command does not really support any arguments.
-    edo mv "${IMAGE}/usr/$(exhost --target)/bin/hostname" "${IMAGE}/usr/$(exhost --target)/bin/hostname.${PN}"
-    edo mv "${IMAGE}/usr/share/man/man1/hostname.1" "${IMAGE}/usr/share/man/man1/hostname.${PN}.1"
-
-    alternatives_for hostname   coreutils 100   \
-        /usr/$(exhost --target)/bin/hostname    /usr/$(exhost --target)/bin/hostname.${PN}  \
-        /usr/share/man/man1/hostname.1          /usr/share/man/man1/hostname.${PN}.1
-    alternatives_for uptime     coreutils 50    \
-        /usr/$(exhost --target)/bin/uptime      /usr/$(exhost --target)/bin/uptime.${PN}    \
-        /usr/share/man/man1/uptime.1            /usr/share/man/man1/uptime.${PN}.1
+    local coreutils_alternatives=()
+    for prog in "${IMAGE}"/usr/$(exhost --target)/bin/*;do
+        prog=$(basename "${prog}")
+        prog=${prog/g}
+        case "${prog}" in
+            hostname|uptime) ;;
+            *)
+                coreutils_alternatives+=(
+                    /usr/$(exhost --target)/bin/${prog} g${prog}
+                    /usr/share/man/man1/${prog}.1       g${prog}.1
+                )
+                case "${prog}" in
+                    '['|arch) ;; # hit errors while trying to copy these for some reason
+                    *) preinst+=( "${prog}" ) ;;
+                esac
+            ;;
+        esac
+    done
+    alternatives_for coreutils  gnu 1000       "${coreutils_alternatives[@]}"
+    alternatives_for hostname   gnu 100                     \
+        /usr/$(exhost --target)/bin/hostname    ghostname   \
+        /usr/share/man/man1/hostname.1          ghostname.1
+    alternatives_for uptime     gnu 50                      \
+        /usr/$(exhost --target)/bin/uptime      guptime     \
+        /usr/share/man/man1/uptime.1            guptime.1
 
     insinto /etc
     newins src/dircolors.hin DIR_COLORS
 }
 
 coreutils_pkg_preinst() {
+    edo pushd "${ROOT}"usr/$(exhost --target)/bin
+    for bin in "${preinst[@]}";do
+        if [[ -e "${bin}" && ! -L "${bin}" ]];then
+            edo cp "${bin}" g"${bin}"
+            edo ln -sf g"${bin}" "${bin}"
+        fi
+    done
+    edo popd
     exhost --is-native -q || return
 
     # NOTE(compnerd) preserve legacy paths for paludis
@@ -159,6 +183,38 @@ coreutils_pkg_preinst() {
             nonfatal edo ln -sf ../$(exhost --target)/bin/${bin} "${ROOT}usr/bin/${bin}" || \
                 eerror nonfatal edo ln -sf ../$(exhost --target)/bin/${bin##*/} "${ROOT}usr/bin/${bin}" failed
         done
+    fi
+}
+
+coreutils_pkg_postinst() {
+    local altpath="${ROOT}"/etc/env.d/alternatives/coreutils/gnu/usr/$(exhost --target)/bin:"${PATH}"
+    # without PATH stuff, eclectic will pull coreutils out from under its feet
+    if has_version 'sys-apps/busybox[<1.23.2-r3]' && [[ -f /usr/share/eclectic/modules/auto/coreutils.eclectic ]];then
+        if ! nonfatal edo env PATH="${altpath}" eclectic coreutils set --force gnu;then
+            exlogfailure
+            eerror "Something failed while trying to forcibly set gnu as the coreutils provider."
+        fi
+    fi
+
+    # this PATH magic is needed so it can keep writing the coreutils auto module!
+    PATH="${altpath}" alternatives_pkg_postinst
+    if [[ "$(eclectic hostname show)" == coreutils ]];then
+        if ! nonfatal edo env PATH="${altpath}" eclectic hostname set --force gnu;then
+            exlogfailure
+            eerror "Something failed setting the hostname provider."
+        fi
+    fi
+    if [[ "$(eclectic uptime show)" == coreutils ]];then
+        if ! nonfatal edo env PATH="${altpath}" eclectic uptime set --force gnu;then
+            exlogfailure
+            eerror "Something failed setting the uptime provider."
+        fi
+    fi
+    if has_version 'sys-apps/busybox[<1.23.2-r3]';then
+        if ! nonfatal edo env PATH="${altpath}" eclectic coreutils set --force gnu;then
+            exlogfailure
+            eerror "Something failed setting the coreutils provider."
+        fi
     fi
 }
 
