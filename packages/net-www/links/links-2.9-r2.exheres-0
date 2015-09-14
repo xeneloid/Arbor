@@ -3,14 +3,17 @@
 # Based in part upon 'links-2.2.ebuild', which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-
-SUMMARY="a fast lightweight text and graphic web-browser"
-
 MY_PNV="${PNV/_/}"
 
-HOMEPAGE="http://links.twibright.com/"
-DOWNLOADS="http://links.twibright.com/download/${MY_PNV}.tar.bz2"
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+SUMMARY="A fast lightweight text and graphic web-browser"
+HOMEPAGE="http://links.twibright.com"
+DOWNLOADS="${HOMEPAGE}/download/${MY_PNV}.tar.bz2"
+
+REMOTE_IDS="freecode:links"
+
+UPSTREAM_CHANGELOG="http://links.twibright.com/download/ChangeLog"
 
 LICENCES="GPL-2"
 SLOT="2"
@@ -25,6 +28,7 @@ MYOPTIONS="
     jpeg? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
     tiff? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
 
+    jpeg? ( ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]] )
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -44,22 +48,27 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-libs/ncurses
-        X? ( x11-libs/libXext
+        X? (
             media-libs/libpng:=[>=1.2.1]
-            jpeg? ( media-libs/jpeg:=[>=6b] )
-            tiff? ( media-libs/tiff[>=3.5.7] ) )
+            x11-libs/libXext
+            jpeg? (
+                providers:ijg-jpeg? ( media-libs/jpeg:= )
+                providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+            )
+            tiff? ( media-libs/tiff[>=3.5.7] )
+        )
         fbcon? ( media-libs/libpng:=[>=1.2.1]
-        jpeg? ( media-libs/jpeg:=[>=6b] )
-        tiff? ( media-libs/tiff[>=3.5.7] ) )
         gpm? ( sys-libs/gpm )
+        jpeg? (
+            providers:ijg-jpeg? ( media-libs/jpeg:= )
+            providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        )
+        tiff? ( media-libs/tiff[>=3.5.7] ) )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
 "
 
-REMOTE_IDS="freecode:links"
-UPSTREAM_CHANGELOG="http://links.twibright.com/download/ChangeLog"
-
-WORK="${WORKBASE}/${MY_PNV}"
+WORK=${WORKBASE}/${MY_PNV}
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-fix-for-libressl.patch
@@ -82,11 +91,11 @@ src_configure() {
         --hates=datarootdir \
         ${graphics} \
         --with-bzip2 \
+        --with-ssl \
         --with-zlib \
         $(option_with X x) \
         $(option_with fbcon fb) \
-        $(option_with gpm) \
-        --with-ssl
+        $(option_with gpm)
 }
 
 src_install() {
