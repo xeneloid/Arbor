@@ -69,12 +69,16 @@ php-pecl_get_abi() {
     echo -n "${MULTIBUILD_PHP_ABIS_CURRENT_TARGET}"
 }
 
-prepare_one_multibuild() {
+php-pecl_prepare_one_multibuild() {
     default
     edo phpize-$(php-pecl_get_abi)
 }
 
-install_one_multibuild() {
+prepare_one_multibuild() {
+    php-pecl_prepare_one_multibuild
+}
+
+php-pecl_install_one_multibuild() {
     local abi=$(php-pecl_get_abi)
     local extensionDir extensionFileName
 
@@ -91,5 +95,9 @@ install_one_multibuild() {
     fi
 
     INSTALL_ROOT="${IMAGE}" default
+}
+
+install_one_multibuild() {
+    php-pecl_install_one_multibuild
 }
 
