@@ -15,7 +15,7 @@ diff --git a/configure.ac b/configure.ac
 index 646bc32..cf5c592 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -342,7 +342,7 @@
+@@ -430,7 +430,7 @@
  
  dnl check for pkg-config
  if test "$pinentry_gtk_2" != "no" -o "$pinentry_gnome_3" != "no"; then
@@ -24,15 +24,15 @@ index 646bc32..cf5c592 100644
  	if test x"${PKG_CONFIG}" = xno ; then
  		pinentry_gtk_2=no
  		pinentry_gnome_3=no
-@@ -416,7 +416,7 @@
+@@ -504,7 +504,7 @@
  
  dnl check for pkg-config
- if test "$libsecret" != "no"; then
+ if test "$libsecret" != "no" -o "$pinentry-qt" != "no"; then
 -        AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 +        PKG_PROG_PKG_CONFIG
- 	if test x"${PKG_CONFIG}" = xno ; then
- 		libsecret=no
- 	fi
+   if test x"${PKG_CONFIG}" = xno ; then
+     if test "$pinentry_qt" = "yes"; then
+       AC_MSG_ERROR([[
 -- 
 2.3.3
 
