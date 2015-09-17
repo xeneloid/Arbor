@@ -1,0 +1,85 @@
+# Copyright 2013 Marc-Antoine Perennou <keruspe@exherbo.org>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require alternatives
+
+SUMMARY="Manages GCC's symlinks"
+HOMEPAGE="https://www.exherbo.org"
+DOWNLOADS=""
+
+LICENCES="GPL-2"
+PLATFORMS="~amd64"
+
+SLOT="0"
+
+CROSS_COMPILE_TARGETS="
+    armv7-unknown-linux-gnueabi
+    armv7-unknown-linux-gnueabihf
+    i686-pc-linux-gnu
+    i686-pc-linux-musl
+    x86_64-pc-linux-gnu
+    x86_64-pc-linux-musl
+    powerpc64-unknown-linux-gnu
+"
+
+MYOPTIONS="
+    targets:
+        ${CROSS_COMPILE_TARGETS}
+"
+
+DEPENDENCIES="
+    run:
+        !sys-devel/gcc:4.9[<4.9.2-r10]  [[
+            description = [ Alternatives conflict ]
+            resolution = uninstall-blocked-after
+        ]]
+        !sys-devel/gcc:5.1[<5.2.0-r6]   [[
+            description = [ Alternatives conflict ]
+            resolution = uninstall-blocked-after
+        ]]
+"
+
+WORK="${WORKBASE}"
+
+src_install() {
+    ALTERNATIVES_cc_DESCRIPTION="System-wide C compiler"
+    ALTERNATIVES_cxx_DESCRIPTION="System-wide C++ compiler"
+    ALTERNATIVES_cpp_DESCRIPTION="System-wide C pre-processor"
+    for target in ${CROSS_COMPILE_TARGETS};do
+        if option targets:${target};then
+            alternatives_for cc     gcc 1000    \
+                /usr/$(exhost --target)/bin/${target}-cc    ${target}-gcc       \
+                /usr/share/man/man1/${target}-cc.1          ${target}-gcc.1
+            alternatives_for c++    gcc 1000    \
+                /usr/$(exhost --target)/bin/${target}-c++   ${target}-g++       \
+                /usr/share/man/man1/${target}-c++.1         ${target}-g++.1
+            alternatives_for cpp    gcc 1000    \
+                /usr/$(exhost --target)/bin/${target}-cpp   ${target}-gcc-cpp   \
+                /usr/share/man/man1/${target}-cpp.1         ${target}-gcc-cpp.1
+            alternatives_for fc     gcc 1000    \
+                /usr/$(exhost --target)/bin/${target}-fc    ${target}-gfortran  \
+                /usr/share/man/man1/${target}-fc.1          ${target}-gfortran.1
+        fi
+    done
+}
+
+pkg_postinst() {
+    alternatives_pkg_postinst
+    if [[ "$(eclectic cpp show)" == gcc ]];then
+        for target in ${CROSS_COMPILE_TARGETS};do
+            if option targets:${target};then
+                if has_version "sys-devel/gcc:5.1[<5.2.0-r6][targets:${target}]";then
+                    edo ln -s ${target}-cpp-5.1 /usr/$(exhost --target)/bin/${target}-cpp
+                elif has_version "sys-devel/gcc:4.9[<4.9.2-r10][targets:${target}]";then
+                    # fix upgrading from latest stage...
+                    [[ -f $(readlink /usr/$(exhost --target)/bin/${target}-cpp-4.9) ]] && \
+                        edo ln -sf ${target}-cpp-4.9 /usr/$(exhost --target)/bin/${target}-cpp
+                    [[ -f $(readlink /usr/$(exhost --target)/bin/${target}-gcc-cpp-4.9) ]] && \
+                        edo ln -sf ${target}-cpp-5.1 /usr/$(exhost --target)/bin/${target}-cpp
+                fi
+            fi
+        done
+    fi
+}
+

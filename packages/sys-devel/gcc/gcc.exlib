@@ -47,6 +47,7 @@ DEPENDENCIES="
             resolution = uninstall-blocked-after
         ]]
     run:
+        app-admin/eclectic-gcc
         sys-devel/binutils[targets:*(-)?]
         !dev-lang/clang[<3.6.1-r5] [[
             description = [ Alternatives conflict ]
@@ -244,8 +245,7 @@ gcc_src_compile() {
 }
 
 gcc_src_install() {
-    local target= alternatives=() cc_alternatives=() cxx_alternatives=() \
-          cpp_alternatives=() fc_alternatives=()
+    local target= alternatives=()
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         if option !targets:${target} ; then
@@ -321,35 +321,9 @@ gcc_src_install() {
         [[ -n ${unset_nullglob} ]] && shopt -u nullglob
 
         edo popd
-
-        cc_alternatives+=(
-            "/usr/${CHOST}/bin/${target}-cc"        "${target}-gcc"
-            "/usr/share/man/man1/${target}-cc.1"    "${target}-gcc.1"
-        )
-        cxx_alternatives+=(
-            "/usr/${CHOST}/bin/${target}-c++"       "${target}-g++"
-            "/usr/share/man/man1/${target}-c++.1"   "${target}-g++.1"
-        )
-        cpp_alternatives+=(
-            "/usr/${CHOST}/bin/${target}-cpp"       "${target}-gcc-cpp"
-            "/usr/share/man/man1/${target}-cpp.1"   "${target}-gcc-cpp.1"
-        )
-        fc_alternatives+=(
-            "/usr/${CHOST}/bin/${target}-fc"        "${target}-gfortran"
-            "/usr/share/man/man1/${target}-fc.1"    "${target}-gfortran.1"
-        )
     done
 
     alternatives_for gcc ${SLOT} ${SLOT} "${alternatives[@]}"
-
-    ALTERNATIVES_cc_DESCRIPTION="System-wide C compiler"
-    ALTERNATIVES_cxx_DESCRIPTION="System-wide C++ compiler"
-    ALTERNATIVES_cpp_DESCRIPTION="System-wide C pre-processor"
-    ALTERNATIVES_fc_DESCRIPTION="System-wide Fortran compiler"
-    alternatives_for cc     gcc         1000    "${cc_alternatives[@]}"
-    alternatives_for c++    g++         1000    "${cxx_alternatives[@]}"
-    alternatives_for cpp    gcc-cpp     1000    "${cpp_alternatives[@]}"
-    alternatives_for fc     gfortran    1000    "${fc_alternatives[@]}"
 
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
