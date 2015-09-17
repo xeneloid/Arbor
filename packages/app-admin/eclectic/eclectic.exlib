@@ -24,8 +24,8 @@ DEPENDENCIES="
     build:
         doc? ( dev-python/docutils )
     build+run:
-        sys-apps/sed
         app-shells/bash
+        virtual/sed
 "
 
 if ever at_least 2.0.11 ; then
