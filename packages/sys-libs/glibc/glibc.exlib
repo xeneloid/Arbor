@@ -46,9 +46,9 @@ DEPENDENCIES="
     build:
         dev-lang/perl:*
         sys-apps/gawk
-        sys-apps/sed
         sys-apps/texinfo
         sys-kernel/linux-headers
+        virtual/sed
     run:
         sys-libs/timezone-data
 "
