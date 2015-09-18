@@ -21,12 +21,13 @@ DEPENDENCIES="
         sys-kernel/linux-headers[<3.0|>=3.0-r1]
     test:
         app-arch/zip
+
+    run:
+        !sys-apps/coreutils[<8.24-r3] [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
 "
-#    run:
-#        !sys-apps/coreutils[<8.24-r1] [[
-#            description = [ Alternatives conflict ]
-#            resolution = upgrade-blocked-before
-#        ]]
 
 bb_make() {
     local build_cflags_var=${CHOST//-/_}_CFLAGS
@@ -39,8 +40,8 @@ bb_make() {
         CC="${CC}" CFLAGS="${CFLAGS}"
         CXX="${CXX}" CXXFLAGS="${CXXFLAGS}"
         LDFLAGS="${LDFLAGS}"
-        HOSTCC="${CHOST}-gcc" HOSTCFLAGS="${!build_cflags_var}"
-        HOSTCXX="${CHOST}-g++" HOSTCXXFLAGS="${!build_cxxflags_var}"
+        HOSTCC="${CHOST}-cc" HOSTCFLAGS="${!build_cflags_var}"
+        HOSTCXX="${CHOST}-c++" HOSTCXXFLAGS="${!build_cxxflags_var}"
         HOSTLDFLAGS="${!build_ldflags_var}"
 
         V=1
@@ -132,36 +133,36 @@ src_install() {
     dodoc -r examples
 
     #   for prog in $(cave executables coreutils | sed 's|.*/g||' | sort);do
-    #       if busybox | grep -q "$nut";then
+    #       if busybox | grep -q "$prog";then
     #           echo -n "$prog "
     #       fi
     #   done
-    #coreutils=( '[' arch base64 basename cat chgrp chmod chown chroot
-    #    cksum comm cp cut date dd df dir dirname du echo env expand
-    #    expr false fold groups head hostid hostname id install kill
-    #    link ln logname ls md5sum mkdir mkfifo mknod mktemp mv nice
-    #    nl nohup od pr printenv printf pwd readlink realpath rm rmdir
-    #    seq sha1sum sha256sum sha512sum shuf sleep sort split stat stty
-    #    sum sync tac tail tee test timeout touch tr true tty uname
-    #    unexpand uniq unlink uptime users vdir wc who whoami yes
-    #)
+    coreutils=( '[' arch base64 basename cat chgrp chmod chown chroot
+        cksum comm cp cut date dd df dir dirname du echo env expand
+        expr false fold head hostid hostname id install kill
+        link ln logname ls md5sum mkdir mkfifo mknod mktemp mv nice
+        nl nohup od pr printenv printf pwd readlink realpath rm rmdir
+        seq sha1sum sha256sum sha512sum shuf sleep sort split stat stty
+        sum sync tac tail tee test timeout touch tr true tty uname
+        unexpand uniq unlink uptime users vdir wc who whoami yes
+    )
 
     # alternatives
-    #local coreutils_alternatives=()
-    #for prog in "${coreutils[@]}";do
-    #    case "${prog}" in
-    #         hostname|uptime) ;;
-    #         *)
-    #            coreutils_alternatives+=(
-    #                /usr/$(exhost --target)/bin/${prog} /usr/$(exhost --target)/bin/busybox
-    #            )
-    #         ;;
-    #    esac
-    #done
+    local coreutils_alternatives=()
+    for prog in "${coreutils[@]}";do
+        case "${prog}" in
+             hostname|uptime) ;;
+             *)
+                coreutils_alternatives+=(
+                    /usr/$(exhost --target)/bin/${prog} /usr/$(exhost --target)/bin/busybox
+                )
+             ;;
+        esac
+    done
 
     alternatives_for awk        ${PN}   75  \
         /usr/$(exhost --target)/bin/awk         /usr/$(exhost --target)/bin/busybox
-    #alternatives_for coreutils  ${PN}   75      "${coreutils_alternatives[@]}"
+    alternatives_for coreutils  ${PN}   75      "${coreutils_alternatives[@]}"
     alternatives_for cpio       ${PN}   75  \
         /usr/$(exhost --target)/bin/cpio        /usr/$(exhost --target)/bin/busybox
     alternatives_for cron       ${PN}   75  \
