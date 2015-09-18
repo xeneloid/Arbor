@@ -188,7 +188,7 @@ clang_src_install() {
     ALTERNATIVES_cxx_DESCRIPTION="System-wide C++ compiler"
     ALTERNATIVES_cpp_DESCRIPTION="System-wide C pre-processor"
     alternatives_for cc     clang       100 "${cc_alternatives[@]}"
-    alternatives_for c++    clang++     100 "${cxx_alternatives[@]}"
-    alternatives_for cpp    clang-cpp   100 "${cpp_alternatives[@]}"
+    alternatives_for c++    clang       100 "${cxx_alternatives[@]}"
+    alternatives_for cpp    clang       100 "${cpp_alternatives[@]}"
 }
 
