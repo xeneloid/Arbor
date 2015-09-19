@@ -82,12 +82,11 @@ src_install() {
     # The package build system installs stuff to /usr/share/doc/${PNV}; move
     # it to .../${PNVR} as necessary
     if [[ ${PNV} != ${PNVR} ]]; then
-        edo cp -pPRT "${IMAGE}"/usr/share/doc/${PNV} "${IMAGE}"/usr/share/doc/${PNVR}
-        edo rm -r "${IMAGE}"/usr/share/doc/${PNV}
+        edo mv "${IMAGE}"/usr/share/doc/${PNV}/* "${IMAGE}"/usr/share/doc/${PNVR}
+        edo rmdir "${IMAGE}"/usr/share/doc/${PNV}
     fi
     if option python; then
-        edo cp -pPRT "${IMAGE}"/usr/share/doc/${PN}-python-${PV} "${IMAGE}"/usr/share/doc/${PNVR}/python
-        edo rm -r "${IMAGE}"/usr/share/doc/${PN}-python-${PV}
+        edo mv "${IMAGE}"/usr/share/doc/${PN}-python-${PV} "${IMAGE}"/usr/share/doc/${PNVR}/python
     fi
 
     # devhelp doesn't support out-of-source builds
