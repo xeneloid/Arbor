@@ -63,7 +63,7 @@ linux-headers_src_install() {
     edo emake                                     \
         ARCH=${arch}                              \
         CROSS_COMPILE=$(exhost --tool-prefix)     \
-        HOSTCC="${CHOST}-gcc"                     \
+        HOSTCC="${CHOST}-cc"                      \
         INSTALL_HDR_PATH="${IMAGE}/usr/${target}" \
         headers_install
     edo find "${IMAGE}/usr/${target}/include" -name '.install' -delete -or \
