@@ -23,6 +23,7 @@ CROSS_COMPILE_TARGETS="
     armv7-unknown-linux-gnueabihf
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
+    x86_64-pc-linux-musl
 "
 
 LICENCES="as-is"
