@@ -1,20 +1,20 @@
 Upstream: no, Exherbo specific
 
-From ef26c260de46e610f4fc42494d149d1560de0550 Mon Sep 17 00:00:00 2001
+From 28d5ece736bf75ae5bca3c7b7b56861fe0babde8 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Sun, 1 Mar 2015 17:47:15 -0800
 Subject: [PATCH 2/3] exherbo multi-arch paths
 
 ---
  gcc/config.gcc              |  2 +-
- gcc/config/arm/linux-eabi.h | 23 +++++++++++++++++++++++
+ gcc/config/arm/linux-eabi.h | 45 +++++++++++++++++++++++++++++++++++++++++++++
  gcc/config/i386/linux.h     | 22 ++++++++++++++++++++++
  gcc/config/i386/linux64.h   | 34 ++++++++++++++++++++++++++++++++++
  gcc/config/rs6000/linux64.h | 15 +++++++++++++++
- 5 files changed, 95 insertions(+), 1 deletion(-)
+ 5 files changed, 117 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index fa81ca0..2160c3f 100644
+index 798f138..d11150f 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
 @@ -227,7 +227,7 @@ default_use_cxa_atexit=no
@@ -27,10 +27,10 @@ index fa81ca0..2160c3f 100644
  
  # Don't carry these over build->host->target.  Please.
 diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-index e9d65dc..56ed051 100644
+index 106bded..9363e00 100644
 --- a/gcc/config/arm/linux-eabi.h
 +++ b/gcc/config/arm/linux-eabi.h
-@@ -120,3 +120,26 @@
+@@ -145,3 +145,48 @@
  #define CLEAR_INSN_CACHE(BEG, END) not_used
  
  #define ARM_TARGET2_DWARF_FORMAT (DW_EH_PE_pcrel | DW_EH_PE_indirect)
@@ -38,17 +38,33 @@ index e9d65dc..56ed051 100644
 +/* exherbo specific paths */
 +
 +#undef STANDARD_STARTFILE_PREFIX_1
++#if DEFAULT_LIBC == LIBC_MUSL
++#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-musleabihf/lib/"
++#else
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-musleabi/lib/"
++#endif
++#else
 +#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
 +#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-gnueabihf/lib/"
 +#else
 +#define STANDARD_STARTFILE_PREFIX_1 "/usr/armv7-unknown-linux-gnueabi/lib/"
 +#endif
++#endif
 +
 +#undef STANDARD_STARTFILE_PREFIX_2
++#if DEFAULT_LIBC == LIBC_MUSL
++#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
++#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-musleabihf/lib/"
++#else
++#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-musleabi/lib/"
++#endif
++#else
 +#if TARGET_DEFAULT_FLOAT_ABI == TARGET_HARD_FLOAT_ABI
 +#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-gnueabihf/lib/"
 +#else
 +#define STANDARD_STARTFILE_PREFIX_2 "/armv7-unknown-linux-gnueabi/lib/"
++#endif
 +#endif
 +
 +#undef GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
@@ -56,6 +72,12 @@ index e9d65dc..56ed051 100644
 +
 +#undef GLIBC_DYNAMIC_LINKER_HARD_FLOAT
 +#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-gnueabihf/lib/ld-linux-armhf.so.3"
++
++#undef MUSL_DYNAMIC_LINKER_SOFT_FLOAT
++#define MUSL_DYNAMIC_LINKER_SOFT_FLOAT "/usr/armv7-unknown-linux-musleabi/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_ENDIAN ".so.1"
++
++#undef MUSL_DYNAMIC_LINKER_HARD_FLOAT
++#define MUSL_DYNAMIC_LINKER_HARD_FLOAT "/usr/armv7-unknown-linux-musleabihf/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_ENDIAN "hf.so.1"
 +
 diff --git a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
 index 47df2f4..7ab47b1 100644
