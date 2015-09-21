@@ -1,4 +1,6 @@
-From a7e6aea8bc21466fb75cf0e34bf3d26a2c38c58d Mon Sep 17 00:00:00 2001
+Upstream: yes
+
+From 013e842688ace86fe07810c2aeff8ba0d34e6c24 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Thu, 27 Aug 2015 19:21:43 -0700
 Subject: [PATCH 1/3] support musl as a proper target
@@ -7,6 +9,7 @@ Subject: [PATCH 1/3] support musl as a proper target
 - add new musl libc option (-mmusl)
 - update libc/loader map for musl
 - setup paths for the loader
+- define USE_PT_GNU_EH_FRAME for musl
 ---
  gcc/config.gcc              |  8 +++++++-
  gcc/config/arm/linux-eabi.h | 25 +++++++++++++++++++++++++
@@ -16,7 +19,8 @@ Subject: [PATCH 1/3] support musl as a proper target
  gcc/config/linux.opt        |  7 ++++++-
  gcc/configure               |  6 ++++++
  gcc/configure.ac            |  6 ++++++
- 8 files changed, 79 insertions(+), 14 deletions(-)
+ libgcc/unwind-dw2-fde-dip.c |  6 ++++++
+ 9 files changed, 85 insertions(+), 14 deletions(-)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
 index 3ede69b..798f138 100644
@@ -249,6 +253,23 @@ index 6f38ba1..a19a537 100644
    # Restrict to Solaris 11+.  While most of the Solaris 11 linker changes
    # were backported to Solaris 10 Update 10, dl_iterate_phdr only lives in
    # libdl there, both complicating its use and breaking compatibility
+diff --git a/libgcc/unwind-dw2-fde-dip.c b/libgcc/unwind-dw2-fde-dip.c
+index e1e566b..137dced 100644
+--- a/libgcc/unwind-dw2-fde-dip.c
++++ b/libgcc/unwind-dw2-fde-dip.c
+@@ -59,6 +59,12 @@
+ 
+ #if !defined(inhibit_libc) && defined(HAVE_LD_EH_FRAME_HDR) \
+     && defined(TARGET_DL_ITERATE_PHDR) \
++    && defined(__linux__)
++# define USE_PT_GNU_EH_FRAME
++#endif
++
++#if !defined(inhibit_libc) && defined(HAVE_LD_EH_FRAME_HDR) \
++    && defined(TARGET_DL_ITERATE_PHDR) \
+     && (defined(__DragonFly__) || defined(__FreeBSD__))
+ # define ElfW __ElfN
+ # define USE_PT_GNU_EH_FRAME
 -- 
-2.5.0
+2.5.2
 
