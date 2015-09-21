@@ -1,0 +1,35 @@
+Title: GCC 5 has been unmasked
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-10-11
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: sys-devel/gcc:4.9
+
+GCC 5 was released a while ago, and has been tested thoroughly by our
+developers and more adventurous users. GCC 5 has brought many new features,
+including better diagnostics and output coloration, to name a few visible
+differences. With GCC 5's release, this has also brought new versions of
+packages provided by it, such as libstdc++, libatomic, libgomp, and others.
+
+As such, I have now removed its testing mask.
+
+1.  Install sys-devel/gcc:5.1
+
+    # cave resolve -1 sys-devel/gcc:5.1
+
+2.  Switch to the newly installed GCC version
+
+    # eclectic gcc set 5.1
+    # eclectic cc set gcc
+    # eclectic c++ set gcc
+    # eclectic cpp set gcc
+
+3.  Install sys-libs/libstdc++:5.1
+
+    # cave resolve -1 sys-libs/libstdc++:5.1
+
+Any issues with GCC 5's installation should be reported to IRC. If you hit
+issues compiling packages with it, please send patches in to fix the
+package in question. Many distributions have switched to GCC 5 already, so
+you will likely find a patch for any package that fails to compile with it.
