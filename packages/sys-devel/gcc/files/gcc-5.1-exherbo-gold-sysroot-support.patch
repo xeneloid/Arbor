@@ -1,7 +1,7 @@
 Upstream: no
 Reason: Causes breakage with gold linker without patch
 
-From 67064a0a30dcbe23440817754291e8b5a90ace4d Mon Sep 17 00:00:00 2001
+From f8453dc82418643f415807a92f62867b6fc11b9d Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Fri, 3 Apr 2015 16:17:39 -0700
 Subject: [PATCH 3/3] driver: Do not pass an empty sysroot
