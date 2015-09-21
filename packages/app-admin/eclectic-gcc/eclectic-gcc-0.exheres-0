@@ -70,13 +70,13 @@ pkg_postinst() {
         for target in ${CROSS_COMPILE_TARGETS};do
             if option targets:${target};then
                 if has_version "sys-devel/gcc:5.1[<5.2.0-r6][targets:${target}]";then
-                    edo ln -s ${target}-cpp-5.1 /usr/$(exhost --target)/bin/${target}-cpp
+                    edo ln -s ${target}-cpp-5.1 "${ROOT}"/usr/$(exhost --target)/bin/${target}-cpp
                 elif has_version "sys-devel/gcc:4.9[<4.9.2-r10][targets:${target}]";then
                     # fix upgrading from latest stage...
-                    [[ -f $(readlink /usr/$(exhost --target)/bin/${target}-cpp-4.9) ]] && \
-                        edo ln -sf ${target}-cpp-4.9 /usr/$(exhost --target)/bin/${target}-cpp
-                    [[ -f $(readlink /usr/$(exhost --target)/bin/${target}-gcc-cpp-4.9) ]] && \
-                        edo ln -sf ${target}-cpp-5.1 /usr/$(exhost --target)/bin/${target}-cpp
+                    [[ -f $(readlink "${ROOT}"/usr/$(exhost --target)/bin/${target}-cpp-4.9) ]] && \
+                        edo ln -sf ${target}-cpp-4.9 "${ROOT}"/usr/$(exhost --target)/bin/${target}-cpp
+                    [[ -f $(readlink "${ROOT}"/usr/$(exhost --target)/bin/${target}-gcc-cpp-4.9) ]] && \
+                        edo ln -sf ${target}-cpp-5.1 "${ROOT}"/usr/$(exhost --target)/bin/${target}-cpp
                 fi
             fi
         done
