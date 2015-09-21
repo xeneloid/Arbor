@@ -20,6 +20,7 @@ CROSS_COMPILE_TARGETS="
     i686-pc-linux-gnu
     i686-pc-linux-musl
     x86_64-pc-linux-gnu
+    x86_64-pc-linux-musl
     powerpc64-unknown-linux-gnu
 "
 MYOPTIONS="
