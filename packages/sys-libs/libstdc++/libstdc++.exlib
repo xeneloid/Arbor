@@ -75,6 +75,11 @@ UPSTREAM_DOCUMENTATION="${HOMEPAGE}onlinedocs/libstdc++/libstdc++-html-USERS-${S
 # need to explicitly depend on the VTV option as it changes vtable information.
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-clocale=gnu --disable-libstdcxx-pch --disable-vtable-verify
                                --with-python-dir=../share/gdb/python --disable-multilib )
+if ever at_least 5.0 ; then
+    # NOTE(compnerd) default to the compatible ABI.  This prevents unncesary failures when linking
+    # between gcc:5 and gcc[<5].
+    DEFAULT_SRC_CONFIGURE_PARAMS+=( --with-default-libstdcxx-abi=gcc4-compatible )
+fi
 
 ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}/libstdc++-v3"
 WORK="${WORKBASE}/build/$(exhost --target)/libstdc++-v3"
