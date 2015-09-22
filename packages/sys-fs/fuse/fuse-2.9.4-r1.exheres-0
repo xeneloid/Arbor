@@ -14,7 +14,7 @@ create and mount their own filesystem implementations.
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     run:
@@ -32,6 +32,5 @@ src_install() {
     default
     edo rm -r "${IMAGE}"/etc
     edo rm -r "${IMAGE}"/dev
-    option baselayout && newinitd "${FILES}"/${PN}.initd ${PN}
 }
 
