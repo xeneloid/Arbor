@@ -27,7 +27,6 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     sensord [[ description = [ Enable sensord, a daemon that can be used to periodically log sensor readings from hardware health-monitoring chips ] ]]
 "
 
@@ -72,15 +71,6 @@ lm_sensors_src_install() {
     default
 
     keepdir /etc/sensors.d
-
-    if option baselayout ; then
-        newinitd "${FILES}"/lm_sensors-init.d lm_sensors
-        newinitd "${FILES}"/fancontrol-init.d fancontrol
-        if option sensord; then
-            newconfd "${FILES}"/sensord-conf.d sensord
-            newinitd "${FILES}"/sensord-init.d sensord
-        fi
-    fi
 
     insinto ${SYSTEMDSYSTEMUNITDIR}
     doins prog/init/lm_sensors.service
