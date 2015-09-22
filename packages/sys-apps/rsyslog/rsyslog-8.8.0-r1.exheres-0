@@ -27,7 +27,6 @@ LICENCES="GPL-3 LGPL-3"
 SLOT="4"
 PLATFORMS="~amd64 ~armv7 ~ppc64 ~x86"
 MYOPTIONS="
-    baselayout
     debug
     gnutls
     kerberos
@@ -118,10 +117,5 @@ src_install() {
     fi
 
     edo rmdir "${IMAGE}"/usr/share/man/man1
-
-    if option baselayout ; then
-        newinitd "${FILES}"/${PN}.initd ${PN}
-        newconfd "${FILES}"/${PN}.confd ${PN}
-    fi
 }
 
