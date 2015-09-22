@@ -43,7 +43,13 @@ src_configure() {
 
 src_install() {
     default
-    if [[ $(exhost --target) != *-*musl* ]];then
+
+    if [[ $(exhost --target) == *-*musl* ]]; then
+        edo mkdir "${IMAGE}"/usr/$(exhost --target)/bin
+        dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
+    else
+        dosym ../lib/libc.so /usr/$(exhost --target)/musl/bin/ldd
+
         edo cd "${IMAGE}"/usr/$(exhost --target)/musl/bin
         edo sed -e "s|^exec|REALGCC=\${REALGCC:-$(exhost --tool-prefix)gcc};&|" \
                 -i musl-gcc
