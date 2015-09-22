@@ -37,7 +37,7 @@ REMOTE_IDS="sourceforge:${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build:
@@ -167,15 +167,6 @@ dracut_src_install() {
 
     insinto /usr/share/doc/${PNVR}/html/
     doins dracut.html dracut.png
-
-    if option baselayout ; then
-        insinto /etc/dracut.conf.d
-        hereins i18n.conf << EOF
-# i18n variable mapping for baselayout
-i18n_vars="/etc/conf.d/consolefont:CONSOLEFONT-SYSFONT"
-keyboard_vars="/etc/conf.d/keymaps:KEYMAP"
-EOF
-    fi
 
     keepdir /etc/dracut.conf.d
     keepdir /usr/$(exhost --target)/lib/dracut/dracut.conf.d
