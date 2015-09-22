@@ -2,7 +2,7 @@
 # Copyright 2014 Julien Pivotto <roidelapluie@inuits.eu>
 # Distributed under the terms of the GNU General Public License v2
 
-require libnetfilter autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
+require libnetfilter autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_prepare
 
@@ -31,11 +31,12 @@ DEPENDENCIES="
     build+run:
         dev-libs/gmp
         net-libs/libmnl[>=1.0.3]
-        net-libs/libnftnl[>=1.0.3]
+        net-libs/libnftnl[>=1.0.5]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-cli
+    --without-mini-gmp
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
@@ -46,9 +47,13 @@ nftables_src_prepare() {
     # docbook2X is weird, has annoying dependencies, the latest release is from
     # 2007 and nftables doesn't find it even if it's installed. Let's just use
     # xmlto.
-    edo sed -i -e "s:docbook2x-man:xmlto:g" configure.ac
-    edo sed -i -e "s:db2x_docbook2man:xmlto:g" configure.ac
-    edo sed -i -e "s:--xinclude:man --skip-validation:" doc/Makefile.am
+    edo sed \
+        -e "s:docbook2x-man:xmlto:g" \
+        -e "s:db2x_docbook2man:xmlto:g" \
+        -i configure.ac
+    edo sed \
+        -e "s:--xinclude:man --skip-validation:" \
+        -i doc/Makefile.am
 
     autotools_src_prepare
 }
