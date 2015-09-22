@@ -24,7 +24,6 @@ LICENCES="ISC BSD-2 BSD-3"
 SLOT="0"
 MYOPTIONS="
     anacron [[ description = [ Use anacron in addition to the standard cron ] ]]
-    baselayout
 "
 
 # debianutils required for run-parts a.k.a cron.{daily,hourly}
@@ -69,8 +68,6 @@ cronie_src_install() {
 
     # overwrite the default pam file with our own
     newpamd "${FILES}"/pamd.compatible crond
-
-    option baselayout && newinitd "${FILES}"/cronie.bl1 cronie
 
     install_systemd_files
     doconfd "${FILES}"/systemd/cronie.conf
