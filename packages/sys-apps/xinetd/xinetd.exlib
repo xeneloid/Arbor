@@ -16,7 +16,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/#changes"
 
 LICENCES="${PN}"
 SLOT="0"
-MYOPTIONS="baselayout perl tcpd"
+MYOPTIONS="perl tcpd"
 
 DEPENDENCIES="
     build+run:
@@ -60,11 +60,6 @@ xinetd_src_prepare() {
 
 xinetd_src_install() {
     default
-
-    if option baselayout ; then
-        newconfd "${FILES}/xinetd.conf.d" xinetd
-        newinitd "${FILES}/xinetd.init.d" xinetd
-    fi
 
     insinto /etc
     doins -r "${WORK}"/contrib/xinetd.d
