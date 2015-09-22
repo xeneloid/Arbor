@@ -5,3 +5,5 @@ require libgfortran
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/1e5f711c11cb80ce609db9e9c1d8b2da0f7b5b61.patch" )
+

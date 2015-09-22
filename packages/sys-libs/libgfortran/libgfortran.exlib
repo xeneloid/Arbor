@@ -57,6 +57,11 @@ libgfortran_src_unpack() {
     edo ln -s gthr-$(${CXX} -v 2>&1 | sed -n 's/^Thread model: //p').h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
 }
 
+libgfortran_src_prepare() {
+    edo cd "${ECONF_SOURCE}/.."
+    default
+}
+
 libgfortran_src_install() {
     default
 
@@ -65,5 +70,5 @@ libgfortran_src_install() {
     slot_other_libs ${PN}.a ${PN}.la ${PN}.spec
 }
 
-export_exlib_phases src_unpack src_install
+export_exlib_phases src_unpack src_prepare src_install
 
