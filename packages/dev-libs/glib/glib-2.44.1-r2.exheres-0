@@ -9,7 +9,7 @@ SLOT="2"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     gtk-doc
-    ( providers: elfutils libelf )
+    ( providers: elfutils libelf ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
