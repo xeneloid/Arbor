@@ -16,7 +16,7 @@ DOWNLOADS="mirror://gentoo/${PNV}.tar.bz2
 LICENCES="BSD-3 BSD-4 ISC"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
@@ -50,7 +50,6 @@ src_install() {
     newins "${WORKBASE}"/${PNV}-cron.deny cron.deny
 
     keepdir /etc/cron.d
-    option baselayout && newinitd "${FILES}"/vixie-cron.rc6 vixie-cron
 
     install_systemd_files
 
