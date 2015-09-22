@@ -19,7 +19,7 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
@@ -60,15 +60,6 @@ multipath-tools_src_install() {
 
     edo rmdir "${IMAGE}"/usr/share/doc/mpathpersist
     edo find "${IMAGE}"/${LIBDIR}/ -type l -delete
-
-    if option baselayout ; then
-        # This is the monitoring daemon
-        newinitd "${FILES}"/rc-multipathd multipathd
-
-        # Handle early-boot startup as well as shutdown of multipath devices
-        insinto /${LIBDIR}/rcscripts/addons
-        doins "${FILES}"/multipath-{start,stop}.sh
-    fi
 }
 
 multipath-tools_pkg_postinst() {
