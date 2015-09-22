@@ -1,29 +1,21 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 ]
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
-require alternatives
+require gnu [ suffix=bz2 ] alternatives
 
 SUMMARY="Archive manager for cpio archives"
 
-LICENCES="( GPL-3 ) [[ last-checked = 2.11 ]]"
+LICENCES="( GPL-3 ) [[ last-checked = 2.12 ]]"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.19]
     build+run:
         app-arch/tar[>=1.26-r1]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-no-gets.patch
-    "${FILES}"/${PNV}-look-for-host-prefixed-ar.patch
-    "${FILES}"/3a7a1820d4cecbd77c7b74c785af5942510bf080.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-mt
@@ -31,19 +23,13 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-rmt=/usr/$(exhost --target)/libexec/rmt
 )
 
-AT_M4DIR=( m4 am )
-
-src_configure() {
-    # NOTE(?) configuration takes a million years without this hack.
-    esandbox hack_toolong
-    default
-    esandbox nohack_toolong
-}
-
 src_install() {
     default
+
     alternatives_for cpio gnu 200  \
         /usr/$(exhost --target)/bin/cpio    gcpio \
         /usr/share/man/man1/cpio.1          gcpio.1
+
+    edo rmdir "${IMAGE}"/usr/share/man/man8
 }
 
