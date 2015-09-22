@@ -12,7 +12,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="baselayout debug"
+MYOPTIONS="debug"
 
 DEPENDENCIES="
     build:
@@ -33,10 +33,4 @@ src_compile() {
 
 src_install() {
     emake DESTDIR="${IMAGE}" mandir=/usr/share/man libdir=/usr/${LIBDIR} NLS=true install
-
-    if option baselayout ; then
-        newinitd "${FILES}"/${PN}-init.d ${PN}
-        newconfd "${FILES}"/${PN}-conf.d ${PN}
-    fi
 }
-
