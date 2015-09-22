@@ -4,18 +4,19 @@
 
 require libnetfilter
 
-SUMMARY="userspace library providing an API to the in-kernel nf_tables subsystem"
+SUMMARY="Userspace library providing an API to the in-kernel nf_tables subsystem"
 DESCRIPTION="
 libnftnl is a userspace library providing a low-level netlink programming interface
 (API) to the in-kernel nf_tables subsystem. The library libnftnl has been previously
 known as libnftables. This library is currently used by nftables.
 "
 
+LICENCES="GPL-2"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
     build+run:
-        net-libs/libmnl
+        net-libs/libmnl[>=1.0.0]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
