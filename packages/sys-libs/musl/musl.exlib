@@ -18,6 +18,10 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    CROSS_COMPILE=$(exhost --tool-prefix)
+)
+
 src_configure() {
     if [[ $(exhost --target) == *-*musl* ]];then
         myconf=(
@@ -30,7 +34,7 @@ src_configure() {
             --prefix=/usr/$(exhost --target)/musl
         )
     fi
-    export CROSS_COMPILE=$(exhost --tool-prefix)
+
     edo ./configure \
         --syslibdir=/usr/$(exhost --target)/lib     \
         --target=$(exhost --target)                 \
