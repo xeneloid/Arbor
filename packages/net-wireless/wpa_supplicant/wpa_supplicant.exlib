@@ -34,7 +34,6 @@ LICENCES="|| ( BSD-3 GPL-2 )"
 SLOT="0"
 
 MYOPTIONS="
-    baselayout
     dbus     [[ description = [ Enable the DBus control interface ] ]]
     eap-fast [[
         description = [ Enable EAP-FAST authentication method ]
@@ -289,23 +288,6 @@ wpa_supplicant_src_install() {
     doins "${WORK}"/systemd/{wpa_supplicant@,wpa_supplicant-nl80211@,wpa_supplicant-wired@}.service
     option dbus && doins "${WORK}"/systemd/wpa_supplicant.service
 
-    if option baselayout ; then
-        exeinto /etc/wpa_supplicant
-        doexe "${FILES}"/wpa_cli.sh
-
-        insinto /etc/wpa_supplicant
-        hereins wpa_supplicant.conf <<EOF
-# This is a network block that connects to any unsecured access point.
-# We give it a low priority so any defined blocks are preferred.
-# To enable it, uncomment the following lines. Keep in mind its a
-# possible security issue to connect to any unsecured access point.
-#network={
-#    key_mgmt=NONE
-#    priority=-9999999
-#}
-EOF
-    fi
-
     emagicdocs
     doman doc/docbook/*.{5,8}
 
@@ -319,9 +301,6 @@ EOF
 
 #    local defaultdriver=wext
 #    option nl80211 && defaultdriver=nl80211
-
-#    newinitd "${FILES}"/wpa_priv.init.d wpa_priv
-#    newconfd "${FILES}"/wpa_priv.conf.d wpa_priv
 
 #    if option nl80211 ; then
 #        edo echo WPA_PRIV_DEFAULT_DRIVER=nl80211 >> "${IMAGE}"/etc/conf.d/wpa_priv
