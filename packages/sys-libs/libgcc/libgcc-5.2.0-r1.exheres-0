@@ -5,3 +5,5 @@ require libgcc
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/a2e31d0681d8a47389b8a3552622fbd9827bcef4.patch" )
+
