@@ -22,7 +22,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/changelog"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     run:
@@ -40,8 +40,6 @@ src_install() {
         edo ./install.sh
 
     keepdir /etc/laptop-mode/{batt,lm-ac,nolm-ac}-{start,stop} /etc/laptop-mode/modules
-
-    option baselayout && newinitd "${FILES}"/laptop-mode.init.d-0 laptop-mode
 
     install_systemd_files
 
