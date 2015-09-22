@@ -19,7 +19,6 @@ LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="
     amqp    [[ description = [ Output logs over AMQP ] ]]
-    baselayout
     caps
     json    [[ description = [ Ingest and produce json-formatted log data ] ]]
     mongodb [[ description = [ Write logs to a mongodb instance ] ]]
@@ -118,11 +117,6 @@ syslog-ng_src_install() {
     fi
 
     dodoc "${FILES}"/syslog-ng.conf.sample
-
-    if option baselayout ; then
-        newinitd "${FILES}"/syslog-ng.rc6 syslog-ng
-        newconfd "${FILES}"/syslog-ng.confd syslog-ng
-    fi
 
     insinto /etc/logrotate.d
     newins "${FILES}"/syslog-ng.logrotate syslog-ng
