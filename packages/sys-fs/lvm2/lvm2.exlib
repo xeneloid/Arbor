@@ -26,7 +26,6 @@ DOWNLOADS="
 LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     dmeventd [[ description = [ DM event daemon to monitor active mapped devices ] ]]
     fsadm [[ description = [ Utility to resize or check filesystem on a device ] ]]
     systemd
@@ -89,11 +88,4 @@ lvm2_src_install() {
     emake DESTDIR="${IMAGE}" install_tmpfiles_configuration
 
     install_systemd_files
-
-    if option baselayout; then
-        insinto /usr/$(exhost --target)/lib/rcscripts/addons
-        doins "${FILES}"/lvm-start.sh
-        doins "${FILES}"/lvm-stop.sh
-    fi
 }
-
