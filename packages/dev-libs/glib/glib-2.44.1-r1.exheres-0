@@ -7,7 +7,10 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] 
 
 SLOT="2"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="gtk-doc"
+MYOPTIONS="
+    gtk-doc
+    ( providers: elfutils libelf )
+"
 
 DEPENDENCIES="
     build:
@@ -20,8 +23,9 @@ DEPENDENCIES="
         ) [[ description = [ For man pages ] ]]
         gtk-doc? ( dev-doc/gtk-doc[>=1.20] )
     build+run:
-        dev-util/elfutils[>=0.142]
         dev-libs/libffi[>=3.0.0]
+        providers:elfutils? ( dev-util/elfutils[>=0.142] )
+        providers:libelf? ( dev-libs/libelf[>=0.8.12] )
     test:
         dev-util/desktop-file-utils
         gnome-bindings/pygobject:3
