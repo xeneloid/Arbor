@@ -4,7 +4,7 @@
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
 require alternatives toolchain-runtime-libraries
 
-export_exlib_phases src_unpack src_configure src_install pkg_postinst
+export_exlib_phases src_unpack src_prepare src_configure src_install pkg_postinst
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
@@ -97,6 +97,11 @@ libstdc++_src_unpack() {
 
     # NOTE(compnerd) make sure that we setup _GLIBCXX_HAS_GTHREADS properly
     edo ln -s gthr-$(${CXX} -v 2>&1 | sed -n 's/^Thread model: //p').h "${WORKBASE}/gcc-${PV/_p?(re)/-}/libgcc/gthr-default.h"
+}
+
+libstdc++_src_prepare() {
+    edo cd "${ECONF_SOURCE}/.."
+    default
 }
 
 libstdc++_src_configure() {
