@@ -29,7 +29,7 @@ BUGS_TO="philantrop@exherbo.org"
 
 LICENCES="|| ( GPL-2 AFL-2.1 )"
 SLOT="0"
-MYOPTIONS="baselayout debug doc systemd X"
+MYOPTIONS="debug doc systemd X"
 
 DEPENDENCIES="
     build:
@@ -119,8 +119,6 @@ dbus_src_install() {
     if ! option doc ; then
         [[ -d "${IMAGE}"/usr/share/doc/${PNVR}/api ]] && edo rmdir "${IMAGE}"/usr/share/doc/${PNVR}/api
     fi
-
-    option baselayout && newinitd "${FILES}"/dbus.init-1.0 dbus
 
     # dbus X session script (Gentoo bug #77504)
     # turns out to only work for GDM. has been merged into other desktop
