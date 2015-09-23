@@ -53,6 +53,8 @@ DEPENDENCIES="
             description = [ Alternatives conflict ]
             resolution = uninstall-blocked-after
         ]]
+    post:
+        app-admin/eclectic-gcc[targets:*(-)?]
 "
 #   build:
 #       $(for host in ${CROSS_COMPILE_TARGETS} ; do
