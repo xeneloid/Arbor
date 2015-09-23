@@ -15,7 +15,7 @@ HOMEPAGE+=" http://git.infradead.org/users/steved/${PN}.git"
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     build:
@@ -53,10 +53,4 @@ src_install() {
     hereins ${PN}.conf <<EOF
 d /run/rpcbind 0700 rpc rpc
 EOF
-
-    if option baselayout ; then
-        newinitd "${FILES}"/rpcbind.initd rpcbind
-        newconfd "${FILES}"/rpcbind.confd rpcbind
-    fi
 }
-
