@@ -3,7 +3,7 @@
 
 require alternatives
 
-export_exlib_phases src_configure src_install pkg_postinst
+export_exlib_phases src_prepare src_configure src_install src_test pkg_postinst
 
 SUMMARY="International Components for Unicode"
 HOMEPAGE="http://site.${PN}-project.org"
