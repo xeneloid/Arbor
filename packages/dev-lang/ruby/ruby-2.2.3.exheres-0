@@ -11,3 +11,7 @@ DEPENDENCIES="
         dev-libs/gmp:=
 "
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PN}-Only-add-SSLv3-support-if-SSL-library-supports-it.patch
+)
+
