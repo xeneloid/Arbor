@@ -146,14 +146,7 @@ libgcc_src_compile() {
 
     edo mkdir -p "${WORK}/$(exhost --target)/libgcc"
     edo cd "${WORK}/$(exhost --target)/libgcc"
-        CC=${CC_FOR_BUILD}                       \
-        LD=${LD_FOR_BUILD}                       \
-        CPP=${CPP_FOR_BUILD}                     \
-        CXX=${CXX_FOR_BUILD}                     \
-        CFLAGS="${!build_cflags_var}"            \
-        CPPFLAGS="${!build_cppflags_var}"        \
-        CXXFLAGS="${!build_cxxflags_var}"        \
-        LDFLAGS="${!build_ldflags_var}"          \
+        CC=$(exhost --tool-prefix)gcc-${SLOT}    \
         AS_FOR_TARGET=$(exhost --tool-prefix)as  \
         CC_FOR_TARGET=$(exhost --tool-prefix)gcc-${SLOT} \
         LD_FOR_TARGET=$(exhost --tool-prefix)ld  \
