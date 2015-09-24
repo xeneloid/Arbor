@@ -31,8 +31,12 @@ findutils_src_configure() {
         --enable-leaf-optimisation \
         --enable-nls \
         --libexecdir=/usr/$(exhost --target)/libexec/${PN} \
-        --without-included-regex \
-        --without-selinux
+        --without-selinux \
+        $(  if [[ "$(exhost --target)" == *-musl* ]];then
+                echo --with-included-regex
+            else
+                echo --without-included-regex
+            fi)
 }
 
 findutils_src_test_expensive() {
