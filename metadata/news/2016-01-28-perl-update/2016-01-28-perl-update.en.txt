@@ -1,0 +1,25 @@
+Title: Perl 5.22 update
+Author: Timo Gurr <tgurr@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-11-20
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-lang/perl[<5.22.1]
+
+Perl has been bumped to 5.22.1
+
+To switch to that version, run...
+
+    # eclectic perl set 5.22
+
+As always after changing perl slots, you will need to rebuild all packages
+that install Perl modules. To do this, you can run...
+
+    # cave resolve -1x $(cave print-owners -f '%c/%p:%s ' /usr/${CHOST}/lib/perl5/vendor_perl/5.20-arch )
+    # cave resolve -1x $(cave print-owners -f '%c/%p:%s ' /usr/${CHOST}/lib/perl5/vendor_perl/5.20-pure )
+
+Replacing ${CHOST} with the triplet matching your system, and executing
+those commands for any cross targets which Perl is installed to.
+
+In addition, if you installed any site-modules manually, you have to
+reinstall those as well.
