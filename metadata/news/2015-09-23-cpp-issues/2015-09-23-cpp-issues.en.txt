@@ -2,7 +2,7 @@ Title: cpp issues and eclectic-gcc
 Author: Kylie McClain <somasis@exherbo.org>
 Content-Type: text/plain
 Posted: 2015-09-23
-Revision: 1
+Revision: 2
 News-Item-Format: 1.0
 
 eclectic-gcc was pushed to the tree a while back to solve some issues with
@@ -18,11 +18,12 @@ Here's what you should do if you haven't upgraded yet:
     # cave resolve -1 gcc
     # cave resolve -1 eclectic-gcc
 
-2.  Ensure that `cc`, `c++`, and `cpp` run fine
+2.  Ensure that `cc`, `c++`, `cpp`, and `fc` run fine
 
     # x86_64-pc-linux-gnu-cc --version
     # x86_64-pc-linux-gnu-c++ --version
     # x86_64-pc-linux-gnu-cpp --version
+    # x86_64-pc-linux-gnu-fc --version
 
 3.  If for any of those commands, bash tells you the command is not found,
     relink them to eclectic-gcc's providers.
@@ -30,6 +31,7 @@ Here's what you should do if you haven't upgraded yet:
     # eclectic cc set gcc
     # eclectic c++ set gcc
     # eclectic cpp set gcc
+    # eclectic fc set gcc
 
 If you have already upgraded, and you currently have broken links for any
 of those commands, only do step three.
