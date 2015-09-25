@@ -22,7 +22,7 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="Sendmail"
 
 SLOT="0"
-MYOPTIONS="baselayout ldap mbox nis sasl sockets ssl tcpd
+MYOPTIONS="ldap mbox nis sasl sockets ssl tcpd
     ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
@@ -199,12 +199,6 @@ sendmail_src_install() {
     edo cat "${IMAGE}"/usr/share/sendmail-cf/cf/submit.mc >> "${IMAGE}"/etc/mail/submit.mc
     echo "# local-host-names - include all aliases for your machine here" \
         > "${IMAGE}"/etc/mail/local-host-names
-
-    if option baselayout ; then
-        dodir /etc/conf.d
-        newconfd "${FILES}"/sendmail.confd-1 sendmail
-        newinitd "${FILES}"/sendmail.initd-1 sendmail
-    fi
 
     install_systemd_files
 
