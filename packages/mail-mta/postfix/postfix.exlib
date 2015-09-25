@@ -20,7 +20,6 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/announcements/${PNV}.html [[ lang = en ]]"
 LICENCES="IPL-1.0"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     cyrus      [[ description = [ Support using Cyrus SASL for SASL support (SASL support using dovecot is built unconditionally) ] ]]
     ldap       [[ description = [ Support using LDAP as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
     mysql      [[ description = [ Support using a MySQL database as source for postfix lookup tables (see ${HOMEPAGE}/DATABASE_README.html) ] ]]
@@ -152,6 +151,5 @@ postfix_src_install() {
     dosym /usr/share/doc/${PNVR} /usr/share/doc/${PN}
 
     install_systemd_files
-    option baselayout && newinitd "${FILES}"/postfix.init.d-0 postfix
 }
 
