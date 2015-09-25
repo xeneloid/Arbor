@@ -27,7 +27,7 @@ UPSTREAM_RELEASE_NOTES="http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS
 
 LICENCES="BSD-3 BSD-4 GPL-2 MIT"
 SLOT="0"
-MYOPTIONS="baselayout caps debug parse-clocks
+MYOPTIONS="caps debug parse-clocks
 ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -100,17 +100,6 @@ ntp_src_install() {
     hereins 60-ntpd.list <<EOF
 ntpd.service
 EOF
-
-    if option baselayout ; then
-        newinitd "${FILES}"/ntpd.initd ntpd
-        # As of ntp-4.2.4_p7-RC1 ntp will only drop privileges if linuxcaps is enabled
-        hereconfd ntpd <<EOF
-# Options to pass to the ntpd process
-# Most people should leave this line alone ...
-# however, if you know what you're doing, feel free to tweak
-NTPD_OPTS="$(option caps && echo '-u ntp:ntp')"
-EOF
-    fi
 
     edo find "${IMAGE}"/usr/ -type d -empty -delete
 
