@@ -13,7 +13,6 @@ LICENCES="BSD-2 BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
-    baselayout
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -37,10 +36,6 @@ src_install() {
     edo rmdir "${IMAGE}"/var{/run,/db,}
 
     install_systemd_files
-
-    if option baselayout; then
-        newinitd "${FILES}/${PN}.rc" ${PN}
-    fi
 
     hereconfd ${PN}.conf <<EOF
 NTPD_HOME=/var/empty
