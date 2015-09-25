@@ -35,7 +35,6 @@ UPSTREAM_RELEASE_NOTES="
 LICENCES="GPL-2" # with-exceptions
 SLOT="0"
 MYOPTIONS="
-    baselayout
     debug
     embedded-server [[ description = [ The embedded MySQL server library, a full-featured MySQL server that can be run inside a client application ] ]]
     memcached [[ description = [ Enable using memcached for InnoDb tables (don't know it? Don't enable it.) ] ]]
@@ -256,11 +255,6 @@ EOF
 
     insinto /etc/logrotate.d
     newins "${FILES}"/logrotate.mysql mysql
-
-    if option baselayout ; then
-        newinitd "${FILES}"/mysql.rc6 mysql
-        newconfd "${FILES}"/mysql.conf.d mysql
-    fi
 
     install_systemd_files
 
