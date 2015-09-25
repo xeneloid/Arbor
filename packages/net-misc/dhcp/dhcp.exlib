@@ -30,7 +30,7 @@ REMOTE_IDS="freecode:iscdhcp"
 
 LICENCES="ISC"
 SLOT="0"
-MYOPTIONS="baselayout"
+MYOPTIONS=""
 
 DEPENDENCIES="
     run:
@@ -66,11 +66,6 @@ dhcp_src_prepare() {
 
 dhcp_src_install() {
     default
-
-    if option baselayout ; then
-        newinitd "${FILES}"/dhcpd.init dhcpd
-        newconfd "${FILES}"/dhcpd.conf dhcpd
-    fi
 
     install_systemd_files
     insinto /etc/conf.d
