@@ -29,7 +29,6 @@ UPSTREAM_RELEASE_NOTES="http://ftp.isc.org/isc/${PN}${PV%%.*}/${MY_PV}/RELEASE-N
 LICENCES="as-is"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     berkdb
     geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]
     idn
@@ -144,12 +143,6 @@ bind_src_install() {
     hereenvd 30bind <<EOF
 CONFIG_PROTECT="/var/bind"
 EOF
-
-    if option baselayout ; then
-        # Installing init file as well as confd file
-        newinitd "${FILES}"/named.init named
-        newconfd "${FILES}"/named.confd named
-    fi
 
     insinto /usr/$(exhost --target)/lib/tmpfiles.d
     hereins ${PN}.conf <<EOF
