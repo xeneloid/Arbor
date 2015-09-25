@@ -223,14 +223,9 @@ mysql_src_configure() {
 }
 
 mysql_src_install() {
-    local ldpath
-
     cmake_src_install
 
     ! option debug && edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib/mysql/plugin/debug
-
-    # construct ldpath for all targets
-    ldpath="/usr/$(exhost --target)/lib/${PN}${ldpath:+:${ldpath}}"
 
     # Remove empty directories
     edo rmdir "${IMAGE}"/usr/share/mysql/info
@@ -250,7 +245,7 @@ mysql_src_install() {
     edo chmod 755 "${IMAGE}"/var/{lib,log}/mysql
 
     hereenvd 46mysql <<EOF
-LDPATH=${ldpath}
+LDPATH=/usr/host/lib/mysql
 EOF
 
     insinto /etc/logrotate.d
