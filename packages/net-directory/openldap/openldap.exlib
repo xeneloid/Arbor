@@ -28,7 +28,6 @@ ${HOMEPAGE}/software/man.cgi    [[ lang = en description = [ Manual pages ] ]]
 LICENCES="OpenLDAP-2.8"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     berkdb
     debug
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
@@ -137,11 +136,6 @@ openldap_src_install() {
 
     edo chown root:ldap "${IMAGE}"/etc/openldap/slapd.conf
     edo chmod 0640 "${IMAGE}"/etc/openldap/slapd.conf
-
-    if option baselayout ; then
-        newinitd "${FILES}"/slapd-initd slapd
-        newconfd "${FILES}"/slapd-confd slapd
-    fi
 
     install_systemd_files
     insinto /etc/conf.d
