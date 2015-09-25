@@ -24,7 +24,6 @@ LICENCES="|| ( GPL-2 GPL-3 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="
-    baselayout
     conntrack [[ description = [ Enables connection tracking via NetFilter ] ]]
     dbus
     dnssec [[ description = [ Support the Domain Name System Security Extensions ] ]]
@@ -88,11 +87,6 @@ src_install() {
     # Lease directory
     dodir /var/lib/dnsmasq
     keepdir /var/lib/dnsmasq
-
-    if option baselayout ; then
-        newinitd "${FILES}"/dnsmasq.init dnsmasq
-        newconfd "${FILES}"/dnsmasq.conf dnsmasq
-    fi
 
     # Only install dnsmasq.service, not README
     insinto ${SYSTEMDSYSTEMUNITDIR}
