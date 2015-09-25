@@ -33,7 +33,6 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/txt/release-${PV%_p*}"
 LICENCES="BSD-3"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     gtk  [[ description = [ Build gnome-ssh-askpass ] ]]
     kerberos
     ldns [[ description = [ Use ldns for DNSSEC support ] ]]
@@ -161,11 +160,6 @@ openssh_src_install() {
     edo chmod 600 "${IMAGE}"/etc/ssh/sshd_config
     dobin contrib/ssh-copy-id
 
-    if option baselayout ; then
-        newinitd "${FILES}"/sshd.rc6 sshd
-        newconfd "${FILES}"/sshd.confd sshd
-    fi
-
     keepdir /etc/ssh/ca
     keepdir /etc/skel/.ssh
     edo rmdir "${IMAGE}"/var{/empty,}
@@ -201,11 +195,6 @@ openssh_src_install() {
 openssh_pkg_postinst() {
     [[ ! -d ${ROOT}/var/empty ]] && edo mkdir -p "${ROOT}"/var/empty
 
-    if option baselayout ; then
-        ewarn "Remember to merge your config files in /etc/ssh/ and then"
-        ewarn "restart sshd: '/etc/init.d/sshd restart'."
-        echo
-    fi
     ewarn "Please be aware users need a valid shell in /etc/passwd"
     ewarn "in order to be allowed to login."
 
