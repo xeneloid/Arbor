@@ -319,8 +319,6 @@ strip-unsupported-flags() {
 }
 
 get-flag() {
-    illegal_in_global_scope
-
     local f findflag="$1"
 
     # this code looks a little flaky but seems to work for
@@ -411,8 +409,6 @@ filter-ldflags() {
 # are suitable for passing directly to 'ld'; note LDFLAGS is usually passed
 # to gcc where it needs the '-Wl,'.
 raw-ldflags() {
-    illegal_in_global_scope
-
     local x input="$@"
     [[ -z ${input} ]] && input=${LDFLAGS}
     set --
@@ -427,8 +423,6 @@ raw-ldflags() {
 # it takes a lot of lines to get this done thanks to bash's indirection
 # Example: print-flags $(exhost --build) CFLAGS LDFLAGS
 print-flags() {
-    illegal_in_global_scope
-
     [[ ${#} -lt 2 ]] && die "print-flags requires at least two arguments"
 
     local prefix=${1//-/_} flag; shift
