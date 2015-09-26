@@ -3,9 +3,9 @@
 # Based in part upon 'libcap-2.08-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require pam
+require pam flag-o-matic
 
-export_exlib_phases src_prepare src_compile src_install
+export_exlib_phases src_prepare src_install
 
 SUMMARY="POSIX 1003.1e capabilities"
 HOMEPAGE="https://sites.google.com/site/fullycapable/"
@@ -23,38 +23,30 @@ DEPENDENCIES="
         sys-libs/pam
 "
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    BUILD_CC="$(exhost --build)-cc"
+    BUILD_CFLAGS="$(print-build-flags CFLAGS) \$(IPATH)"
+    lib=lib
+    PAM_CAP=yes
+)
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    prefix=/usr/$(exhost --target)
+    SBINDIR=/usr/$(exhost --target)/bin
+    lib=lib
+    man_prefix=/usr/share
+    RAISE_SETFCAP=no
+)
+
 libcap_src_prepare() {
     default
 
-    edo sed -f - -i Make.Rules <<'EOF'
-    /^\(AR\|CC\|CFLAGS\|LDFLAGS\|RANLIB\) :=/{
-        s|:=|?=|;
-    }
-EOF
-}
-
-libcap_src_compile() {
-    local host_prefix=$(exhost --build)
-    local build_cflags=${host_prefix//-/_}_CFLAGS
-
-    emake                                                           \
-        BUILD_CC="${host_prefix}-gcc"                               \
-        BUILD_CFLAGS="${!build_cflags} \$(IPATH)"                   \
-        lib=lib                                                     \
-        PAM_CAP=yes
+    edo sed -e 's/^\(AR\|CC\|CFLAGS\|LDFLAGS\|RANLIB\) :=/\1 ?=/' \
+            -i Make.Rules
 }
 
 libcap_src_install() {
-    emagicdocs
-
-    emake -j1                               \
-        DESTDIR="${IMAGE}"                  \
-        SBINDIR=/usr/$(exhost --target)/bin \
-        prefix=/usr/$(exhost --target)      \
-        lib=lib                             \
-        man_prefix=/usr/share               \
-        RAISE_SETFCAP=no                    \
-        install
+    default
 
     dopammod pam_cap/pam_cap.so
     dopamsecurity '' pam_cap/capability.conf
