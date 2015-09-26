@@ -1,6 +1,8 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require flag-o-matic
+
 TZCODE_PV="${PV}"
 TZDATA_PV="${PV}"
 
@@ -72,19 +74,14 @@ src_test() {
 }
 
 src_compile() {
-    local var build_cflags build_cppflags build_ldflags
-
     # build native zic, it's needed in `make install`
     if ! exhost --is-native -q; then
-        var=${CHOST//-/_}_CFLAGS; build_cflags=${!var}
-        var=${CHOST//-/_}_CPPFLAGS; build_cppflags=${!var}
-        var=${CHOST//-/_}_LDFLAGS; build_ldflags=${!var}
 
         emake \
             CC=$(exhost --build)-cc \
-            CFLAGS="${build_cflags}" \
-            CPPFLAGS="${build_cppflags}" \
-            LDFLAGS="${build_ldflags}" \
+            CFLAGS="$(print-build-flags CFLAGS)" \
+            CPPFLAGS="$(print-build-flags CPPFLAGS)" \
+            LDFLAGS="$(print-build-flags LDFLAGS)" \
             -C build-$(exhost --build) \
             zic
     fi
