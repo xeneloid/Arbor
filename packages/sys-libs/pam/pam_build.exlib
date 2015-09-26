@@ -79,16 +79,11 @@ pam_build_src_prepare() {
 }
 
 pam_build_src_configure() {
-    local build=$(exhost --build)
-    local build_cflags=${build//-/_}_CFLAGS         \
-          build_cppflags=${build//-/_}_CPPFLAGS     \
-          build_ldflags=${build//-/_}_LDFLAGS
-
-    CC_FOR_BUILD="${build}-cc"                      \
-    BUILD_CFLAGS="${!build_cflags}"                 \
-    BUILD_CPPFLAGS="${!build_cppflags}"             \
-    BUILD_LDFLAGS="${!build_ldflags}"               \
-        default
+    CC_FOR_BUILD="$(exhost --build)-cc" \
+    BUILD_CFLAGS="$(print-build-flags CFLAGS)" \
+    BUILD_CPPFLAGS="$(print-build-flags CPPFLAGS)" \
+    BUILD_LDFLAGS="$(print-build-flags LDFLAGS)" \
+    default
 }
 
 pam_build_src_test() {
