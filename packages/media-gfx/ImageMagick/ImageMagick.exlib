@@ -4,7 +4,7 @@
 # Based in part upon 'imagemagick-6.4.2.0.ebuild' from Gentoo Linux, which is:
 #    Copyright 1999-2008 Gentoo Foundation
 
-export_exlib_phases src_configure src_install
+export_exlib_phases src_prepare src_configure src_install
 
 MY_PV="${MY_PV:-$(ever replace 3 -)}"
 
@@ -145,6 +145,13 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 DEFAULT_SRC_INSTALL_PARAMS=( DOCUMENTATION_PATH=/usr/share/doc/${PNVR}/html )
 
 WORK=${WORKBASE}/${PN}-${MY_PV}
+
+ImageMagick_src_prepare() {
+    default
+
+    # *sigh*, replace hard-coded pkg-config in stupid wrapper script
+    edo sed -e "s:pkg-config:${PKG_CONFIG}:" -i wand/MagickWand-config.in
+}
 
 ImageMagick_src_configure() {
     default
