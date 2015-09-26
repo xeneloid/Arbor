@@ -5,7 +5,7 @@
 # Based in part upon 'cmake-2.6.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require bash-completion elisp-optional [ source_directory=Auxiliary ]
+require bash-completion elisp-optional [ source_directory=Auxiliary ] flag-o-matic
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
@@ -81,18 +81,15 @@ cmake-build_src_prepare() {
 
 cmake-build_src_configure() {
     local host=$(exhost --target)
-    local build_cflags_var=${CHOST//-/_}_CFLAGS
-    local build_ldflags_var=${CHOST//-/_}_LDFLAGS
-    local build_cxxflags_var=${CHOST//-/_}_CXXFLAGS
 
     # TODO(tridactyla): There are still some issues with cross-compiling to a non-native platform
     # related to generating documentation (it tries to run executables it just built).
     edo env                                                                     \
-        CC="${CHOST}-gcc"                                                       \
-        CXX="${CHOST}-g++"                                                      \
-        CFLAGS="${!build_cflags_var}"                                           \
-        LDFLAGS="${!build_ldflags_var}"                                         \
-        CXXFLAGS="${!build_cxxflags_var}"                                       \
+        CC="$(exhost --build)-cc"                                               \
+        CXX="$(exhost --build)-c++"                                             \
+        CFLAGS="$(print-build-flags CFLAGS)"                                    \
+        CXXFLAGS="$(print-build-flags CXXFLAGS)"                                \
+        LDFLAGS="$(print-build-flags LDFLAGS)"                                  \
     ./bootstrap                                                                 \
         --parallel=${EXJOBS:-1}                                                 \
         --$(option qt5 || option qt4 || echo "no-")qt-gui                       \
