@@ -1,0 +1,96 @@
+# Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require flag-o-matic
+
+TZCODE_PV="${PV}"
+TZDATA_PV="${PV}"
+
+SUMMARY="Timezone data"
+HOMEPAGE="https://www.iana.org/time-zones"
+DOWNLOADS="
+    mirror://timezone-data/tzcode${TZCODE_PV}.tar.gz
+    mirror://timezone-data/tzdata${TZDATA_PV}.tar.gz
+"
+
+BUGS_TO="philantrop@exherbo.org"
+
+LICENCES="BSD-4 public-domain"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+WORK="${WORKBASE}"
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    cc="${CC}"
+    AR="${AR}"
+    RANLIB="${RANLIB}"
+    CFLAGS="${CFLAGS}"
+    TZDIR="/usr/share/zoneinfo"
+)
+DEFAULT_SRC_INSTALL_PARAMS=(
+    $(exhost --is-native -q || echo zic=build-$(exhost --build)/zic)
+    TZDIR=/usr/share/zoneinfo
+    # NOTE: timezone-data installs tzselect, zic, zdump, and nothing else to ETCDIR.
+    ETCDIR=/usr/$(exhost --target)/bin
+    LIBDIR=/usr/$(exhost --target)/lib
+    MANDIR=/usr/share/man
+    TOPDIR=/
+)
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( Theory )
+
+pkg_preinst() {
+    if [[ -d ${ROOT}/usr/share/zoneinfo/posix ]]; then
+        edo rm -r "${ROOT}"/usr/share/zoneinfo/posix
+    fi
+}
+
+src_unpack() {
+    default
+
+    if ! exhost --is-native -q; then
+        edo mkdir build-$(exhost --build)
+        edo pushd build-$(exhost --build)
+        default
+        edo popd
+    fi
+}
+
+src_test() {
+    # Don't validate webpages as that requires dependencies on open{jade,sp}
+    edo sed -i -e 's: check_web::' Makefile
+
+    emake AWK=awk check
+}
+
+src_compile() {
+    # build native zic, it's needed in `make install`
+    if ! exhost --is-native -q; then
+
+        emake \
+            CC=$(exhost --build)-cc \
+            CFLAGS="$(print-build-flags CFLAGS)" \
+            CPPFLAGS="$(print-build-flags CPPFLAGS)" \
+            LDFLAGS="$(print-build-flags LDFLAGS)" \
+            -C build-$(exhost --build) \
+            zic
+    fi
+
+    default
+}
+
+src_install() {
+    # Fix weird installation paths
+    edo sed -i -e 's:-posix:/posix:' \
+               -e 's:-leaps:/leaps:' Makefile
+
+    default
+
+    # Fix symlink
+    edo rm "${IMAGE}"/usr/share/zoneinfo/posix
+    dosym ../zoneinfo /usr/share/zoneinfo/posix
+}
+
