@@ -139,7 +139,7 @@ openldap_src_install() {
 
     install_systemd_files
     insinto /etc/conf.d
-    newins "${FILES}/slapd-confd" slapd.conf
+    doins "${FILES}"/slapd.conf
     insinto /usr/$(exhost --target)/lib/tmpfiles.d
     newins "${FILES}/systemd/openldap.conf.tmpfiles" openldap.conf
 }
