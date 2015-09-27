@@ -104,7 +104,7 @@ src_configure() {
 
     # Fixes cross compilation
     export BUILD_CC=$(exhost --build)-cc
-    export BUILD_CFLAGS=$(print-flags $(exhost --build) CFLAGS)
+    export BUILD_CFLAGS=$(print-build-flags CFLAGS)
     default
 }
 
