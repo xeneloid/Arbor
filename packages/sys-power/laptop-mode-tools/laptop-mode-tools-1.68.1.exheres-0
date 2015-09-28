@@ -33,7 +33,9 @@ DEPENDENCIES="
 src_compile() { :; }
 
 src_install() {
-    edo sed -i -e 's:DESTDIR/usr/sbin:DESTDIR/usr/$SBIN_D:g' install.sh
+    edo sed \
+        -e 's:DESTDIR/usr/sbin:DESTDIR/usr/$SBIN_D:g' \
+        -i install.sh
 
     DESTDIR="${IMAGE}" ACPI="force" MAN_D="/usr/share/man" LIB_D="lib" SBIN_D="$(exhost --target)/bin" \
         ULIB_D="/usr/$(exhost --target)/lib" UDEV_D="${UDEVRULESDIR}" INIT_D="none" SYSTEMD="no" \
