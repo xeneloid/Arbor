@@ -47,7 +47,6 @@ DEPENDENCIES="
             resolution = uninstall-blocked-after
         ]]
     run:
-        app-admin/eclectic-gcc[targets:*(-)?]
         sys-devel/binutils[targets:*(-)?]
         !dev-lang/clang[<3.6.1-r5] [[
             description = [ Alternatives conflict ]
