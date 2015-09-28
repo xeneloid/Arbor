@@ -20,7 +20,6 @@ LICENCES="
 "
 SLOT="0"
 MYOPTIONS="
-    baselayout
     milter [[ description = [ antivirus scanner using mail-filter/libmilter ] ]]
     unrar [[ description = [ build libclamunrar to enable scanning rar archives ] ]]
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
@@ -72,20 +71,6 @@ clamav_src_install() {
     hereins ${PN}.conf <<EOF
 d /run/clamav 0755 clamav clamav
 EOF
-
-    if option baselayout ; then
-        # Install /etc/logrotate.d/clamavd ?
-        hereconfd clamd <<EOF
-# NOTICE: Since clamav-0.85-r1, only START_CLAMD and START_FRESHCLAM settings
-#      are used, other are silently ignored
-
-START_CLAMD=yes
-START_FRESHCLAM=yes
-CLAMD_NICELEVEL=3
-FRESHCLAM_NICELEVEL=19
-EOF
-        newinitd "${FILES}"/clamd.rc clamd
-    fi
 
     dodir /var/log/${PN}
     keepdir /var/log/${PN}
