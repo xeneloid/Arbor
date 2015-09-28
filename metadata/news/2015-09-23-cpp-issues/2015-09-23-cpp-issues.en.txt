@@ -2,7 +2,7 @@ Title: cpp issues and eclectic-gcc
 Author: Kylie McClain <somasis@exherbo.org>
 Content-Type: text/plain
 Posted: 2015-09-23
-Revision: 2
+Revision: 3
 News-Item-Format: 1.0
 
 eclectic-gcc was pushed to the tree a while back to solve some issues with
@@ -13,10 +13,9 @@ itself once provided.
 
 Here's what you should do if you haven't upgraded yet:
 
-1.  Upgrade GCC and eclectic-gcc to the latest version (seperately!)
+1.  Upgrade GCC and eclectic-gcc to the latest version
 
-    # cave resolve -1 gcc
-    # cave resolve -1 eclectic-gcc
+    # cave resolve -1 gcc eclectic-gcc
 
 2.  Ensure that `cc`, `c++`, `cpp`, and `fc` run fine
 
