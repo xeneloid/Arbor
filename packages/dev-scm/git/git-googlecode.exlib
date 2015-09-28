@@ -29,7 +29,6 @@ REMOTE_IDS="freshcode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="
-    baselayout
     curl
     emacs [[ description = [ Install various Emacs libraries: git.el, git-blame.el and vc-git.el ] ]]
     keyring [[ description = [ Install GNOME keyring credential helper ] ]]
@@ -216,11 +215,6 @@ git-googlecode_src_install() {
     edo find "${IMAGE}/usr/lib/perl5" -type f -name perllocal.pod -delete
     edo find "${IMAGE}/usr/lib/perl5" -type f -name .packlist -delete
     edo find "${IMAGE}/usr/lib/" -type d -empty -delete
-
-    if option baselayout ; then
-        newinitd "${FILES}"/git-daemon.initd git-daemon
-        newconfd "${FILES}"/git-daemon.confd git-daemon
-    fi
 
     if option xinetd ; then
         dodir /etc/xinetd.d
