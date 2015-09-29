@@ -43,7 +43,7 @@ ncurses_src_configure() {
         --enable-overwrite
         --enable-pc-files
         --enable-termcap
-        --with-build-cc=$(exhost --build)-cc
+        --with-build-cc=/usr/$(exhost --build)/bin/$(exhost --build)-cc
         --with-cxx-shared
         --with-normal
         --with-pkg-config-libdir=/usr/$(exhost --target)/lib/pkgconfig
