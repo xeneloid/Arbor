@@ -1,0 +1,38 @@
+Upstream: no
+Reason: This test makes sydbox hang
+
+From 9e99d74d2b2728548ae310f55e53f6a258babe31 Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Tue, 29 Sep 2015 10:37:26 +0200
+Subject: [PATCH] test_fork: Disable a test which makes sydbox hang
+
+---
+ bootstraptest/test_fork.rb | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/bootstraptest/test_fork.rb b/bootstraptest/test_fork.rb
+index 5de6ee1..a9237fc 100644
+--- a/bootstraptest/test_fork.rb
++++ b/bootstraptest/test_fork.rb
+@@ -21,12 +21,12 @@ assert_finish 10, %q{
+   end
+ }, '[ruby-core:22158]'
+ 
+-assert_normal_exit(<<'End', '[ruby-dev:37934]')
+-  main = Thread.current
+-  Thread.new { sleep 0.01 until main.stop?; Thread.kill main }
+-  Process.setrlimit(:NPROC, 1)
+-  fork {}
+-End
++#assert_normal_exit(<<'End', '[ruby-dev:37934]')
++#  main = Thread.current
++#  Thread.new { sleep 0.01 until main.stop?; Thread.kill main }
++#  Process.setrlimit(:NPROC, 1)
++#  fork {}
++#End
+ 
+ assert_equal 'ok', %q{
+   begin
+-- 
+2.6.0
+
