@@ -1,5 +1,5 @@
 Source: Bryan Østergaard <kloeri@exherbo.org>, based on old version
-by Bo Andreasen <zlin@exherbo.org>
+by Bo Ørsted Andresen <zlin@exherbo.org>
 Upstream: no, distribution specific settings
 Reason: needed for the build process
 
@@ -79,10 +79,10 @@ Reason: needed for the build process
  
  
  #------------------------------------------------------------------------------
-@@ -578,15 +578,15 @@
+@@ -628,15 +628,15 @@
  # included in the Exim binary. You will then need to set up the run time
  # configuration to make use of the mechanism(s) selected.
- 
+
 -# AUTH_CRAM_MD5=yes
 +AUTH_CRAM_MD5=yes
  # AUTH_CYRUS_SASL=yes
@@ -95,9 +95,9 @@ Reason: needed for the build process
 -# AUTH_SPA=yes
 +AUTH_PLAINTEXT=yes
 +AUTH_SPA=yes
- 
- 
- #------------------------------------------------------------------------------
+ # AUTH_TLS=yes
+
+
 @@ -751,7 +751,7 @@
  # Once you have done this, "make install" will build the info files and
  # install them in the directory you have defined.
@@ -125,15 +125,15 @@ Reason: needed for the build process
  COMPRESS_SUFFIX=gz
  
  
-@@ -821,7 +821,7 @@
- # If the exigrep utility is fed compressed log files, it tries to uncompress
- # them using this command.
- 
+@@ -886,7 +886,7 @@
+ # ZCAT_COMMAND=zcat
+ #
+ # Or specify the full pathname:
 -ZCAT_COMMAND=/usr/bin/zcat
 +ZCAT_COMMAND=/bin/zcat
- 
- 
+
  #------------------------------------------------------------------------------
+ # Compiling in support for embedded Perl: If you want to be able to
 @@ -918,7 +918,8 @@
  # group. Once you have installed saslauthd, you should arrange for it to be
  # started by root at boot time.
