@@ -34,7 +34,7 @@ src_install() {
         dosym domainname /usr/$(exhost --target)/bin/${i}
     done
 
-    alternatives_for hostname net-tools 100 \
+    alternatives_for hostname net-tools 5000 \
         /usr/$(exhost --target)/bin/hostname /usr/$(exhost --target)/bin/domainname \
         /usr/share/man/man1/hostname.1 /usr/share/man/man1/hostname.net-tools.1
 }
