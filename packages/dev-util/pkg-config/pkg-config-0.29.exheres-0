@@ -33,8 +33,6 @@ DEPENDENCIES="
 
 ECONF_SOURCE=${WORK}
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( '--disable-static' '--without-internal-glib' )
-
 src_configure() {
     local target=
 
@@ -54,16 +52,18 @@ src_configure() {
 
         # PKG_CONFIG_ALLOW_SYSTEM_LIBS=true makes sure -L/usr/lib gets added during
         # migration to /usr/host/lib
-            PKG_CONFIG_ALLOW_SYSTEM_LIBS=true                                \
-            PKG_CONFIG=${PKG_CONFIG:-$(exhost --target)-pkg-config}                    \
+            PKG_CONFIG_ALLOW_SYSTEM_LIBS=true \
+            PKG_CONFIG=${PKG_CONFIG:-$(exhost --target)-pkg-config} \
             PKG_CONFIG_LIBDIR=/usr/$(exhost --target)/lib/pkgconfig:/usr/lib/pkgconfig \
-        econf                                                                \
-            --with-pc-path=${pc_path}                                        \
-            --with-system-include-path=/usr/${target}/include                \
-            --with-system-library-path=/usr/${target}/lib                    \
-            --disable-indirect-deps                                          \
-            --disable-host-tool                                              \
-            --program-prefix=${target}-
+        econf \
+            --program-prefix=${target}- \
+            --with-pc-path=${pc_path} \
+            --with-system-include-path=/usr/${target}/include \
+            --with-system-library-path=/usr/${target}/lib \
+            --without-internal-glib \
+            --disable-host-tool \
+            --disable-indirect-deps \
+            --disable-static
     done
 }
 
