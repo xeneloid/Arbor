@@ -50,7 +50,7 @@ DEPENDENCIES="
         sys-kernel/linux-headers
         virtual/sed
     run:
-        sys-libs/timezone-data
+        sys-libs/timezone-data[>=2015f-r1] [[ note = [ files used to collide, rebuild to change mtime ] ]]
 "
 
 if ever at_least 2.21; then
@@ -135,6 +135,8 @@ glibc_src_prepare() {
     edo cd "${ECONF_SOURCE}"
     # TODO(compnerd) convert to an exparam
     ever at_least 2.14.1-r2 && ! ever at_least 2.16 && eautoconf
+    edo sed -i timezone/Makefile \
+            -e '/^install-/d'
     default
 }
 
