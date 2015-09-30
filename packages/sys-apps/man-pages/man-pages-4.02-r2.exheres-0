@@ -22,3 +22,11 @@ src_compile() {
     :
 }
 
+src_install() {
+    default
+    edo rm "${IMAGE}"/usr/share/man/man5/tzfile.5
+    for i in tzselect zdump zic; do
+        edo rm "${IMAGE}"/usr/share/man/man8/${i}.8
+    done
+}
+
