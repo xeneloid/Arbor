@@ -44,7 +44,7 @@ DEPENDENCIES="
     build+run:
         dev-lang/perl:=[>=5.7.3]
         sys-libs/zlib
-        curl? ( net-misc/curl )
+        curl? ( net-misc/curl[>=7.34] )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
@@ -80,13 +80,6 @@ DEPENDENCIES="
 
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
-
-if ever at_least 2.3.0 ; then
-    DEPENDENCIES+="
-        build+run:
-            curl? ( net-misc/curl[>=7.34] )
-    "
-fi
 
 WORK=${WORKBASE}/${PNV/_/.}
 
