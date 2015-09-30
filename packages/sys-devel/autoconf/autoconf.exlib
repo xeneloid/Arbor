@@ -45,6 +45,7 @@ autoconf_src_install() {
         alternatives+=( /usr/share/info/${info} ${sinfo} )
         edo mv ${info} ${sinfo}
     done
+    alternatives+=( /usr/share/info/standards.info standards-${SLOT}.info )
     alternatives_for "${alternatives[@]}"
 }
 
