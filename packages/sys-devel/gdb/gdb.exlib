@@ -86,9 +86,10 @@ gdb_src_test_expensive() {
 gdb_src_install() {
     default
 
-    # sys-devel/binutils installs opcodes.mo and bfd.mo
+    # sys-devel/binutils installs opcodes.mo, bfd.mo and bfd.info
     edo find "${IMAGE}" -name opcodes.mo -delete
     edo find "${IMAGE}" -name bfd.mo -delete
+    edo find "${IMAGE}" -name bfd.info -delete
 
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
