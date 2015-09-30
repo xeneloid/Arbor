@@ -80,11 +80,11 @@ src_install() {
     expart development /usr/$(exhost --target)/{include,lib/pkgconfig}
 
     if option parts:binaries;then
-        alternatives_for uptime ${PN} 100   \
+        alternatives_for uptime ${PN} 2000  \
             /usr/$(exhost --target)/bin/uptime  uptime.${PN}
     fi
     if option parts:documentation;then
-        alternatives_for uptime ${PN} 100   \
+        alternatives_for uptime ${PN} 2000  \
             /usr/share/man/man1/uptime.1        uptime.${PN}.1
     fi
 }
