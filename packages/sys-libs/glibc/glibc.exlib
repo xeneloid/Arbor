@@ -4,11 +4,6 @@
 # Distributed under the terms of the GNU General Public License v2
 
 myexparam source_uri="mirror://gnu/${PN}/${PNV}.tar.bz2"
-if ! ever at_least 2.17; then
-    myexparam ports_uri="mirror://gnu/${PN}/${PN}-ports-${PV}.tar.bz2"
-else
-    myexparam ports_uri=""
-fi
 
 require flag-o-matic systemd-service [ systemd_files=[ nscd.service ] ] kernel
 require toolchain-funcs
@@ -21,12 +16,11 @@ SUMMARY="GNU C library"
 HOMEPAGE="https://www.gnu.org/software/libc"
 
 exparam -v source_uri source_uri
-exparam -v ports_uri ports_uri
 
 myexparam minimum_kernel_version="2.6.22"
 exparam -v MINIMUM_KERNEL_VERSION minimum_kernel_version
 
-DOWNLOADS="${source_uri} ${ports_uri}"
+DOWNLOADS="${source_uri}"
 
 LICENCES="|| ( GPL-3 GPL-2 ) || ( LGPL-3 LGPL-2.1 )"
 SLOT="0"
@@ -46,22 +40,15 @@ DEPENDENCIES="
     build:
         dev-lang/perl:*
         sys-apps/gawk
-        sys-apps/texinfo
+        sys-apps/texinfo[>=4.7]
+        sys-devel/binutils[>=2.22]
+        sys-devel/bison[>=2.7]
+        sys-devel/gcc:*[>=4.6]
         sys-kernel/linux-headers
         virtual/sed
     run:
         sys-libs/timezone-data[>=2015f-r1] [[ note = [ files used to collide, rebuild to change mtime ] ]]
 "
-
-if ever at_least 2.21; then
-    DEPENDENCIES+="
-        build:
-            sys-apps/texinfo[>=4.7]
-            sys-devel/binutils[>=2.22]
-            sys-devel/bison[>=2.7]
-            sys-devel/gcc:*[>=4.6]
-    "
-fi
 
 # tests are expensive
 RESTRICT=test
@@ -118,41 +105,18 @@ glibc_pkg_setup() {
 
 glibc_src_unpack() {
     default
-
-    # TODO(compnerd) remove the ports handling once glibc[>=2.17] is the oldest version supported on
-    # exherbo
-    if [[ ${PV} =~ *_p* ]] ; then
-        edo mv glibc-${PV/_p*}-2* glibc-${PV}
-        edo mv ${PNV%%_p*}-ports-${PV##*_p} glibc-ports-${PV}
-    fi
-
-    [[ -z ${ports_uri} ]] || edo mv ${PN}-ports-${PV} "${WORKBASE}"/${PNV}/ports
-
     edo mkdir "${WORK}"
 }
 
 glibc_src_prepare() {
     edo cd "${ECONF_SOURCE}"
-    # TODO(compnerd) convert to an exparam
-    ever at_least 2.14.1-r2 && ! ever at_least 2.16 && eautoconf
     edo sed -i timezone/Makefile \
             -e '/^install-/d'
     default
 }
 
-# TODO(compnerd) convert this to use multiarch.exlib
 glibc_src_configure() {
     local target=$(exhost --target) build=$(exhost --build)
-
-    if ! ever at_least 2.17 ; then
-        # NOTE(compnerd) explicitly specify that the toolchain is able to emit debug
-        # information for assembly routines.  This is really important as the stabs
-        # fallback stabs information leaves gas unable to actually resolve symbol sizes
-        # and thus breaks compilation
-        cat >> "${WORKBASE}/build/config.cache" <<- EOF
-libc_cv_cpp_asm_debuginfo=yes
-EOF
-    fi
 
     # NOTE(compnerd) explicitly use the BFD linker as suggested by upstream, preferring to use
     # -fuse-ld if available
@@ -180,10 +144,10 @@ EOF
         --enable-obsolete-rpc
         --enable-stackguard-randomization
         --with-headers=/usr/${target}/include
-        $(ever at_least 2.18 && echo --enable-pt_chown)
-        $(ever at_least 2.21 && echo --enable-add-ons || echo --with-add-ons)
-        $(ever at_least 2.21 && echo --disable-werror)
-        $(ever at_least 2.21 && echo --without-gd)
+        --enable-pt_chown
+        --enable-add-ons
+        --disable-werror
+        --without-gd
     )
 
     if ever at_least 2.22 ; then
@@ -221,16 +185,7 @@ glibc_src_install() {
 
     export LANGUAGE=C
 
-    if ever at_least 2.21 ; then
-        emake -j1 "${DEFAULT_SRC_INSTALL_PARAMS[@]}" DESTDIR="${IMAGE}" install
-    else
-        default
-    fi
-
-    ! ever at_least 2.17 && ! exhost --is-native -q && edo rmdir "${IMAGE}/usr/$(exhost --target)/libexec/getconf"
-
-    # don't install bundled timezone info
-    ever at_least 2.16.0 || edo rm -r "${IMAGE}/usr/share/zoneinfo"
+    emake -j1 "${DEFAULT_SRC_INSTALL_PARAMS[@]}" DESTDIR="${IMAGE}" install
 
     # don't install /etc/{ld.so.cache,localtime}
     edo rm -f "${noins_files[@]}"
