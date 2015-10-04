@@ -1,5 +1,5 @@
 # Copyright 2008 Fernando J. Pereda
-# Copyright 2013 Johannes Nixdorf <mixi@exherbo.org>
+# Copyright 2013-2015 Johannes Nixdorf <mixi@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'postfix-2.5.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
@@ -63,19 +63,18 @@ postfix_src_prepare() {
 }
 
 postfix_src_configure() {
-    local \
-        auxlibs=( -pthread -ldb -lnsl -lpam -lresolv ) \
-        # -DUSE_SASL_AUTH: this enables dovecot SASL and adds no additional build dependencies
-        ccargs=(
-            -DDEF_COMMAND_DIR=\\\"/usr/$(exhost --target)/bin\\\"
-            -DDEF_DAEMON_DIR=\\\"/usr/$(exhost --target)/lib/postfix\\\"
-            -DDEF_SENDMAIL_PATH=\\\"/usr/$(exhost --target)/bin/sendmail\\\"
-            -DDEF_MANPAGE_DIR=\\\"/usr/share/man\\\"
-            -DDEF_README_DIR=\\\"/usr/share/doc/${PNVR}/readme\\\"
-            -DDEF_HTML_DIR=\\\"/usr/share/doc/${PNVR}/html\\\"
-            -DUSE_SASL_AUTH
-            -DHAS_DB
-        )
+    local makeopts=() auxlibs=( -pthread -ldb -lnsl -lpam -lresolv )
+    # -DUSE_SASL_AUTH: this enables dovecot SASL and adds no additional build dependencies
+    # -DHAS_DB: this is already enabled in sys_defs.h for linux
+    local ccargs=(
+        -DDEF_COMMAND_DIR=\\\"/usr/$(exhost --target)/bin\\\"
+        -DDEF_DAEMON_DIR=\\\"/usr/$(exhost --target)/lib/postfix\\\"
+        -DDEF_SENDMAIL_PATH=\\\"/usr/$(exhost --target)/bin/sendmail\\\"
+        -DDEF_MANPAGE_DIR=\\\"/usr/share/man\\\"
+        -DDEF_README_DIR=\\\"/usr/share/doc/${PNVR}/readme\\\"
+        -DDEF_HTML_DIR=\\\"/usr/share/doc/${PNVR}/html\\\"
+        -DUSE_SASL_AUTH
+    )
 
     if option ssl; then
         ccargs+=( -DUSE_TLS )
@@ -84,33 +83,67 @@ postfix_src_configure() {
 
     if option cyrus; then
         ccargs+=( -DUSE_CYRUS_SASL -I/usr/$(exhost --target)/include/sasl )
-        auxlibs+=( -lsasl2 )
+
+        if ever at_least 3; then
+            makeopts+=( AUXLIBS_CYRUS=-lsasl2 )
+        else
+            auxlibs+=( -lsasl2 )
+        fi
     fi
 
     if option ldap; then
         ccargs+=( -DHAS_LDAP )
-        auxlibs+=( -lldap -llber )
+
+        if ever at_least 3; then
+            makeopts+=( AUXLIBS_LDAP="-lldap -llber" )
+        else
+            auxlibs+=( -lldap -llber )
+        fi
     fi
 
     if option mysql; then
         ccargs+=( -DHAS_MYSQL -I/usr/$(exhost --target)/include/mysql )
-        auxlibs+=( -L/usr/$(exhost --target)/lib/mysql/ -lmysqlclient -lz -lm )
+
+        if ever at_least 3; then
+            makeopts+=( AUXLIBS_MYSQL="-L/usr/$(exhost --target)/lib/mysql/ -lmysqlclient -lz -lm" )
+        else
+            auxlibs+=( -L/usr/$(exhost --target)/lib/mysql/ -lmysqlclient -lz -lm )
+        fi
     fi
 
     if option postgresql; then
         ccargs+=( -DHAS_PGSQL )
-        auxlibs+=( -lpq )
+        if ever at_least 3; then
+            makeopts+=( AUXLIBS_PGSQL="-lpq" )
+        else
+            auxlibs+=( -lpq )
+        fi
+    fi
+
+    if ever at_least 3; then
+        makeopts+=(
+            shared=yes
+            SHLIB_DIR=/usr/$(exhost --target)/lib/postfix
+        )
     fi
 
     export AR="${AR}" RANLIB="${RANLIB}"
-    emake CC="${CC}" OPT="${CFLAGS}" \
-        CCARGS="${ccargs[*]}" AUXLIBS="${auxlibs[*]}" makefiles
+
+    emake \
+        CC="${CC}" \
+        OPT="${CFLAGS}" \
+        CCARGS="${ccargs[*]}" \
+        AUXLIBS="${auxlibs[*]}" \
+        "${makeopts[@]}" \
+        makefiles
 }
 
 postfix_src_install() {
+    LD_LIBRARY_PATH=${WORK}/lib:${LD_LIBRARY_PATH} \
     edo /bin/sh postfix-install \
         -non-interactive \
         install_root="${IMAGE}" \
+        shlib_directory=/usr/$(exhost --target)/lib/postfix \
         config_directory="/usr/share/doc/${PNVR}/defaults" \
         readme_directory="/usr/share/doc/${PNVR}/readme"
 
@@ -144,6 +177,7 @@ postfix_src_install() {
     dodir /etc/postfix
     insinto /etc/postfix
     doins "${IMAGE}"/usr/share/doc/${PNVR}/defaults/{main,master}.cf
+    keepdir /etc/postfix/postfix-files.d
 
     insinto /usr/share/doc/${PNVR}
     doins -r "${WORK}"/examples
