@@ -62,7 +62,7 @@ postfix_src_prepare() {
 }
 
 postfix_src_configure() {
-    local makeopts=() auxlibs=( -pthread -ldb -lnsl -lpam -lresolv )
+    local makeopts=() auxlibs=( -pthread -ldb -lpam -lresolv )
     # -DUSE_SASL_AUTH: this enables dovecot SASL and adds no additional build dependencies
     # -DHAS_DB: this is already enabled in sys_defs.h for linux
     local ccargs=(
@@ -74,6 +74,12 @@ postfix_src_configure() {
         -DDEF_HTML_DIR=\\\"/usr/share/doc/${PNVR}/html\\\"
         -DUSE_SASL_AUTH
     )
+
+    if [[ $(exhost --target) == *-musl* ]]; then
+        ccargs+=( -DNO_NIS )
+    else
+        auxlibs+=( -lnsl )
+    fi
 
     if option ssl; then
         ccargs+=( -DUSE_TLS )
