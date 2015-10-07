@@ -13,7 +13,9 @@ DOWNLOADS="
 
 BUGS_TO="philantrop@exherbo.org"
 
-LICENCES="BSD-4 public-domain"
+# We don't install anything which uses BSD licensed code
+# BSD licensed: date.c, newstrftime.c, strftime.c
+LICENCES="public-domain"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
