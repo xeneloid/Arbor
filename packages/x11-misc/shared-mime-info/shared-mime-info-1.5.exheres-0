@@ -14,9 +14,9 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    ( linguas: ar as az be@latin bg bg_BG bn_IN ca ca@valencia cs cy da de el en_GB eo es eu fa
-               fa_IR fi fo fr ga gl gu he hi hr hu ia id it ja ka kk kn ko lt lv ml mr ms nb nl
-               nn oc or pa pl pt pt_BR ro ru rw sk sl sq sr sr@latin sv ta te th tr uk vi wa
+    ( linguas: ar as az be@latin bg bg_BG bn_IN ca ca@valencia cs cy da de el en_GB eo es et eu
+               fa fa_IR fi fo fr ga gl gu he hi hr hu ia id it ja ka kk kn ko lt lv ml mr ms nb
+               nl nn oc or pa pl pt pt_BR ro ru rw sk sl sq sr sr@latin sv ta te th tr uk vi wa
                zh_CN zh_HK zh_TW )
 "
 
@@ -26,17 +26,12 @@ DEPENDENCIES="
         sys-devel/gettext
         virtual/pkg-config[>=0.20]
     build+run:
-        dev-libs/glib:2[>=2.16]
+        dev-libs/glib:2[>=2.26.0]
         dev-libs/libxml2:2.0[>=2.4]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-update-mimedb )
+
 # "update_mime_database-update-mime-database.o: file not recognized: File truncated"
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
-
-src_prepare() {
-    # Respect datarootdir
-    edo sed -e 's:itlocaledir = $(prefix)/$(DATADIRNAME)/locale:itlocaledir = $(datarootdir)/locale:' \
-        -i "${WORK}"/po/Makefile.in.in
-}
 
