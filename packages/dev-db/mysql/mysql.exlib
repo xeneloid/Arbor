@@ -66,7 +66,7 @@ DEPENDENCIES="
         app-admin/logrotate [[ description = [ Use logrotate for rotating logs ] ]]
 "
 
-if ever at_least 5.6.24 ; then
+if ever at_least 5.6.27 ; then
     DEPENDENCIES+="
         build+run:
             dev-libs/libedit
@@ -175,7 +175,7 @@ mysql_src_configure() {
         )
     fi
 
-    if ever at_least 5.6.24 ; then
+    if ever at_least 5.6.27 ; then
         cmakeargs+=(
             -DBUILD_WITH_WERROR:BOOL=FALSE
             -DCMAKE_DISABLE_FIND_PACKAGE_Git:BOOL=TRUE
@@ -187,6 +187,7 @@ mysql_src_configure() {
             -DWITH_EDITLINE:STRING=system
             # Search for event_comment in this exlib for the reason for using bundled
             -DWITH_LIBEVENT:STRING=bundled
+            -DWITH_NUMA:BOOL=FALSE
             -DWITH_SSL:STRING=/usr/$(exhost --target)
         )
     else
@@ -232,7 +233,7 @@ mysql_src_install() {
 
     keepdir /etc/mysql
 
-    if ever at_least 5.6.24 ; then
+    if ever at_least 5.6.27 ; then
         edo cp "${IMAGE}"/usr/share/${PN}/my-default.cnf "${IMAGE}"/etc/mysql/my.cnf
     else
         edo cp "${IMAGE}"/usr/share/${PN}/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
