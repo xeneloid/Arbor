@@ -9,7 +9,7 @@ else
     DOWNLOADS="http://hostap.epitest.fi/releases/${PNV}.tar.gz"
 fi
 
-require qmake systemd-service
+require qmake [ slot=5 ] freedesktop-desktop gtk-icon-cache systemd-service
 require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
 export_exlib_phases src_prepare src_configure src_compile src_install
@@ -46,17 +46,26 @@ MYOPTIONS="
     pcsc     [[ description = [
         Include GSM SIM/USIM interface for GSM/UMTS authentication algorithm (for EAP-SIM/EAP-AKA)
     ] ]]
-    qt4      [[ description = [ Build the Qt4-based wpa_gui program ] ]]
+    qt5      [[ description = [ Build the Qt-based wpa_gui program ] ]]
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
+
+# FIXME: Tests don't seem to get along with external crypto -- needs further
+# investigation. Be sure to uncomment *all* test-related code below when this
+# is resolved.
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
         dbus? ( virtual/pkg-config )
+        qt5? (
+            x11-libs/qttools:5 [[ note = [ lrelease/lconvert for translations ] ]]
+        )
     build+run:
         sys-libs/ncurses
         sys-libs/readline
         dbus? ( sys-apps/dbus )
+        nl80211? ( net-libs/libnl:3.0 )
         pcap? (
             dev-libs/libdnet
             dev-libs/libpcap
@@ -65,8 +74,10 @@ DEPENDENCIES="
         providers:gnutls? ( dev-libs/gnutls )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
-        qt4? ( x11-libs/qt:4 )
-        nl80211? ( net-libs/libnl:3.0 )
+        qt5? (
+            x11-libs/qtbase:5[gui]
+            x11-libs/qtsvg:5
+        )
 "
 
 if ever is_scm ; then
@@ -77,14 +88,17 @@ if ever is_scm ; then
     "
 fi
 
-# FIXME: Tests don't seem to get along with external crypto -- needs further
-# investigation. Be sure to uncomment *all* test-related code below when this
-# is resolved.
-RESTRICT="test"
-
 WORK=${WORKBASE}/${PNV}/${PN}
 
-DEFAULT_SRC_COMPILE_PARAMS+=( CC="${CC}" BINDIR=/usr/$(exhost --target)/bin LIBDIR=/usr/$(exhost --target)/lib V=1 )
+EQMAKE_SOURCES="wpa_gui.pro"
+
+DEFAULT_SRC_COMPILE_PARAMS=(
+    CC="${CC}"
+    BINDIR=/usr/$(exhost --target)/bin
+    INCDIR=/usr/$(exhost --target)/include
+    LIBDIR=/usr/$(exhost --target)/lib
+    V=1
+)
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( eap_testing.txt wpa_supplicant.conf )
 
@@ -114,12 +128,6 @@ config_enable_eap() {
 }
 
 wpa_supplicant_src_prepare() {
-    if ! ever is_scm; then
-        pushd "${WORKBASE}/${PNV}" >/dev/null 2>&1
-        expatch "${FILES}/${PN}-2.3-CVE-2015-1863.patch"
-        popd >/dev/null 2>&1
-    fi
-
     default
 
     # FILES is a reserved exheres-0 variable
@@ -252,12 +260,23 @@ wpa_supplicant_src_configure() {
     config_enable P2P
     config_enable WIFI_DISPLAY
 
-    option qt4 && eqmake -o wpa_gui-qt4/{Makefile,wpa_gui.pro}
+    if option qt5 ; then
+        edo pushd wpa_gui-qt4
+        qmake_src_configure
+        edo popd
+    fi
 }
 
 wpa_supplicant_src_compile() {
     default
-    option qt4 && emake -C wpa_gui-qt4
+
+    if option qt5 ; then
+        edo pushd wpa_gui-qt4
+        edo lrelease-qt5 lang/wpa_gui.pro
+        emake
+        edo popd
+    fi
+
     ever is_scm && emake -C doc/docbook man
 }
 
@@ -267,8 +286,6 @@ wpa_supplicant_src_compile() {
 
 wpa_supplicant_src_install() {
     dobin wpa_cli wpa_passphrase wpa_supplicant
-
-    option qt4 && dobin wpa_gui-qt4/wpa_gui
 
     if option dbus ; then
         pushd dbus
@@ -282,6 +299,23 @@ wpa_supplicant_src_install() {
         doins 'fi.w1.wpa_supplicant1.service'
 
         popd
+    fi
+
+    if option qt5 ; then
+        edo pushd wpa_gui-qt4
+
+        dobin wpa_gui
+
+        insinto /usr/share/wpa_gui/translations
+        doins lang/*.qm
+
+        insinto /usr/share/applications
+        doins wpa_gui.desktop
+
+        insinto /usr/share/icons/hicolor/scalable/apps
+        doins icons/wpa_gui.svg
+
+        edo popd
     fi
 
     insinto "${SYSTEMDSYSTEMUNITDIR}"
@@ -309,9 +343,17 @@ wpa_supplicant_src_install() {
 #    fi
 }
 
-#pkg_postinst() {
-#    einfo "In order to use a control interface group with wpa_supplicant"
-#    einfo "Please add the system-wide wpa_supplicant user to that group:"
-#    einfo " usermod -a -G <control_interface_group> wpa_supplicant"
-#}
+pkg_postinst() {
+    option qt5 && freedesktop-desktop_pkg_postinst
+    option qt5 && gtk-icon-cache_pkg_postinst
+
+#    elog "In order to use a control interface group with wpa_supplicant"
+#    elog "Please add the system-wide wpa_supplicant user to that group:"
+#    elog " usermod -a -G <control_interface_group> wpa_supplicant"
+}
+
+pkg_postrm() {
+    option qt5 && freedesktop-desktop_pkg_postrm
+    option qt5 && gtk-icon-cache_pkg_postrm
+}
 
