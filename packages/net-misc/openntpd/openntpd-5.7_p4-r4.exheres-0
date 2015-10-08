@@ -1,6 +1,7 @@
 # Copyright (c) 2007 Alexander Færøy <ahf@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require systemd-service alternatives
 
 NTP_PNV="${PNV/_/}"
@@ -24,6 +25,9 @@ DEPENDENCIES="
         providers:openssl? ( dev-libs/openssl )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/94073d01eb615badc2c84685fcbbcd98f0c12c5d.patch
+)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-privsep-user=ntp --localstatedir=/var
