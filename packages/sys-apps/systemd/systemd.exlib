@@ -85,7 +85,7 @@ DEPENDENCIES="
         sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
-        sys-apps/util-linux[>=2.25]
+        sys-apps/util-linux[>=2.27]
         sys-kernel/linux-headers[>=3.10]
         sys-libs/libcap
         sys-libs/pam[>=1.1.2]
