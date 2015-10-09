@@ -94,7 +94,7 @@ gem_install_abi() {
 
     local gem=${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${RUBY_PNV}.gem}
 
-    edo ${GEM} install "${gem}" --local "${myconf[@]}"
+    edo ${GEM} install -V "${gem}" --local "${myconf[@]}"
 
     if [[ -d ${IMAGE}/${vendor_gem_dir}/bin ]]; then
         local alternatives=( _$(exhost --target)_${PN} ${abi} ${abi} ) path exe
