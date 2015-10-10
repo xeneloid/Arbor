@@ -44,6 +44,7 @@ case "$type" in
         myexparam branch=
         exparam -v SCM_BRANCH branch
 
+        GITLAB_TYPE=scm
         SCM_REPOSITORY="$(exparam prefix)/$(exparam user)/$(exparam pn).git"
         require scm-git
     ;;
@@ -61,7 +62,12 @@ esac
 export_exlib_phases src_unpack
 
 gitlab_src_unpack() {
-    default
+    if [[ "${GITLAB_TYPE}" == scm ]];then
+        scm_src_unpack
+    else
+        default
+    fi
+
     # only set WORK if it hasn't been set away from the default value
     if [[ "${GITLAB_TYPE}" == ref && "${WORK}" == "${WORKBASE}"/"${PNV}" ]];then
         WORK=( "${WORKBASE}"/${GITLAB_PN}* )
