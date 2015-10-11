@@ -1,20 +1,19 @@
-Upstream: no, Exherbo specific
-
-From 28d5ece736bf75ae5bca3c7b7b56861fe0babde8 Mon Sep 17 00:00:00 2001
+From 0f5b06318fedee49164ada57905ec837191a1c93 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Sun, 1 Mar 2015 17:47:15 -0800
 Subject: [PATCH 2/3] exherbo multi-arch paths
 
 ---
- gcc/config.gcc              |  2 +-
- gcc/config/arm/linux-eabi.h | 45 +++++++++++++++++++++++++++++++++++++++++++++
- gcc/config/i386/linux.h     | 22 ++++++++++++++++++++++
- gcc/config/i386/linux64.h   | 34 ++++++++++++++++++++++++++++++++++
- gcc/config/rs6000/linux64.h | 15 +++++++++++++++
- 5 files changed, 117 insertions(+), 1 deletion(-)
+ gcc/config.gcc                     |  2 +-
+ gcc/config/aarch64/aarch64-linux.h | 22 +++++++++++++++++++
+ gcc/config/arm/linux-eabi.h        | 45 ++++++++++++++++++++++++++++++++++++++
+ gcc/config/i386/linux.h            | 22 +++++++++++++++++++
+ gcc/config/i386/linux64.h          | 34 ++++++++++++++++++++++++++++
+ gcc/config/rs6000/linux64.h        | 15 +++++++++++++
+ 6 files changed, 139 insertions(+), 1 deletion(-)
 
 diff --git a/gcc/config.gcc b/gcc/config.gcc
-index 798f138..d11150f 100644
+index 7088f74..dee3c78 100644
 --- a/gcc/config.gcc
 +++ b/gcc/config.gcc
 @@ -227,7 +227,7 @@ default_use_cxa_atexit=no
@@ -26,6 +25,37 @@ index 798f138..d11150f 100644
  target_type_format_char='@'
  
  # Don't carry these over build->host->target.  Please.
+diff --git a/gcc/config/aarch64/aarch64-linux.h b/gcc/config/aarch64/aarch64-linux.h
+index 4a2735b..dbb1896 100644
+--- a/gcc/config/aarch64/aarch64-linux.h
++++ b/gcc/config/aarch64/aarch64-linux.h
+@@ -94,4 +94,26 @@
+ #undef TARGET_BINDS_LOCAL_P
+ #define TARGET_BINDS_LOCAL_P default_binds_local_p_2
+ 
++/* exherbo specific paths */
++
++#undef GLIBC_DYNAMIC_LINKER
++#define GLIBC_DYNAMIC_LINKER "/usr/aarch64-unknown-linux-gnueabi/lib/ld-linux-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
++
++#undef MUSL_DYNAMIC_LINKER
++#define MUSL_DYNAMIC_LINKER "/usr/aarch64-unknown-linux-musleabi/lib/ld-musl-aarch64" MUSL_DYNAMIC_LINKER_ENDIAN ".so.1"
++
++#undef STANDARD_STARTFILE_PREFIX_1
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/aarch64-unknown-linux-musleabi/lib/"
++#else
++#define STANDARD_STARTFILE_PREFIX_1 "/usr/aarch64-unknown-linux-gnueabi/lib/"
++#endif
++
++#undef STANDARD_STARTFILE_PREFIX_2
++#if DEFAULT_LIBC == LIBC_MUSL
++#define STANDARD_STARTFILE_PREFIX_2 "/aarch64-unknown-linux-musleabi/lib/"
++#else
++#define STANDARD_STARTFILE_PREFIX_2 "/aarch64-unknown-linux-gnueabi/lib/"
++#endif
++
+ #endif  /* GCC_AARCH64_LINUX_H */
 diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
 index 106bded..9363e00 100644
 --- a/gcc/config/arm/linux-eabi.h
@@ -175,5 +205,5 @@ index 0879e7e..06651f0 100644
 +#define GNU_USER_DYNAMIC_LINKER64 "/usr/powerpc64-unknown-linux-gnueabi/lib/ld64.so.1"
 +
 -- 
-2.5.0
+2.6.1
 

@@ -1,7 +1,4 @@
-Upstream: no
-Reason: Causes breakage with gold linker without patch
-
-From 67e4a72aaa97ef854f23f46ade594b46002d3636 Mon Sep 17 00:00:00 2001
+From 038e5ef7f7562af1462dc94e2fb6e9f65fa87f46 Mon Sep 17 00:00:00 2001
 From: Saleem Abdulrasool <compnerd@compnerd.org>
 Date: Fri, 3 Apr 2015 16:17:39 -0700
 Subject: [PATCH 3/3] driver: Do not pass an empty sysroot
@@ -31,5 +28,5 @@ index d956c36..28bf137 100644
        obstack_grow (&obstack, "%(sysroot_spec) ", strlen ("%(sysroot_spec) "));
        obstack_grow0 (&obstack, link_spec, strlen (link_spec));
 -- 
-2.5.0
+2.6.1
 

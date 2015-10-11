@@ -9,5 +9,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-${SLOT}-musl-support.patch"
     "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
     "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
+    "${FILES}/a2e31d0681d8a47389b8a3552622fbd9827bcef4.patch"
 )
 
