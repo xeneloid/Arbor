@@ -1,7 +1,7 @@
 # Copyright 2013 Ivan Diorditsa <ivan.diorditsa@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require python [ has_bin=true has_lib=false blacklist="3" min_versions="2.7" ]
+require python [ has_bin=true has_lib=false blacklist=none min_versions=2.7 ]
 
 if ever is_scm ; then
     SCM_REPOSITORY="https://sourceware.org/git/${PN}.git"
@@ -21,7 +21,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext[>=0.18.2]
+        sys-devel/gettext[>=0.19.4]
         virtual/pkg-config[>=0.9.0]
     build+run:
         dev-util/elfutils[>=0.148]
@@ -40,6 +40,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-dyninst
     --without-java
     --without-nss
+    --without-python3
     --without-rpm
     --without-selinux
 )
