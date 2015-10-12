@@ -23,25 +23,16 @@ MYOPTIONS="
     fbcon [[ requires = gpm ]]
     gpm
     jpeg
+    openmp [[ description = [ Support for using Open Multi-Processing in the image scaler ] ]]
     tiff
 
     jpeg? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
+    openmp? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
     tiff? ( ( X fbcon ) [[ number-selected = at-least-one ]] )
 
     jpeg? ( ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]] )
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
-
-# sdl: support dropped until someone takes care
-
-# Note: if X or fbcon usegflag are enabled, links will be built in graphic
-# mode. libpng is required to compile links in graphic mode
-# (not required in text mode), so let's add libpng for X? and fbcon?
-
-# TODO:
-#   directfb? ( dev-libs/DirectFB )
-#   sdl? ( >=media-libs/libsdl-1.2.0 )
-#   svga? ( >=media-libs/svgalib-1.4.3 )
 
 DEPENDENCIES="
     build:
@@ -55,15 +46,19 @@ DEPENDENCIES="
                 providers:ijg-jpeg? ( media-libs/jpeg:= )
                 providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
             )
+            openmp? ( sys-libs/libgomp:= )
             tiff? ( media-libs/tiff[>=3.5.7] )
         )
-        fbcon? ( media-libs/libpng:=[>=1.2.1]
-        gpm? ( sys-libs/gpm )
-        jpeg? (
-            providers:ijg-jpeg? ( media-libs/jpeg:= )
-            providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        fbcon? (
+            media-libs/libpng:=[>=1.2.1]
+            jpeg? (
+                providers:ijg-jpeg? ( media-libs/jpeg:= )
+                providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+            )
+            openmp? ( sys-libs/libgomp:= )
+            tiff? ( media-libs/tiff[>=3.5.7] )
         )
-        tiff? ( media-libs/tiff[>=3.5.7] ) )
+        gpm? ( sys-libs/gpm )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
 "
@@ -71,37 +66,47 @@ DEPENDENCIES="
 WORK=${WORKBASE}/${MY_PNV}
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-fix-for-libressl.patch
-    "${FILES}"/${PNV}-fix-for-newer-autoconf.patch
+    "${FILES}"/${PN}-2.9-fix-for-libressl.patch
+    "${FILES}"/${PN}-2.9-fix-for-newer-autoconf.patch
 )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BRAILLE_HOWTO KEYS SITES )
 
 src_configure() {
+    local myconf=(
+        --hates=docdir
+        --hates=datarootdir
+        --with-bzip2
+        --with-ssl
+        --with-zlib
+        --without-directfb
+        --without-libevent
+        --without-librsvg
+        --without-sdl
+        --without-svgalib
+        $(option_with X x)
+        $(option_with fbcon fb)
+        $(option_with gpm)
+    )
+
     if option X || option fbcon; then
-        graphics="--enable-graphics
+        myconf+=(
+            --enable-graphics
             $(option_with jpeg libjpeg)
-            $(option_with tiff libtiff)"
+            $(option_with openmp)
+            $(option_with tiff libtiff)
+        )
     else
-        graphics="--disable-graphics"
+        myconf+=( --disable-graphics )
     fi
 
-    econf \
-        --hates=docdir \
-        --hates=datarootdir \
-        ${graphics} \
-        --with-bzip2 \
-        --with-ssl \
-        --with-zlib \
-        $(option_with X x) \
-        $(option_with fbcon fb) \
-        $(option_with gpm)
+    econf "${myconf[@]}"
 }
 
 src_install() {
     default
 
-    # Only install links icon if X driver was compiled in ...
+    # Only install links icon if X driver was compiled in
     if option X ; then
         insinto /usr/share/pixmaps
         doins graphics/links.xpm
