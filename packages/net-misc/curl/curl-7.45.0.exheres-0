@@ -7,7 +7,10 @@ require curl
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ares [[ description = [ Enabled c-ares posix-threaded dns support, disables curl's own threaded resolver ] ]]
-    idn kerberos ldap rtmp
+    idn
+    kerberos
+    ldap
+    rtmp
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 DEPENDENCIES="
