@@ -18,9 +18,13 @@ LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS=""
 
+# The tests are broken. Last checked: 3.16.1
+RESTRICT=test
+
 DEPENDENCIES="
     build:
         app-doc/asciidoc
+        virtual/pkg-config[>=0.9.0]
     build+run:
         app-arch/lzo:2
         sys-apps/acl
@@ -29,9 +33,6 @@ DEPENDENCIES="
     suggestion:
         dev-python/matplotlib [[ description = [ for btrfs-show-blocks & other debugging tools ] ]]
 "
-
-# The tests are broken. Last checked: 3.16.1
-RESTRICT=test
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     V=1
