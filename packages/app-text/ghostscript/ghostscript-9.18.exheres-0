@@ -32,7 +32,7 @@ DEPENDENCIES="
         media-libs/fontconfig
         media-libs/freetype:2[>=2.4.2]
         media-libs/jbig2dec
-        media-libs/lcms2[>=2.5]
+        media-libs/lcms2[>=2.6]
         media-libs/libpng:=[>=1.5.7]
         media-libs/tiff
         sys-libs/zlib
@@ -52,12 +52,13 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-9.16-system-zlib.patch
-    "${FILES}"/${PN}-9.16-fontmap.patch
+    "${FILES}"/${PN}-9.18-system-zlib.patch
+    "${FILES}"/b68e05c3b78c19ae06003281adaa2736cb53e605.patch
+    "${FILES}"/95553954b8d150e847090ec03db3b10a998e82be.patch
 )
 
 src_prepare() {
-    edo rm -r ./{cups/libs,expat,freetype,jbig2dec,jpeg{,xr},lcms2,libpng,tiff,zlib}
+    edo rm -r ./{cups/libs,freetype,jbig2dec,jpeg,lcms2,libpng,tiff,zlib}
 
     # remove internal CMaps (CMaps from poppler-data are used instead)
     edo rm -r ./Resource/CMap
