@@ -10,12 +10,12 @@ Yasm currently supports the x86 and AMD64 instruction sets, accepts NASM and GAS
 outputs binary, ELF32, ELF64, 32 and 64-bit Mach-O, RDOFF2, COFF, Win32, and Win64 object formats,
 and generates source debugging information in STABS, DWARF 2, and CodeView 8 formats.
 "
-HOMEPAGE="http://www.tortall.net/projects/${PN}/"
-DOWNLOADS="${HOMEPAGE}releases/${PNV}.tar.gz"
+HOMEPAGE="http://${PN}.tortall.net"
+DOWNLOADS="http://www.tortall.net/projects/${PN}/releases/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
-UPSTREAM_RELEASE_NOTES="${HOMEPAGE}wiki/Release${PV}"
+UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/releases/Release${PV}.html"
 
 LICENCES="BSD-2 BSD-3 || ( Artistic GPL-2 LGPL-2 )"
 SLOT="0"
@@ -24,13 +24,14 @@ MYOPTIONS="python"
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext
+        sys-devel/gettext[>=0.18.3]
     build+run:
-        python? (
-            dev-python/Cython
-        )
+        python? ( dev-python/Cython )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-nls )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( python 'python python-bindings' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    python
+    'python python-bindings'
+)
 
