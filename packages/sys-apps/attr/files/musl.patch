@@ -1,0 +1,34 @@
+Upstream: submitted
+Source: https://savannah.nongnu.org/bugs/?45500
+
+diff --git a/include/xattr.h b/include/xattr.h
+index 70a84be..8b5ea98 100755
+--- a/include/xattr.h
++++ b/include/xattr.h
+@@ -31,6 +31,26 @@
+ #define XATTR_REPLACE 0x2       /* set value, fail if attr does not exist */
+ 
+ 
++#ifndef __THROW
++# define __THROW
++#endif
++
++#ifdef	__cplusplus
++# ifndef __BEGIN_DECLS
++#   define __BEGIN_DECLS extern "C" {
++# endif
++# ifndef __END_DECLS
++#   define __END_DECLS }
++# endif
++#else
++# ifndef __BEGIN_DECLS
++#   define __BEGIN_DECLS
++# endif
++# ifndef __END_DECLS
++#   define __END_DECLS
++# endif
++#endif
++
+ __BEGIN_DECLS
+ 
+ extern int setxattr (const char *__path, const char *__name,
