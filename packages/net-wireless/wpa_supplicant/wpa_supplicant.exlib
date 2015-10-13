@@ -272,7 +272,7 @@ wpa_supplicant_src_compile() {
 
     if option qt5 ; then
         edo pushd wpa_gui-qt4
-        edo lrelease-qt5 lang/wpa_gui.pro
+        edo lrelease-qt5 lang/wpa_gui_*.ts
         emake
         edo popd
     fi
