@@ -130,6 +130,10 @@ config_enable_eap() {
 wpa_supplicant_src_prepare() {
     default
 
+    edo pushd ${WORKBASE}/${PNV}
+    expatch "${FILES}"/${PNV}-Fix-build-with-libressl.patch
+    edo popd
+
     # FILES is a reserved exheres-0 variable
     ever is_scm && edo sed -i -e 's:FILES:DOC_FILES:g' doc/docbook/Makefile
 
