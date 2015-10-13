@@ -1,0 +1,28 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+HOMEPAGE="http://www.lysator.liu.se/~nisse/misc"
+DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
+
+SUMMARY="Argument parsing functions, split from the GNU C Library"
+SLOT="0"
+LICENCES="GPL-2 LGPL-2.1"
+
+MYOPTIONS=""
+
+PLATFORMS="~amd64"
+
+DEPENDENCIES="
+    run:
+        !sys-libs/glibc [[
+            description = [ argp is part of glibc ]
+            resolution = manual
+        ]]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-throw-in-funcdef.patch
+    "${FILES}"/0002-isprint.patch
+    "${FILES}"/0003-no_optimize.patch
+)
+
