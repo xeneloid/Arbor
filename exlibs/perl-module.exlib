@@ -54,6 +54,7 @@ perl-module_src_configure() {
         export PERL_MM_USE_DEFAULT="1"
 
         edo perl Makefile.PL INSTALLMAN3DIR='none' INSTALLDIRS=vendor DESTDIR="${IMAGE}" \
+            PREFIX=/usr/$(exhost --target) \
             "${PERL_MODULE_SRC_CONFIGURE_PARAMS[@]}"
     fi
 }
