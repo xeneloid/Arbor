@@ -29,6 +29,10 @@ DEPENDENCIES="
 # 43 tests succeeded / 107 tests failed (last checked: 1.42.13)
 RESTRICT="test"
 
+DEFAULT_SRC_COMPILE_PARAMS=(
+    AR=$(exhost --tool-prefix)ar
+)
+
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( RELEASE-NOTES )
 DEFAULT_SRC_INSTALL_PARAMS=( install-libs )
 
