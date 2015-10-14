@@ -12,7 +12,7 @@ SCHNARF_PV_DOC="$(ever range 1)$(printf "%02d" $(ever range 2))$(printf "%02d" $
 require flag-o-matic
 
 SUMMARY="An embedded SQL database engine"
-HOMEPAGE="http://www.sqlite.org"
+HOMEPAGE="https://www.sqlite.org"
 DOWNLOADS="${HOMEPAGE}/2015/${PN}-autoconf-${SCHNARF_PV}.tar.gz
     ${HOMEPAGE}/2015/${PN}-src-${SCHNARF_PV}.zip
     doc? ( ${HOMEPAGE}/2015/${PN}-doc-${SCHNARF_PV_DOC}.zip )"
@@ -65,36 +65,41 @@ src_prepare() {
 
 src_configure() {
     # Support detection of misuse of SQLite API.
-    # http://sqlite.org/compile.html#enable_api_armor
+    # https://sqlite.org/compile.html#enable_api_armor
     append-cppflags -DSQLITE_ENABLE_API_ARMOR
 
     # Support column metadata functions.
-    # http://sqlite.org/c3ref/column_database_name.html
+    # https://sqlite.org/c3ref/column_database_name.html
     append-cppflags -DSQLITE_ENABLE_COLUMN_METADATA
 
     # Support dbstat virtual table.
-    # http://sqlite.org/dbstat.html
+    # https://sqlite.org/dbstat.html
     append-cppflags -DSQLITE_ENABLE_DBSTAT_VTAB
 
     # Support Full-Text Search versions 3 and 4.
-    # http://sqlite.org/fts3.html
+    # FTS5 is considered experimental for now.
+    # https://sqlite.org/fts3.html
     append-cppflags -DSQLITE_ENABLE_FTS{{3,3_PARENTHESIS},4}
 
+    # Support JSON1 Extension.
+    # https://www.sqlite.org/json1.html
+    append-cppflags -DSQLITE_ENABLE_JSON1
+
     # Support R*Trees.
-    # http://sqlite.org/rtree.html
+    # https://sqlite.org/rtree.html
     append-cppflags -DSQLITE_ENABLE_RTREE
 
     # Support scan status functions.
-    # http://sqlite.org/c3ref/stmt_scanstatus.html
-    # http://sqlite.org/c3ref/stmt_scanstatus_reset.html
+    # https://sqlite.org/c3ref/stmt_scanstatus.html
+    # https://sqlite.org/c3ref/stmt_scanstatus_reset.html
     append-cppflags -DSQLITE_ENABLE_STMT_SCANSTATUS
 
     # Support unlock notification.
-    # http://sqlite.org/unlock_notify.html
+    # https://sqlite.org/unlock_notify.html
     append-cppflags -DSQLITE_ENABLE_UNLOCK_NOTIFY
 
     # Support soundex() function.
-    # http://sqlite.org/lang_corefunc.html#soundex
+    # https://sqlite.org/lang_corefunc.html#soundex
     append-cppflags -DSQLITE_SOUNDEX
 
     # Fixes cross compilation
