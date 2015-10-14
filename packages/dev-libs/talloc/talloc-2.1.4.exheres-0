@@ -16,9 +16,13 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+# test_magic_differs is broken, last checked: 2.1.4
+RESTRICT="test"
+
 DEPENDENCIES=""
 
 WAF_SRC_COMPILE_PARAMS=( -j1 )
+
 DEFAULT_SRC_INSTALL_EXCLUDE=( release-script.sh )
 
 src_install() {
