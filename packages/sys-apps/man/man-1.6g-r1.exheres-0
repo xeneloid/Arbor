@@ -27,8 +27,11 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 )
 
 src_configure() {
+    local build=$(exhost --build)
+    local build_cflags_var=${build//-/_}_CFLAGS
+
     edo env                                       \
-        BUILD_CC="$(exhost --build)-cc ${CFLAGS}" \
+        BUILD_CC="$(exhost --build)-cc ${!build_cflags_var}" \
         DEFS="-I/usr/$(exhost --target)/include"  \
     "${WORK}/configure"                           \
             -default                              \
