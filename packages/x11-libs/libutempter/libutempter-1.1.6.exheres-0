@@ -19,6 +19,10 @@ DEPENDENCIES="
         group/utmp
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p2 "${FILES}"/${PNV}-musl.patch
+)
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     libdir="/usr/$(exhost --target)/lib"
     libexecdir="/usr/$(exhost --target)/libexec"
