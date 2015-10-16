@@ -23,5 +23,8 @@ DEPENDENCIES="
         dev-libs/libxml2:2.0[python][python_abis:*(-)?]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/itstool-${PV}-python-usage.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/itstool-${PV}-python-usage.patch"
+    "${FILES}/d75f68cbc58075b57aee53d57b9156655a2fc99a.patch"
+)
 
