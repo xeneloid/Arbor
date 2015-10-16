@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
-require python [ blacklist="3" has_lib=true multibuild=false with_opt=true ]
+require python [ blacklist=none has_lib=true multibuild=false with_opt=true ]
 
 SUMMARY="XML C Parser and Toolkit v2"
 HOMEPAGE="http://www.xmlsoft.org"
@@ -60,6 +60,8 @@ src_prepare() {
     # abi obtained from /usr/bin/python. Hence, we'll force configure to use
     # /usr/bin/python$(python_get_abi) instead.
     edo sed -i -e "s:\(bin/python\):\1$(python_get_abi):" configure.ac
+
+    edo sed -i -e "s:^PYTHON_INCLUDES=:&$(python_get_incdir):" configure.ac
 
     autotools_src_prepare
 }
