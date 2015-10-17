@@ -56,7 +56,7 @@ src_compile() {
         ZLIB="no"
     )
 
-    option udev && params+=( HWDB="yes" )
+    option udev && params+=( HWDB="yes" ) || params+=( HWDB="no" )
 
     edo pushd "${WORKBASE}"/static
     emake \
