@@ -75,10 +75,12 @@ src_prepare() {
     edo sed \
         -e "s:strings -af ../../busybox > foo:$(exhost --build)-strings -af ../../busybox > foo:" \
         -i testsuite/strings/strings-works-like-GNU
+
+    edo cp "${FILES}"/config .config
 }
 
 src_configure() {
-    bb_make defconfig
+    bb_make oldconfig
 }
 
 src_compile() {
