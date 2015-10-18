@@ -139,6 +139,7 @@ libgcc_src_compile() {
             --disable-multilib                  \
             --with-multilib-list=''             \
             --with-glibc-version=2.11           \
+            --with-sysroot='""'                 \
             --enable-languages=c
     edo sed -e 's,libgcc.mvars:.*$,libgcc.mvars:,' -i Makefile
     edo make config.h libgcc.mvars tconfig.h tm.h options.h insn-constants.h insn-modes.h gcov-iov.h
