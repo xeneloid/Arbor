@@ -132,19 +132,14 @@ src_install() {
     emagicdocs
     dodoc -r examples
 
-    #   for prog in $(cave executables coreutils | sed 's|.*/g||' | sort);do
-    #       if busybox | grep -q "$prog";then
-    #           echo -n "$prog "
-    #       fi
-    #   done
-    coreutils=( '[' arch base64 basename cat chgrp chmod chown chroot
-        cksum comm cp cut date dd df dir dirname du echo env expand
-        expr false fold head hostid hostname id install kill
-        link ln logname ls md5sum mkdir mkfifo mknod mktemp mv nice
-        nl nohup od pr printenv printf pwd readlink realpath rm rmdir
-        seq sha1sum sha256sum sha512sum shuf sleep sort split stat stty
-        sum sync tac tail tee test timeout touch tr true tty uname
-        unexpand uniq unlink uptime users vdir wc who whoami yes
+    coreutils=(
+        '[' base64 basename cat chgrp chmod chown chroot cksum comm cp cut
+        date dd df dirname du echo env expand expr false fold head hostid
+        hostname id install kill ln logname ls md5sum mkdir mkfifo mknod
+        mktemp mv nice nohup od printenv printf pwd readlink realpath
+        rm rmdir seq sha1sum sha256sum sha512sum shuf sleep sort split stat
+        stty sum sync tac tail tee test timeout touch tr true tty uname
+        unexpand uniq unlink uptime users wc who whoami yes
     )
 
     # alternatives
