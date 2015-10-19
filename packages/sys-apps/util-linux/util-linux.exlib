@@ -2,9 +2,9 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require bash-completion systemd-service
+require providers bash-completion systemd-service
 
-export_exlib_phases src_prepare src_configure src_install
+export_exlib_phases src_prepare src_configure src_test src_install
 
 SUMMARY="Common linux utilities"
 HOMEPAGE="https://git.kernel.org/cgit/utils/${PN}/${PN}.git"
@@ -83,6 +83,7 @@ DEPENDENCIES="
         )
     test:
         sys-apps/bc
+        sys-apps/grep
 "
 
 DEFAULT_SRC_INSTALL_PARAMS=( usrsbin_execdir=/usr/$(exhost --target)/bin )
@@ -164,6 +165,11 @@ util-linux_src_configure() {
         $(option_with session-management utempter) \
         $(option_with systemd) \
         $(option_with udev)
+}
+
+util-linux_src_test() {
+    providers_set 'grep gnu'
+    default
 }
 
 util-linux_src_install() {
