@@ -2,7 +2,7 @@
 # Copyright 2008 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives gnu [ suffix=xz ]
+require providers alternatives gnu [ suffix=xz ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_prepare src_test src_install
@@ -21,8 +21,7 @@ DEPENDENCIES="
         dev-libs/mpfr:=
         sys-libs/readline
     test:
-        app-admin/eclectic
-        sys-apps/coreutils
+        sys-apps/coreutils[>=8.24-r3]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -48,7 +47,8 @@ gawk_src_prepare() {
 
 gawk_src_test() {
     # gawk fails with non-gnu coreutils
-    PATH=$(eval $(eclectic coreutils script gnu);echo ${PATH}):${PATH} default
+    providers_set 'coreutils gnu'
+    default
 }
 
 gawk_src_install() {
