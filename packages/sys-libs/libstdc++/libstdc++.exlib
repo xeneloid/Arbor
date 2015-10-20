@@ -112,7 +112,7 @@ libstdc++_src_configure() {
 }
 
 libstdc++_src_install() {
-    local alternatives=() locale= name=
+    local alternatives=() locale= libpath= name= suffix=
 
     default
 
@@ -126,9 +126,11 @@ libstdc++_src_install() {
     # c.f. http://gcc.gnu.org/ml/gcc/2009-09/msg00085.html
     # NOTE(compnerd) these are formatters which are platform agnostic, so simply grab the version
     # from the primary ABI
-    dodir /usr/share/gdb/python/auto-load
-    name=$(basename usr/$(exhost --target)/lib/libstdc++.so.*-gdb.py -gdb.py)
-    edo mv usr/$(exhost --target)/lib/libstdc++.so.*-gdb.py usr/share/gdb/python/auto-load/${name%-gdb.py}
+    libpath=usr/$(exhost --target)/lib
+    dodir /usr/share/gdb/auto-load/${libpath}
+    name=$(basename ${libpath}/${PN}.so.*-gdb.py)
+    suffix=${name#*.}
+    edo mv ${libpath}/${PN}.${suffix} usr/share/gdb/auto-load/${libpath}/${PN}-${SLOT}.${suffix}
 
     mo_provided=()
     for locale in usr/share/locale/*/*/*.mo; do
