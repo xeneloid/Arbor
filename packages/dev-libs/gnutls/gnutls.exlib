@@ -65,7 +65,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'pkcs11 p11-kit' )
 
 AT_M4DIR=( m4 gl/m4 src/gl/m4 src/libopts/m4/ )
 
-gnutls-3_src_prepare() {
+gnutls_src_prepare() {
     # Source: Trond A Ekseth <troeks@gmail.com>
     # Upstream: No
     # Reason: Binding to 0.0.0.0 creates access violations under sydbox.
@@ -82,7 +82,7 @@ gnutls-3_src_prepare() {
     autotools_src_prepare
 }
 
-gnutls-3_src_test() {
+gnutls_src_test() {
     esandbox allow_net "LOOPBACK@80"
     esandbox allow_net "LOOPBACK@5559"
     esandbox allow_net --connect "LOOPBACK@5557"
