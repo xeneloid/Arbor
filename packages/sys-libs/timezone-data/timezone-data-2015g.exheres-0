@@ -81,7 +81,7 @@ src_compile() {
         var=${CHOST//-/_}_LDFLAGS; build_ldflags=${!var}
 
         emake \
-            CC=$(exhost --build)-gcc \
+            CC=$(exhost --build)-cc \
             CFLAGS="${build_cflags}" \
             CPPFLAGS="${build_cppflags}" \
             LDFLAGS="${build_ldflags}" \
