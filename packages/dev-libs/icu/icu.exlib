@@ -9,8 +9,6 @@ SUMMARY="International Components for Unicode"
 HOMEPAGE="http://site.${PN}-project.org"
 DOWNLOADS="http://download.${PN}-project.org/files/${PN}4c/${PV}/${PN}4c-${PV//./_}-src.tgz"
 
-REMOTE_IDS="freecode:internationalcomponentsforunicodecc"
-
 UPSTREAM_CHANGELOG="${HOMEPAGE}/download/$(ever major) [[ lang = en ]]"
 
 LICENCES="icu"
@@ -35,7 +33,8 @@ icu_src_configure() {
         econf
     else
         edo mkdir -p "${WORK_HOST}"/config
-        edo cp "${FILES}"/icucross.{mk,inc} "${WORK_HOST}"/config
+        edo cp "${FILES}"/icucross.{inc,mk} "${WORK_HOST}"/config
+        edo echo "CROSS_ICU_VERSION=${SLOT}" >> "${WORK_HOST}"/config/icucross.mk
 
         econf --with-cross-build="${WORK_HOST}"
     fi

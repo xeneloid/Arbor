@@ -1,0 +1,19 @@
+Title: ICU 56.1 update
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2015-10-21
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-libs/icu:55.1
+
+dev-libs/icu has been bumped to 56.1.
+
+Since it breaks ABI compatibility pretty consistently, it is slotted to
+avoid breaking currently installed packages.
+
+Upgrade packages which depend on icu:55.1, and remove it afterwards.
+
+# cave fix-linkage --library libicui18n.so.55 --library libicuio.so.55 \
+  --library libicule.so.55 --library libiculx.so.55 --library libicuuc.so.55
+# cave uninstall -x icu:55.1
+
