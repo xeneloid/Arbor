@@ -30,7 +30,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES+=( 'arm_cpu_features:neon arm-neon' )
 
 src_configure()
 {
-    CC_FOR_BUILD="$(exhost --build)-gcc" \
+    CC_FOR_BUILD="$(exhost --build)-cc" \
     econf \
         --enable-public-key \
         --enable-shared \
