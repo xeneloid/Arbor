@@ -28,8 +28,7 @@ DEPENDENCIES="
 # RESTRICT="userpriv" due to the usage of ptrace.
 RESTRICT="test"
 
-# TODO(compnerd) use cc instead of gcc
-DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD="$(exhost --target)-gcc" )
+DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD="$(exhost --tool-prefix)cc" )
 
 src_prepare() {
     default
