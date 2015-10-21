@@ -28,7 +28,11 @@ DEPENDENCIES="
 # RESTRICT="userpriv" due to the usage of ptrace.
 RESTRICT="test"
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD="$(exhost --tool-prefix)cc" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD=$(exhost --tool-prefix)cc )
 
 src_prepare() {
     default
