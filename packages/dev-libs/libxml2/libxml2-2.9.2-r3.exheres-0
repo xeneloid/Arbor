@@ -61,7 +61,8 @@ src_prepare() {
     # /usr/bin/python$(python_get_abi) instead.
     edo sed -i -e "s:\(bin/python\):\1$(python_get_abi):" configure.ac
 
-    edo sed -i -e "s:^PYTHON_INCLUDES=:&$(python_get_incdir):" configure.ac
+    option python && \
+        edo sed -i -e "s:^PYTHON_INCLUDES=:&$(python_get_incdir):" configure.ac
 
     autotools_src_prepare
 }
