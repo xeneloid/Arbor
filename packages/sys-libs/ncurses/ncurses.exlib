@@ -46,6 +46,7 @@ ncurses_src_configure() {
         --with-build-cc=/usr/$(exhost --build)/bin/$(exhost --build)-cc
         --with-cxx-shared
         --with-normal
+        --with-pkg-config=/usr/$(exhost --target)/lib/pkgconfig
         --with-pkg-config-libdir=/usr/$(exhost --target)/lib/pkgconfig
         --with-shared
         --with-xterm-kbs=DEL
