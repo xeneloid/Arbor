@@ -147,7 +147,7 @@ clang_src_install() {
     edo popd
 
     edo pushd "${IMAGE}"/usr/share/clang-analyzer
-    edo chmod a+x scan-build/{ccc-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
+    edo chmod a+x scan-build/{c{++,cc}-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
     edo popd
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
