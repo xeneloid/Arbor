@@ -1,0 +1,54 @@
+# Copyright 2007 Bryan Østergaard
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ tag="s${PV}" ]
+
+SUMMARY="Small useful utilities for networking"
+HOMEPAGE="http://www.skbuff.net/${PN}"
+LICENCES="BSD-4 GPL-2"
+DOWNLOADS+=" https://dev.gentoo.org/~polynomial-c/${PN}-s${PV}-manpages.tar.xz"
+
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+MYOPTIONS="
+    caps idn
+    ( providers: gcrypt libressl nettle openssl ) [[ number-selected = exactly-one ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        caps? ( sys-libs/libcap )
+        idn? ( net-dns/libidn )
+        providers:gcrypt? ( dev-libs/libgcrypt )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:nettle? ( dev-libs/nettle )
+        providers:openssl? ( dev-libs/openssl )
+    suggestion:
+        net-analyzer/traceroute [[
+            description = [ Traceroute is a tool commonly categorized with iputils ]
+        ]]
+"
+
+DEFAULT_SRC_INSTALL_EXTRA_DOCS=( "RELNOTES" )
+
+src_compile() {
+    emake \
+        CC=$(exhost --tool-prefix)cc \
+        CFLAGS="${CFLAGS}" \
+        LIBC_INCLUDE=/usr/$(exhost --target)/include \
+        USE_CAP=$(optionv caps || echo no) \
+        USE_GCRYPT=$(optionv providers:gcrypt || echo no) \
+        USE_IDN=$(optionv idn || echo no) \
+        USE_NETTLE=$(optionv providers:nettle || echo no)
+}
+
+src_install() {
+    dobin arping clockdiff ipg ping rarpd rdisc tftpd tracepath tracepath6
+    edo chmod +s "${IMAGE}"/usr/$(exhost --target)/bin/ping
+    doman doc/*.8
+    edo rm "${IMAGE}"/usr/share/man/man8/traceroute6.8
+    edo ln -s ping "${IMAGE}"/usr/$(exhost --target)/bin/ping6
+    edo ln -s ping.8 "${IMAGE}"/usr/share/man/man8/ping6.8
+    emagicdocs
+}
+
