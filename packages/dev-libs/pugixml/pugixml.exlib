@@ -1,8 +1,6 @@
 # Copyright 2015 Quentin “Sardem FF7” Glidic <sardemff7@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-CMAKE_SOURCE=${WORK}/scripts
-
 require github [ user=zeux tag=v${PV} ] cmake [ api=2 ]
 
 SUMMARY="Light-weight, simple and fast XML parser for C++ with XPath support"
@@ -15,22 +13,19 @@ pugixml is a light-weight C++ XML processing library. It features:
 - Full Unicode support with Unicode interface variants and automatic encoding conversions
 "
 
+BUGS_TO="sardemff7@exherbo.org"
+
 LICENCES="MIT"
 SLOT="0"
 MYOPTIONS=""
 
 DEPENDENCIES=""
 
-BUGS_TO="sardemff7@exherbo.org"
+CMAKE_SOURCE=${WORKBASE}/${PNV}/scripts
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DBUILD_DEFINES:STRING=PUGIXML_HAS_LONG_LONG
     -DBUILD_SHARED_LIBS:BOOL=TRUE
     -DBUILD_TESTS:BOOL=TRUE
 )
-
-if ever at_least scm ; then
-    CMAKE_SRC_CONFIGURE_PARAMS+=( -DBUILD_DEFINES:string='PUGIXML_HAS_LONG_LONG' )
-else
-    CMAKE_SRC_CONFIGURE_PARAMS+=( -DBUILD_DEFINES:string='-DPUGIXML_HAS_LONG_LONG' )
-fi
 
