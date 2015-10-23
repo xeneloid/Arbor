@@ -47,6 +47,7 @@ src_install() {
     if [[ $(exhost --target) == *-*musl* ]]; then
         edo mkdir "${IMAGE}"/usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
+        dosym ../bin/true /usr/$(exhost --target)/bin/ldconfig
     else
         dosym ../lib/libc.so /usr/$(exhost --target)/musl/bin/ldd
 
