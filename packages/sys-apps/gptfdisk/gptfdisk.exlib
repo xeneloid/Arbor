@@ -3,7 +3,7 @@
 
 require sourceforge [ suffix=tar.gz ]
 
-export_exlib_phases src_test src_install
+export_exlib_phases src_install
 
 SUMMARY="GPT fdisk is a GUID partition table editor"
 DESCRIPTION="
@@ -29,10 +29,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_COMPILE_PARAMS=( CXX=${CXX} )
-
-gptfdisk_src_test() {
-    edo ./gdisk_test.sh
-}
 
 gptfdisk_src_install() {
     dobin cgdisk
