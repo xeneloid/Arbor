@@ -1,9 +1,9 @@
 # Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ project=nfs ] systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.12 ] ]
+require sourceforge [ project=nfs ] systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-export_exlib_phases src_prepare src_install pkg_postinst
+export_exlib_phases src_install pkg_postinst
 
 SUMMARY="NFS client and server daemons"
 DESCRIPTION="
@@ -22,8 +22,8 @@ MYOPTIONS="
     nfsv4 [[ description = [ Enable support for NFSv4, including 4.1 ] ]]
     tcpd
 "
-# FIXME: kerberos
 
+# FIXME: kerberos
 DEPENDENCIES="
     build+run:
         net-libs/libtirpc
@@ -51,6 +51,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-mount
     --enable-mountconfig
     --enable-tirpc
+    --disable-osdlogin
     --disable-static
     --with-statduser=nobody
     --with-statedir=/var/lib/nfs
@@ -76,10 +77,6 @@ DEFAULT_SRC_INSTALL_PARAMS=( sbindir=/usr/$(exhost --target)/bin )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( KNOWNBUGS NEW )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( linux-nfs )
 
-nfs-utils_src_prepare() {
-    autotools_src_prepare
-}
-
 nfs-utils_src_install() {
     default
 
@@ -89,12 +86,11 @@ nfs-utils_src_install() {
     keepdir /var/lib/nfs/{sm,sm.bak}
     edo mv "${IMAGE}"/var/lib/nfs/* "${IMAGE}"/usr/$(exhost --target)/lib/nfs
     keepdir /var/lib/nfs
-
 }
 
 nfs-utils_pkg_postinst() {
     # Install default xtab and friends if there's none existing.
-    # In src_install we put them in /usr/target/lib/nfs for safe-keeping, but
+    # In src_install we put them in /usr/$(exhost --target)/lib/nfs for safe-keeping, but
     # the daemons actually use the files in /var/lib/nfs. cf. Gentoo bug 30486.
     local f
     for f in "${ROOT}"/usr/$(exhost --target)/lib/nfs/*; do
