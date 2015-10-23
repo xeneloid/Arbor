@@ -55,6 +55,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-9.18-system-zlib.patch
     "${FILES}"/b68e05c3b78c19ae06003281adaa2736cb53e605.patch
     "${FILES}"/95553954b8d150e847090ec03db3b10a998e82be.patch
+    "${FILES}"/74ba28a80804f82aaa68682733c7d7a3cd5f9cbd.patch
+    "${FILES}"/feafe5e540a0545ec5d28f3f66bb542056bba495.patch
 )
 
 src_prepare() {
