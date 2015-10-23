@@ -17,18 +17,22 @@ millisecond on LANs and up to a few tens of milliseconds on WANs relative to a
 primary server synchronized to Coordinated Universal Time (UTC) via a Global
 Positioning Service (GPS) receiver, for example.
 "
-HOMEPAGE="http://www.${PN}.org/"
+HOMEPAGE="http://www.${PN}.org"
 DOWNLOADS="
-    http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}$(ever major)/${PN}-${PV:0:3}/${MY_PNV}.tar.gz
-    http://dev.exherbo.org/~tanderson/${MY_PNV}-manpages.tar.bz2
+    https://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}$(ever major)/${PN}-${PV:0:3}/${MY_PNV}.tar.gz
+    https://dev.exherbo.org/distfiles/${PN}/${MY_PNV}-manpages.tar.bz2
 "
 
-UPSTREAM_RELEASE_NOTES="http://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS"
+UPSTREAM_RELEASE_NOTES="https://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS"
 
 LICENCES="BSD-3 BSD-4 GPL-2 MIT"
 SLOT="0"
-MYOPTIONS="caps debug parse-clocks
-( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+MYOPTIONS="
+    caps
+    debug
+    parse-clocks
+
+    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -91,6 +95,7 @@ ntp_src_install() {
     edo chown ntp:ntp "${IMAGE}"/var/lib/ntp
 
     install_systemd_files
+
     # As of ntp-4.2.4_p7-RC1 ntp will only drop privileges if linuxcaps is enabled
     if option !caps ; then
         edo sed -i -e 's/ -u ntp:ntp//' "${IMAGE}"/"${SYSTEMDSYSTEMUNITDIR}"/ntpd.service
