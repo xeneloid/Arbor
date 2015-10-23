@@ -9,7 +9,7 @@ DESCRIPTION="
 This library provides an interface for raw netlink messaging and various netlink
 family specific interfaces.
 "
-HOMEPAGE="http://www.infradead.org/~tgr/${PN}"
+HOMEPAGE="https://www.infradead.org/~tgr/${PN}"
 
 UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc/index.html [[ lang = en ]]"
 
@@ -29,7 +29,7 @@ if ever at_least 3.2.17 ; then
         build:
             sys-devel/bison
             sys-devel/flex
-            virtual/pkg-config[>=0.9]
+            virtual/pkg-config[>=0.9.0]
         test:
             dev-libs/check[>=0.9]
     "
