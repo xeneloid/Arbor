@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="PNP ID data"
-HOMEPAGE="https://git.fedorahosted.org/git/?p=hwdata.git"
+HOMEPAGE="https://git.fedorahosted.org/cgit/hwdata.git"
 DOWNLOADS=""
 
 LICENCES="|| ( GPL-2 GPL-3 X11 )"
@@ -19,7 +19,7 @@ src_fetch_extra() {
     for path in ${PALUDIS_FETCHERS_DIRS[@]};do
         export PATH="${PATH}:${path}"
     done
-    dohttps "${HOMEPAGE};a=blob_plain;f=pnp.ids;hb=HEAD" "${FETCHEDDIR}"/pnp.ids
+    dohttps "${HOMEPAGE}plain/pnp.ids?h=master" "${FETCHEDDIR}"/pnp.ids
 }
 
 src_unpack() {
