@@ -70,6 +70,7 @@ bind_src_prepare() {
     edo sed -i 's/"nm"/"'$(exhost --tool-prefix)'nm"/' util/mksymtbl.pl
 
     expatch "${FILES}"/${PN}-fixMakefile.patch
+    expatch "${FILES}"/${PNV}-libressl.patch
 
     eautoconf
 }
