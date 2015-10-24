@@ -14,24 +14,34 @@ tc-is-cross-compiler() {
     return $([[ ${CBUILD:-${CHOST}} != ${CHOST} ]])
 }
 
+cc-has-defined() {
+    illegal_in_global_scope
+    "${CC}" ${CFLAGS} -x c -dM -E /dev/null -o - | grep -q "${1}"
+}
+
+cxx-has-defined() {
+    illegal_in_global_scope
+    "${CXX}" ${CXXFLAGS} -x c++ -dM -E /dev/null -o - | grep -q "${1}"
+}
+
 cc-is-clang() {
     illegal_in_global_scope
-    "${CC}" -x c -dM -E /dev/null -o - | grep -q __clang__
+    cc-has-defined __clang__
 }
 
 cc-is-gcc() {
     illegal_in_global_scope
-    ! cc-is-clang && "${CC}" -x c -dM -E /dev/null -o - | grep -q __GNUC__
+    ! cc-is-clang && cc-has-defined __GNUC__
 }
 
 cxx-is-clang() {
     illegal_in_global_scope
-    "${CXX}" -x c++ -dM -E /dev/null -o - | grep -q __clang__
+    cxx-has-defined __clang__
 }
 
 cxx-is-gcc() {
     illegal_in_global_scope
-    ! cxx-is-clang && "${CXX}" -x c++ -dM -E /dev/null -o - | grep -q __GNUC__
+    ! cxx-is-clang && cxx-has-defined __GNUC__
 }
 
 # Returns the version as by `$CC -dumpversion`
