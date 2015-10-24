@@ -21,7 +21,6 @@ DEPENDENCIES="
         sys-kernel/linux-headers[<3.0|>=3.0-r1]
     test:
         app-arch/zip
-
     run:
         !sys-apps/coreutils[<8.24-r3] [[
             description = [ Alternatives conflict ]
@@ -198,5 +197,7 @@ src_install() {
         /usr/$(exhost --target)/bin/unzip       /usr/$(exhost --target)/bin/busybox
     alternatives_for uptime     ${PN}   75  \
         /usr/$(exhost --target)/bin/uptime      /usr/$(exhost --target)/bin/busybox
+    alternatives_for vi         ${PN}   75  \
+        /usr/$(exhost --target)/bin/vi          /usr/$(exhost --target)/bin/busybox
 }
 
