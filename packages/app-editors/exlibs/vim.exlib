@@ -44,8 +44,8 @@ DEPENDENCIES="
 # with detection of exuberant-ctags by configure.
 DEPENDENCIES+="
     build:
-        sys-apps/sed[>=4]
         sys-devel/autoconf:2.5
+        virtual/sed
     build+run:
         dev-util/ctags
         sys-libs/ncurses[>=5.2-r2]"
