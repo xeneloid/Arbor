@@ -19,7 +19,7 @@ DOWNLOADS="ftp://ftp.isc.org/isc/bind9/${MY_PV}/${MY_PNV}.tar.gz"
 
 BUGS_TO="philantrop@exherbo.org"
 
-LICENCES="as-is"
+LICENCES="ISC"
 SLOT="0"
 MYOPTIONS="
     geoip [[ description = [ ACLs can also be used for geographic access restrictions. ] ]]

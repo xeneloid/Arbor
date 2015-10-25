@@ -26,7 +26,7 @@ DOWNLOADS="
 UPSTREAM_DOCUMENTATION="https://www.isc.org/faq/bind [[ note = [ FAQ ] ]]"
 UPSTREAM_RELEASE_NOTES="http://ftp.isc.org/isc/${PN}${PV%%.*}/${MY_PV}/RELEASE-NOTES-${MY_PV}.html"
 
-LICENCES="as-is"
+LICENCES="ISC"
 SLOT="0"
 MYOPTIONS="
     berkdb
