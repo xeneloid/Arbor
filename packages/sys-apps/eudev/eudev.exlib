@@ -23,6 +23,7 @@ DEPENDENCIES="
         gtk-doc? ( dev-doc/gtk-doc )
     build+run:
         dev-util/gperf
+        sys-apps/kmod[>=8]
     run:
         !sys-apps/systemd [[
             description = [ ${CATEGORY}/${PN} is a udev daemon which provides the same library and programs that systemd-udev does ]
@@ -41,7 +42,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-introspection=no
     --enable-manpages
     --disable-gudev
-    --disable-kmod # kmod-tools should be preferred since it's one less dep
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
