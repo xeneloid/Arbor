@@ -133,6 +133,11 @@ coreutils_src_install() {
         prog=${prog/g}
         case "${prog}" in
             hostname|uptime) ;;
+            '[') # no manpage
+                coreutils_alternatives+=(
+                    /usr/$(exhost --target)/bin/${prog} g${prog}
+                )
+            ;;
             *)
                 coreutils_alternatives+=(
                     /usr/$(exhost --target)/bin/${prog} g${prog}
