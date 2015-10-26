@@ -1,0 +1,13 @@
+# Copyright 2010 Bo Ørsted Andresen
+# Distributed under the terms of the GNU General Public License v2
+
+ACCEPT_PLATFORMS="x86"
+
+FILESYSTEM_LAYOUT="cross"
+
+# these variables may be overridden by the user
+
+CHOST="i686-pc-linux-musl"
+CFLAGS="-pipe -Os -g"
+CXXFLAGS="-pipe -Os -g"
+
