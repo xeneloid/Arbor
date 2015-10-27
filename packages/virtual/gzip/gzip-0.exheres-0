@@ -1,0 +1,25 @@
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="Virtual: gzip providers"
+HOMEPAGE=""
+
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS="
+    ( providers:
+        busybox
+        gnu
+        pigz
+    ) [[
+        *description = [ gzip provider ]
+        number-selected = at-least-one
+    ]]
+"
+
+DEPENDENCIES="
+    providers:busybox? ( sys-apps/busybox )
+    providers:gnu? ( app-arch/gzip )
+    providers:pigz? ( app-arch/pigz )
+"
+
