@@ -14,7 +14,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS=""
+MYOPTIONS="systemd"
 
 DEPENDENCIES="
     build:
@@ -22,6 +22,7 @@ DEPENDENCIES="
     test:
         app-arch/zip
     run:
+        systemd? ( sys-apps/systemd )
         !sys-apps/coreutils[<8.24-r3] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
@@ -76,6 +77,11 @@ src_prepare() {
         -i testsuite/strings/strings-works-like-GNU
 
     edo cp "${FILES}"/config .config
+
+    if ! option systemd;then
+        edo sed -e 's/^CONFIG_FEATURE_SYSTEMD.*/# CONFIG_FEATURE_SYSTEMD is not set/'   \
+                -i .config
+    fi
 }
 
 src_configure() {
@@ -119,6 +125,7 @@ src_install() {
     exeinto /usr/share/udhcpc
     newexe examples/udhcp/simple.script default.script
     dosym busybox /usr/${host}/bin/udhcpc
+    dosym busybox /usr/${host}/bin/udhcpc6
 
     # udhcpd
     insinto /etc
@@ -170,7 +177,9 @@ src_install() {
         /usr/$(exhost --target)/bin/fgrep       /usr/$(exhost --target)/bin/busybox
     alternatives_for gzip       ${PN}   75  \
         /usr/$(exhost --target)/bin/gzip        /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/gunzip      /usr/$(exhost --target)/bin/busybox
+        /usr/$(exhost --target)/bin/gunzip      /usr/$(exhost --target)/bin/busybox \
+        /usr/$(exhost --target)/bin/uncompress  /usr/$(exhost --target)/bin/busybox \
+        /usr/$(exhost --target)/bin/zcat        /usr/$(exhost --target)/bin/busybox
     alternatives_for hostname   ${PN}   75  \
         /usr/$(exhost --target)/bin/hostname    /usr/$(exhost --target)/bin/busybox
     alternatives_for init       ${PN}   75  \
