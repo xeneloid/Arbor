@@ -63,8 +63,6 @@ DEPENDENCIES="
         net-print/foomatic-db      [[ note = [ for non-PostScript printers ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}"/${PNV}-r7399.patch )
-
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 src_prepare() {
@@ -75,7 +73,7 @@ src_prepare() {
 }
 
 src_configure() {
-    local args=(
+    local myconf=(
         --enable-imagefilters
         --disable-static
         --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')$(option ldap && echo 'ldap ')cups"
@@ -95,7 +93,7 @@ src_configure() {
         $(option_enable ldap)
     )
 
-    econf "${args[@]}"
+    econf "${myconf[@]}"
 }
 
 src_install() {
