@@ -65,7 +65,7 @@ src_prepare() {
     # this test just hardcodes sid 1, presumably because it is unlikely to be there.
     # It seems that with the kernels process namespacing, which is being used e.g. by
     # systemd-nspawn, the first process group in the container always gets that sid.
-    edo sed -e "/^set test \"pgrep doesn't match with bogus sid\"$/,+3 d" \
+    edo sed -e "/^set test \"pgrep doesn't match with bogus sid\"$/ {N;N;N;d}" \
             -i testsuite/pgrep.test/pgrep.exp
 
     edo po/update-potfiles
