@@ -23,6 +23,10 @@ DEPENDENCIES="
         app-arch/zip
     run:
         systemd? ( sys-apps/systemd )
+        !app-arch/gzip[<1.6-r2] [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
         !sys-apps/coreutils[<8.24-r3] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
