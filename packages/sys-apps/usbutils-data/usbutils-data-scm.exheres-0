@@ -16,15 +16,21 @@ DEPENDENCIES=""
 WORK="${WORKBASE}"
 
 src_fetch_extra() {
+    local path url err=1
     for path in ${PALUDIS_FETCHERS_DIRS[@]};do
         export PATH="${PATH}:${path}"
     done
-    dohttps https://usb-ids.gowdy.us/usb.ids "${FETCHEDDIR}"/usb.ids
+    for url in \
+        https://usb-ids.gowdy.us/usb.ids.gz \
+        http://www.linux-usb.org/usb.ids.gz;do
+        do${url%://*} "$url" "${FETCHEDDIR}"/usb.ids.gz && err=0 && break
+    done
+    [[ "$err" -eq 0 ]] || die "Fetching failed"
 }
 
 src_unpack() {
-    edo cp "${FETCHEDDIR}"/usb.ids .
-    [[ -s usb.ids ]] || die "usb.ids is not usable"
+    [[ -s "${FETCHEDDIR}"/usb.ids.gz ]] || die "Fetching appears to have failed"
+    unpack usb.ids.gz
 }
 
 src_install() {
