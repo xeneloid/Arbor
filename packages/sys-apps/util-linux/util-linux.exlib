@@ -82,7 +82,7 @@ DEPENDENCIES="
         )
     test:
         sys-apps/bc
-        sys-apps/grep
+        sys-apps/grep[>=2.21-r2]
 "
 
 DEFAULT_SRC_INSTALL_PARAMS=( usrsbin_execdir=/usr/$(exhost --target)/bin )
