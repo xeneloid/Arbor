@@ -46,9 +46,6 @@ DEPENDENCIES="
 WORK="${WORKBASE}"
 
 src_install() {
-    ALTERNATIVES_cc_DESCRIPTION="System-wide C compiler"
-    ALTERNATIVES_cxx_DESCRIPTION="System-wide C++ compiler"
-    ALTERNATIVES_cpp_DESCRIPTION="System-wide C pre-processor"
     for target in ${CROSS_COMPILE_TARGETS};do
         if option targets:${target};then
             alternatives_for cc     gcc 1000    \

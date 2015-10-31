@@ -29,7 +29,6 @@ WORK="${WORKBASE}"
 
 eclectic-python_src_install() {
     target=$(exhost --target)
-    ALTERNATIVES_python_DESCRIPTION="System-wide Python interpreter version"
     alternatives=(
         python ${SLOT} ${IMPORTANCE}
         /usr/${target}/bin/2to3 2to3-${SLOT}
