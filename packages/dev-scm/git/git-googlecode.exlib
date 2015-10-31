@@ -31,6 +31,7 @@ SLOT="0"
 MYOPTIONS="
     curl
     emacs [[ description = [ Install various Emacs libraries: git.el, git-blame.el and vc-git.el ] ]]
+    examples [[ description = [ Install various contributions (i. e. the contrib/ directory) ] ]]
     keyring [[ description = [ Install GNOME keyring credential helper ] ]]
     python [[ description = [ Install helper scripts for git remote helpers, a compatibility layer with other SCMs ] ]]
     tk
@@ -187,6 +188,8 @@ git-googlecode_src_install() {
         fi
     done
     docinto /
+
+    option examples && dodoc -r contrib
 
     dobashcompletion contrib/completion/git-completion.bash
     # zsh completion uses bash completion internally
