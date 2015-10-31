@@ -27,11 +27,7 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0002-Add-detection-of-Exherbo-Linux.patch
-)
-
-WORK=${WORKBASE}/${PN}
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0002-Add-detection-of-Exherbo-Linux.patch )
 
 src_compile() {
     edo ${CC} ${CFLAGS} ${LDFLAGS} -o newns newns.c
