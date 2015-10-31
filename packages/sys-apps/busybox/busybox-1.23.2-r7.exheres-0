@@ -3,7 +3,7 @@
 # Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives
+require alternatives toolchain-funcs
 
 SUMMARY="BusyBox provides tiny replacements for many common UNIX utilities"
 HOMEPAGE="http://busybox.net"
@@ -52,6 +52,12 @@ bb_make() {
         SKIP_STRIP=y
     )
     emake "${make_options[@]}" "$@"
+}
+
+pkg_pretend() {
+    if ! cc-is-gcc;then
+        die "Building ${CATEGORY}/${PNV} with a compiler other than GCC is known to cause segfaults with certain busybox applets. Aborting."
+    fi
 }
 
 src_prepare() {
