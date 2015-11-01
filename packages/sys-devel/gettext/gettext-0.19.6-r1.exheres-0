@@ -53,5 +53,11 @@ src_install() {
     option emacs && elisp-install-site-file
     option examples || edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/examples
     edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/html/{csharpdoc,javadoc2}
+
+    if [[ "$(exhost --target)" == *-musl* ]];then
+        # NOTE(somasis)
+        # musl provides it's own api header, should be used rather than gettext's
+        edo rm "${IMAGE}"/usr/$(exhost --target)/include/libintl.h
+    fi
 }
 
