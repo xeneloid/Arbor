@@ -17,19 +17,16 @@ MYOPTIONS=""
 # reads and sets EFI variables
 RESTRICT="test"
 
-DEFAULT_SRC_INSTALL_PARAMS=(
-    bindir=/usr/$(exhost --target)/bin
-    libdir=/usr/$(exhost --target)/lib
-    includedir=/usr/$(exhost --target)/include
-)
-
 DEPENDENCIES="
     build+run:
         dev-libs/popt
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/054a52e338d460b4529b92fdd11aa07342d626ee.patch
-    "${FILES}"/pr26.patch
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/a3606c02fd271d32e364fcc540e34ba1899309f6.patch )
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    bindir=/usr/$(exhost --target)/bin
+    libdir=/usr/$(exhost --target)/lib
+    includedir=/usr/$(exhost --target)/include
 )
 
