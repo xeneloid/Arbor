@@ -25,27 +25,30 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-0.18-sydbox.patch )
 
-DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --htmldir=/usr/share/doc/${PNVR}/html
-    --enable-curses
-    --enable-nls
-    --disable-csharp
-    --disable-java
-    --disable-native-java
-    --disable-rpath
-    --disable-static
-    --with-included-glib
-    --with-included-libcroco
-    --with-included-libunistring
-    --without-cvs
-    --without-git
-    --without-included-gettext
-)
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
-    acl
-    openmp
-)
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( emacs )
+src_configure() {
+    econf \
+        --htmldir=/usr/share/doc/${PNVR}/html   \
+        --enable-curses                         \
+        --disable-csharp                        \
+        --disable-java                          \
+        --disable-native-java                   \
+        --disable-rpath                         \
+        --disable-static                        \
+        --with-included-glib                    \
+        --with-included-libcroco                \
+        --with-included-libunistring            \
+        --without-cvs                           \
+        --without-git                           \
+        --without-included-gettext              \
+        $(option_enable acl)                    \
+        $(option_enable openmp)                 \
+        $(option_with emacs)                    \
+        $(if [[ $(exhost --target) == *-musl* ]];then
+            echo --disable-nls
+        else
+            echo --enable-nls
+        fi)
+}
 
 src_install() {
     default
@@ -53,11 +56,5 @@ src_install() {
     option emacs && elisp-install-site-file
     option examples || edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/examples
     edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/html/{csharpdoc,javadoc2}
-
-    if [[ "$(exhost --target)" == *-musl* ]];then
-        # NOTE(somasis)
-        # musl provides it's own api header, should be used rather than gettext's
-        edo rm "${IMAGE}"/usr/$(exhost --target)/include/libintl.h
-    fi
 }
 
