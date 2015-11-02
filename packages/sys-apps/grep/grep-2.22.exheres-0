@@ -1,8 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives
-require gnu [ suffix=xz ]
+require gnu [ suffix=xz ] alternatives
 
 SUMMARY="Grep searches input files for matches to specified patterns"
 
@@ -17,17 +16,17 @@ DEPENDENCIES="
     build:
         dev-lang/perl:*
         sys-devel/gettext[>=0.18.2]
+        virtual/pkg-config[>=0.9.0]
     build+run:
         dev-libs/pcre
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/83a95bd8c8561875b948cadd417c653dbe7ef2e2.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --enable-perl-regexp
     --program-prefix=g
 )
+
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( README-alpha )
 
 src_test() {
@@ -37,6 +36,7 @@ src_test() {
 
 src_install() {
     default
+
     alternatives_for grep gnu 1000  \
         /usr/$(exhost --target)/bin/grep    ggrep       \
         /usr/$(exhost --target)/bin/egrep   gegrep      \
