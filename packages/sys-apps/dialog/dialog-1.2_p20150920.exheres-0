@@ -35,9 +35,21 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --enable-widec
     --disable-rpath-hack
+    --with-libtool
+    --with-libtool-opts=-shared
     --with-ncursesw
-    --with-shared
+    --without-man2html
 )
+
+
+src_prepare() {
+    # fix cross/multiarch locale install path
+    edo sed \
+        -e 's:gnulocaledir = $(prefix)/share/locale:gnulocaledir = /usr/share/locale:g' \
+        -i po/makefile.inn
+
+    default
+}
 
 src_install() {
     default
@@ -46,5 +58,7 @@ src_install() {
         insinto /usr/share/doc/${PNVR}/examples
         doins -r samples/*
     fi
+
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 }
 
