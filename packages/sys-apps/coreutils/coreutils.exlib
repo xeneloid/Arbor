@@ -1,6 +1,7 @@
 # Copyright 2007-2009 Bryan Østergaard <kloeri@exherbo.org>
 # Copyright 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
@@ -46,7 +47,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}/${PNV}-remove-man-page-generation.patch"
+    "${FILES}"/${PNV}-remove-man-page-generation.patch
     "${FILES}"/${PNV}-tmux-addition.patch
 )
 
@@ -192,7 +193,8 @@ coreutils_pkg_preinst() {
 }
 
 coreutils_pkg_postinst() {
-    local altpath="${ROOT}"/etc/env.d/alternatives/coreutils/gnu/usr/$(exhost --target)/bin:"${PATH}"
+    # build is used so cross compilation works fine when we can't run the target binary
+    local altpath="${ROOT}"/etc/env.d/alternatives/coreutils/gnu/usr/$(exhost --build)/bin:"${PATH}"
     # without PATH stuff, eclectic will pull coreutils out from under its feet
     if has_version 'sys-apps/busybox[<1.23.2-r3]' && [[ -f /usr/share/eclectic/modules/auto/coreutils.eclectic ]];then
         if ! nonfatal edo env PATH="${altpath}" eclectic coreutils set --force gnu;then
