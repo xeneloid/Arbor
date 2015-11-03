@@ -45,6 +45,9 @@ src_install() {
     default
 
     if [[ $(exhost --target) == *-*musl* ]]; then
+        # NOTE(somasis): fix programs with bad checks trying to compile with -lintl
+        edo cp "${IMAGE}"/usr/$(exhost --target)/lib/{libm,libintl}.a
+
         edo mkdir "${IMAGE}"/usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
         herebin ldconfig <<EOF
