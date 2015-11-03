@@ -29,6 +29,10 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/musl.patch
+)
+
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( "RELNOTES" )
 
 src_compile() {
