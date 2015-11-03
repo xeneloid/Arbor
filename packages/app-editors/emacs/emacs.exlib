@@ -41,12 +41,12 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build:
-        X? ( dev-util/pkg-config )
-        alsa? ( dev-util/pkg-config )
-        dbus? ( dev-util/pkg-config )
-        gtk? ( dev-util/pkg-config )
-        gtk3? ( dev-util/pkg-config )
-        svg? ( dev-util/pkg-config )
+        X? ( virtual/pkg-config )
+        alsa? ( virtual/pkg-config )
+        dbus? ( virtual/pkg-config )
+        gtk? ( virtual/pkg-config )
+        gtk3? ( virtual/pkg-config )
+        svg? ( virtual/pkg-config )
     build+run:
         dev-libs/libxml2:2.0 [[ note = [ used for html rendering; could be made optional ] ]]
         net-libs/liblockfile
