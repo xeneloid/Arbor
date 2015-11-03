@@ -1,0 +1,102 @@
+Upstream: no
+Reason: fix building on musl
+
+
+diff -Naur net-tools-2.00_p201405201800.orig/lib/af.c net-tools-2.00_p201405201800/lib/af.c
+--- net-tools-2.00_p201405201800.orig/lib/af.c	2015-11-03 04:52:12.228584793 +0000
++++ net-tools-2.00_p201405201800/lib/af.c	2015-11-03 04:50:44.606009136 +0000
+@@ -110,7 +110,6 @@
+ extern struct aftype netrom_aftype;
+ extern struct aftype ipx_aftype;
+ extern struct aftype ddp_aftype;
+-extern struct aftype ec_aftype;
+ extern struct aftype x25_aftype;
+ extern struct aftype rose_aftype;
+ extern struct aftype ash_aftype;
+diff -Naur net-tools-2.00_p201405201800.orig/lib/inet6_gr.c net-tools-2.00_p201405201800/lib/inet6_gr.c
+--- net-tools-2.00_p201405201800.orig/lib/inet6_gr.c	2015-11-03 04:52:12.224584767 +0000
++++ net-tools-2.00_p201405201800/lib/inet6_gr.c	2015-11-03 04:47:30.723735381 +0000
+@@ -23,7 +23,7 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <unistd.h>
+-#ifndef __GLIBC__
++#ifdef HAVE_IPV6_ROUTE_H
+ #include <netinet6/ipv6_route.h>	/* glibc doesn't have this */
+ #endif
+ #include "version.h"
+diff -Naur net-tools-2.00_p201405201800.orig/lib/inet6_sr.c net-tools-2.00_p201405201800/lib/inet6_sr.c
+--- net-tools-2.00_p201405201800.orig/lib/inet6_sr.c	2015-11-03 04:52:12.226584780 +0000
++++ net-tools-2.00_p201405201800/lib/inet6_sr.c	2015-11-03 04:48:03.950953675 +0000
+@@ -23,10 +23,10 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <unistd.h>
+-#ifdef __GLIBC__
+-#include <net/route.h>
+-#else
++#ifdef HAVE_IPV6_ROUTE_H
+ #include <netinet6/ipv6_route.h>	/* glibc does not have this */
++#else
++#include <net/route.h>
+ #endif
+ #include "version.h"
+ #include "net-support.h"
+diff -Naur net-tools-2.00_p201405201800.orig/lib/inet_sr.c net-tools-2.00_p201405201800/lib/inet_sr.c
+--- net-tools-2.00_p201405201800.orig/lib/inet_sr.c	2015-11-03 04:52:12.229584800 +0000
++++ net-tools-2.00_p201405201800/lib/inet_sr.c	2015-11-03 04:48:26.584102369 +0000
+@@ -26,6 +26,7 @@
+ #include <string.h>
+ #include <stdio.h>
+ #include <unistd.h>
++#include <asm-generic/param.h>
+ #include "version.h"
+ #include "net-support.h"
+ #include "pathnames.h"
+diff -Naur net-tools-2.00_p201405201800.orig/lib/util-ank.c net-tools-2.00_p201405201800/lib/util-ank.c
+--- net-tools-2.00_p201405201800.orig/lib/util-ank.c	2015-11-03 04:52:12.228584793 +0000
++++ net-tools-2.00_p201405201800/lib/util-ank.c	2015-11-03 04:48:35.743162541 +0000
+@@ -14,6 +14,7 @@
+  * Rani Assaf <rani@magic.metawire.com> 980929:	resolve addresses
+  */
+ 
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+diff -Naur net-tools-2.00_p201405201800.orig/mii-tool.c net-tools-2.00_p201405201800/mii-tool.c
+--- net-tools-2.00_p201405201800.orig/mii-tool.c	2015-11-03 04:52:12.223584760 +0000
++++ net-tools-2.00_p201405201800/mii-tool.c	2015-11-03 04:48:55.360291421 +0000
+@@ -46,10 +46,6 @@
+ #include <net/if.h>
+ #include <linux/sockios.h>
+ 
+-#ifndef __GLIBC__
+-#include <linux/if_arp.h>
+-#include <linux/if_ether.h>
+-#endif
+ #include <linux/mii.h>
+ #include <linux/sockios.h>
+ #include "version.h"
+diff -Naur net-tools-2.00_p201405201800.orig/netstat.c net-tools-2.00_p201405201800/netstat.c
+--- net-tools-2.00_p201405201800.orig/netstat.c	2015-11-03 04:52:12.222584754 +0000
++++ net-tools-2.00_p201405201800/netstat.c	2015-11-03 04:49:09.239382603 +0000
+@@ -88,6 +88,7 @@
+ #include <sys/stat.h>
+ #include <net/if.h>
+ #include <dirent.h>
++#include <asm-generic/param.h>
+ 
+ #include "net-support.h"
+ #include "pathnames.h"
+diff -Naur net-tools-2.00_p201405201800.orig/slattach.c net-tools-2.00_p201405201800/slattach.c
+--- net-tools-2.00_p201405201800.orig/slattach.c	2015-11-03 04:52:12.243584892 +0000
++++ net-tools-2.00_p201405201800/slattach.c	2015-11-03 04:49:18.356442499 +0000
+@@ -44,6 +44,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <getopt.h>
++#include <termios.h>
+ #include <linux/if_slip.h>
+ 
+ #if defined(__GLIBC__)

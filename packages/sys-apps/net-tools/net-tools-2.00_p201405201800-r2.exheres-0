@@ -16,6 +16,10 @@ DEPENDENCIES="
         sys-devel/gettext
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/musl.patch
+)
+
 DEFAULT_SRC_INSTALL_PARAMS=(
     BINDIR=/usr/$(exhost --target)/bin
     SBINDIR=/usr/$(exhost --target)/bin
@@ -23,7 +27,9 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 
 src_configure() {
     yes "" | edo ./configure.sh config.in
-    edo sed -i -e 's:I18N 0:I18N 1:' config.h
+    edo sed -e 's:I18N 0:I18N 1:'           \
+            -e 's:AFECONET 1:AFECONET 0:'   \
+            -i config.h
 }
 
 src_install() {
