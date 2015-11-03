@@ -37,6 +37,7 @@ MYOPTIONS="
     xim [[
         description = [ Support for X Input Method ]
     ]]
+    X? ( ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]] )
 "
 
 DEPENDENCIES="
@@ -53,7 +54,6 @@ DEPENDENCIES="
         sys-libs/ncurses
         alsa? ( sys-sound/alsa-lib[>=1.0.0] )
         X? (
-            media-libs/jpeg:=
             media-libs/libpng:=
             x11-data/xbitmaps
             x11-libs/libICE
@@ -72,6 +72,8 @@ DEPENDENCIES="
             otf? ( dev-libs/libotf )
             svg? ( gnome-desktop/librsvg:2[>=2.11.0] )
             tiff? ( media-libs/tiff )
+            providers:ijg-jpeg? ( media-libs/jpeg:= )
+            providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         )
         dbus? ( sys-apps/dbus[>=1.0.0] )
         freetype? (
