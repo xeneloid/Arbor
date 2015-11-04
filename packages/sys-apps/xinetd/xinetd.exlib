@@ -25,7 +25,10 @@ DEPENDENCIES="
         perl? ( dev-lang/perl:* )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-Respect-AR.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-Respect-AR.patch
+    "${FILES}"/${PN}-2.3.15-CVE-2013-4342.patch
+)
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS+=(
     AUDIT
