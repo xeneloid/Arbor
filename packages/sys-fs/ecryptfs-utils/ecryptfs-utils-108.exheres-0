@@ -49,6 +49,10 @@ BUGS_TO="alip@exherbo.org"
 WORK="${WORKBASE}"
 WORK="${WORK}/${PNV}"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
 src_configure() {
     local crypt_flags
 
