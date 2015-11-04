@@ -19,7 +19,9 @@ RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.5.5-makefile-fixup.patch
+    "${FILES}"/${PNV}-musl.patch
 )
+
 PREFIX=/usr/$(exhost --target)/
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}"
