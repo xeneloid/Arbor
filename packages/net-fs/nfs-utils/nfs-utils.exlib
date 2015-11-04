@@ -10,6 +10,7 @@ DESCRIPTION="
 nfs-utils provides the required support programs for using the Linux kernel's NFS
 support, either as a client or as a server (or as both).
 "
+HOMEPAGE+=" http://git.linux-nfs.org/?p=steved/${PN}.git"
 
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
