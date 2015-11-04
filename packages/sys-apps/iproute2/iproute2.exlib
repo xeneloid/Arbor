@@ -80,7 +80,7 @@ iproute2_src_prepare() {
         edo sed -e 's:$(DESTDIR)/lib:$(DESTDIR)$(LIBDIR):g' -i netem/Makefile
     fi
 
-    if ! option berkdb ; then
+    if ! ever at_least 4.3.0 && ! option berkdb ; then
         edo sed -e '/TARGETS/s:arpd::' -i misc/Makefile
     fi
 
@@ -110,6 +110,14 @@ iproute2_src_configure() {
 
     if ever at_least 4.2.0 ; then
         edo echo 'HAVE_MNL:=y' >> Config
+    fi
+
+    if ever at_least 4.3.0 ; then
+        if option berkdb ; then
+            edo echo 'HAVE_BERKELEY_DB:=y' >> Config
+        else
+            edo echo 'HAVE_BERKELEY_DB:=n' >> Config
+        fi
     fi
 }
 
