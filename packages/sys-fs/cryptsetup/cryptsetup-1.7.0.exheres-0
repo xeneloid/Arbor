@@ -46,11 +46,13 @@ DEPENDENCIES="
 # static cryptsetup must be disabled because lvm2 can't be linked statically anymore.
 # FIPS (requires dev-libs/libgcrypt[>=1.4.5]) is probably not interesting for us, so hard disable it
 src_configure() {
-    econf --enable-cryptsetup-reencrypt \
+    econf \
+        --enable-cryptsetup-reencrypt \
         --enable-dev-random \
         --enable-nls \
         --enable-udev \
         --disable-fips \
+        --disable-passwdqc \
         --disable-pwquality \
         --disable-selinux \
         --disable-static-cryptsetup \
