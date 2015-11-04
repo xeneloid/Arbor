@@ -16,7 +16,8 @@ DESCRIPTION="
 Guile is a library designed to help programmers create flexible applications.
 Using Guile in an application allows programmers to write plug-ins, or modules
 (there are many names, but the concept is essentially the same) and users to
-use them to have an application fit their needs."
+use them to have an application fit their needs.
+"
 
 MYOPTIONS=""
 

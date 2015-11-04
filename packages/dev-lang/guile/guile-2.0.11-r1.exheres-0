@@ -1,7 +1,7 @@
 # Copyright 2009 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require guile
+require guile autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 LICENCES="
   LGPL-3
