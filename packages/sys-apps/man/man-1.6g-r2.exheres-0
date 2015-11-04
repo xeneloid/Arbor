@@ -15,10 +15,6 @@ MYOPTIONS=""
 DEPENDENCIES="
     run:
         sys-apps/groff[>=1.19.2]
-        !sys-apps/mandoc [[
-            description = [ mandoc doesn't like alternatives ]
-            resolution = manual
-        ]]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -45,11 +41,13 @@ src_configure() {
 src_install() {
     default
     alternatives_for man ${PN} 1000 \
-        /usr/$(exhost --target)/bin/apropos ${PN}.apropos   \
-        /usr/$(exhost --target)/bin/man     ${PN}.man       \
-        /usr/$(exhost --target)/bin/whatis  ${PN}.whatis    \
-        /usr/share/man/man1/apropos.1       ${PN}.apropos.1 \
-        /usr/share/man/man1/man.1           ${PN}.man.1     \
-        /usr/share/man/man1/whatis.1        ${PN}.whatis.1
+        /usr/$(exhost --target)/bin/apropos     ${PN}.apropos       \
+        /usr/$(exhost --target)/bin/man         ${PN}.man           \
+        /usr/$(exhost --target)/bin/makewhatis  ${PN}.makewhatis    \
+        /usr/$(exhost --target)/bin/whatis      ${PN}.whatis        \
+        /usr/share/man/man1/apropos.1           ${PN}.apropos.1     \
+        /usr/share/man/man1/man.1               ${PN}.man.1         \
+        /usr/share/man/man1/whatis.1            ${PN}.whatis.1      \
+        /usr/share/man/man8/makewhatis.8        ${PN}.makewhatis.8
 
 }
