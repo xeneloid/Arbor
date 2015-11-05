@@ -25,3 +25,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
 )
 
+src_configure() {
+    # NOTE(somasis): fix musl build
+    CPPFLAGS="${CPPFLAGS} -D__STDC_ISO_10646__=201103L" \
+        default
+}
+
