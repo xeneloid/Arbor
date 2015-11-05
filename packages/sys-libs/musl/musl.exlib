@@ -5,14 +5,14 @@ SUMMARY="A lightweight, fast, and simple standard libc library"
 HOMEPAGE="http://www.musl-libc.org/"
 
 if ever is_scm ; then
-    DOWNLOADS=""
     SCM_REPOSITORY="git://git.musl-libc.org/${PN}"
     require scm-git
 else
     DOWNLOADS="http://www.musl-libc.org/releases/${PNV}.tar.gz"
 fi
 
-LICENCES="MIT"
+LICENCES="BSD-2 BSD-3 MIT"
+
 SLOT="0"
 MYOPTIONS=""
 
@@ -46,9 +46,14 @@ src_install() {
 
     if [[ $(exhost --target) == *-*musl* ]]; then
         # NOTE(somasis): fix programs with bad checks trying to compile with -lintl
+        # (libm is an empty archive, it does nothing. i'm not losing my mind okay)
         edo cp "${IMAGE}"/usr/$(exhost --target)/lib/{libm,libintl}.a
 
-        edo mkdir "${IMAGE}"/usr/$(exhost --target)/bin
+        # NOTE(somasis): install BSD compatibility headers
+        insinto /usr/$(exhost --target)/include/sys
+        doins "${FILES}"/bsd-compat/{cdefs,queue,tree}.h
+
+        insinto /usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
         herebin ldconfig <<EOF
 #!/bin/sh
@@ -62,4 +67,5 @@ EOF
                 -i musl-gcc
         edo mv musl-gcc $(exhost --tool-prefix)gcc
     fi
+
 }
