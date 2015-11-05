@@ -23,3 +23,7 @@ MYOPTIONS=""
 
 BUGS_TO="philantrop@exherbo.org"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
