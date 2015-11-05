@@ -7,3 +7,5 @@ PLATFORMS="~amd64 ~arm ~x86"
 
 UPSTREAM_RELEASE_NOTES="http://zsh.sourceforge.net/releases.html"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/git.patch )
+

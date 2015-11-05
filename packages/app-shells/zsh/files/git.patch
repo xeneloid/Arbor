@@ -1,0 +1,58 @@
+Upstream: yes
+Note: this is a backport of 7a1678767f44f200295d88dfea94902718275266 onto 5.1.1
+
+From 96e3c523a5200c40d6508b3d3f8f16f8841be513 Mon Sep 17 00:00:00 2001
+From: Frank Terbeck <ft@bewatermyfriend.org>
+Date: Sun, 11 Oct 2015 11:54:06 +0200
+Subject: [PATCH] 36830: vcs_info: Silence an error message with new git
+ versions
+
+Mikael informs me on IRC, that in new versions of git (he used 2.6.1)
+where the "am" subcommand is now a builtin, a file that is used by the
+git backend of vcs_info (namely .git/rebase-apply/msg-clean) is not
+available anymore, leading to an annoying error message:
+
+  VCS_INFO_get_data_git:232: no such file or directory: .git/rebase-apply/msg-clean
+
+This patch checks for the availabiliy of the file before using it,
+and adjusts the value of the dependant values accordingly.
+
+Conflicts:
+	ChangeLog
+	Functions/VCS_Info/Backends/VCS_INFO_get_data_git
+---
+ Functions/VCS_Info/Backends/VCS_INFO_get_data_git | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/Functions/VCS_Info/Backends/VCS_INFO_get_data_git b/Functions/VCS_Info/Backends/VCS_INFO_get_data_git
+index 638ea45..c717611 100644
+--- a/Functions/VCS_Info/Backends/VCS_INFO_get_data_git
++++ b/Functions/VCS_Info/Backends/VCS_INFO_get_data_git
+@@ -222,11 +222,21 @@ elif [[ -d "${gitdir}/rebase-apply" ]]; then
+     for p in $(seq $(($cur - 1))); do
+         git_patches_applied+=("$(printf "%04d" $p) ?")
+     done
+-    subject="${$(< "${patchdir}/msg-clean")[(f)1]}"
++    if [[ -f "${patchdir}/msg-clean" ]]; then
++        subject="${$(< "${patchdir}/msg-clean")[(f)1]}"
++    fi
+     if [[ -f "${patchdir}/original-commit" ]]; then
+-        git_patches_applied+=("$(< ${patchdir}/original-commit) $subject")
++        if [[ -n $subject ]]; then
++            git_patches_applied+=("$(< ${patchdir}/original-commit) $subject")
++        else
++            git_patches_applied+=("$(< ${patchdir}/original-commit)")
++        fi
+     else
+-        git_patches_applied+=("? $subject")
++        if [[ -n $subject ]]; then
++            git_patches_applied+=("? $subject")
++        else
++            git_patches_applied+=("?")
++        fi
+     fi
+     git_patches_unapplied=($(seq $cur $(< "${patchdir}/last")))
+ 
+-- 
+2.6.2
+
