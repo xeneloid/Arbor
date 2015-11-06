@@ -47,6 +47,10 @@ DEPENDENCIES="
         sys-kernel/linux-headers
         virtual/sed
     run:
+        !sys-libs/musl [[
+            description = [ musl is a C library which provides the same library as glibc. ]
+            resolution = manual
+        ]]
         sys-libs/timezone-data[>=2015f-r1] [[ note = [ files used to collide, rebuild to change mtime ] ]]
 "
 
