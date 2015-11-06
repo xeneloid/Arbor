@@ -7,6 +7,7 @@ require gnu [ suffix=xz ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
 HOMEPAGE="http://${PN}lib.org"
+DOWNLOADS+=" ftp://ftp.gmplib.org/pub/${PN}/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
@@ -16,7 +17,6 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/${PN}$(ever range 1-2).html [[ lang = en ]]"
 LICENCES="GPL-3 LGPL-3"
 SLOT="6"
 PLATFORMS="~amd64 ~arm ~x86"
-
 MYOPTIONS="parts: development documentation libraries"
 
 DEPENDENCIES="
