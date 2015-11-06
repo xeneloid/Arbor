@@ -6,7 +6,7 @@ require bash-completion zsh-completion elisp-optional [ source_directory=contrib
 require setup-py [ import=distutils blacklist='3' min_versions='2.6' has_bin=true multibuild=false ]
  
 SUMMARY="A fast, lightweight, distributed source control management system"
-HOMEPAGE="https://${PN}.selenic.com"
+HOMEPAGE="https://${PN}-scm.org"
 DOWNLOADS="${HOMEPAGE}/release/${PNV}.tar.gz"
 
 REMOTE_IDS="pypi:Mercurial"
@@ -60,7 +60,7 @@ src_test_expensive() {
 
 src_install() {
     setup-py_src_install
-    dobashcompletion contrib/bash_completion
+    dobashcompletion contrib/bash_completion hg
     dozshcompletion contrib/zsh_completion _hg
     elisp-optional_src_install
     doman doc/hg*.?
