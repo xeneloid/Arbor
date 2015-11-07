@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic
+require flag-o-matic alternatives
 
 TZCODE_PV="${PV}"
 TZDATA_PV="${PV}"
@@ -53,6 +53,14 @@ pkg_preinst() {
     fi
 }
 
+pkg_postinst() {
+    if [[ -d ${ROOT}/usr/share/zoneinfo ]]; then
+        edo rm -r "${ROOT}"/usr/share/zoneinfo
+    fi
+
+    alternatives_pkg_postinst
+}
+
 src_unpack() {
     default
 
@@ -90,14 +98,16 @@ src_compile() {
 }
 
 src_install() {
-    # Fix weird installation paths
-    edo sed -i -e 's:-posix:/posix:' \
-               -e 's:-leaps:/leaps:' Makefile
-
     default
 
-    # Fix symlink
-    edo rm "${IMAGE}"/usr/share/zoneinfo/posix
-    dosym ../zoneinfo /usr/share/zoneinfo/posix
+    edo rm "${IMAGE}"/usr/share/zoneinfo-posix
+    edo mv "${IMAGE}"/usr/share/zoneinfo{,-posix}
+
+    # Make the posix and leaps zoneinfo files switchable. See hwclock(8) for why this is done this
+    # way.
+    alternatives_for zoneinfo posix 2 \
+        /usr/share/zoneinfo /usr/share/zoneinfo-posix
+    alternatives_for zoneinfo leaps 1 \
+        /usr/share/zoneinfo /usr/share/zoneinfo-leaps
 }
 
