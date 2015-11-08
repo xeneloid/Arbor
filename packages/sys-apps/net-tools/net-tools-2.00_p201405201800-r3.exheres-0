@@ -3,7 +3,7 @@
 
 require sourceforge alternatives
 
-SUMMARY="Collection of Basic Networking Tools"
+SUMMARY="A deprecated, but familiar collection of basic networking tools"
 DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
