@@ -16,7 +16,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-# test_magic_differs is broken, last checked: 2.1.4
+# test_magic_differs is broken, last checked: 2.1.5
 RESTRICT="test"
 
 DEPENDENCIES=""
