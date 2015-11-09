@@ -14,7 +14,7 @@ fi
 
 # 3.7.0 - only works with python2, and attempting to build with python3 makes it use python2 anyway
 require cmake [ api=2 ]
-require setup-py [ import=distutils blacklist=3 has_bin=true has_lib=true multibuild=false ]
+require setup-py [ import=distutils blacklist=none has_bin=true has_lib=true multibuild=false ]
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install
 
