@@ -16,8 +16,7 @@ similar mass-storage devices, in particular large ones. The term \"volume\" refe
 to a disk drive or part thereof.
 This package also includes device-mapper.
 "
-BASE_URL="sourceware.org"
-HOMEPAGE="https://${BASE_URL}/${PN}/"
+HOMEPAGE="https://sourceware.org/${PN}/"
 DOWNLOADS="
     mirror://sourceware/${PN}/LVM2.${PV}.tgz
     mirror://sourceware/${PN}/old/LVM2.${PV}.tgz
@@ -28,7 +27,7 @@ SLOT="0"
 MYOPTIONS="
     dmeventd [[ description = [ DM event daemon to monitor active mapped devices ] ]]
     fsadm [[ description = [ Utility to resize or check filesystem on a device ] ]]
-    systemd
+    ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
 UPSTREAM_RELEASE_NOTES="https://git.fedorahosted.org/cgit/${PN}.git/tree/WHATS_NEW?id=v${PV//./_}"
@@ -37,14 +36,17 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        sys-apps/systemd[>=205]
         sys-apps/util-linux[>=2.24]
         sys-libs/readline
+        providers:eudev? ( sys-apps/eudev )
+        providers:systemd? ( sys-apps/systemd[>=205] )
 "
 
 # The tests are expensive, unreliable, they need write access to /dev and /etc
 # and leave stale volumes lingering around if they fail
 RESTRICT="test"
+
+WORK=${WORKBASE}/LVM2.${PV}
 
 lvm2_src_configure() {
     local myconf=(
@@ -72,13 +74,11 @@ lvm2_src_configure() {
         --disable-static_link
         $(option_enable dmeventd)
         $(option_enable fsadm)
-        $(option_enable systemd udev-systemd-background-jobs)
+        $(option_enable providers:systemd udev-systemd-background-jobs)
     )
 
     econf "${myconf[@]}"
 }
-
-WORK=${WORKBASE}/LVM2.${PV}
 
 lvm2_src_install() {
     default
