@@ -5,3 +5,9 @@ require pam_build
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/musl-innetgr.patch
+    "${FILES}"/musl-fix-compat.patch
+    "${FILES}"/musl-pam_exec.patch
+)
+
