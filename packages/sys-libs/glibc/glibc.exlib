@@ -47,10 +47,6 @@ DEPENDENCIES="
         sys-kernel/linux-headers
         virtual/sed
     run:
-        !sys-libs/musl [[
-            description = [ musl is a C library which provides the same library as glibc. ]
-            resolution = manual
-        ]]
         sys-libs/timezone-data[>=2015f-r1] [[ note = [ files used to collide, rebuild to change mtime ] ]]
 "
 
@@ -67,6 +63,10 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 )
 
 glibc_pkg_pretend() {
+    if [[ $(exhost --target) != *-gnu* ]];then
+        die "Installing glibc on a non *-gnu* CHOST is a really, really bad idea and will definitely break your system."
+    fi
+
     if ! cc-is-gcc ; then
         die "Building glibc with a compiler other than GCC is very likely to break your system. Aborting."
     fi
