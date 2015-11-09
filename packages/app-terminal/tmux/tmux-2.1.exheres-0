@@ -1,10 +1,11 @@
 # Copyright 2009 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require github
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ release=${PV} suffix=tar.gz ]
 
 SUMMARY="A terminal multiplexer, it enables a number of terminals (or windows) to be accessed and controlled from a single terminal"
+
+BUGS_TO="ingmar@exherbo.org"
 
 UPSTREAM_CHANGELOG="${HOMEPAGE}/blob/${PV}/CHANGES"
 
@@ -21,8 +22,6 @@ DEPENDENCIES="
         sys-libs/ncurses
         x11-libs/libutempter
 "
-
-BUGS_TO="ingmar@exherbo.org"
 
 DEFAULT_SRC_COMPILE_PARAMS=( PREFIX=/usr/$(exhost --target) )
 DEFAULT_SRC_INSTALL_PARAMS=( PREFIX=/usr/$(exhost --target) )
