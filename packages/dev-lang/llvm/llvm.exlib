@@ -12,7 +12,6 @@ else
     DOWNLOADS="http://llvm.org/releases/${PV}/${MY_PNV}.tar.${SUFFIX}"
 fi
 
-# 3.7.0 - only works with python2, and attempting to build with python3 makes it use python2 anyway
 require cmake [ api=2 ]
 require setup-py [ import=distutils blacklist=none has_bin=true has_lib=true multibuild=false ]
 
@@ -31,10 +30,9 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         dev-lang/perl:*
-        dev-python/setuptools [[ description = [ For lit ] ]]
+        dev-lang/python:2.7 [[ description = [ build system always uses python2 ] ]]
+        dev-python/setuptools[python_abis:*(-)?] [[ description = [ For lit ] ]]
         sys-devel/flex
-    test:
-        dev-lang/python:*
 "
 
 llvm_src_prepare() {
