@@ -18,6 +18,10 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+# tests run against the installed version
+# https://github.com/qpdf/qpdf/issues/56
+RESTRICT="test"
+
 DEPENDENCIES="
     build+run:
         dev-libs/pcre
