@@ -70,7 +70,7 @@ pam_build_src_prepare() {
     done
 
     # NOTE(somasis): fix libcrypt usage on musl
-    export ac_cv_search_crypt=no
+    [[ $(exhost --target) == *-musl* ]] && export ac_cv_search_crypt=no
 
     # NOTE(somasis): insecure, doesn't compile on musl either
     edo sed -e 's/pam_rhosts//g' -i modules/Makefile.am
