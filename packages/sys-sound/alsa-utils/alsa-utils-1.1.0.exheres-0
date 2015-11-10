@@ -30,7 +30,8 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    alsaloop [[ description = [ Tool to create playback/capture loops  ] ]]
+    alsaloop    [[ description = [ Tool to create playback/capture loops  ] ]]
+    bat         [[ description = [ Tool to test audio card output ] ]]
 "
 
 DEPENDENCIES="
@@ -41,6 +42,7 @@ DEPENDENCIES="
         sys-libs/ncurses
         sys-sound/alsa-lib[>=1.0.27-r1]
         alsaloop? ( media-libs/libsamplerate [[ note = [ Used by alsaloop, which is optional ] ]] )
+        bat? ( sci-libs/fftw )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -52,7 +54,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-systemdsystemunitdir="${SYSTEMDSYSTEMUNITDIR}"
     --with-udev-rules-dir="${UDEVRULESDIR}"
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( alsaloop )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( alsaloop bat )
 
 src_install() {
     default
