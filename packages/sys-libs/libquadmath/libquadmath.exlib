@@ -28,8 +28,6 @@ DEPENDENCIES="
     build:
         sys-apps/texinfo
         sys-devel/gcc
-    build+run:
-        sys-libs/glibc
 "
 
 REMOTE_IDS="freecode:gcc"
