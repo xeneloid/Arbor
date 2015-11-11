@@ -112,7 +112,7 @@ libstdc++_src_configure() {
 }
 
 libstdc++_src_install() {
-    local alternatives=() locale= libpath= name= suffix=
+    local locale= libpath= name= suffix=
 
     default
 
@@ -132,6 +132,7 @@ libstdc++_src_install() {
     suffix=${name#*.}
     edo mv ${libpath}/${PN}.${suffix} usr/share/gdb/auto-load/${libpath}/${PN}-${SLOT}.${suffix}
 
+    alternatives=()
     mo_provided=()
     for locale in usr/share/locale/*/*/*.mo; do
         [[ -e ${locale} ]] || continue
@@ -142,7 +143,7 @@ libstdc++_src_install() {
 
     edo popd
 
-    alternatives_for _${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
+    [[ -z "${alternatives}" ]] || alternatives_for _${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
 }
 
 libstdc++_pkg_postinst() {
@@ -153,6 +154,6 @@ libstdc++_pkg_postinst() {
         fi
     done
 
-    alternatives_pkg_postinst
+    [[ -z "${alternatives}" ]] || alternatives_pkg_postinst
 }
 
