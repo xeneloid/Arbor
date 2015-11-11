@@ -78,6 +78,18 @@ else
     "
 fi
 
+if ever at_least 5.7.9; then
+    MYOPTIONS+="systemd"
+    DEPENDENCIES+="
+        build:
+            dev-libs/boost[>=1.59.0]
+            virtual/pkg-config
+            systemd? ( sys-apps/systemd )
+        build+run:
+            app-arch/lz4
+    "
+fi
+
 # event_comment
 # >= 5.6 needs libevent[>=1.4.12&<2.0] but
 # a) we only have 2.0.22 at the time of writing
@@ -113,7 +125,7 @@ mysql_pkg_pretend() {
 }
 
 mysql_src_prepare() {
-    default
+    cmake_src_prepare
 
     # https://bugs.mysql.com/bug.php?id=72353 (only relevant when using system libevent)
     edo sed -i -e "s:\(LIBEVENT_LIBRAR\)IES:\1Y:" "${WORKBASE}"/${PNV}/cmake/libevent.cmake
@@ -145,8 +157,6 @@ mysql_src_configure() {
         -DINSTALL_SBINDIR:PATH=$(exhost --target)/bin
         -DINSTALL_SCRIPTDIR:PATH=$(exhost --target)/bin
         -DINSTALL_SHAREDIR:PATH=share
-        # Empty value to not install the sql-bench directory
-        -DINSTALL_SQLBENCHDIR:STRING=
         -DINSTALL_SUPPORTFILESDIR:PATH=share/mysql
         -DMYSQL_DATADIR:PATH=/var/lib/mysql
         -DMYSQL_UNIX_ADDR:PATH=/run/mysqld/mysqld.sock
@@ -177,9 +187,7 @@ mysql_src_configure() {
 
     if ever at_least 5.6.27 ; then
         cmakeargs+=(
-            -DBUILD_WITH_WERROR:BOOL=FALSE
             -DCMAKE_DISABLE_FIND_PACKAGE_Git:BOOL=TRUE
-            -DCOMPILE_FLAG_WERROR:BOOL=FALSE
             -DENABLE_DTRACE:BOOL=FALSE
             -DENABLE_GCOV:BOOL=FALSE
             -DENABLE_GPROF:BOOL=FALSE
@@ -195,6 +203,36 @@ mysql_src_configure() {
             -DWITH_LIBEDIT:BOOL=FALSE
             -DWITH_READLINE:BOOL=FALSE
             -DWITH_SSL:STRING=system
+        )
+    fi
+
+    if ever at_least 5.7.9 ; then
+        cmakeargs+=(
+            -DBOOST_INCLUDE_DIR:PATH=/usr/$(exhost --target)/include
+            -DWITH_CLIENT_PROTOCOL_TRACING:BOOL=FALSE
+            -DWITH_LZ4:STRING=system
+            -DWITH_MSAN:BOOL=FALSE
+            -DWITH_TEST_TRACE_PLUGIN:BOOL=FALSE
+            -DWITH_UBSAN:BOOL=FALSE
+        )
+        if option systemd ; then
+            cmakeargs+=(
+                -DWITH_SYSTEMD:BOOL=TRUE
+                -DSYSTEMD_PID_DIR:PATH=/run/mysqld
+                -DSYSTEMD_SERVICES_DIR:PATH=${SYSTEMDSYSTEMUNITDIR}
+                -DSYSTEMD_TMPFILES_DIR:PATH=/usr/$(exhost --target)/lib/tmpfiles.d
+            )
+        else
+            cmakeargs+=(
+                -DWITH_SYSTEMD:BOOL=FALSE
+            )
+        fi
+    else
+        cmakeargs+=(
+            -DBUILD_WITH_WERROR:BOOL=FALSE
+            -DCOMPILE_FLAG_WERROR:BOOL=FALSE
+            # Empty value to not install the sql-bench directory
+            -DINSTALL_SQLBENCHDIR:STRING=
         )
     fi
 
@@ -226,10 +264,9 @@ mysql_src_configure() {
 mysql_src_install() {
     cmake_src_install
 
-    ! option debug && edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib/mysql/plugin/debug
-
     # Remove empty directories
     edo rmdir "${IMAGE}"/usr/share/mysql/info
+    ! option debug && edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib/mysql/plugin/debug
 
     keepdir /etc/mysql
 
@@ -238,12 +275,6 @@ mysql_src_install() {
     else
         edo cp "${IMAGE}"/usr/share/${PN}/my-small.cnf "${IMAGE}"/etc/mysql/my.cnf
     fi
-    edo mv "${IMAGE}"/usr/$(exhost --target)/bin/mysqlaccess.conf "${IMAGE}"/etc/mysql/mysqlaccess.conf
-    edo chmod 644 "${IMAGE}"/etc/mysql/mysqlaccess.conf
-
-    keepdir /var/{lib,log}/mysql
-    edo chown mysql:mysql "${IMAGE}"/var/{lib,log}/mysql
-    edo chmod 755 "${IMAGE}"/var/{lib,log}/mysql
 
     hereenvd 46mysql <<EOF
 LDPATH=/usr/host/lib/mysql
@@ -252,12 +283,25 @@ EOF
     insinto /etc/logrotate.d
     newins "${FILES}"/logrotate.mysql mysql
 
-    install_systemd_files
+    if ever at_least 5.7.9 ; then
+        keepdir /var/lib/mysql-files
+        edo chown mysql:mysql "${IMAGE}"/var/lib/mysql-files
+        edo chmod 0750 "${IMAGE}"/var/lib/mysql-files
+    else
+        edo mv "${IMAGE}"/usr/$(exhost --target)/bin/mysqlaccess.conf "${IMAGE}"/etc/mysql/mysqlaccess.conf
+        edo chmod 644 "${IMAGE}"/etc/mysql/mysqlaccess.conf
 
-    insinto /usr/$(exhost --target)/lib/tmpfiles.d
-    hereins ${PN}.conf <<EOF
+        keepdir /var/{lib,log}/mysql
+        edo chown mysql:mysql "${IMAGE}"/var/{lib,log}/mysql
+        edo chmod 755 "${IMAGE}"/var/{lib,log}/mysql
+
+        install_systemd_files
+
+        insinto /usr/$(exhost --target)/lib/tmpfiles.d
+        hereins ${PN}.conf <<EOF
 d /run/mysqld 0755 mysql mysql
 EOF
+    fi
 }
 
 mysql_pkg_postinst() {
