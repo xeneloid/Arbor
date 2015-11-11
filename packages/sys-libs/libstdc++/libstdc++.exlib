@@ -154,6 +154,6 @@ libstdc++_pkg_postinst() {
         fi
     done
 
-    [[ -z "${alternatives}" ]] || alternatives_pkg_postinst
+    alternatives_pkg_postinst
 }
 
