@@ -215,7 +215,7 @@ case ${PYTHON_EXLIB_API} in
 
         # PYTHON_AVAILABLE_ABIS below need to be in sync with
         # MULTIBUILD_PYTHON_ABIS_TARGETS in profiles/make.defaults.
-        PYTHON_AVAILABLE_ABIS="2.7 3.2 3.3 3.4 3.5"
+        PYTHON_AVAILABLE_ABIS="2.7 3.3 3.4 3.5"
 
         if [[ ${PYTHON_BLACKLIST} == none ]]; then
             PYTHON_FILTERED_ABIS="${PYTHON_AVAILABLE_ABIS}"
