@@ -29,6 +29,7 @@ src_configure() {
     econf \
         --htmldir=/usr/share/doc/${PNVR}/html   \
         --enable-curses                         \
+        --enable-nls                            \
         --disable-csharp                        \
         --disable-java                          \
         --disable-native-java                   \
@@ -39,19 +40,24 @@ src_configure() {
         --with-included-libunistring            \
         --without-cvs                           \
         --without-git                           \
-        --without-included-gettext              \
         $(option_enable acl)                    \
         $(option_enable openmp)                 \
         $(option_with emacs)                    \
         $(if [[ $(exhost --target) == *-musl* ]];then
-            echo --disable-nls
+            echo --with-included-gettext
         else
-            echo --enable-nls
+            echo --without-included-gettext
         fi)
 }
 
 src_install() {
     default
+
+    if [[ $(exhost --target) == *-musl* ]];then
+        edo mkdir "${IMAGE}"/usr/$(exhost --target)/include/gettext
+        edo mv "${IMAGE}"/usr/$(exhost --target)/include/{libintl.h,gettext/}
+        edo mv "${IMAGE}"/usr/$(exhost --target)/lib/libintl.* "${IMAGE}"/usr/$(exhost --target)/lib/gettext/
+    fi
 
     option emacs && elisp-install-site-file
     option examples || edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/examples
