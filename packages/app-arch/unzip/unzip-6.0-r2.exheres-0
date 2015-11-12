@@ -24,7 +24,16 @@ MYOPTIONS="platform: x86"
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-no-exec-stack.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-no-exec-stack.patch
+    "${FILES}"/${PNV}-cve-2014-8139.patch
+    "${FILES}"/${PNV}-cve-2014-8140.patch
+    "${FILES}"/${PNV}-cve-2014-8141.patch
+    "${FILES}"/${PNV}-cve-2015-7696.patch
+    "${FILES}"/${PNV}-cve-2015-7697.patch
+    "${FILES}"/${PNV}-fix-integer-underflow-csiz-decrypted.patch
+)
+
 DEFAULT_SRC_INSTALL_PARAMS=(
     prefix="${IMAGE}"/usr/$(exhost --target)
     MANDIR="${IMAGE}"/usr/share/man/man1
