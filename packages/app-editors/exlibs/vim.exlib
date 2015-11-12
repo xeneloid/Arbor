@@ -407,7 +407,7 @@ vim_src_install() {
     edo rm -f "${IMAGE}"/usr/$(exhost --target)/bin/{ex,view}
 
     if [[ "${PN}" == 'vim-runtime' ]] ; then
-        local f target importance=${VIM_VERSION} alternatives files=()
+        local f target importance=100${VIM_VERSION} alternatives files=()
         alternatives=( '_vim-runtime' "${VIM_VERSION}" "${importance}" )
         edo cd "${IMAGE}"
         files+=(
