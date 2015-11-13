@@ -43,6 +43,8 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 src_install() {
     default
 
+    edo rm -f "${IMAGE}"/usr/share/locale/locale.alias "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+
     # these binaries are rarely used and have very generic names. move them to a separate dir.
     dodir /usr/$(exhost --target)/libexec/${PN}
     edo mv "${IMAGE}"/usr/$(exhost --target)/bin/{analyze,chmorph,hzip,hunzip} \
