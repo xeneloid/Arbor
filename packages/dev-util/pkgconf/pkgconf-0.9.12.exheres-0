@@ -21,6 +21,8 @@ CROSS_COMPILE_TARGETS="
     arm-exherbo-linux-gnueabi
     armv7-unknown-linux-gnueabi
     armv7-unknown-linux-gnueabihf
+    armv7-unknown-linux-musleabi
+    armv7-unknown-linux-musleabihf
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
     x86_64-pc-linux-musl
