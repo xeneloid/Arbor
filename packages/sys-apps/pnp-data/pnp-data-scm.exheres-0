@@ -19,7 +19,7 @@ src_fetch_extra() {
     for path in ${PALUDIS_FETCHERS_DIRS[@]};do
         export PATH="${PATH}:${path}"
     done
-    dohttps "${HOMEPAGE}plain/pnp.ids?h=master" "${FETCHEDDIR}"/pnp.ids
+    dohttps "${HOMEPAGE}/plain/pnp.ids?h=master" "${FETCHEDDIR}"/pnp.ids
 }
 
 src_unpack() {
