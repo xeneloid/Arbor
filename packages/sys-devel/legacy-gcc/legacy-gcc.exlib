@@ -24,7 +24,9 @@ CROSS_COMPILE_TARGETS="
     i686-pc-linux-gnu
     x86_64-pc-linux-gnu
 "
-MYOPTIONS="( targets: ${CROSS_COMPILE_TARGETS} )"
+MYOPTIONS="
+    ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
+"
 
 DEPENDENCIES="
     build:

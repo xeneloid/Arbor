@@ -57,7 +57,7 @@ CROSS_COMPILE_TARGETS="
 
 MYOPTIONS="
     doc
-    ( targets: ${CROSS_COMPILE_TARGETS} )
+    ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(

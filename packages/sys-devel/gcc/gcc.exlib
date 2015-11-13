@@ -31,7 +31,7 @@ CROSS_COMPILE_TARGETS="
     powerpc64-unknown-linux-gnu
 "
 MYOPTIONS="
-    ( targets: ${CROSS_COMPILE_TARGETS} )
+    ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
     graphite [[ description = [ enable support for Graphite based loop optimizations ] ]]
     threads  [[ description = [ build with threading support; requires target libc ] ]]
 "

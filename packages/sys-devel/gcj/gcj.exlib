@@ -23,7 +23,7 @@ CROSS_COMPILE_TARGETS="
     x86_64-pc-linux-gnu
 "
 MYOPTIONS="
-    ( targets: ${CROSS_COMPILE_TARGETS} )
+    ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
 "
 
 DEPENDENCIES="

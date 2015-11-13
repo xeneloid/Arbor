@@ -26,7 +26,7 @@ CROSS_COMPILE_TARGETS="
     powerpc64-unknown-linux-gnu
 "
 MYOPTIONS="
-    targets: ${CROSS_COMPILE_TARGETS}
+    ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
     ( linguas:
         bg da de eo es fi fr ga hr id it ja ms nl pt_BR ro ru rw sk sr sv tr uk vi zh_CN zh_TW
     )
