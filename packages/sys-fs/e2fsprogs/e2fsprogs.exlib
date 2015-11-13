@@ -68,6 +68,8 @@ e2fsprogs_src_test() {
 e2fsprogs_src_install() {
     default
 
+    edo rm -f "${IMAGE}"/usr/share/locale/locale.alias "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+
     # e2fsprogs has references to the build directory here
     edo sed -i -e '/^ET_DIR=/s:=.*:=/usr/share/et:' \
         "${IMAGE}"/usr/$(exhost --target)/bin/compile_et
