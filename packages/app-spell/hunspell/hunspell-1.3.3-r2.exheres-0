@@ -34,16 +34,11 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-readline
     --with-ui
-)
-
-DEFAULT_SRC_COMPILE_PARAMS=(
-    AR=$(exhost --tool-prefix)ar
+    gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
 src_install() {
     default
-
-    edo rm -f "${IMAGE}"/usr/share/locale/locale.alias "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 
     # these binaries are rarely used and have very generic names. move them to a separate dir.
     dodir /usr/$(exhost --target)/libexec/${PN}
