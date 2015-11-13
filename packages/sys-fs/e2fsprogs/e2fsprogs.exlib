@@ -29,10 +29,6 @@ DEPENDENCIES="
 # 43 tests succeeded / 107 tests failed (last checked: 1.42.13)
 RESTRICT="test"
 
-DEFAULT_SRC_COMPILE_PARAMS=(
-    AR=$(exhost --tool-prefix)ar
-)
-
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( RELEASE-NOTES )
 DEFAULT_SRC_INSTALL_PARAMS=( install-libs )
 
@@ -52,7 +48,7 @@ e2fsprogs_src_configure() {
         --disable-fsck \
         --disable-libblkid \
         --disable-libuuid \
-        --without-included-gettext
+        gt_cv_func_gnugettext{1,2}_libc=yes
 }
 
 e2fsprogs_src_test() {
@@ -67,8 +63,6 @@ e2fsprogs_src_test() {
 
 e2fsprogs_src_install() {
     default
-
-    edo rm -f "${IMAGE}"/usr/share/locale/locale.alias "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 
     # e2fsprogs has references to the build directory here
     edo sed -i -e '/^ET_DIR=/s:=.*:=/usr/share/et:' \
