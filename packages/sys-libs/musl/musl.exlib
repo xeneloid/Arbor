@@ -18,6 +18,10 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-hardcode-an-exherbo-specific-ld-config-file.patch
+)
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     CROSS_COMPILE=$(exhost --tool-prefix)
 )
@@ -35,10 +39,11 @@ src_configure() {
         )
     fi
 
-    edo ./configure \
-        --syslibdir=/usr/$(exhost --target)/lib     \
-        --target=$(exhost --target)                 \
-        ${myconf[@]}
+    CFLAGS="${CFLAGS} -DEXHERBO_TARGET=\\\"$(exhost --target)\\\"" \
+        edo ./configure \
+            --syslibdir=/usr/$(exhost --target)/lib     \
+            --target=$(exhost --target)                 \
+            ${myconf[@]}
 }
 
 src_install() {
@@ -68,4 +73,7 @@ EOF
         edo mv musl-gcc $(exhost --tool-prefix)gcc
     fi
 
+    # create a target file so eclectic knows to generate a ld config file for this target
+    edo mkdir -p "${IMAGE}"/etc/env.d/targets
+    edo touch "${IMAGE}"/etc/env.d/targets/$(exhost --target)
 }
