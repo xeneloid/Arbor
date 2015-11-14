@@ -172,6 +172,7 @@ EOF
         CC="${target}-gcc" \
         CPP="/usr/${build}/bin/${target}-cpp" \
         CXX="/usr/${build}/bin/${target}-g++" \
+        CPPFLAGS="-DLD_SO_CONF='\"/etc/ld-$(exhost --target).path\"' -DLD_SO_CACHE='\"/etc/ld-$(exhost --target).cache\"' ${CPPFLAGS}" \
         "${WORKBASE}/${PNV}/configure" \
         "${myconf[@]}"
 }
@@ -210,6 +211,10 @@ EOF
 
     # remove empty locale dirs
     edo find "${IMAGE}"/usr/share/locale/ -type d -empty -delete
+
+    # create a target file so eclectic knows to generate a ld config file for this target
+    edo mkdir -p "${IMAGE}"/etc/env.d/targets
+    edo touch "${IMAGE}"/etc/env.d/targets/$(exhost --target)
 }
 
 glibc_pkg_preinst() {
