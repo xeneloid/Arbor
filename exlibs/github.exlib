@@ -7,7 +7,7 @@
 # However, you should pass them explicitly whenever possible!
 #
 # A quick guide to which exparam to set, as github has a few different downloads APIs:
-# 
+#
 # If the download url looks like
 #   https://github.com/{user}/{project}/releases/download/{release}/{pnv}.{suffix}
 #   set 'suffix' and 'release'  (new releases API)
