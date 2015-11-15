@@ -1,6 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
 require gnu [ suffix=bz2 ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
@@ -13,6 +14,15 @@ MYOPTIONS="platform: amd64 x86"
 DEPENDENCIES="
     build:
         sys-devel/m4
+    run:
+        !dev-lang/gmp:5[<5.1.3-r3] [[
+            description = [ File collisions ]
+            resolution = upgrade-blocked-before
+        ]]
+        !dev-lang/gmp:6[<6.1.0-r2] [[
+            description = [ File collisions ]
+            resolution = upgrade-blocked-before
+        ]]
     post:
         dev-libs/gmp:5
 "
@@ -42,6 +52,16 @@ src_configure() {
 
 src_install() {
     default
+
+    alternatives_for _$(exhost --target)_gmp "${SLOT}" "${SLOT}"    \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.a             \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.la            \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.so.3          \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.so            \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.a           \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.la          \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.so.4        \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.so
 
     edo rm -r "${IMAGE}"/usr/{$(exhost --target)/include,share/info/}
 }

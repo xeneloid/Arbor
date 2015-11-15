@@ -3,6 +3,7 @@
 # Copyright 2013 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
 require gnu [ suffix=xz ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
@@ -16,7 +17,6 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/${PN}$(ever range 1-2).html [[ lang = en ]]"
 LICENCES="GPL-3 LGPL-3"
 SLOT="5"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-
 MYOPTIONS="parts: development documentation libraries"
 
 DEPENDENCIES="
@@ -26,6 +26,10 @@ DEPENDENCIES="
         sys-libs/readline
         !dev-libs/gmp:0[<4.3.2-r1] [[
             description = [ file collisions which will probably break your system ]
+        ]]
+        !dev-lang/gmp:6[<6.1.0-r2] [[
+            description = [ File collisions ]
+            resolution = upgrade-blocked-before
         ]]
 "
 
@@ -58,6 +62,21 @@ src_configure() {
 
 src_install() {
     default
+
+    alternatives_for _$(exhost --target)_gmp "${SLOT}" "${SLOT}"    \
+        /usr/share/info/gmp{,-${SLOT}}.info                         \
+        /usr/share/info/gmp{,-${SLOT}}.info-1                       \
+        /usr/share/info/gmp{,-${SLOT}}.info-2                       \
+        /usr/$(exhost --target)/include/gmp{,-${SLOT}}.h            \
+        /usr/$(exhost --target)/include/gmpxx{,-${SLOT}}.h          \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.a             \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.la            \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.so.10         \
+        /usr/$(exhost --target)/lib/libgmp{,-${SLOT}}.so            \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.a           \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.la          \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.so.4        \
+        /usr/$(exhost --target)/lib/libgmpxx{,-${SLOT}}.so
 
     expart development /usr/$(exhost --target)/include
     expart documentation /usr/share/{doc,info}
