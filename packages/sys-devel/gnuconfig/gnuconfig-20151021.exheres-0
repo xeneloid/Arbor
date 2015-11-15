@@ -3,9 +3,9 @@
 
 SUMMARY="GNU config.guess and config.sub scripts"
 HOMEPAGE="https://savannah.gnu.org/projects/config"
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
+DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 
-LICENCES="GPL-2"
+LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="parts: data documentation"
