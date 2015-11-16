@@ -46,7 +46,7 @@ MYOPTIONS="
     compat-libs [[ description = [ Install legacy compat libs (libsystemd-{daemon,id128,journal,login}) ] ]]
     cryptsetup [[ description = [ Enable systemd's minimal cryptsetup unit generator ] ]]
     efi [[
-        description = [ EFI information in various tools and mounting of efivars during boot ]
+        description = [ EFI information in various tools, sd-boot, and mounting of efivars during boot ]
         note = [ Needs (U)EFI compatible hardware and a fairly recent kernel with proper configuration ]
     ]]
     gcrypt [[ description = [ Enable cryptographically secured journal files ] ]]
