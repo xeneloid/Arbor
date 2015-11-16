@@ -1,4 +1,4 @@
-# Copyright (c) Ciaran McCreesh <ciaran.mccreesh@googlemail.com>
+# Copyright Ciaran McCreesh <ciaran.mccreesh@googlemail.com>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A frontend to an XSL toolchain"
@@ -28,12 +28,12 @@ DEPENDENCIES="
     build:
         app-misc/ca-certificates
     build+run:
-        app-text/docbook-xsl-stylesheets
         app-text/docbook-xml-dtd:4.2
+        app-text/docbook-xsl-stylesheets
         dev-libs/libxslt
     run:
         providers:links? ( net-www/links )
-        providers:w3m?   ( net-www/w3m   )
-        providers:lynx?  ( net-www/lynx  )
+        providers:w3m? ( net-www/w3m )
+        providers:lynx? ( net-www/lynx )
 "
 
