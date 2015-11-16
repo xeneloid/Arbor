@@ -27,6 +27,7 @@ DEPENDENCIES="
 
 findutils_src_configure() {
     econf \
+        gt_cv_func_gnugettext{1,2}_libc=yes \
         --enable-d_type-optimisation \
         --enable-leaf-optimisation \
         --enable-nls \
@@ -68,6 +69,10 @@ findutils_src_install() {
 
     alternatives_for "${alternatives[@]}"
 
+    if [[ $(exhost --target) == *-musl* ]];then
+        edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+        edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
+    fi
     edo rmdir "${IMAGE}"/var{/lib,}
 }
 
