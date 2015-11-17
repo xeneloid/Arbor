@@ -5,5 +5,8 @@ require ddclient
 
 PLATFORMS="~amd64 ~armv7 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( -p0 "${FILES}"/${PN}-reasonable-security.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-freedns-send-IP-address.patch
+    -p0 "${FILES}"/${PN}-reasonable-security.patch
+)
 
