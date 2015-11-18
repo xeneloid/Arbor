@@ -183,9 +183,6 @@ src_install() {
     alternatives_for coreutils  ${PN}   75      "${coreutils_alternatives[@]}"
     alternatives_for cpio       ${PN}   75  \
         /usr/$(exhost --target)/bin/cpio        /usr/$(exhost --target)/bin/busybox
-    alternatives_for cron       ${PN}   75  \
-        /usr/$(exhost --target)/bin/crond       /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/crontab     /usr/$(exhost --target)/bin/busybox
     alternatives_for grep       ${PN}   75  \
         /usr/$(exhost --target)/bin/grep        /usr/$(exhost --target)/bin/busybox \
         /usr/$(exhost --target)/bin/egrep       /usr/$(exhost --target)/bin/busybox \
@@ -197,8 +194,6 @@ src_install() {
         /usr/$(exhost --target)/bin/zcat        /usr/$(exhost --target)/bin/busybox
     alternatives_for hostname   ${PN}   75  \
         /usr/$(exhost --target)/bin/hostname    /usr/$(exhost --target)/bin/busybox
-    alternatives_for init       ${PN}   75  \
-        /usr/$(exhost --target)/bin/init        /usr/$(exhost --target)/bin/busybox
     alternatives_for kmod-tools ${PN}   75  \
         /usr/$(exhost --target)/bin/rmmod       /usr/$(exhost --target)/bin/busybox \
         /usr/$(exhost --target)/bin/modprobe    /usr/$(exhost --target)/bin/busybox \
@@ -212,9 +207,6 @@ src_install() {
         /usr/$(exhost --target)/bin/ntpd        /usr/$(exhost --target)/bin/busybox
     alternatives_for sed        ${PN}   75  \
         /usr/$(exhost --target)/bin/sed         /usr/$(exhost --target)/bin/busybox
-    alternatives_for syslogd    ${PN}   75  \
-        /usr/$(exhost --target)/bin/syslogd     /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/klogd       /usr/$(exhost --target)/bin/busybox
     alternatives_for tar        ${PN}   75  \
         /usr/$(exhost --target)/bin/tar         /usr/$(exhost --target)/bin/busybox
     alternatives_for unzip      ${PN}   75  \
