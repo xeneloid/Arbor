@@ -124,11 +124,11 @@ src_test() {
 
         # test dynamic version
         edo cp ../busybox{.dynamic,}
-        PATH="${newpath}" edo ./runtest -v
+        edo ./runtest -v
 
         # test static version
         edo cp ../busybox{.static,}
-        PATH="${newpath}" edo ./runtest -v
+        edo ./runtest -v
 
         edo popd >/dev/null
     fi
