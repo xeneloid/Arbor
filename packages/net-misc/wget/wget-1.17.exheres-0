@@ -42,6 +42,7 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
 
 src_configure() {
     local myconf=(
+        gt_cv_func_gnugettext{1,2}_libc=yes
         --enable-ipv6
         --enable-nls
         --disable-assert
@@ -57,5 +58,11 @@ src_configure() {
 src_test() {
     unset http_proxy https_proxy ftp_proxy
     default
+}
+
+src_install() {
+    default
+    # NOTE(somasis): remove gettext remenants on musl
+    edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib
 }
 
