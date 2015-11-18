@@ -14,7 +14,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="systemd"
+MYOPTIONS="doc systemd"
 
 DEPENDENCIES="
     build:
@@ -33,12 +33,13 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-unzip.patch
+)
+
 bb_make() {
     local make_options=(
-        AR=$(exhost --tool-prefix)ar
-        NM=$(exhost --tool-prefix)nm
-        CC=$(exhost --tool-prefix)cc
-        CXX=$(exhost --tool-prefix)c++
+        CROSS_COMPILE=$(exhost --tool-prefix)
         CFLAGS="${CFLAGS}"
         CXXFLAGS="${CXXFLAGS}"
         LDFLAGS="${LDFLAGS}"
@@ -88,9 +89,11 @@ src_prepare() {
         -i testsuite/strings/strings-works-like-GNU
 
     if [[ $(exhost --target) == *-musl* ]];then
-        edo cp "${FILES}"/musl-config .config
+        edo cp "${FILES}"/${PNV}-musl-config .config
     elif [[ $(exhost --target) == *-gnu* ]];then
-        edo cp "${FILES}"/glibc-config .config
+        edo cp "${FILES}"/${PNV}-glibc-config .config
+    else
+        die "Don't know what ${PNV}-*-config file to use."
     fi
 
     if ! option systemd;then
@@ -114,19 +117,21 @@ src_compile() {
 }
 
 src_test() {
-    export SKIP_KNOWN_BUGS=y SKIP_INTERNET_TESTS=y
+    if exhost --is-native -q;then
+        export SKIP_KNOWN_BUGS=y SKIP_INTERNET_TESTS=y
 
-    edo pushd testsuite >/dev/null
+        edo pushd testsuite >/dev/null
 
-    # test dynamic version
-    edo cp ../busybox{.dynamic,}
-    edo ./runtest -v
+        # test dynamic version
+        edo cp ../busybox{.dynamic,}
+        PATH="${newpath}" edo ./runtest -v
 
-    # test static version
-    edo cp ../busybox{.static,}
-    edo ./runtest -v
+        # test static version
+        edo cp ../busybox{.static,}
+        PATH="${newpath}" edo ./runtest -v
 
-    edo popd >/dev/null
+        edo popd >/dev/null
+    fi
 }
 
 src_install() {
@@ -153,7 +158,11 @@ src_install() {
 
     # docs
     emagicdocs
-    dodoc -r examples
+    if option doc;then
+        dodoc -r examples
+        dodoc docs/*.{txt,pod,html}
+        doman docs/busybox.1
+    fi
 
     coreutils=(
         '[' base64 basename cat chgrp chmod chown chroot cksum comm cp cut
