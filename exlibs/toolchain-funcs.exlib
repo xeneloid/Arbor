@@ -2,17 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/eclass/toolchain-funcs.eclass,v 1.69 2007/03/27 01:46:50 vapier Exp $
 #
-# Maintainer: Toolchain Ninjas <toolchain@gentoo.org>
-#
-# This eclass contains (or should) functions to get common info
-# about the toolchain (libc/compiler/binutils/etc...)
-
-# A simple way to see if we're using a cross-compiler ...
-tc-is-cross-compiler() {
-    illegal_in_global_scope
-
-    return $([[ ${CBUILD:-${CHOST}} != ${CHOST} ]])
-}
+# This exlib contains functions to get common info about
+# the toolchain (libc/compiler/binutils/etc...)
 
 cc-has-defined() {
     illegal_in_global_scope
