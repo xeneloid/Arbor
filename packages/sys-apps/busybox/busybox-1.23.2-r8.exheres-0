@@ -3,7 +3,7 @@
 # Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives toolchain-funcs
+require alternatives toolchain-funcs flag-o-matic
 
 SUMMARY="BusyBox provides tiny replacements for many common UNIX utilities"
 HOMEPAGE="http://busybox.net"
@@ -34,19 +34,20 @@ DEPENDENCIES="
 "
 
 bb_make() {
-    local build_cflags_var=${CHOST//-/_}_CFLAGS
-    local build_cxxflags_var=${CHOST//-/_}_CXXFLAGS
-    local build_ldflags_var=${CHOST//-/_}_LDFLAGS
     local make_options=(
-        AR="${AR}"
-        NM="${NM}"
-
-        CC="${CC}" CFLAGS="${CFLAGS}"
-        CXX="${CXX}" CXXFLAGS="${CXXFLAGS}"
+        AR=$(exhost --tool-prefix)ar
+        NM=$(exhost --tool-prefix)nm
+        CC=$(exhost --tool-prefix)cc
+        CXX=$(exhost --tool-prefix)c++
+        CFLAGS="${CFLAGS}"
+        CXXFLAGS="${CXXFLAGS}"
         LDFLAGS="${LDFLAGS}"
-        HOSTCC="${CHOST}-cc" HOSTCFLAGS="${!build_cflags_var}"
-        HOSTCXX="${CHOST}-c++" HOSTCXXFLAGS="${!build_cxxflags_var}"
-        HOSTLDFLAGS="${!build_ldflags_var}"
+
+        HOSTCC=$(exhost --build)-cc
+        HOSTCXX=$(exhost --build)-c++
+        HOSTCFLAGS=$(print-build-flags CFLAGS)
+        HOSTCXXFLAGS=$(print-build-flags CXXFLAGS)
+        HOSTLDFLAGS=$(print-build-flags LDFLAGS)
 
         V=1
         SKIP_STRIP=y
@@ -83,7 +84,7 @@ src_prepare() {
 
     # testsuite fix for multiarch
     edo sed \
-        -e "s:strings -af ../../busybox > foo:$(exhost --build)-strings -af ../../busybox > foo:" \
+        -e "s:strings -af ../../busybox > foo:$(exhost --tool-prefix)strings -af ../../busybox > foo:" \
         -i testsuite/strings/strings-works-like-GNU
 
     if [[ $(exhost --target) == *-musl* ]];then
