@@ -1,10 +1,7 @@
 # Copyright 1999-2007 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/eclass/flag-o-matic.eclass,v 1.119 2007/05/12 11:45:51 vapier Exp $
-#
-# Maintainer: toolchain@gentoo.org
 
-#
 #### filter-flags <flags> ####
 # Remove particular flags from C[XX]FLAGS
 # Matches only complete flags
@@ -116,26 +113,12 @@ filter-flags() {
     return 0
 }
 
-filter-lfs-flags() {
-    illegal_in_global_scope
-
-    [[ -n $@ ]] && die "filter-lfs-flags takes no arguments"
-    filter-flags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
-}
-
 append-cppflags() {
     illegal_in_global_scope
 
     [[ -z $* ]] && return 0
     export CPPFLAGS="${CPPFLAGS} $*"
     return 0
-}
-
-append-lfs-flags() {
-    illegal_in_global_scope
-
-    [[ -n $@ ]] && die "append-lfs-flags takes no arguments"
-    append-cppflags -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 }
 
 append-flags() {
@@ -170,36 +153,6 @@ replace-flags() {
         eval export ${fset}=\${new_${fset}\[*]}
     done
 
-    return 0
-}
-
-filter-mfpmath() {
-    illegal_in_global_scope
-
-    local orig_mfpmath new_math prune_math
-
-    # save the original -mfpmath flag
-    orig_mfpmath=$(get-flag -mfpmath)
-    # get the value of the current -mfpmath flag
-    new_math=$(get-flag mfpmath)
-    new_math=" ${new_math//,/ } "
-    # figure out which math values are to be removed
-    prune_math=""
-    for prune_math in "$@" ; do
-        new_math=${new_math/ ${prune_math} / }
-    done
-    new_math=$(echo ${new_math})
-    new_math=${new_math// /,}
-
-    if [[ -z ${new_math} ]] ; then
-        # if we're removing all user specified math values are
-        # slated for removal, then we just filter the flag
-        filter-flags ${orig_mfpmath}
-    else
-        # if we only want to filter some of the user specified
-        # math values, then we replace the current flag
-        replace-flags ${orig_mfpmath} -mfpmath=${new_math}
-    fi
     return 0
 }
 
@@ -298,19 +251,6 @@ test-flags-CC() { test-flags-PROG "CC" "$@"; }
 # Returns (echo's) the given flags supported by the C++ compiler
 test-flags-CXX() { test-flags-PROG "CXX" "$@"; }
 
-# Short-hand that should hopefully work for both C and C++ compiler, but
-# its really only present due to the append-flags() abomination.
-test-flags() { test-flags-CC "$@"; }
-
-# Depriciated, use test-flags()
-test_flag() {
-    illegal_in_global_scope
-
-    ewarn "test_flag: deprecated, please use test-flags()!" >&2
-
-    test-flags-CC "$@"
-}
-
 strip-unsupported-flags() {
     illegal_in_global_scope
 
@@ -333,59 +273,6 @@ get-flag() {
         fi
     done
     return 1
-}
-
-replace-sparc64-flags() {
-    illegal_in_global_scope
-
-    local SPARC64_CPUS="ultrasparc3 ultrasparc v9"
-
-    if [ "${CFLAGS/mtune}" != "${CFLAGS}" ]; then
-        for x in ${SPARC64_CPUS}; do
-            CFLAGS="${CFLAGS/-mcpu=${x}/-mcpu=v8}"
-        done
-    else
-        for x in ${SPARC64_CPUS}; do
-            CFLAGS="${CFLAGS/-mcpu=${x}/-mcpu=v8 -mtune=${x}}"
-        done
-    fi
-
-    if [ "${CXXFLAGS/mtune}" != "${CXXFLAGS}" ]; then
-        for x in ${SPARC64_CPUS}; do
-            CXXFLAGS="${CXXFLAGS/-mcpu=${x}/-mcpu=v8}"
-        done
-    else
-        for x in ${SPARC64_CPUS}; do
-            CXXFLAGS="${CXXFLAGS/-mcpu=${x}/-mcpu=v8 -mtune=${x}}"
-        done
-    fi
-
-    export CFLAGS CXXFLAGS
-}
-
-append-supported-flags-cc() {
-    illegal_in_global_scope
-    local x input="$@"
-
-    for x in ${input}; do
-        if [[ "$(get-flag ${x})" != "" ]]; then
-            if test-flag-CC ${x}; then
-                CC="${CC} ${x}"
-            fi
-        fi
-    done
-
-    export CC
-}
-
-multibuild-m32-cc() {
-    illegal_in_global_scope
-    local multibuild_target="$1"
-
-    case "${multibuild_target}" in
-        32) append-supported-flags-cc -m32 ;;
-        64) export CC="${CC/ -m32/}" ;;
-    esac
 }
 
 append-ldflags() {
@@ -436,21 +323,4 @@ print-flags() {
 print-build-flags() {
     print-flags "$(exhost --build)" "${@}"
 }
-
-# Some tests for when we screw with things and want to make
-# sure we didn't break anything
-#TESTS() {
-#   CFLAGS="-a -b -c=1"
-#   CXXFLAGS="-x -y -z=2"
-#   LDFLAGS="-l -m -n=3"
-#
-#   die() { exit 1; }
-#
-#   strip-unsupported-flags
-#   [[ ${CFLAGS} == "-c=1" ]] || die
-#   [[ ${CXXFLAGS} == "-y -z=2" ]] || die
-#
-#   echo "All tests pass"
-#}
-#TESTS
 
