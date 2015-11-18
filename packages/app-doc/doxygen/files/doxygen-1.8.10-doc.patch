@@ -2,9 +2,21 @@ Source: Timo Gurr <tgurr@exherbo.org>
 Upstream: Wait until the CMake conversion settled a bit, there are already open pull requests regarding doc handling
 Reason: Don't try to install nonexistent files
 
+diff -Naur doxygen-1.8.10/CMakeLists.txt doxygen-1.8.10.new/CMakeLists.txt
+--- doxygen-1.8.10/CMakeLists.txt	2015-06-16 19:42:32.000000000 +0200
++++ doxygen-1.8.10.new/CMakeLists.txt	2015-11-18 14:00:00.756519191 +0100
+@@ -28,6 +28,8 @@
+ set(SOURCE "${CMAKE_SOURCE_DIR}")
+ include(version)
+ 
++include(GNUInstallDirs)
++
+ set(sqlite3  "0" CACHE INTERNAL "used in settings.h")
+ set(clang    "0" CACHE INTERNAL "used in settings.h")
+ if (use_sqlite3)
 diff -Naur doxygen-1.8.10/doc/CMakeLists.txt doxygen-1.8.10.new/doc/CMakeLists.txt
 --- doxygen-1.8.10/doc/CMakeLists.txt	2015-06-20 23:49:50.000000000 +0200
-+++ doxygen-1.8.10.new/doc/CMakeLists.txt	2015-07-01 18:15:02.607056864 +0200
++++ doxygen-1.8.10.new/doc/CMakeLists.txt	2015-11-18 13:59:37.931714070 +0100
 @@ -88,17 +88,7 @@
          "${PROJECT_BINARY_DIR}/man/doxywizard.1"
          "${PROJECT_BINARY_DIR}/man/doxysearch.1"
