@@ -6,7 +6,7 @@
 
 export_exlib_phases src_prepare src_configure src_install
 
-require pam alternatives systemd-service
+require toolchain-funcs pam alternatives systemd-service
 
 SUMMARY="Fast, easy to administer and secure mail transport agent"
 HOMEPAGE="http://www.postfix.org"
@@ -87,7 +87,7 @@ postfix_src_configure() {
         -DUSE_SASL_AUTH
     )
 
-    if [[ $(exhost --target) == *-musl* ]]; then
+    if libc-is-musl; then
         ccargs+=( -DNO_NIS )
     else
         auxlibs+=( -lnsl )
