@@ -85,7 +85,7 @@ DEPENDENCIES="
         sys-apps/kmod[>=15]
         sys-apps/pciutils
         sys-apps/skeleton-filesystem-layout
-        sys-apps/util-linux[>=2.27]
+        sys-apps/util-linux[>=2.27.1]
         sys-kernel/linux-headers[>=3.10]
         sys-libs/libcap
         sys-libs/pam[>=1.1.2]
@@ -105,7 +105,7 @@ DEPENDENCIES="
         idn? ( net-dns/libidn )
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
         libcurl? ( net-misc/curl )
-        lz4? ( app-arch/lz4 )
+        lz4? ( app-arch/lz4[>=125] )
         nat? ( net-firewall/iptables )
         polkit? ( sys-auth/polkit:1 )
         qrencode? ( media-libs/qrencode )
