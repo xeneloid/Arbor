@@ -6,7 +6,7 @@ if (( $(ever range 2) % 2 )); then
 else
     require gnu [ suffix=gz ]
 fi
-require alternatives
+require toolchain-funcs alternatives
 
 export_exlib_phases src_configure src_test_expensive src_install
 
@@ -33,11 +33,11 @@ findutils_src_configure() {
         --enable-nls \
         --libexecdir=/usr/$(exhost --target)/libexec/${PN} \
         --without-selinux \
-        $(  if [[ "$(exhost --target)" == *-musl* ]];then
-                echo --with-included-regex
-            else
-                echo --without-included-regex
-            fi)
+        $(if libc-is-musl;then
+            echo --with-included-regex
+        else
+            echo --without-included-regex
+        fi)
 }
 
 findutils_src_test_expensive() {
@@ -69,7 +69,7 @@ findutils_src_install() {
 
     alternatives_for "${alternatives[@]}"
 
-    if [[ $(exhost --target) == *-musl* ]];then
+    if libc-is-musl;then
         edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
         edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
     fi
