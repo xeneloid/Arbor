@@ -88,9 +88,9 @@ src_prepare() {
         -e "s:strings -af ../../busybox > foo:$(exhost --tool-prefix)strings -af ../../busybox > foo:" \
         -i testsuite/strings/strings-works-like-GNU
 
-    if [[ $(exhost --target) == *-musl* ]];then
+    if libc-is-musl;then
         edo cp "${FILES}"/${PNV}-musl-config .config
-    elif [[ $(exhost --target) == *-gnu* ]];then
+    elif libc-is-glibc;then
         edo cp "${FILES}"/${PNV}-glibc-config .config
     else
         die "Don't know what ${PNV}-*-config file to use."
