@@ -1,6 +1,8 @@
 # Copyright 2013 Ankur Kothari
 # Distributed under the terms of the GNU General Public License v2
 
+require toolchain-funcs
+
 SUMMARY="A lightweight, fast, and simple standard libc library"
 HOMEPAGE="http://www.musl-libc.org/"
 
@@ -27,7 +29,7 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 )
 
 src_configure() {
-    if [[ $(exhost --target) == *-*musl* ]];then
+    if libc-is-musl;then
         myconf=(
             --disable-gcc-wrapper
             --prefix=/usr/$(exhost --target)
@@ -49,7 +51,7 @@ src_configure() {
 src_install() {
     default
 
-    if [[ $(exhost --target) == *-*musl* ]]; then
+    if libc-is-musl; then
         # NOTE(somasis): fix programs with bad checks trying to compile with -lintl
         # (libm is an empty archive, it does nothing. i'm not losing my mind okay)
         edo cp "${IMAGE}"/usr/$(exhost --target)/lib/{libm,libintl}.a
