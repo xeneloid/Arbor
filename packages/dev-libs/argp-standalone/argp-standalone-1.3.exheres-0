@@ -33,6 +33,7 @@ DEFAULT_SRC_COMPILE_PARAMS=(
     CC=$(exhost --tool-prefix)cc
     NM=$(exhost --tool-prefix)nm
     RANLIB=$(exhost --tool-prefix)ranlib
+    CFLAGS="${CFLAGS} -fPIC"
 )
 
 src_install() {
