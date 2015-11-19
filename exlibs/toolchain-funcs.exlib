@@ -5,6 +5,16 @@
 # This exlib contains functions to get common info about
 # the toolchain (libc/compiler/binutils/etc...)
 
+libc-is-glibc() {
+    illegal_in_global_scope
+    [[ "$(exhost --target)" == *-gnu* ]]
+}
+
+libc-is-musl() {
+    illegal_in_global_scope
+    [[ "$(exhost --target) == *-musl* ]]
+}
+
 cc-has-defined() {
     illegal_in_global_scope
     "${CC}" ${CFLAGS} -x c -dM -E /dev/null -o - | grep -q "${1}"
