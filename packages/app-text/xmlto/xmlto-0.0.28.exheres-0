@@ -15,9 +15,9 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ( providers:
-        links
-        w3m
+        elinks
         lynx
+        w3m
     ) [[
         *description = [ HTML to Text conversion tool ]
         number-selected = at-least-one
@@ -32,8 +32,8 @@ DEPENDENCIES="
         app-text/docbook-xsl-stylesheets
         dev-libs/libxslt
     run:
-        providers:links? ( net-www/links )
-        providers:w3m? ( net-www/w3m )
+        providers:elinks? ( net-www/elinks )
         providers:lynx? ( net-www/lynx )
+        providers:w3m? ( net-www/w3m )
 "
 
