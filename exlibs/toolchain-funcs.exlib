@@ -12,7 +12,7 @@ libc-is-glibc() {
 
 libc-is-musl() {
     illegal_in_global_scope
-    [[ "$(exhost --target) == *-musl* ]]
+    [[ "$(exhost --target)" == *-musl* ]]
 }
 
 cc-has-defined() {
