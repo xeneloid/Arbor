@@ -52,6 +52,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.8.10-doc.patch
     "${FILES}"/379af51e874f86f4f5477e18fd1cf405fe6d8c85.patch
+    "${FILES}"/${PN}-Support-flex-2.6.0.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS+=(
