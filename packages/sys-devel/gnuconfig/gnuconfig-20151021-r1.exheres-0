@@ -15,6 +15,7 @@ DEPENDENCIES=""
 src_install() {
     dodir /usr/share/${PN}
     insinto /usr/share/${PN}
+    insopts -m0755
     doins config.guess config.sub
     dodoc ChangeLog
 
