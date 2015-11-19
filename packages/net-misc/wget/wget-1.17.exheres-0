@@ -50,6 +50,7 @@ src_configure() {
         --with-ssl=$(option providers:gnutls gnutls openssl)
         --with-zlib
         --without-libpsl
+        --without-metalink
         $(option_enable idn iri)
     )
     econf ${myconf[@]}
