@@ -2,7 +2,7 @@
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 ] alternatives
+require gnu [ suffix=bz2 ] alternatives flag-o-matic
 
 export_exlib_phases src_prepare src_configure src_compile src_test_expensive src_install
 
@@ -69,6 +69,10 @@ binutils_src_prepare() {
 
 binutils_src_configure() {
     local host=$(exhost --target) target=
+
+    export CC_FOR_BUILD=$(exhost --build)-cc
+    export CFLAGS_FOR_BUILD=$(print-build-flags CFLAGS)
+    export LDFLAGS_FOR_BUILD=$(print-build-flags LDFLAGS)
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local libpath=/${target}/lib:/usr/${target}/lib
