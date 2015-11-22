@@ -1,6 +1,8 @@
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require toolchain-funcs flag-o-matic
+
 if ever is_scm ; then
     SCM_REPOSITORY="https://sourceware.org/git/dwz.git"
     if ! ever at_least scm; then
@@ -30,4 +32,9 @@ DEPENDENCIES="
     build+run:
         dev-util/elfutils
 "
+
+src_compile() {
+    libc-is-musl && append-ldflags -lobstack
+    default
+}
 
