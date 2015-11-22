@@ -28,6 +28,7 @@ DEPENDENCIES="
             description = [ installs the same headers, but the libraries are ABI incompatible ]
         ]]
         libc:musl? (
+            dev-libs/argp-standalone
             dev-libs/musl-fts
             dev-libs/musl-obstack
         )
