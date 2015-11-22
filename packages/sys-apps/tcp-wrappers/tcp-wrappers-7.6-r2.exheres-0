@@ -24,6 +24,7 @@ src_prepare() {
 
     expatch "${PATCHDIR}/${PNV}-makefile.patch" "${PATCHDIR}/${PNV}-shared.patch" "${PATCHDIR}/generic"
     expatch -p2 "${PATCHDIR}"/${PNV}-ipv6-1.14.diff
+    expatch "${FILES}"/${PNV}-musl.patch
 }
 
 src_compile() {
