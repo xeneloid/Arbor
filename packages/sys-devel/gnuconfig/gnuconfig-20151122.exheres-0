@@ -10,7 +10,15 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="parts: data documentation"
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build:
+        sys-apps/help2man
+"
+
+src_compile() {
+    default
+    emake manpages
+}
 
 src_install() {
     dodir /usr/share/${PN}
@@ -18,8 +26,9 @@ src_install() {
     insopts -m0755
     doins config.guess config.sub
     dodoc ChangeLog
+    doman doc/config.guess.1 doc/config.sub.1
 
     expart data /usr/share/gnuconfig
-    expart documentation /usr/share/doc
+    expart documentation /usr/share/doc /usr/share/man
 }
 
