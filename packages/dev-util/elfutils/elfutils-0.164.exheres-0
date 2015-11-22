@@ -1,7 +1,8 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require flag-o-matic toolchain-funcs
 
 SUMMARY="Libraries/utilities to handle ELF objects"
 HOMEPAGE="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}"
@@ -26,11 +27,11 @@ DEPENDENCIES="
         !dev-libs/libelf [[
             description = [ installs the same headers, but the libraries are ABI incompatible ]
         ]]
+        libc:musl? (
+            dev-libs/musl-fts
+            dev-libs/musl-obstack
+        )
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-fix-build-with-Os.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=eu-
@@ -41,6 +42,11 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-zlib
 )
 
+src_prepare() {
+    libc-is-musl && expatch "${FILES}"/${PNV}-musl.patch
+    autotools_src_prepare
+}
+
 src_configure() {
     # NOTE (abdulras) tests require that the debug information be present in the tools
     expecting_tests && append-flags -g
@@ -48,6 +54,9 @@ src_configure() {
     # NOTE (compnerd) explicitly add -fPIC as the build fails on x86_64 with LTO without it
     # contains RIP-relative relocations which may overflow requiring GOT-relative relocations
     append-flags -fPIC
+
+    # NOTE (somasis): fails to build with -Os; there's a patch but it's not upstream
+    replace-flags -Os -O2
 
     default
 }

@@ -1,0 +1,527 @@
+Upstream: not yet
+Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6a1439a3be9ce93c534
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -305,6 +305,62 @@ else
+ fi
+ AC_SUBST([argp_LDADD])
+ 
++dnl Check if we have fts available from our libc
++AC_LINK_IFELSE(
++	[AC_LANG_PROGRAM(
++		[#if !defined(__x86_64__)
++		#undef  _FILE_OFFSET_BITS
++		#define _FILE_OFFSET_BITS 32
++		#endif
++		#include <fts.h>],
++		[FTS* fts = 0; return fts_close(fts); return 0;]
++		)],
++	[libc_has_fts="true"],
++	[libc_has_fts="false"]
++)
++
++dnl If our libc doesn't provide fts, then test for libfts
++if test "$libc_has_fts" = "false" ; then
++	AC_MSG_WARN("libc does not have fts")
++	AC_CHECK_LIB([fts], [fts_close], [have_fts="true"], [have_fts="false"])
++
++	if test "$have_fts" = "false"; then
++		AC_MSG_ERROR("no libfts found")
++	else
++		fts_LDADD="-lfts"
++	fi
++else
++	fts_LDADD=""
++fi
++AC_SUBST([fts_LDADD])
++
++dnl Check if we have obstack available from our libc
++AC_LINK_IFELSE(
++	[AC_LANG_PROGRAM(
++		[#include <obstack.h>],
++		[_obstack_begin(0, 0, 0, NULL, NULL); return 0;]
++		)],
++	[libc_has_obstack="true"],
++	[libc_has_obstack="false"]
++)
++
++dnl If our libc doesn't provide obstack, then test for libobstack
++if test "$libc_has_obstack" = "false" ; then
++	AC_MSG_WARN("libc does not have obstack")
++	AC_CHECK_LIB([obstack], [_obstack_begin], [have_obstack="true"], [have_obstack="false"])
++
++	if test "$have_obstack" = "false"; then
++		AC_MSG_ERROR("no libobstack found")
++	else
++		obstack_LDADD="-lobstack"
++	fi
++else
++	obstack_LDADD=""
++fi
++AC_SUBST([obstack_LDADD])
++
++dnl The directories with content.
++
+ dnl The directories with content.
+ 
+ dnl Documentation.
+--- /dev/null
++++ b/lib/error.h
+@@ -0,0 +1,27 @@
++#ifndef _ERROR_H_
++#define _ERROR_H_
++
++#include <stdarg.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <errno.h>
++
++static unsigned int error_message_count = 0;
++
++static inline void error(int status, int errnum, const char* format, ...)
++{
++	va_list ap;
++	fprintf(stderr, "%s: ", program_invocation_name);
++	va_start(ap, format);
++	vfprintf(stderr, format, ap);
++	va_end(ap);
++	if (errnum)
++		fprintf(stderr, ": %s", strerror(errnum));
++	fprintf(stderr, "\n");
++	error_message_count++;
++	if (status)
++		exit(status);
++}
++
++#endif	/* _ERROR_H_ */
+--- a/lib/fixedsizehash.h
++++ b/lib/fixedsizehash.h
+@@ -30,12 +30,12 @@
+ #include <errno.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <sys/cdefs.h>
+ #include <sys/param.h>
+ 
+ #include <system.h>
+ 
+-#define CONCAT(t1,t2) __CONCAT (t1,t2)
++#define CONCAT1(x,y) x##y
++#define CONCAT(x,y) CONCAT1(x,y)
+ 
+ /* Before including this file the following macros must be defined:
+ 
+--- a/lib/system.h
++++ b/lib/system.h
+@@ -35,6 +35,7 @@
+ #include <endian.h>
+ #include <byteswap.h>
+ #include <unistd.h>
++#include <fcntl.h>
+ 
+ #if __BYTE_ORDER == __LITTLE_ENDIAN
+ # define LE32(n)	(n)
+@@ -50,6 +51,20 @@
+ # error "Unknown byte order"
+ #endif
+ 
++#if !defined(__GLIBC__)
++
++/* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
++   set to EINTR.  */
++
++# define TEMP_FAILURE_RETRY(expression) \
++  (__extension__                                                              \
++    ({ long int __result;                                                     \
++       do __result = (long int) (expression);                                 \
++       while (__result == -1L && errno == EINTR);                             \
++       __result; }))
++
++#endif
++
+ extern void *xmalloc (size_t) __attribute__ ((__malloc__));
+ extern void *xcalloc (size_t, size_t) __attribute__ ((__malloc__));
+ extern void *xrealloc (void *, size_t) __attribute__ ((__malloc__));
+--- a/libcpu/i386_disasm.c
++++ b/libcpu/i386_disasm.c
+@@ -1,4 +1,4 @@
+-/* Disassembler for x86.
++﻿/* Disassembler for x86.
+    Copyright (C) 2007, 2008, 2009, 2011 Red Hat, Inc.
+    This file is part of elfutils.
+    Written by Ulrich Drepper <drepper@redhat.com>, 2007.
+@@ -710,6 +710,7 @@ i386_disasm (const uint8_t **startp, const uint8_t *end, GElf_Addr addr,
+ 
+ 		case 'm':
+ 		  /* Mnemonic.  */
++		  str = mnebuf;
+ 
+ 		  if (unlikely (instrtab[cnt].mnemonic == MNE_INVALID))
+ 		    {
+--- a/libdw/Makefile.am
++++ b/libdw/Makefile.am
+@@ -112,7 +112,7 @@ libdw.so$(EXEEXT): $(srcdir)/libdw.map libdw_pic.a ../libdwelf/libdwelf_pic.a \
+ 		-Wl,--enable-new-dtags,-rpath,$(pkglibdir) \
+ 		-Wl,--version-script,$<,--no-undefined \
+ 		-Wl,--whole-archive $(filter-out $<,$^) -Wl,--no-whole-archive\
+-		-ldl $(argp_LDADD) $(zip_LIBS)
++		-ldl $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) $(zip_LIBS)
+ 	@$(textrel_check)
+ 	$(AM_V_at)ln -fs $@ $@.$(VERSION)
+ 
+--- a/libdw/libdw.h
++++ b/libdw/libdw.h
+@@ -33,7 +33,27 @@
+ #include <stdbool.h>
+ #include <stddef.h>
+ #include <stdint.h>
++#include <unistd.h>
++#include <alloca.h>
++#include <string.h>
++
++#ifndef TEMP_FAILURE_RETRY
++#define TEMP_FAILURE_RETRY(expression) \
++  (__extension__                                                              \
++    ({ long int __result;                                                     \
++       do __result = (long int) (expression);                                 \
++       while (__result == -1L && errno == EINTR);                             \
++       __result; }))
++#endif
+ 
++#ifndef strndupa
++#define strndupa(s, n) \
++       (__extension__ ({const char *__in = (s); \
++                        size_t __len = strnlen (__in, (n)) + 1; \
++                        char *__out = (char *) alloca (__len); \
++                        __out[__len-1] = '\0'; \
++                        (char *) memcpy (__out, __in, __len-1);}))
++#endif
+ 
+ #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)
+ # define __nonnull_attribute__(...) __attribute__ ((__nonnull__ (__VA_ARGS__)))
+--- a/libdwfl/dwfl_build_id_find_elf.c
++++ b/libdwfl/dwfl_build_id_find_elf.c
+@@ -94,7 +94,7 @@ __libdwfl_open_by_build_id (Dwfl_Module *mod, bool debug, char **file_name,
+ 	{
+ 	  if (*file_name != NULL)
+ 	    free (*file_name);
+-	  *file_name = canonicalize_file_name (name);
++	  *file_name = realpath (name, NULL);
+ 	  if (*file_name == NULL)
+ 	    {
+ 	      *file_name = name;
+--- a/libdwfl/dwfl_error.c
++++ b/libdwfl/dwfl_error.c
+@@ -154,7 +154,16 @@ dwfl_errmsg (int error)
+   switch (error &~ 0xffff)
+     {
+     case OTHER_ERROR (ERRNO):
++#if defined(__GLIBC__)
+       return strerror_r (error & 0xffff, "bad", 0);
++#else
++      {
++        static __thread char buf[128] = "";
++        if (0 == strerror_r(error & 0xffff, buf, sizeof(buf)))
++          return buf;
++      }
++      return "strerror_r() failed";
++#endif
+     case OTHER_ERROR (LIBELF):
+       return elf_errmsg (error & 0xffff);
+     case OTHER_ERROR (LIBDW):
+--- a/libdwfl/find-debuginfo.c
++++ b/libdwfl/find-debuginfo.c
+@@ -372,7 +372,7 @@ dwfl_standard_find_debuginfo (Dwfl_Module *mod,
+       /* If FILE_NAME is a symlink, the debug file might be associated
+ 	 with the symlink target name instead.  */
+ 
+-      char *canon = canonicalize_file_name (file_name);
++      char *canon = realpath (file_name, NULL);
+       if (canon != NULL && strcmp (file_name, canon))
+ 	fd = find_debuginfo_in_path (mod, canon,
+ 				     debuglink_file, debuglink_crc,
+--- a/libebl/eblwstrtab.c
++++ b/libebl/eblwstrtab.c
+@@ -305,7 +305,7 @@ copystrings (struct Ebl_WStrent *nodep, wchar_t **freep, size_t *offsetp)
+ 
+   /* Process the current node.  */
+   nodep->offset = *offsetp;
+-  *freep = wmempcpy (*freep, nodep->string, nodep->len);
++  *freep = wmemcpy (*freep, nodep->string, nodep->len) + nodep->len;
+   *offsetp += nodep->len * sizeof (wchar_t);
+ 
+   for (subs = nodep->next; subs != NULL; subs = subs->next)
+--- a/libelf/elf.h
++++ b/libelf/elf.h
+@@ -21,6 +21,17 @@
+ 
+ #include <features.h>
+ 
++#if !defined(__GLIBC__)
++/* C++ needs to know that types and declarations are C, not C++.  */
++#ifdef  __cplusplus
++# define __BEGIN_DECLS  extern "C" {
++# define __END_DECLS    }
++#else
++# define __BEGIN_DECLS
++# define __END_DECLS
++#endif
++#endif
++
+ __BEGIN_DECLS
+ 
+ /* Standard ELF types.  */
+--- a/libelf/elf_getarsym.c
++++ b/libelf/elf_getarsym.c
+@@ -297,7 +297,7 @@ elf_getarsym (Elf *elf, size_t *ptr)
+ 		arsym[cnt].as_off = (*u32)[cnt];
+ 
+ 	      arsym[cnt].as_hash = _dl_elf_hash (str_data);
+-	      str_data = rawmemchr (str_data, '\0') + 1;
++	      str_data = memchr (str_data, '\0', SIZE_MAX) + 1;
+ 	    }
+ 
+ 	  /* At the end a special entry.  */
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -104,27 +104,28 @@ ranlib_no_Wstack_usage = yes
+ ar_no_Wstack_usage = yes
+ unstrip_no_Wstack_usage = yes
+ 
+-readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+-nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl \
++readelf_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++nm_LDADD = $(libdw) $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl \
+ 	   $(demanglelib)
+-size_LDADD = $(libelf) $(libeu) $(argp_LDADD)
+-strip_LDADD = $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+-ld_LDADD = $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
++size_LDADD = $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
++strip_LDADD = $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++ld_LDADD = $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
+ if NATIVE_LD
+ # -ldl is always needed for libebl.
+ ld_LDADD += libld_elf.a
+ endif
+ ld_LDFLAGS = -rdynamic
+-elflint_LDADD  = $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+-findtextrel_LDADD = $(libdw) $(libelf) $(argp_LDADD)
+-addr2line_LDADD = $(libdw) $(libelf) $(argp_LDADD) $(demanglelib)
+-elfcmp_LDADD = $(libebl) $(libelf) $(argp_LDADD) -ldl
+-objdump_LDADD  = $(libasm) $(libebl) $(libelf) $(libeu) $(argp_LDADD) -ldl
+-ranlib_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD)
+-strings_LDADD = $(libelf) $(libeu) $(argp_LDADD)
+-ar_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD)
+-unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl
+-stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl $(demanglelib)
++elflint_LDADD  = $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++findtextrel_LDADD = $(libdw) $(libelf) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
++addr2line_LDADD = $(libdw) $(libelf) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) $(demanglelib)
++elfcmp_LDADD = $(libebl) $(libelf) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++objdump_LDADD  = $(libasm) $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++ranlib_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
++strings_LDADD = $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
++ar_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
++unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
++stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl \
++		$(demanglelib)
+ 
+ ldlex.o: ldscript.c
+ ldlex_no_Werror = yes
+--- a/src/arlib.h
++++ b/src/arlib.h
+@@ -29,6 +29,16 @@
+ #include <stdint.h>
+ #include <sys/types.h>
+ 
++#if !defined(ACCESSPERMS)
++# define ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO) /* 0777 */
++#endif
++#if !defined(ALLPERMS)
++# define ALLPERMS (S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO) /* 07777 */
++#endif
++#if !defined(DEFFILEMODE)
++# define DEFFILEMODE (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)/* 0666*/
++#endif
++
+ 
+ /* State of -D/-U flags.  */
+ extern bool arlib_deterministic_output;
+--- /dev/null
++++ b/src/error.h
+@@ -0,0 +1,27 @@
++#ifndef _ERROR_H_
++#define _ERROR_H_
++
++#include <stdarg.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <errno.h>
++
++static unsigned int error_message_count = 0;
++
++static inline void error(int status, int errnum, const char* format, ...)
++{
++	va_list ap;
++	fprintf(stderr, "%s: ", program_invocation_name);
++	va_start(ap, format);
++	vfprintf(stderr, format, ap);
++	va_end(ap);
++	if (errnum)
++		fprintf(stderr, ": %s", strerror(errnum));
++	fprintf(stderr, "\n");
++	error_message_count++;
++	if (status)
++		exit(status);
++}
++
++#endif	/* _ERROR_H_ */
+--- a/src/ld.h
++++ b/src/ld.h
+@@ -24,6 +24,19 @@
+ #include <stdio.h>
+ #include "xelf.h"
+ 
++#if !defined(DL_CALL_FCT)
++# define DL_CALL_FCT(fctp, args) (*fctp) args
++#endif	/* !defined(DL_CALL_FCT) */
++
++#if !defined(ACCESSPERMS)
++# define ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO) /* 0777 */
++#endif
++#if !defined(ALLPERMS)
++# define ALLPERMS (S_ISUID|S_ISGID|S_ISVTX|S_IRWXU|S_IRWXG|S_IRWXO) /* 07777 */
++#endif
++#if !defined(DEFFILEMODE)
++# define DEFFILEMODE (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)/* 0666*/
++#endif
+ 
+ /* Recommended size of the buffer passed to ld_strerror.  */
+ #define ERRBUFSIZE	(512)
+--- a/src/ldgeneric.c
++++ b/src/ldgeneric.c
+@@ -2628,12 +2628,12 @@ ld_generic_generate_sections (struct ld_state *statep)
+ }
+ 
+ 
+-/* Callback function registered with on_exit to make sure the temporary
++/* Callback function registered with atexit to make sure the temporary
+    files gets removed if something goes wrong.  */
+ static void
+-remove_tempfile (int status, void *arg)
++remove_tempfile (void)
+ {
+-  if (status != 0 && ld_state.tempfname != NULL)
++  if (error_message_count != 0 && ld_state.tempfname != NULL)
+     unlink (ld_state.tempfname);
+ }
+ 
+@@ -2680,7 +2680,7 @@ ld_generic_open_outfile (struct ld_state *statep, int machine, int klass,
+ 
+   /* Make sure we remove the temporary file in case something goes
+      wrong.  */
+-  on_exit (remove_tempfile, NULL);
++  atexit (remove_tempfile);
+ 
+   /* Create the ELF file data for the output file.  */
+   Elf *elf = ld_state.outelf = elf_begin (fd,
+--- a/src/nm.c
++++ b/src/nm.c
+@@ -46,6 +46,21 @@
+ #include <system.h>
+ #include "../libebl/libeblP.h"
+ 
++#if !defined(__GLIBC__)
++static int obstack_printf(struct obstack *obst, const char *fmt, ...)
++{
++	char buf[1024];
++	va_list ap;
++	int len;
++
++	va_start(ap, fmt);
++	len = vsnprintf(buf, sizeof(buf), fmt, ap);
++	obstack_grow(obst, buf, len);
++	va_end(ap);
++
++	return len;
++}
++#endif
+ 
+ /* Name and version of program.  */
+ static void print_version (FILE *stream, struct argp_state *state);
+--- a/src/readelf.c
++++ b/src/readelf.c
+@@ -4366,10 +4366,11 @@ listptr_base (struct listptr *p)
+   return base;
+ }
+ 
++static const char *listptr_name;
++
+ static int
+-compare_listptr (const void *a, const void *b, void *arg)
++compare_listptr (const void *a, const void *b)
+ {
+-  const char *name = arg;
+   struct listptr *p1 = (void *) a;
+   struct listptr *p2 = (void *) b;
+ 
+@@ -4385,21 +4386,21 @@ compare_listptr (const void *a, const void *b, void *arg)
+ 	  p1->warned = p2->warned = true;
+ 	  error (0, 0,
+ 		 gettext ("%s %#" PRIx64 " used with different address sizes"),
+-		 name, (uint64_t) p1->offset);
++		 listptr_name, (uint64_t) p1->offset);
+ 	}
+       if (p1->dwarf64 != p2->dwarf64)
+ 	{
+ 	  p1->warned = p2->warned = true;
+ 	  error (0, 0,
+ 		 gettext ("%s %#" PRIx64 " used with different offset sizes"),
+-		 name, (uint64_t) p1->offset);
++		 listptr_name, (uint64_t) p1->offset);
+ 	}
+       if (listptr_base (p1) != listptr_base (p2))
+ 	{
+ 	  p1->warned = p2->warned = true;
+ 	  error (0, 0,
+ 		 gettext ("%s %#" PRIx64 " used with different base addresses"),
+-		 name, (uint64_t) p1->offset);
++		 listptr_name, (uint64_t) p1->offset);
+ 	}
+     }
+ 
+@@ -4464,9 +4465,11 @@ notice_listptr (enum section_e section, struct listptr_table *table,
+ static void
+ sort_listptr (struct listptr_table *table, const char *name)
+ {
+-  if (table->n > 0)
+-    qsort_r (table->table, table->n, sizeof table->table[0],
+-	     &compare_listptr, (void *) name);
++  if (table->n > 0) {
++    listptr_name = name;
++    qsort (table->table, table->n, sizeof table->table[0],
++	     &compare_listptr);
++  }
+ }
+ 
+ static bool
+--- a/src/strip.c
++++ b/src/strip.c
+@@ -44,6 +44,10 @@
+ #include <libebl.h>
+ #include <system.h>
+ 
++#if !defined(ACCESSPERMS)
++#define ACCESSPERMS (S_IRWXU|S_IRWXG|S_IRWXO)
++#endif
++
+ typedef uint8_t GElf_Byte;
+ 
+ /* Name and version of program.  */
+-- 
+2.6.3
+
+
