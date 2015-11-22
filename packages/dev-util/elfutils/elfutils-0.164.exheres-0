@@ -13,7 +13,9 @@ BUGS_TO="philantrop@exherbo.org"
 LICENCES="GPL-3 || ( GPL-2 LGPL-3 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    ( libc: musl )
+"
 
 RESTRICT="test"
 
