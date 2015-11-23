@@ -19,7 +19,7 @@ LICENCES="GPL-2"
 DEPENDENCIES="
     build:
         dev-libs/libxslt
-        sys-kernel/linux-headers[>=3.8] [[ note = [ Possibly works with 3.2 instead, but 3.8 is better because of in-kernel firmware loading ] ]]
+        sys-kernel/linux-headers[>=2.6.39]
         gtk-doc? ( dev-doc/gtk-doc )
     build+run:
         dev-util/gperf
@@ -29,6 +29,8 @@ DEPENDENCIES="
             description = [ ${CATEGORY}/${PN} is a udev daemon which provides the same library and programs that systemd-udev does ]
             resolution = manual
         ]]
+    recommendation:
+        sys-kernel/linux-headers[>=3.8] [[ note = [ Support for in-kernel firmware loading ] ]]
 "
 
 MYOPTIONS="gtk-doc"
