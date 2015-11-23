@@ -30,6 +30,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-device-mapper.patch
     "${FILES}"/${PNV}-libparted-also-link-to-UUID_LIBS.patch
     "${FILES}"/0001-tests-Try-several-UTF8-locales.patch
+    -p0 "${FILES}"/${PNV}-musl.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
