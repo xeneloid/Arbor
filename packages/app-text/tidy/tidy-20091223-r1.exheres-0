@@ -1,6 +1,8 @@
 # Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
+
 MY_PV="${PV}cvs"
 
 SUMMARY="Tidy the layout and correct errors in HTML and XML documents"
@@ -40,7 +42,12 @@ src_install() {
 
     # To update the manpage, thanks to debian:
     edo ./console/tidy -xml-help > htmldoc/tidy-help.xml
-    edo xsltproc -o tidy.1 htmldoc/tidy1.xsl htmldoc/tidy-help.xml
+    edo ./console/tidy -xml-config > htmldoc/tidy-config.xml
+    edo xsltproc -o tidy.1 htmldoc/tidy1.xsl htmldoc/tidy-help.xml htmldoc/tidy-config.xml
     doman ${PN}.1
+
+    alternatives_for tidy tidy 4 \
+        /usr/$(exhost --target)/bin/tidy        tidy4   \
+        /usr/$(exhost --target)/lib/libtidy.so  libtidy.so.4
 }
 
