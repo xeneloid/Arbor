@@ -1,6 +1,7 @@
-Upstream: not yet. But acked by a glib-dev.
-Bug: https://bugzilla.gnome.org/show_bug.cgi?id=707298
+Upstream: yes; https://git.gnome.org/browse/glib/commit/?id=2b178c762fbc0706031e9890ba190233e243a602
+Source: https://bugzilla.gnome.org/show_bug.cgi?id=707298
 Reason: Fixes a vlc segfault.
+
 From 274239a62f9f2a9f23030b94c1fb4df17ce88418 Mon Sep 17 00:00:00 2001
 From: Alexandre Rostovtsev <tetromino@gentoo.org>
 Date: Mon, 2 Sep 2013 13:59:18 -0400

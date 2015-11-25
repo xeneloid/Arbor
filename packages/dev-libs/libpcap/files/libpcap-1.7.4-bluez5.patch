@@ -1,5 +1,5 @@
+Upstream: yes, fixed with different patch
 Reason: libpcap depends on bluez4, this fixes it for bluez5
-Upstream: unknown
 Source: https://projects.archlinux.org/svntogit/packages.git/plain/trunk/mgmt.h?h=packages/libpcap
 
 

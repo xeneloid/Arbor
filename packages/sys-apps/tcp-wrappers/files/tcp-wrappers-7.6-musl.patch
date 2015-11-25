@@ -1,4 +1,4 @@
-Upstream: doubt it. upstream seems dead.
+Upstream: no, upstream seems dead.
 Source: https://github.com/kraj/meta-musl/blob/9846ac3d615ecac73361059b89bf8aede37565ee/recipes-extended/tcp-wrappers/tcp-wrappers/musl-decls.patch
 
 Index: tcp_wrappers_7.6/tcpd.h

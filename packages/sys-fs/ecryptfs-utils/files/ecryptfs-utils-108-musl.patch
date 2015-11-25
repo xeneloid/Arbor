@@ -1,4 +1,4 @@
-Upstream: submitted
+Upstream: yes
 Source: https://bugs.launchpad.net/ecryptfs/+bug/1514625
 
 diff -ru ecryptfs-utils-108.orig/src/utils/mount.ecryptfs.c ecryptfs-utils-108/src/utils/mount.ecryptfs.c
