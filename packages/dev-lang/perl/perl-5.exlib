@@ -13,17 +13,14 @@ require alternatives flag-o-matic
 export_exlib_phases src_unpack src_prepare src_configure src_test src_install
 
 myexparam Module_Build_pv=
-myexparam cross_perl_ver=[ ]
-
-# first value:  perlcross version
-# second value: perl version it applies to (if != ${PV})
-exparam -v CROSS_PERL_VER cross_perl_ver[@]
+myexparam perl_cross_ver=
+myexparam perl_cross_base=${PV}
 
 SUMMARY="Perl is a general-purpose programming language originally developed for text manipulation"
 HOMEPAGE="http://www.perl.org"
 DOWNLOADS="
     mirror://cpan/src/5.0/${PNV}.tar.bz2
-    https://github.com/arsv/${PN}-cross/releases/download/${CROSS_PERL_VER[0]}/${PN}-${CROSS_PERL_VER[1]:-${PV}}-cross-${CROSS_PERL_VER[0]}.tar.gz
+    https://github.com/arsv/${PN}-cross/releases/download/$(exparam perl_cross_ver)/${PN}-$(exparam perl_cross_base)-cross-$(exparam perl_cross_ver).tar.gz
 "
 
 REMOTE_IDS="cpan:${PN} freecode:${PN}"
@@ -59,10 +56,13 @@ option_define() {
 
 perl-5_src_unpack() {
     default
+    
+    local perl_base
+    exparam -v perl_base perl_cross_base
 
-    if [[ -n ${CROSS_PERL_VER[1]} ]]; then
+    if [[ ${perl_base} != ${PV} ]]; then
         # perlcross and perl versions don't match exactly
-        edo cp -a "${WORKBASE}"/${PN}-${CROSS_PERL_VER[1]}/* "${WORK}"
+        edo cp -a "${WORKBASE}"/${PN}-${perl_base}/* "${WORK}"
     fi
 }
 
