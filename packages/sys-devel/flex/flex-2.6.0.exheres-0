@@ -28,11 +28,11 @@ DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
 AT_M4DIR=( m4 )
 
-src_test() {
+src_prepare() {
+    default
+
     # make check wants to rebuild this just because of autoreconf
     edo touch doc/flex.pdf
-
-    default
 }
 
 src_install() {
