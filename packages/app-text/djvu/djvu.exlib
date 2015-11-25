@@ -4,7 +4,9 @@
 
 MY_PN="djvulibre"
 
-require freedesktop-desktop freedesktop-mime sourceforge [ project=${PN} suffix=tar.gz ]
+require freedesktop-mime gtk-icon-cache sourceforge [ project=${PN} suffix=tar.gz ]
+
+export_exlib_phases pkg_postinst pkg_postrm
 
 SUMMARY="DjVu encoders and utilities"
 
@@ -34,13 +36,13 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-threads
 )
 
-pkg_postinst() {
-    freedesktop-desktop_pkg_postinst
+djvu_pkg_postinst() {
     freedesktop-mime_pkg_postinst
+    gtk-icon-cache_pkg_postinst
 }
 
-pkg_postrm() {
-    freedesktop-desktop_pkg_postrm
+djvu_pkg_postrm() {
     freedesktop-mime_pkg_postrm
+    gtk-icon-cache_pkg_postrm
 }
 
