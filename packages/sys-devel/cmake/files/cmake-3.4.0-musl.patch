@@ -1,5 +1,5 @@
-Upstream: not yet
-Source: Void Linux
+Upstream: submitted
+Source: http://public.kitware.com/pipermail/cmake-developers/2015-November/027079.html
 
 --- Source/cmStandardIncludes.h.orig
 +++ Source/cmStandardIncludes.h
