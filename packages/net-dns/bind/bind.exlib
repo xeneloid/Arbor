@@ -54,6 +54,8 @@ DEPENDENCIES="
         threads? ( sys-libs/libcap[>=2.1.0] )
         group/named
         user/named
+    run:
+        net-dns/bind-tools[~${PV}][geoip=][idn=][kerberos=][providers:*=]
 "
 
 # Tons of sandbox violations.
@@ -121,6 +123,13 @@ bind_src_configure() {
 
 bind_src_install() {
     default
+
+    #remove conflicts with bind-tools
+    local BIND_TOOL BIND_TOOLS=( dig.1 host.1 nslookup.1 nsupdate.1 dnssec-keygen.8 )
+    for BIND_TOOL in "${BIND_TOOLS[@]}"; do
+        edo rm "${IMAGE}"/usr/$(exhost --target)/bin/${BIND_TOOL%.*}
+        edo rm "${IMAGE}"/usr/share/man/man${BIND_TOOL#*.}/${BIND_TOOL}
+    done
 
     keepdir /etc/${PN} /var/${PN}/{pri,sec}
     edo chown named:named "${IMAGE}"/var/${PN}/{pri,sec}
