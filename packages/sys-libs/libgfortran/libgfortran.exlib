@@ -26,7 +26,6 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        sys-libs/glibc
         sys-libs/libquadmath:${SLOT}
 "
 
