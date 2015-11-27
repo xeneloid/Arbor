@@ -1,0 +1,45 @@
+# Copyright 2013 Bryan Østergaard <kloeri@exherbo.org>
+# Copyright 2015 Wouter van Kesteren <woutershep@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require perl-module
+
+SUMMARY="Tools to sign and check DNSSEC DNS zones."
+HOMEPAGE="http://www.dnssec-tools.org/"
+DOWNLOADS="http://www.dnssec-tools.org/download/${PNV}.tar.gz"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build+run:
+        dev-perl/Net-DNS
+        dev-perl/XML-Simple
+        net-dns/bind
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --with-ipv6
+    --with-libval
+    --with-perl-build-args="INSTALLMAN3DIR=none INSTALLDIRS=vendor"
+    --with-threads
+    --with-validator
+)
+
+src_prepare() {
+    edo sed -e 's:\$(PREFIX)/share:/usr/share:g' \
+            -e "s:\$(DISTDIR):${IMAGE}:" \
+            -i tools/donuts/Makefile.PL
+}
+
+src_configure() {
+    export PERL_MM_USE_DEFAULT="1"
+    default
+}
+
+src_install() {
+    perl-module_src_install
+    edo rm "${IMAGE}"/usr/share/man/man3/Net::*.3
+}
