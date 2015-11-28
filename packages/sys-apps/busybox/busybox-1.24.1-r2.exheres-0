@@ -196,11 +196,6 @@ src_install() {
         /usr/$(exhost --target)/bin/grep        /usr/$(exhost --target)/bin/busybox \
         /usr/$(exhost --target)/bin/egrep       /usr/$(exhost --target)/bin/busybox \
         /usr/$(exhost --target)/bin/fgrep       /usr/$(exhost --target)/bin/busybox
-    alternatives_for gzip       ${PN}   75  \
-        /usr/$(exhost --target)/bin/gzip        /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/gunzip      /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/uncompress  /usr/$(exhost --target)/bin/busybox \
-        /usr/$(exhost --target)/bin/zcat        /usr/$(exhost --target)/bin/busybox
     alternatives_for hostname   ${PN}   75  \
         /usr/$(exhost --target)/bin/hostname    /usr/$(exhost --target)/bin/busybox
     alternatives_for kmod-tools ${PN}   75  \
@@ -216,8 +211,6 @@ src_install() {
         /usr/$(exhost --target)/bin/ntpd        /usr/$(exhost --target)/bin/busybox
     alternatives_for sed        ${PN}   75  \
         /usr/$(exhost --target)/bin/sed         /usr/$(exhost --target)/bin/busybox
-    alternatives_for tar        ${PN}   75  \
-        /usr/$(exhost --target)/bin/tar         /usr/$(exhost --target)/bin/busybox
     alternatives_for unzip      ${PN}   75  \
         /usr/$(exhost --target)/bin/unzip       /usr/$(exhost --target)/bin/busybox
     alternatives_for uptime     ${PN}   75  \
