@@ -5,8 +5,7 @@ SUMMARY="libestr - some essentials for string handling (and a bit more)"
 HOMEPAGE="http://libestr.adiscon.com"
 DOWNLOADS="${HOMEPAGE}/files/download/${PNV}.tar.gz"
 
-BUGS_TO="philantrop@exherbo.org"
-REMOTE_IDS="freecode:${PN}"
+BUGS_TO=""
 
 LICENCES="LGPL-2.1"
 SLOT="0"
