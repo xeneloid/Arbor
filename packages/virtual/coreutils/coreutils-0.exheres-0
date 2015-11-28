@@ -14,7 +14,7 @@ This includes utilities such as:
 HOMEPAGE=""
 
 SLOT="0"
-PLATFORMS="~amd64 ~armv7"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( providers:
         busybox
