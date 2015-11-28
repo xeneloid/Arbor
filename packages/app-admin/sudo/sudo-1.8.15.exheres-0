@@ -67,6 +67,16 @@ DEFAULT_SRC_COMPILE_PARAMS=( OPTIONS= )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( TROUBLESHOOTING UPGRADE )
 
+src_configure() {
+    econf   \
+        ${DEFAULT_SRC_CONFIGURE_PARAMS[@]} \
+        $(if [[ $(exhost --target) == i686-*-musl ]];then
+            echo --disable-hardening
+        else
+            echo --enable-hardening
+        fi)
+}
+
 src_install() {
     default
 
