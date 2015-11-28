@@ -63,6 +63,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-install-program=arch,hostname
     --enable-largefile
     --program-prefix=g
+    gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
 AT_M4DIR=( m4 )
@@ -127,6 +128,9 @@ coreutils_src_install() {
     # since shadow deals with logins and such anyway, it is preferred
     edo rm "${IMAGE}"/usr/$(exhost --target)/bin/ggroups
     edo rm "${IMAGE}"/usr/share/man/man1/ggroups.1
+
+    # musl file conflicts
+    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 
     local coreutils_alternatives=()
     for prog in "${IMAGE}"/usr/$(exhost --target)/bin/*;do
