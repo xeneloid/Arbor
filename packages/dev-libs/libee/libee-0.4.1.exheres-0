@@ -1,4 +1,4 @@
-# Copyright 2012 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2012-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Libee - An Event Expression Library inspired by CEE"
@@ -11,7 +11,7 @@ conversion tool that provides format transformation without the need to program.
 HOMEPAGE="http://www.libee.org"
 DOWNLOADS="${HOMEPAGE}/files/download/${PNV}.tar.gz"
 
-BUGS_TO="philantrop@exherbo.org"
+BUGS_TO=""
 REMOTE_IDS="freecode:${PN}"
 
 LICENCES="LGPL-2.1"
