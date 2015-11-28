@@ -122,7 +122,8 @@ DEPENDENCIES="
         ]]
 "
 
-# requires root
+# As broken as it gets - the tests even signal failure when they're just checking
+# for the file system type
 RESTRICT="test"
 
 # TODO
