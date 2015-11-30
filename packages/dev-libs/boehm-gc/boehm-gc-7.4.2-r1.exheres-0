@@ -3,13 +3,15 @@
 # Based in part upon 'boehm-gc-7.1.ebuild', which is:
 #   Copyright 1999-2008 Gentoo Foundation
 
+require flag-o-matic toolchain-funcs
+
 MY_PNV="gc-${PV/_/}"
 
 SUMMARY="The Boehm-Demers-Weiser conservative garbage collector"
 HOMEPAGE="http://www.hboehm.info/gc"
 DOWNLOADS="${HOMEPAGE}/gc_source/${MY_PNV}.tar.gz"
 
-LICENCES="as-is"
+LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
@@ -21,22 +23,21 @@ DEPENDENCIES="
         dev-libs/libatomic_ops[>=7.4.2]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-cplusplus
     --enable-threads=posix
     --disable-static
     --with-libatomic-ops
+    --datadir=/usr/share/doc/${PNVR}
 )
 
 WORK=${WORKBASE}/${MY_PNV%d}
 
-src_install() {
-    default
-
-    # move docs to docdir
-    dodir /usr/share/doc/${PNVR}/html
-    edo mv "${IMAGE}"/usr/share/gc/*.html "${IMAGE}"/usr/share/doc/${PNVR}/html
-    edo mv "${IMAGE}"/usr/share/gc/* "${IMAGE}"/usr/share/doc/${PNVR}
-    edo rm -r "${IMAGE}"/usr/share/gc
+pkg_setup() {
+    libc-is-musl && append-flags -DNO_GETCONTEXT
 }
 
