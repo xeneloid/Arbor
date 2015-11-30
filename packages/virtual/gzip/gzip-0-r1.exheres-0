@@ -8,7 +8,6 @@ SLOT="0"
 PLATFORMS="~amd64"
 MYOPTIONS="
     ( providers:
-        busybox
         gnu
         pigz
     ) [[
@@ -18,7 +17,6 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( app-arch/gzip )
     providers:pigz? ( app-arch/pigz )
 "

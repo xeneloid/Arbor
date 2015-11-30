@@ -10,7 +10,6 @@ SLOT="0"
 PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( providers:
-        busybox
         gnu
         libarchive
     ) [[
@@ -20,7 +19,6 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( app-arch/tar )
     providers:libarchive? ( app-arch/libarchive )
 "
