@@ -6,3 +6,8 @@ require llvm
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl-p1.patch
+    "${FILES}"/${PNV}-musl-p2.patch
+)
+
