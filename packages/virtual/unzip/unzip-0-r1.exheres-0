@@ -9,7 +9,6 @@ PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( providers:
         bsdunzip
-        busybox
         unzip
     ) [[
         *description = [ unzip provider ]
@@ -19,7 +18,6 @@ MYOPTIONS="
 
 DEPENDENCIES="
     providers:bsdunzip? ( app-arch/bsdunzip )
-    providers:busybox? ( sys-apps/busybox )
     providers:unzip? ( app-arch/unzip )
 "
 
