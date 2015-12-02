@@ -12,6 +12,7 @@ MYOPTIONS="
     ( providers:
         busybox
         gnu
+        lok
         mawk
     ) [[
         *description = [ awk provider ]
@@ -22,6 +23,7 @@ MYOPTIONS="
 DEPENDENCIES="
     providers:busybox? ( sys-apps/busybox )
     providers:gnu? ( sys-apps/gawk )
+    providers:lok? ( sys-apps/lok )
     providers:mawk? ( sys-apps/mawk )
 "
 
