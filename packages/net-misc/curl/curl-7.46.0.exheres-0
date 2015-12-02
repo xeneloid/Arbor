@@ -42,7 +42,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-werror
     --disable-sspi
     --with-{libssh2,zlib}
-    --without-{axtls,ca-bundle,cyassl,libmetalink,nghttp2,nss,polarssl}
+    --without-{axtls,ca-bundle,cyassl,libmetalink,libpsl,mbedtls,nghttp2,nss,polarssl,zsh-functions-dir}
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     ares '!ares threaded-resolver'
