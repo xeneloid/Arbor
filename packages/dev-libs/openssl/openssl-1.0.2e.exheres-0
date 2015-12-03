@@ -3,7 +3,7 @@
 
 SUMMARY="Open source SSL and TLS implementation and cryptographic library"
 HOMEPAGE="https://www.openssl.org"
-DOWNLOADS="${HOMEPAGE}/source/${PNV}.tar.gz"
+DOWNLOADS="${HOMEPAGE}/source/${PNV}.tar.gz -> ${PNV}-r1.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
@@ -26,7 +26,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-0.9.8o-CFLAGS.patch
-    "${FILES}"/${PN}-1.0.2e-missing-pod2mantest.patch
 )
 
 # Tests don't run in parallel
