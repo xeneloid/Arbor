@@ -59,7 +59,7 @@ RESTRICT="test"
 VIMFILE="${PN}.vim"
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/remove-test-failure-submits-via-network2.patch
+    "${FILES}"/${PN}-remove-test-failure-submits-via-network2.patch
     "${FILES}"/${PN}-install-cmake.m4-to-usr-share-aclocal.patch
 )
 DEFAULT_SRC_TEST_PARAMS=( ARGS=--verbose )
