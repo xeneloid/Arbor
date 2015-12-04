@@ -9,7 +9,7 @@ myexparam module=extension
 
 # If the package doesn't support all php slots, you have to list
 # all supported slots yourself
-myexparam php_abis=[ 5.4 5.5 5.6 ]
+myexparam php_abis=[ 5.4 5.5 5.6 7.0 ]
 
 # Provide a way to customize the PN used by easy-multibuild for $WORK
 myexparam pn=${PN}
