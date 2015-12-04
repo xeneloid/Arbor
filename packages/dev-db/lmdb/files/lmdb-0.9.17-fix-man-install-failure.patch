@@ -1,0 +1,14 @@
+Upstream: Submitted, http://www.openldap.org/its/index.cgi?findid=8332
+
+diff -Naur lmdb-LMDB_0.9.17/Makefile lmdb-LMDB_0.9.17.new/Makefile
+--- lmdb-LMDB_0.9.17/Makefile	2015-11-30 17:55:33.000000000 +0100
++++ lmdb-LMDB_0.9.17.new/Makefile	2015-12-04 12:50:51.720202552 +0100
+@@ -42,7 +42,7 @@
+ 	mkdir -p $(DESTDIR)$(prefix)/bin
+ 	mkdir -p $(DESTDIR)$(prefix)/lib
+ 	mkdir -p $(DESTDIR)$(prefix)/include
+-	mkdir -p $(DESTDIR)$(prefix)/man/man1
++	mkdir -p $(DESTDIR)$(mandir)/man1
+ 	for f in $(IPROGS); do cp $$f $(DESTDIR)$(prefix)/bin; done
+ 	for f in $(ILIBS); do cp $$f $(DESTDIR)$(prefix)/lib; done
+ 	for f in $(IHDRS); do cp $$f $(DESTDIR)$(prefix)/include; done

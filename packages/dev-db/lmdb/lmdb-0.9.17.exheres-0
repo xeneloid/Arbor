@@ -5,8 +5,7 @@ require lmdb
 
 PLATFORMS="~amd64"
 
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    -p3 "${FILES}"/${PN}-Allow-passing-AR-to-make.patch
-        "${FILES}"/${PN}-Allow-passing-manprefix-to-make-install.patch
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-0.9.17-fix-man-install-failure.patch
 )
 
