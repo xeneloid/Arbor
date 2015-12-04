@@ -41,8 +41,6 @@ MYOPTIONS="
             ldap          [[ description = [ Support for LDAP authentication (activates SASL, too). ] ]]
             libedit       [[ description = [ Use libedit, the readline replacement. ] requires = [ php_extensions: -readline ] ]]
             mcrypt        [[ description = [ Support modern encryption algorithms, e. g. AES. ] ]]
-            mssql         [[ description = [ Support for MS SQL-Server. ] ]]
-            mysql         [[ description = [ Support for the popular MySQL database. ] requires = [ php_extensions: -recode ] ]]
             mysqli        [[ description = [ Support for the popular MySQL database, improved driver. ] ]]
             pcre          [[ description = [ Include support for Perl Compatible Regular Expressions. ] ]]
             pdo-dblib     [[ description = [ PDO: Support for MS SQL-Server. ] ]]
@@ -53,7 +51,6 @@ MYOPTIONS="
             pgsql         [[ description = [ Support for the PostgreSQL database. ] ]]
             pspell        [[ description = [ Support for spell checking via aspell. ] ]]
             readline      [[ description = [ Include readline support (CLI/CGI only) ] requires = [ php_extensions: -libedit ] ]]
-            recode        [[ description = [ Include support for the recode extension. ] requires = [ php_extensions: -mysql ] ]]
             ssl           [[ description = [ Include OpenSSL support (can be used for FTP, IMAP, SNMP). ] ]]
             tidy          [[ description = [ Include TIDY support. ] ]]
             unixodbc      [[ description = [ Support for using ODBC database connections using unixODBC. ] ]]
@@ -77,6 +74,24 @@ if ! ever at_least 5.5.9; then
     "
 fi
 
+if ! ever at_least 7.0.0; then
+    MYOPTIONS+="
+        (
+            php_extensions:
+                mssql         [[ description = [ Support for MS SQL-Server. ] ]]
+                mysql         [[ description = [ Support for the popular MySQL database. ] requires = [ php_extensions: -recode ] ]]
+                recode        [[ description = [ Include support for the recode extension. ] requires = [ php_extensions: -mysql ] ]]
+        )
+    "
+else
+    MYOPTIONS+="
+        (
+            php_extensions:
+                recode        [[ description = [ Include support for the recode extension. ] ]]
+        )
+    "
+fi
+
 DEPENDENCIES="
     build:
         sys-devel/gettext
@@ -94,7 +109,6 @@ DEPENDENCIES="
             media-libs/freetype:2
             media-libs/libpng:=[>=1.2.35]
             media-libs/libvpx
-            media-libs/t1lib[>=5.1.2]
             x11-libs/libXpm[>=3.5.7]
             providers:ijg-jpeg? ( media-libs/jpeg:=[>=6b] )
             providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
@@ -115,7 +129,6 @@ DEPENDENCIES="
         )
         php_extensions:libedit? ( dev-libs/libedit[>=2.11_p20080712] )
         php_extensions:mcrypt? ( dev-libs/libmcrypt[>=2.5.8] )
-        php_extensions:mssql? ( dev-db/freetds[>=0.82] )
         php_extensions:pcre? ( dev-libs/pcre[>=7.9] )
         php_extensions:pdo-dblib? ( dev-db/freetds[>=0.82] )
         php_extensions:pdo-odbc? ( dev-db/unixODBC[>=2.2.14] )
@@ -145,6 +158,15 @@ DEPENDENCIES="
 if ever at_least 5.6.4; then
     DEPENDENCIES+="
         app-arch/libzip[>=0.11]
+    "
+fi
+
+if ! ever at_least 7.0.0; then
+    DEPENDENCIES+="
+        php_extensions:gd? (
+            media-libs/t1lib[>=5.1.2]
+        )
+        php_extensions:mssql? ( dev-db/freetds[>=0.82] )
     "
 fi
 
@@ -203,14 +225,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-zlib
     --with-zlib-dir=/usr
     --without-adabas
-    --without-aolserver
-    --without-apache-hooks
-    --without-apache-hooks-static
-    --without-apxs
     --without-birdstep
-    --without-caudium
     --without-cdb
-    --without-continuity
     --without-custom-odbc
     --without-dbmaker
     --without-empress
@@ -221,27 +237,17 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-ibm-db2
     --without-interbase
     --without-iodbc
-    --without-isapi
     --without-litespeed
-    --without-milter
     --without-mm
     --without-ndbm
-    --without-nsapi
     --without-ODBCRouter
     --without-oci8
     --without-pdo-firebird
     --without-pdo-oci
-    --without-phttpd
-    --without-pi3web
     --without-qdbm
-    --without-roxen
     --without-sapdb
     --without-snmp
     --without-solid
-    --without-sybase-ct
-    --without-thttpd
-    --without-tux
-    --without-webjames
 )
 
 if ever at_least 5.5.9; then
@@ -253,6 +259,27 @@ fi
 if ever at_least 5.6.4; then
     DEFAULT_SRC_CONFIGURE_PARAMS+=(
         --with-libzip
+    )
+fi
+
+if ! ever at_least 7.0.0; then
+    DEFAULT_SRC_CONFIGURE_PARAMS+=(
+        --without-aolserver
+        --without-apache-hooks
+        --without-apache-hooks-static
+        --without-apxs
+        --without-caudium
+        --without-continuity
+        --without-isapi
+        --without-milter
+        --without-nsapi
+        --without-phttpd
+        --without-pi3web
+        --without-roxen
+        --without-sybase-ct
+        --without-thttpd
+        --without-tux
+        --without-webjames
     )
 fi
 
@@ -283,7 +310,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "php_extensions:gd jpeg-dir /usr"
     "php_extensions:gd freetype-dir /usr"
     "php_extensions:gd png-dir /usr"
-    "php_extensions:gd t1lib /usr"
     "php_extensions:gd xpm-dir /usr"
     "php_extensions:imap imap"
     "php_extensions:gdbm gdbm"
@@ -292,9 +318,6 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "php_extensions:ldap ldap-sasl"
     "php_extensions:libedit libedit"
     "php_extensions:mcrypt mcrypt"
-    "php_extensions:mssql mssql"
-    "php_extensions:mysql mysql mysqlnd"
-    "php_extensions:mysql mysql-sock /run/mysqld/mysqld.sock"
     "php_extensions:mysqli mysqli mysqlnd"
     "php_extensions:mysqli mysql-sock /run/mysqld/mysqld.sock"
     "php_extensions:pcre pcre-dir /usr"
@@ -325,6 +348,15 @@ if ever at_least 5.5.9; then
 else
     DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
         "php_extensions:curlwrappers curlwrappers"
+    )
+fi
+
+if ! ever at_least 7.0.0; then
+    DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=(
+        "php_extensions:gd t1lib /usr"
+        "php_extensions:mssql mssql"
+        "php_extensions:mysql mysql mysqlnd"
+        "php_extensions:mysql mysql-sock /run/mysqld/mysqld.sock"
     )
 fi
 
@@ -448,8 +480,10 @@ php_src_install() {
         done
     fi
 
-    if option php_extensions:mysql ; then
-        edo sed -i -e 's:.*\(mysql.default_socket =\).*:\1 "/run/mysqld/mysqld.sock":' "${IMAGE}"/etc/php-${SLOT}/php.ini
+    if ! ever at_least 7.0.0; then
+        if option php_extensions:mysql ; then
+            edo sed -i -e 's:.*\(mysql.default_socket =\).*:\1 "/run/mysqld/mysqld.sock":' "${IMAGE}"/etc/php-${SLOT}/php.ini
+        fi
     fi
 
     if option apache; then
@@ -458,7 +492,7 @@ php_src_install() {
        doins "${FILES}"/70_mod_php.conf
     fi
 
-    if option fpm; then
+    if option fpm || ever at_least 7.0.0; then
         edo rmdir "${IMAGE}"/var/{run,log}
         if ! option pear; then
             edo rmdir "${IMAGE}"/var
