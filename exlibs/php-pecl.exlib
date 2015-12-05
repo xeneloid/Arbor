@@ -101,3 +101,13 @@ install_one_multibuild() {
     php-pecl_install_one_multibuild
 }
 
+php-pecl_test_one_multibuild() {
+    export NO_INTERACTION=Yes
+
+    default
+}
+
+test_one_multibuild() {
+    php-pecl_test_one_multibuild
+}
+
