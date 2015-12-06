@@ -26,7 +26,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     build+run:
-        sys-libs/libquadmath:${SLOT}
+        sys-libs/libquadmath:${SLOT}[~>${PV}]
 "
 
 REMOTE_IDS="freecode:gcc"
