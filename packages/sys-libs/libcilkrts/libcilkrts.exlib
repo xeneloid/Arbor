@@ -21,11 +21,6 @@ fi
 
 MYOPTIONS=""
 
-DEPENDENCIES="
-    build+run:
-        sys-libs/glibc
-"
-
 REMOTE_IDS="freecode:gcc"
 
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}gcc-${SLOT}/"
