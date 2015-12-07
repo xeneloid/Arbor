@@ -431,7 +431,7 @@ vim_src_install() {
         alternatives_for "${alternatives[@]}"
     else
         local importance
-        [[ ${PN} == vim ]] && importance=10 || importance=5
+        [[ ${PN} == vim ]] && importance=100 || importance=5
         alternatives_for 'vi' "${PN}" "${importance}" "/usr/$(exhost --target)/bin/vi" "${PN}"
         alternatives_for 'vi' "${PN}" "${importance}" "/usr/share/man/man1/vi.1" 'vim.1'
         alternatives_for 'vi' "${PN}" "${importance}" "/usr/$(exhost --target)/bin/ex" "${PN}"
