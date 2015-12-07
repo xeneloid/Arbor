@@ -1,14 +1,19 @@
 # Copyright 2015 Benedikt Morbach <moben@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-
 # An exlib to slot libraries and provide symlinks for each installed version.
 # Mainly intended for use by things like libstdc++, which must never break.
 #
 # This is different from "ordinary" slotting, where only one version of the library is kept around
 
-
 require alternatives
+
+case ${CATEGORY}/${PN} in
+    sys-devel/gcj) HOMEPAGE="https://gcc.gnu.org/java/" ;;
+    sys-libs/libgomp) HOMEPAGE="https://gcc.gnu.org/projects/gomp/" ;;
+    sys-libs/libstdc++) HOMEPAGE="https://gcc.gnu.org/libstdc++/" ;;
+    *) HOMEPAGE="https://gcc.gnu.org/" ;;
+esac
 
 # argument: at least one library name (without the .so)
 #

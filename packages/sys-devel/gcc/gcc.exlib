@@ -5,6 +5,7 @@ require gnu [ suffix=bz2 subdir=${PNV} ]
 require alternatives
 
 SUMMARY="stand alone compiler"
+HOMEPAGE="https://gcc.gnu.org/"
 
 LICENCES="GPL-2"
 # Upstream did some version bikeshedding, 5.x. are bugfix releases.
