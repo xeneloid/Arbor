@@ -17,8 +17,11 @@ DEPENDENCIES="
         platform:x86? ( dev-lang/nasm )
 "
 
-WORK="${WORKBASE}/${MY_PNV}"
+WORK=${WORKBASE}/${MY_PNV}
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-15.09-CVE-2015-1038.patch
+)
 DEFAULT_SRC_COMPILE_PARAMS=( all3 )
 DEFAULT_SRC_INSTALL_PARAMS=(
     DEST_DIR="${IMAGE}"
@@ -28,6 +31,8 @@ DEFAULT_SRC_INSTALL_PARAMS=(
 )
 
 src_prepare() {
+    default
+
     local makefile
 
     case "$(exhost --target)" in
@@ -49,10 +54,9 @@ src_prepare() {
 
     edo sed -e "s:-m32 ::g" \
             -e "s:-m64 ::g" \
-            -e "/^OPTFLAGS/s:-O::" \
-            -e "/ALLFLAGS/s:-s ::" \
-            -e "s:^CC=[^ ]\+\? \(.*\):CC=$(exhost --tool-prefix)cc ${CFLAGS} \1:" \
-            -e "s:^CXX=[^ ]\+\? \(.*\):CXX=$(exhost --tool-prefix)c++ ${CXXFLAGS} \1:" \
+            -e "/^OPTFLAGS/s:-O -s::" \
+            -e "s:^CC=[^ ]\+:CC=$(exhost --tool-prefix)cc ${CFLAGS}:" \
+            -e "s:^CXX=[^ ]\+:CXX=$(exhost --tool-prefix)c++ ${CXXFLAGS}:" \
             -i makefile.machine
 
     edo sed -i -e "/strip/d" install.sh
@@ -71,7 +75,7 @@ exec /usr/$(exhost --target)/lib/${PN}/\${0##*/} "\${@}"
 EOF
     dosym 7z /usr/$(exhost --target)/bin/7za
     dosym 7z /usr/$(exhost --target)/bin/7zr
-    edo rm -rf "${IMAGE}usr/bin"
+    edo rm -rf "${IMAGE}"/usr/bin
 
     edo find "${IMAGE}" -type f -iname "*License*" -o -iname "*copying*" -delete
 }
