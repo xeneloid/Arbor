@@ -35,6 +35,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-unzip.patch
+    "${FILES}"/${PNV}-unzip-regression.patch
 )
 
 bb_make() {
@@ -161,7 +162,6 @@ src_install() {
     if option doc;then
         dodoc -r examples
         dodoc docs/*.{txt,pod,html}
-        doman docs/busybox.1
     fi
 
     coreutils=(
@@ -171,8 +171,11 @@ src_install() {
         nice nohup od printenv printf pwd readlink realpath rm rmdir seq
         sha1sum sha256sum sha512sum shuf sleep sort split stat stty sum
         sync tac tail tee test timeout touch tr true tty uname unexpand
-        uniq unlink users wc who whoami yes
+        uniq unlink wc who whoami yes
     )
+
+    # we disable CONFIG_UTMP on musl, users only exists if it is enabled
+    libc-is-musl || coreutils+=( users )
 
     # alternatives
     local coreutils_alternatives=()
