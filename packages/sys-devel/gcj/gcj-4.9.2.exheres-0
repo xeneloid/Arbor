@@ -1,6 +1,7 @@
 # Copyright 2012 © Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+ECJ_JAR_PV=4.5
 require gcj
 
 PLATFORMS="~amd64"

@@ -5,7 +5,6 @@
 require gnu [ suffix=bz2 pn=gcc subdir=gcc-${PV} ]
 require alternatives toolchain-runtime-libraries
 
-ECJ_JAR_PV=4.5
 DOWNLOADS+=" mirror://sourceware/java/ecj-${ECJ_JAR_PV}.jar"
 
 SUMMARY="stand alone java compiler"
@@ -32,12 +31,14 @@ DEPENDENCIES="
         virtual/unzip
     build+run:
         dev-libs/gmp:=[>=4.2]
+        dev-libs/isl:=[>=0.12]
         dev-libs/mpc:=[>=0.8.1]
         dev-libs/mpfr:=[>=2.4.0]
         sys-libs/zlib
     run:
         sys-devel/binutils[targets:*(-)?]
 "
+
 #   build:
 #       $(for host in ${CROSS_COMPILE_TARGETS} ; do
 #           echo hosts:${host}? ( sys-devel/binutils[targets:${host}] )
@@ -57,6 +58,10 @@ gcj_pkg_setup() {
         if option targets:${target}; then
             [[ -n ${!target_cflags_var} ]] || die "CFLAGS for ${target} are not set"
         fi
+
+        # ecj1: symbol lookup error: ecj1: undefined symbol: _Jv_Compiler_Properties
+        local target_ldflags_var=${target//-/_}_LDFLAGS
+        eval "${target_ldflags_var}+=\" -Wl,--no-as-needed\""
     done
 }
 
@@ -93,6 +98,81 @@ gcj_src_configure() {
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
 
+        local myconf=(
+            --cache-file=config.cache
+            --build=${CHOST}
+            --host=${CHOST}
+            --target=${target}
+            --prefix=/usr/${CHOST}
+            --datarootdir=/usr/share
+            --localstatedir=/var
+            --sysconfdir=/etc
+            --disable-dependency-tracking
+            --enable-fast-install
+            --enable-serial-configure
+            --disable-bootstrap
+            --disable-decimal-float
+            --disable-install-libiberty
+            --disable-libada
+            --disable-libatomic
+            --disable-libcilkrts
+            --disable-libgfortran
+            --disable-libgo
+            --disable-libgomp
+            --disable-libitm
+            --disable-libobjc
+            --disable-libquadmath
+            --disable-libsanitizer
+            --disable-libssp
+            --disable-libstdcxx
+            --disable-libstdc++-v3
+            --disable-libvtv
+            --disable-vtable-verify
+            --disable-multilib
+            --disable-nls
+            --disable-lto
+            --disable-plugin
+            --with-sysroot='""'
+            --without-newlib
+            --enable-threads
+            --enable-libffi
+            --enable-libjava
+            --enable-shared
+            --enable-languages=java
+            $(if [[ ${target} == ${CHOST} ]] ; then
+                echo --program-transform="s,$,-${SLOT},"
+              else
+                echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
+              fi)
+            --with-lib-path=${libpath}
+            --with-as=/usr/${CHOST}/bin/${target}-as
+            --with-ld=/usr/${CHOST}/bin/${target}-ld
+            --with-system-zlib
+            $(if [[ ${target} == armv7* ]] ; then
+                    # TODO(compnerd) use the variant agnostic architecture by default
+                    echo --with-arch=armv7-a
+              fi)
+            $(if [[ ${target} == arm*-*-*-*hf ]] ; then
+                echo --with-float=hard
+              fi)
+            --with-python-dir=/../share/gdb/python
+            --with-glibc-version=2.11
+            --enable-linker-build-id
+            --with-multilib-list=
+
+            # disable JNI relying on external things
+            # libjava/classpath/configure.ac
+            --disable-alsa
+            --disable-dssi
+        )
+
+        if ever at_least 5.0 ; then
+            myconf+=(
+                --disable-libmpx
+                --disable-liboffloadmic
+            )
+        fi
+
         edo env                                             \
             AR=${CHOST}-ar                                  \
             RANLIB=${CHOST}-ranlib                          \
@@ -106,73 +186,7 @@ gcj_src_configure() {
             CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"   \
             CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"   \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
-        "${WORKBASE}/gcc-${PV}/configure"         \
-                --cache-file=config.cache                   \
-                --build=${CHOST}                            \
-                --host=${CHOST}                             \
-                --target=${target}                          \
-                --prefix=/usr/${CHOST}                      \
-                --datarootdir=/usr/share                    \
-                --localstatedir=/var                        \
-                --sysconfdir=/etc                           \
-                --disable-dependency-tracking               \
-                --enable-fast-install                       \
-                --enable-serial-configure                   \
-                --disable-bootstrap                         \
-                --disable-decimal-float                     \
-                --disable-install-libiberty                 \
-                --disable-libada                            \
-                --disable-libatomic                         \
-                --disable-libcilkrts                        \
-                --disable-libgfortran                       \
-                --disable-libgo                             \
-                --disable-libgomp                           \
-                --disable-libitm                            \
-                $(if ever at_least 5.0 ; then
-                    echo --disable-libmpx
-                  fi)                                       \
-                --disable-libobjc                           \
-                $(if ever at_least 5.0 ; then
-                    echo --disable-liboffloadmic
-                  fi)                                       \
-                --disable-libquadmath                       \
-                --disable-libsanitizer                      \
-                --disable-libssp                            \
-                --disable-libstdcxx                         \
-                --disable-libstdc++-v3                      \
-                --disable-libvtv                            \
-                --disable-vtable-verify                     \
-                --disable-multilib                          \
-                --disable-nls                               \
-                --disable-lto                               \
-                --disable-plugin                            \
-                --with-sysroot='""'                         \
-                --without-newlib                            \
-                --enable-threads                            \
-                --enable-libffi                             \
-                --enable-libjava                            \
-                --enable-shared                             \
-                --enable-languages=java                     \
-                $(if [[ ${target} == ${CHOST} ]] ; then
-                    echo --program-transform="s,$,-${SLOT},"
-                  else
-                    echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
-                  fi)                                       \
-                --with-lib-path=${libpath}                  \
-                --with-as=/usr/${CHOST}/bin/${target}-as    \
-                --with-ld=/usr/${CHOST}/bin/${target}-ld    \
-                --with-system-zlib                          \
-                $(if [[ ${target} == armv7* ]] ; then
-                        # TODO(compnerd) use the variant agnostic architecture by default
-                        echo --with-arch=armv7-a
-                  fi)                                       \
-                $(if [[ ${target} == arm*-*-*-*hf ]] ; then
-                    echo --with-float=hard
-                  fi)                                       \
-                --with-python-dir=/../share/gdb/python       \
-                --with-glibc-version=2.11                   \
-                --enable-linker-build-id                    \
-                --with-multilib-list=
+        "${WORKBASE}/gcc-${PV}/configure" "${myconf[@]}"
     done
 }
 
