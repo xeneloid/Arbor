@@ -28,6 +28,7 @@ SLOT="4"
 PLATFORMS="~amd64 ~armv7 ~ppc64 ~x86"
 MYOPTIONS="
     debug
+    gcrypt     [[ description = [ Support log file encryption ] ]]
     gnutls
     kerberos
     mysql      [[ description = [ Support logging to a MySQL database ] ]]
@@ -40,10 +41,12 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
         dev-python/docutils
+        sys-devel/bison
     build+run:
         dev-libs/json-c
         dev-libs/libee[>=0.3.1]
         dev-libs/libestr[>=0.1.9]
+        gcrypt? ( dev-libs/libgcrypt )
         gnutls? ( dev-libs/gnutls )
         kerberos? ( app-crypt/heimdal )
         mysql? ( virtual/mysql )
@@ -81,6 +84,7 @@ src_configure() {
 
         $(option_enable debug)
         $(option_enable debug diagtools)
+        $(option_enable gcrypt libgcrypt)
         $(option_enable gnutls)
         $(option_enable kerberos gssapi-krb5)
         $(option_enable mysql)
