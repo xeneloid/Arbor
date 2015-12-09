@@ -14,9 +14,13 @@ myexparam php_abis=[ 5.4 5.5 5.6 ]
 # Provide a way to customize the PN used by easy-multibuild for $WORK
 myexparam pn=${PN}
 
+# Provide a way to customize WORK (will be passed to easy-multibuild)
+myexparam work=""
+
 exparam -v PHP_MODULE_TYPE module
 exparam -v PHP_ABIS php_abis[@]
 exparam -v MY_PN pn
+exparam -v MY_WORK work
 
 fix_PECL_PV() {
     tmp="${PV}"
@@ -36,11 +40,11 @@ fix_PECL_PV() {
 
 UPSTREAM_CHANGELOG="http://pecl.php.net/package-changelog.php?package=${PN}&release=${PECL_PV}"
 
-MY_PNV="${MY_PN}-${PECL_PV}"
+[[ -z ${MY_WORK} ]] && MY_WORK="${MY_PN}-${PECL_PV}"
 
 MULTIBUILD_PHP_ABIS_TARGETS="${PHP_ABIS[@]}"
 
-require easy-multibuild [ classes=[ PHP_ABIS ] multiunpack=true work=${MY_PNV} ]
+require easy-multibuild [ classes=[ PHP_ABIS ] multiunpack=true work=${MY_WORK} ]
 
 php_myoptions() {
     local abi
