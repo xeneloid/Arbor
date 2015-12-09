@@ -15,8 +15,8 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.
 export_exlib_phases pkg_pretend src_prepare src_configure src_test src_install
 
 SUMMARY="Python interpreter"
-HOMEPAGE="https://www.${PN}.org/"
-DOWNLOADS="https://www.${PN}.org/ftp/${PN}/${PV}/${MY_PNV}.tar.xz"
+HOMEPAGE="https://www.${PN}.org"
+DOWNLOADS="${HOMEPAGE}/ftp/${PN}/${PV}/${MY_PNV}.tar.xz"
 
 UPSTREAM_DOCUMENTATION="https://docs.${PN}.org/$(ever range 1-2)/"
 UPSTREAM_CHANGELOG="${HOMEPAGE}/download/releases/${PV}/NEWS.txt"
@@ -39,7 +39,7 @@ DEPENDENCIES="
         dev-libs/libffi
         sys-libs/ncurses
         sys-libs/zlib[>=1.1.3]
-        berkdb? ( sys-libs/db:=[>=4.6.21&<4.8] [[ note = [ python:2.7 also supports 4.8 ] ]] )
+        berkdb? ( sys-libs/db:=[>=4.6.21&<5.4] )
         gdbm? ( sys-libs/gdbm )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
@@ -51,6 +51,7 @@ DEPENDENCIES="
 "
 
 WORK="${WORKBASE}/${MY_PNV}"
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-ipv6
     --enable-shared

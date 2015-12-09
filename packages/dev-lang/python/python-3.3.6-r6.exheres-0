@@ -8,13 +8,10 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 DEPENDENCIES+="
     build+run:
         app-arch/xz
-        dev-libs/expat
         !dev-lang/python:3.2[=3.2.5] [[
             description = [ Man file collision ]
         ]]
 "
-
-DEFAULT_SRC_CONFIGURE_PARAMS+=( '--with-system-expat' )
 
 src_test() {
     local DISABLE_TESTS
@@ -23,7 +20,8 @@ src_test() {
     # test_socket: seems to hang
     # the rest want to bind to 0.0.0.0/::
     # test_ssl test_timeout test_urllibnet test_urllib2net: wants access to DNS
-    DISABLE_TESTS=( test_distutils test_ftplib test_gdb test_pydoc test_socket test_ssl test_timeout test_urllibnet test_urllib2net )
+    DISABLE_TESTS=( test_distutils test_faulthandler test_ftplib test_gdb test_pydoc test_socket
+                    test_ssl test_timeout test_urllibnet test_urllib2net test_uuid )
 
     # for test_socketserver
     esandbox allow_net "unix:${TEMP%/}"'/unix_socket.*'
