@@ -104,6 +104,7 @@ emacs_src_configure() {
         --infodir=/usr/share/info/emacs
         --with-pkg-config-prog=/usr/$(exhost --target)/bin/$(exhost --tool-prefix)pkg-config
         --without-compress-info # applies to manpages as well
+        --without-file-notification
         --without-gsettings
         --without-hesiod
         --without-imagemagick
@@ -163,6 +164,9 @@ EOF
     alternatives_for ctags emacs 500 \
         /usr/${CHOST}/bin/ctags ctags-emacs \
         /usr/share/man/man1/ctags.1 ctags-emacs.1
+
+    # Do not install empty directory
+    edo rmdir "${IMAGE}"/usr/share/emacs/24.5/lisp/emacs-parallel
 
     hereenvd 70${PN} <<EOF
 INFOPATH="/usr/share/info/${PN}"
