@@ -11,6 +11,7 @@ MYOPTIONS="
     kerberos
     ldap
     rtmp
+    zsh-completion
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 DEPENDENCIES="
@@ -33,6 +34,8 @@ DEPENDENCIES="
         )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
+    run:
+        zsh-completion? ( app-shells/zsh )
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -42,7 +45,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-werror
     --disable-sspi
     --with-{libssh2,zlib}
-    --without-{axtls,ca-bundle,cyassl,libmetalink,libpsl,mbedtls,nghttp2,nss,polarssl,zsh-functions-dir}
+    --without-{axtls,ca-bundle,cyassl,libmetalink,libpsl,mbedtls,nghttp2,nss,polarssl}
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     ares '!ares threaded-resolver'
@@ -52,6 +55,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'idn libidn'
     'kerberos gssapi'
     'rtmp librtmp'
+    'zsh-completion zsh-functions-dir /usr/share/zsh/site-functions'
     'providers:gnutls gnutls'
     'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
     '!providers:gnutls ssl'
@@ -98,6 +102,11 @@ EOF
 
 src_install() {
     default
+
+    # curl installs zsh completion file to /_curl if disabled!
+    if [[ -f "${IMAGE}"/_curl ]] && ! option zsh-completion;then
+        edo rm -f "${IMAGE}"/_curl
+    fi
 
     insinto /usr/share/aclocal
     doins "${WORK}"/docs/libcurl/libcurl.m4
