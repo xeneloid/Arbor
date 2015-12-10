@@ -15,7 +15,7 @@ REMOTE_IDS="freecode:${PN}"
 UPSTREAM_DOCUMENTATION+="${HOMEPAGE}/manual/ [[ lang = en ]]"
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/${PN}$(ever range 1-2).html [[ lang = en ]]"
 
-LICENCES="GPL-3 LGPL-3"
+LICENCES="|| ( GPL-2 LGPL-3 ) [[ last-checked = 6.1.0 ]]"
 SLOT="6"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS="parts: development documentation libraries"
