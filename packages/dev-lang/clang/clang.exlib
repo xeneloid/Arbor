@@ -42,6 +42,13 @@ DEPENDENCIES="
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
+    suggestion:
+        dev-libs/compiler-rt [[
+            description = [ Sanitizer runtimes for clang ]
+        ]]
+        sys-libs/openmp [[
+            description = [ OpenMP runtime for clang ]
+        ]]
 "
 
 # clang is a cross compiler and can compile for any target without a
