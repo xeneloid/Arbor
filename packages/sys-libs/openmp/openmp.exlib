@@ -1,0 +1,70 @@
+# Copyright 2015 Niels Ole Salscheider <niels_ole@salscheider-online.de>
+# Distributed under the terms of the GNU General Public License v2
+
+if ever is_scm ; then
+    SCM_REPOSITORY="http://llvm.org/git/openmp.git"
+
+    require scm-git
+else
+    MY_PNV=openmp-${PV}.src
+    WORK=${WORKBASE}/${MY_PNV}
+
+    DOWNLOADS=http://llvm.org/releases/${PV}/openmp-${PV}.src.tar.xz
+fi
+
+require cmake [ api=2 ]
+
+export_exlib_phases src_install
+
+SUMMARY="OpenMP runtime for clang"
+HOMEPAGE="http://openmp.llvm.org/"
+
+LICENCES="|| ( MIT UoI-NCSA )"
+SLOT="0"
+MYOPTIONS="
+    hwloc [[ description = [ Use the hwloc library for affinity ] ]]
+"
+
+LLVM_PVR=${PV}
+
+DEPENDENCIES="
+    build:
+        dev-lang/perl:*
+    build+run:
+        sys-libs/glibc
+        hwloc? ( dev-libs/hwloc )
+"
+
+case "$(exhost --target)" in
+    x86_64*)
+        OPENMP_ARCH="x86_64"
+        ;;
+    i*86-*)
+        OPENMP_ARCH="i386"
+        ;;
+    arm*)
+        OPENMP_ARCH="arm"
+        ;;
+    powerpc64*)
+        OPENMP_ARCH="ppc64"
+        ;;
+    aarch64*)
+        OPENMP_ARCH="aarch64"
+        ;;
+esac
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DLIBOMP_ARCH:STRING=${OPENMP_ARCH}
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'hwloc LIBOMP_USE_HWLOC'
+)
+
+openmp_src_install() {
+    cmake_src_install
+
+    # We have sys-libs/libgomp, remove symlink
+    rm ${IMAGE}/usr/$(exhost --target)/lib/libgomp.so
+}
+
