@@ -139,24 +139,31 @@ clang_src_install() {
         edo popd
     fi
 
-    edo pushd tools
-    insinto /usr/share/clang-analyzer
-    for f in scan-{build,view} ; do
-        doins -r ${f}
-        dosym /usr/share/clang-analyzer/${f}/${f} /usr/$(exhost --target)/bin/${f}
-    done
-    edo popd
-    edo popd
+    if ! ever is_scm; then
+        edo pushd tools
+        insinto /usr/share/clang-analyzer
+        for f in scan-{build,view} ; do
+            doins -r ${f}
+            dosym /usr/share/clang-analyzer/${f}/${f} /usr/$(exhost --target)/bin/${f}
+        done
+        edo popd
 
-    edo pushd "${IMAGE}"/usr/share/clang-analyzer
-    edo chmod a+x scan-build/{c{++,cc}-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
-    edo rm scan-build/*.bat
+        edo pushd "${IMAGE}"/usr/share/clang-analyzer
+        edo chmod a+x scan-build/{c{++,cc}-analyzer,scan-build,set-xcode-analyzer} scan-view/scan-view
+        edo rm scan-build/*.bat
+        edo popd
+    fi
+
     edo popd
 
     edo mv "${IMAGE}"/usr/$(exhost --target)/share/clang "${IMAGE}"/usr/share/
+    if ever is_scm; then
+        edo mv "${IMAGE}"/usr/$(exhost --target)/share/{scan-build,scan-view} "${IMAGE}"/usr/share/
+    fi
+
     edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 
-    if option doc;then
+    if option doc; then
         edo pushd "${IMAGE}"/usr/share/man/man1
         edo ln -s clang.1 clang++.1
         edo ln -s clang.1 clang-cpp.1
