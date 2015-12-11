@@ -25,6 +25,7 @@ DEPENDENCIES="
         net-libs/libssh2[>=1.2.8]
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
+        http2? ( net-libs/nghttp2 )
         idn? ( net-dns/libidn )
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap )
