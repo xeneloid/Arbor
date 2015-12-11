@@ -7,6 +7,7 @@ require curl
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     ares [[ description = [ Enabled c-ares posix-threaded dns support, disables curl's own threaded resolver ] ]]
+    http2
     idn
     kerberos
     ldap
@@ -45,21 +46,22 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-werror
     --disable-sspi
     --with-{libssh2,zlib}
-    --without-{axtls,ca-bundle,cyassl,libmetalink,libpsl,mbedtls,nghttp2,nss,polarssl}
+    --without-{axtls,ca-bundle,cyassl,libmetalink,libpsl,mbedtls,nss,polarssl}
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     ares '!ares threaded-resolver'
     ldap 'ldap ldaps'
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    'http2 nghttp2'
     'idn libidn'
     'kerberos gssapi'
     'rtmp librtmp'
     'zsh-completion zsh-functions-dir /usr/share/zsh/site-functions'
-    'providers:gnutls gnutls'
-    'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
-    '!providers:gnutls ssl'
     '!providers:gnutls ca-path /etc/ssl/certs'
+    '!providers:gnutls ssl'
+    'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
+    'providers:gnutls gnutls'
 )
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES=( docs/ )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BINDINGS DISTRO FEATURES INTERNALS MANUAL RESOURCES TheArtOfHttpScripting )
