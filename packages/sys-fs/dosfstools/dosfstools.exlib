@@ -1,9 +1,9 @@
 # Copyright 2008 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ release=v${PV} suffix=tar.xz ]
+require flag-o-matic github [ release=v${PV} suffix=tar.xz ]
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases pkg_setup src_prepare src_install
 
 SUMMARY="Utilities to create and check MS-DOS filesystems under Linux"
 DESCRIPTION="MS-DOS filesystem programs mkfs.fat, fatlabel and fsck.fat."
@@ -20,6 +20,10 @@ RESTRICT="test"
 DEPENDENCIES=""
 
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
+
+dosfstools_pkg_setup() {
+    append-flags -D_GNU_SOURCE -Du_int32_t=uint32_t
+}
 
 dosfstools_src_prepare() {
     default
