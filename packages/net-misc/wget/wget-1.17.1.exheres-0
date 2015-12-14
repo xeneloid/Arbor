@@ -1,8 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ]
-require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
+require gnu [ suffix=xz ] option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
 SUMMARY="Wget is a package for retrieving files using HTTP, HTTPS and FTP"
 
@@ -12,18 +11,19 @@ LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
-    idn    [[ description = [ Enable support for internationalized domain names ] ]]
+    idn [[ description = [ Enable support for internationalized domain names ] ]]
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
     build:
-        sys-devel/gettext[>=0.17]
+        sys-devel/gettext[>=0.18.1]
         virtual/pkg-config[>=0.9.0]
     build+run:
         dev-libs/pcre
         sys-apps/util-linux [[ note = [ for libuuid ] ]]
         sys-libs/zlib
+        idn? ( net-dns/libidn )
         providers:gnutls? (
             dev-libs/gmp:=
             dev-libs/gnutls
@@ -32,7 +32,6 @@ DEPENDENCIES="
         )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
-        idn? ( net-dns/libidn )
     test:
         dev-perl/HTTP-Daemon
         dev-perl/IO-Socket-SSL
@@ -53,16 +52,19 @@ src_configure() {
         --without-metalink
         $(option_enable idn iri)
     )
+
     econf ${myconf[@]}
 }
 
 src_test() {
     unset http_proxy https_proxy ftp_proxy
+
     default
 }
 
 src_install() {
     default
+
     # NOTE(somasis): remove gettext remenants on musl
     edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib
 }
