@@ -5,5 +5,3 @@ require mysql
 
 PLATFORMS="~amd64 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-5.7.9-bug79229.patch )
-
