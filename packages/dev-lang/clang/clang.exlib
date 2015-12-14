@@ -4,18 +4,22 @@
 if ever is_scm ; then
     SCM_REPOSITORY="http://llvm.org/git/clang.git"
 
+    SCM_tools_extra_REPOSITORY="http://llvm.org/git/clang-tools-extra.git"
+    SCM_SECONDARY_REPOSITORIES="tools_extra"
+
     require scm-git
 else
     MY_PNV=cfe-${PV}.src
     WORK=${WORKBASE}/${MY_PNV}
 
-    DOWNLOADS=http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz
+    DOWNLOADS="http://llvm.org/releases/${PV}/cfe-${PV}.src.tar.xz
+        http://llvm.org/releases/${PV}/clang-tools-extra-${PV}.src.tar.xz"
 fi
 
 require alternatives
 require cmake [ api=2 ]
 
-export_exlib_phases src_prepare src_configure src_compile src_test src_install
+export_exlib_phases src_unpack src_prepare src_configure src_compile src_test src_install
 
 SUMMARY="C language family frontend for LLVM"
 HOMEPAGE="http://clang.llvm.org/"
@@ -74,6 +78,16 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-exherbo-multi-arch-paths.patch
     "${FILES}"/${PNV}-Install-cmake-files-to-lib-cmake-clang.patch
 )
+
+clang_src_unpack() {
+    cmake_src_unpack
+
+    if ever is_scm; then
+        edo mv tools_extra "${CMAKE_SOURCE}"/tools/extra
+    else
+        edo mv clang-tools-extra-${PV}.src "${CMAKE_SOURCE}"/tools/extra
+    fi
+}
 
 clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
