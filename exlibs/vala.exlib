@@ -34,6 +34,12 @@ if exparam -b vala_dep; then
     "
 fi
 
+vala_get_abi() {
+    illegal_in_global_scope # has_version isn't allowed in global so this isn't either
+
+    echo -n "$(get_best_slot_dependency dev-lang/vala ${vala_slots[@]})"
+}
+
 vala_pkg_setup() {
     if exparam -b vala_dep && { ! exparam -b with_opt || { exparam -b with_opt && option ${OPTION_NAME} ; } }; then
         local vala_version=$(get_best_slot_dependency dev-lang/vala ${vala_slots[@]})
