@@ -4,7 +4,7 @@
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
 require alternatives toolchain-runtime-libraries
 
-export_exlib_phases src_unpack src_prepare src_configure src_install pkg_postinst
+export_exlib_phases src_unpack src_prepare src_configure src_compile src_install pkg_postinst
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
@@ -19,6 +19,7 @@ DEPENDENCIES="
         sys-devel/gettext
         doc? (
             app-doc/doxygen[>=1.5.1]
+            app-text/docbook-xsl-ns-stylesheets
             dev-libs/libxml2
             dev-libs/libxslt
             media-gfx/graphviz
@@ -111,10 +112,26 @@ libstdc++_src_configure() {
     default
 }
 
+libstdc++_src_compile() {
+    default
+
+    if option doc; then
+        edo pushd doc
+        emake doc-html
+        edo popd
+    fi
+}
+
 libstdc++_src_install() {
     local locale= libpath= name= suffix=
 
     default
+
+    if option doc; then
+        edo pushd doc
+        emake -j1 DESTDIR="${IMAGE}" doc-install-html
+        edo popd
+    fi
 
     symlink_dynamic_libs ${PN}
     slot_dynamic_libs ${PN}
