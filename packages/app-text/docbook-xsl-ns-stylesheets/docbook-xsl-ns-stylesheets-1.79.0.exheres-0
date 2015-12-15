@@ -1,0 +1,58 @@
+# Copyright 2008 Ali Polatel
+# Distributed under the terms of the GNU General Public License v2
+# Based in part upon 'docbook-xsl-stylesheets-1.73.2.ebuild' from Gentoo, which is:
+#   Copyright 1999-2008 Gentoo Foundation
+
+MY_PNV="${PNV/-stylesheets}"
+require sourceforge [ project=docbook ]
+
+SUMMARY="XSL Stylesheets for Docbook"
+HOMEPAGE="http://wiki.docbook.org/DocBookXslStylesheets"
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+MYOPTIONS=""
+
+RESTRICT="test"
+
+DEPENDENCIES="
+    build:
+        app-text/build-docbook-catalog[>=1.5]
+"
+
+WORK=${WORKBASE}/${MY_PNV}
+
+src_compile() { : ; }
+
+src_install() {
+    insinto /usr/share/sgml/docbook/xsl-ns-stylesheets
+
+    local i
+    for sheet in */ ; do
+        i=$(basename ${sheet})
+        pushd "${WORK}"/${i} >/dev/null
+        for doc in ChangeLog README; do
+            if [[ -e ${doc} ]]; then
+                mv ${doc} ${doc}.${i}
+                dodoc ${doc}.${i}
+                rm ${doc}.${i}
+            fi
+        done
+
+        doins -r "${WORK}"/${i}
+        popd > /dev/null
+    done
+
+    doins VERSION{,.xsl}
+    emagicdocs
+}
+
+pkg_postinst() {
+    build-docbook-catalog
+}
+
+pkg_postrm() {
+    build-docbook-catalog
+}
+
