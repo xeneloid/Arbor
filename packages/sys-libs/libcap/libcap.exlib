@@ -26,6 +26,9 @@ DEPENDENCIES="
 DEFAULT_SRC_COMPILE_PARAMS=(
     BUILD_CC="$(exhost --build)-cc"
     BUILD_CFLAGS="$(print-build-flags CFLAGS) \$(IPATH)"
+    AR=$(exhost --tool-prefix)ar
+    CC=$(exhost --tool-prefix)cc
+    RANLIB=$(exhost --tool-prefix)ranlib
     lib=lib
     PAM_CAP=yes
 )
