@@ -75,6 +75,7 @@ src_prepare() {
 src_configure() {
     local myconf=(
         --enable-imagefilters
+        --disable-braille
         --disable-static
         --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')$(option ldap && echo 'ldap ')cups"
         --with-cups-domainsocket=/run/cups/cups.sock
