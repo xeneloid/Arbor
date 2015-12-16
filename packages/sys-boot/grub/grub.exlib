@@ -66,7 +66,6 @@ grub_src_configure() {
     myconf=(
         "CPP=${CC} -E"
 
-        # TODO(compnerd) use cc instead of gcc
         BUILD_CC=$(exhost --build)-cc
 
         --with-bootdir=/boot
