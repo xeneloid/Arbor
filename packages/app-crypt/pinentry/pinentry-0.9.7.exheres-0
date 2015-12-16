@@ -5,7 +5,7 @@
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Collection of simple PIN or passphrase entry dialogs which utilize"
-HOMEPAGE="http://gnupg.org/related_software/${PN}"
+HOMEPAGE="https://gnupg.org/related_software/${PN}"
 DOWNLOADS="mirror://gnupg/${PN}/${PNV}.tar.bz2"
 
 LICENCES="GPL-2"
@@ -52,6 +52,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     "gtk pinentry-gtk2"
     "keyring libsecret"
     "qt5 pinentry-qt"
+    "qt5 pinentry-qt5"
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     "caps libcap"
