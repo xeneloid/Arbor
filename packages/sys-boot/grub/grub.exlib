@@ -56,7 +56,7 @@ grub_pkg_setup() {
 }
 
 grub_src_prepare() {
-    edo sed -i autogen.sh -e "/Running autoreconf/,+2d"
+    edo sed -i autogen.sh -e "s/.*Running autoreconf.*/exit 0/"
     edo ./autogen.sh
 
     autotools_src_prepare
@@ -67,7 +67,7 @@ grub_src_configure() {
         "CPP=${CC} -E"
 
         # TODO(compnerd) use cc instead of gcc
-        "BUILD_CC=$(exhost --build)-gcc"
+        BUILD_CC=$(exhost --build)-cc
 
         --with-bootdir=/boot
         --with-grubdir=grub
@@ -83,6 +83,8 @@ grub_src_configure() {
         --disable-libzfs
 
         --disable-werror
+
+        gt_cv_func_gnugettext{1,2}_libc=yes
     )
 
     option efi && myconf+=( '--with-platform=efi' )
@@ -97,6 +99,8 @@ grub_src_install() {
     default
 
     dodoc "${WORK}"/docs/grub.cfg
+
+    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 
     edo rm "${IMAGE%/}"/etc/bash_completion.d/${PN}
     edo rmdir "${IMAGE%/}"/etc/bash_completion.d/
