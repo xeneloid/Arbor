@@ -1,0 +1,60 @@
+# Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ tag=r${PV//./-} ] systemd-service
+
+export_exlib_phases src_prepare src_compile src_install
+
+SUMMARY="Rotates, compresses and mails system logs"
+
+BUGS_TO="philantrop@exherbo.org"
+
+LICENCES="GPL-2"
+SLOT="0"
+MYOPTIONS="
+    cron [[ description = [ Install launcher script to cron.daily path ] ]]
+"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/popt[>=1.5]
+        sys-apps/acl
+"
+
+logrotate_src_prepare() {
+    default
+
+    edo sed -e "s:CFLAGS += -g:CFLAGS += -g ${CFLAGS}:" \
+            -e "s:LDFLAGS = -g:LDFLAGS = -g ${LDFLAGS}:" \
+            -i Makefile
+}
+
+logrotate_src_compile() {
+    local opts=(
+        "CC=${CC}"
+        "CPP=${CC}"
+        "WITH_ACL=yes"
+        "WITH_SELINUX=no"
+    )
+
+    emake "${opts[@]}"
+}
+
+logrotate_src_install() {
+    insinto /usr
+    dobin logrotate
+    doman logrotate.8
+    dodoc examples/*
+
+    if option cron; then
+        exeinto /etc/cron.daily
+        doexe "${FILES}"/logrotate.cron
+    fi
+    install_systemd_files
+
+    insinto /etc
+    doins "${FILES}"/logrotate.conf
+
+    keepdir /etc/logrotate.d
+}
+
