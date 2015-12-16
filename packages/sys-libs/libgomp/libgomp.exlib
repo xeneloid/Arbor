@@ -29,23 +29,27 @@ if ever at_least 6.0 ; then
     DEPENDENCIES+="
         build:
             sys-devel/gcc:${SLOT}
+            fortran? ( sys-libs/libgfortran:${SLOT} )
     "
 elif ever at_least 5.2 ; then
     SLOT=5.1
     DEPENDENCIES+="
         build:
             sys-devel/gcc:${SLOT}[>=5.2.0-r5]
+            fortran? ( sys-libs/libgfortran:${SLOT} )
     "
 else
     SLOT="$(ever range 1-2)"
     DEPENDENCIES+="
         build:
             sys-devel/gcc:${SLOT}[>=4.9.2-r9]
+            fortran? ( sys-libs/libgfortran:${SLOT} )
     "
 fi
 
 MYOPTIONS="
     doc
+    fortran
     (
         linguas:
             be ca da de el eo es fi fr hr id ja nl ru sr sv tr uk vi zh_CN zh_TW
@@ -72,6 +76,9 @@ libgomp_src_unpack() {
 }
 
 libgomp_src_configure() {
+    # Similarly to CC/CPP/CXX, we could use GFORTRAN here, but currently this env variable
+    # has no effect, so use ac_cv_prog_FC to override.
+    option fortran && export ac_cv_prog_FC=$(exhost --tool-prefix)gfortran-${SLOT}
     CC=$(exhost --tool-prefix)gcc-${SLOT}       \
     CPP=$(exhost --tool-prefix)gcc-cpp-${SLOT}  \
     CXX=$(exhost --tool-prefix)g++-${SLOT}      \
