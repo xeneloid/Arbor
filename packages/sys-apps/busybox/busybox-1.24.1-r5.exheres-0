@@ -14,7 +14,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="doc systemd"
+MYOPTIONS="doc static systemd"
 
 DEPENDENCIES="
     build:
@@ -108,29 +108,16 @@ src_configure() {
 }
 
 src_compile() {
-    # Build dynamically linked executable and preserve it
-    bb_make CONFIG_STATIC=n busybox
-    edo mv busybox{,.dynamic}
-
-    # Build statically linked executable and preserve it
-    bb_make CONFIG_STATIC=y busybox
-    edo mv busybox{,.static}
+    local CONFIG_STATIC=n
+    option static && local CONFIG_STATIC=y
+    bb_make CONFIG_STATIC=${CONFIG_STATIC} busybox
 }
 
 src_test() {
     if exhost --is-native -q;then
         export SKIP_KNOWN_BUGS=y SKIP_INTERNET_TESTS=y
-
         edo pushd testsuite >/dev/null
-
-        # test dynamic version
-        edo cp ../busybox{.dynamic,}
         edo ./runtest -v
-
-        # test static version
-        edo cp ../busybox{.static,}
-        edo ./runtest -v
-
         edo popd >/dev/null
     fi
 }
@@ -139,8 +126,7 @@ src_install() {
     local host=$(exhost --target)
 
     # busybox
-    newbin busybox.dynamic busybox
-    newbin busybox.static  busybox-static
+    dobin busybox
 
     # udhcpc
     exeinto /usr/share/udhcpc
