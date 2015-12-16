@@ -45,6 +45,7 @@ RESTRICT="test"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-fixMakefile.patch
+    "${FILES}"/${PN}-libressl.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
