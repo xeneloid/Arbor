@@ -16,7 +16,7 @@ SUMMARY="An object-oriented scripting language"
 DESCRIPTION="A dynamic, open source programming language with a focus on
 simplicity and productivity. It has an elegant syntax that is natural to
 read and easy to write."
-HOMEPAGE="http://www.ruby-lang.org"
+HOMEPAGE="https://www.ruby-lang.org"
 DOWNLOADS="mirror://ruby/${SLOT}/${MY_PNV}.tar.bz2"
 
 MYOPTIONS="
