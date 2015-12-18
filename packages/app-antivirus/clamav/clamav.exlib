@@ -72,9 +72,8 @@ clamav_src_install() {
 d /run/clamav 0755 clamav clamav
 EOF
 
-    dodir /var/log/${PN}
-    keepdir /var/log/${PN}
-    edo chown clamav:clamav "${IMAGE}"/var/log/${PN}
+    keepdir /var/{lib,log}/${PN}
+    edo chown clamav:clamav "${IMAGE}"/var/{lib,log}/${PN}
 
     # Set up some default configs
     edo sed -e "s:.*\(PidFile\) .*:\1 /run/clamav/clamd.pid:" \
