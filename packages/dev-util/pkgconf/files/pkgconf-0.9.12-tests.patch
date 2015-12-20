@@ -1,0 +1,480 @@
+Upstream: yes
+
+diff --git a/tests/lib1/argv-parse-2.pc b/tests/lib1/argv-parse-2.pc
+index 5b68e86..cfc0fcf 100644
+--- a/tests/lib1/argv-parse-2.pc
++++ b/tests/lib1/argv-parse-2.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/argv-parse-3.pc b/tests/lib1/argv-parse-3.pc
+index 6e3182b..b115b30 100644
+--- a/tests/lib1/argv-parse-3.pc
++++ b/tests/lib1/argv-parse-3.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/argv-parse.pc b/tests/lib1/argv-parse.pc
+index 08999b5..d445ae7 100644
+--- a/tests/lib1/argv-parse.pc
++++ b/tests/lib1/argv-parse.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/bar.pc b/tests/lib1/bar.pc
+index 688d2af..9157d06 100644
+--- a/tests/lib1/bar.pc
++++ b/tests/lib1/bar.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/baz.pc b/tests/lib1/baz.pc
+index 1f0c16a..d9cb258 100644
+--- a/tests/lib1/baz.pc
++++ b/tests/lib1/baz.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/cflags-libs-only.pc b/tests/lib1/cflags-libs-only.pc
+index 441523a..718e7cd 100644
+--- a/tests/lib1/cflags-libs-only.pc
++++ b/tests/lib1/cflags-libs-only.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr/local
++prefix=/test/local
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/circular-1.pc b/tests/lib1/circular-1.pc
+index 732197a..bbdb9f7 100644
+--- a/tests/lib1/circular-1.pc
++++ b/tests/lib1/circular-1.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/circular-2.pc b/tests/lib1/circular-2.pc
+index 04321b9..2086834 100644
+--- a/tests/lib1/circular-2.pc
++++ b/tests/lib1/circular-2.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/circular-3.pc b/tests/lib1/circular-3.pc
+index 9edce93..e8b8e77 100644
+--- a/tests/lib1/circular-3.pc
++++ b/tests/lib1/circular-3.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/conflicts.pc b/tests/lib1/conflicts.pc
+index f217201..bec4869 100644
+--- a/tests/lib1/conflicts.pc
++++ b/tests/lib1/conflicts.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/dos-lineendings.pc b/tests/lib1/dos-lineendings.pc
+index 923ff44..5fa7090 100644
+--- a/tests/lib1/dos-lineendings.pc
++++ b/tests/lib1/dos-lineendings.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/foo.pc b/tests/lib1/foo.pc
+index a8d448f..f154eb7 100644
+--- a/tests/lib1/foo.pc
++++ b/tests/lib1/foo.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/framework-1.pc b/tests/lib1/framework-1.pc
+index 9964f78..fcaa008 100644
+--- a/tests/lib1/framework-1.pc
++++ b/tests/lib1/framework-1.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/framework-2.pc b/tests/lib1/framework-2.pc
+index 5caad80..793655a 100644
+--- a/tests/lib1/framework-2.pc
++++ b/tests/lib1/framework-2.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/intermediary-1.pc b/tests/lib1/intermediary-1.pc
+index 6c732b0..38ee483 100644
+--- a/tests/lib1/intermediary-1.pc
++++ b/tests/lib1/intermediary-1.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/intermediary-2.pc b/tests/lib1/intermediary-2.pc
+index 90bee16..188ce6b 100644
+--- a/tests/lib1/intermediary-2.pc
++++ b/tests/lib1/intermediary-2.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/missing-require.pc b/tests/lib1/missing-require.pc
+index d9a5ffb..ede148d 100644
+--- a/tests/lib1/missing-require.pc
++++ b/tests/lib1/missing-require.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/multiline.pc b/tests/lib1/multiline.pc
+index ce27dbb..75b5902 100644
+--- a/tests/lib1/multiline.pc
++++ b/tests/lib1/multiline.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/no-trailing-newline.pc b/tests/lib1/no-trailing-newline.pc
+index 3359ec7..eaf2f8f 100644
+--- a/tests/lib1/no-trailing-newline.pc
++++ b/tests/lib1/no-trailing-newline.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+@@ -7,4 +7,4 @@ Name: no-trailing-newline
+ Description: A testing pkg-config file
+ Version: 1.2.3
+ Libs: -L${libdir}/no-trailing-newline -lno-trailing-newline
+-Cflags: -I${includedir}/no-trailing-newline
+\ No newline at end of file
++Cflags: -I${includedir}/no-trailing-newline
+diff --git a/tests/lib1/nocflag.pc b/tests/lib1/nocflag.pc
+index 9ce6bdc..0a3d752 100644
+--- a/tests/lib1/nocflag.pc
++++ b/tests/lib1/nocflag.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/nolib.pc b/tests/lib1/nolib.pc
+index db5d746..b47e30c 100644
+--- a/tests/lib1/nolib.pc
++++ b/tests/lib1/nolib.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/omg-uninstalled.pc b/tests/lib1/omg-uninstalled.pc
+index ad42720..17d8078 100644
+--- a/tests/lib1/omg-uninstalled.pc
++++ b/tests/lib1/omg-uninstalled.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/prefix-foo1.pc b/tests/lib1/prefix-foo1.pc
+index a91133d..7a6e900 100644
+--- a/tests/lib1/prefix-foo1.pc
++++ b/tests/lib1/prefix-foo1.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr/bar
++prefix=/test/bar
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/prefix-foo2.pc b/tests/lib1/prefix-foo2.pc
+index f2926db..0546975 100644
+--- a/tests/lib1/prefix-foo2.pc
++++ b/tests/lib1/prefix-foo2.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr/bar
++prefix=/test/bar
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/quotes.pc b/tests/lib1/quotes.pc
+index 1aee256..bb1282f 100644
+--- a/tests/lib1/quotes.pc
++++ b/tests/lib1/quotes.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/static-archive-libs.pc b/tests/lib1/static-archive-libs.pc
+index 965ba36..95f7bfb 100644
+--- a/tests/lib1/static-archive-libs.pc
++++ b/tests/lib1/static-archive-libs.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr/local
++prefix=/test/local
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/static-libs.pc b/tests/lib1/static-libs.pc
+index 555df8c..075b331 100644
+--- a/tests/lib1/static-libs.pc
++++ b/tests/lib1/static-libs.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr/local
++prefix=/test/local
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib1/tilde.pc b/tests/lib1/tilde.pc
+index 10e8db0..a4002ec 100644
+--- a/tests/lib1/tilde.pc
++++ b/tests/lib1/tilde.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${exec_prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib2/foo.pc b/tests/lib2/foo.pc
+index 5974fbe..44588f2 100644
+--- a/tests/lib2/foo.pc
++++ b/tests/lib2/foo.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/lib3/bar.pc b/tests/lib3/bar.pc
+index 688d2af..9157d06 100644
+--- a/tests/lib3/bar.pc
++++ b/tests/lib3/bar.pc
+@@ -1,4 +1,4 @@
+-prefix=/usr
++prefix=/test
+ exec_prefix=${prefix}
+ libdir=${prefix}/lib
+ includedir=${prefix}/include
+diff --git a/tests/run.sh.in b/tests/run.sh.in
+index 819954c..190ea79 100644
+--- a/tests/run.sh.in
++++ b/tests/run.sh.in
+@@ -55,13 +55,13 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1}; echo \$?" \
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs foo" \
+ 	'-lfoo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags --libs foo" \
+-	'-lfoo' '-I/usr/include/foo' '-fPIC'
++	'-lfoo' '-I/test/include/foo' '-fPIC'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags --libs 'foo > 1.2'" \
+-	'-lfoo' '-I/usr/include/foo' '-fPIC'
++	'-lfoo' '-I/test/include/foo' '-fPIC'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags --libs 'foo > 1.2 bar >= 1.3'" \
+-	'-lfoo' '-I/usr/include/foo' '-fPIC'
++	'-lfoo' '-I/test/include/foo' '-fPIC'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags --libs 'foo' '>' '1.2'" \
+-	'-lfoo' '-I/usr/include/foo' '-fPIC'
++	'-lfoo' '-I/test/include/foo' '-fPIC'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --exists nonexistant; echo \$?" \
+ 	'1'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} nonexistant; echo \$?" \
+@@ -109,23 +109,23 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1${PATH_SEP}${selfdir}/lib2' ${1} --lib
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs bar" \
+ 	'-lfoo' '-lbar'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs --cflags baz" \
+-	'-lbaz' '-fPIC' '-I/usr/include/foo'
++	'-lbaz' '-fPIC' '-I/test/include/foo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --static --libs baz" \
+ 	'-lfoo' '-lbaz' '-lzee'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --static --libs argv-parse-2" \
+ 	'-pthread '
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --static --cflags baz" \
+-	'-fPIC' '-I/usr/include/foo' '-DFOO_STATIC'
++	'-fPIC' '-I/test/include/foo' '-DFOO_STATIC'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --static --libs-only-l private-libs-duplication" \
+ 	'-lprivate -lfoo -lbaz -lzee -lbar -lfoo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --static --libs static-libs" \
+-	'-lbar -lbar-private -lfoo'
++	'-lbar -lbar-private -L/test/lib -lfoo'
+ 
+ # 4) tests for parser bugs
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs dos-lineendings" \
+-	'-L/usr/lib/dos-lineendings -ldos-lineendings'
++	'-L/test/lib/dos-lineendings -ldos-lineendings'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags no-trailing-newline" \
+-	'-I/usr/include/no-trailing-newline'
++	'-I/test/include/no-trailing-newline'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs argv-parse" \
+ 	'-llib-2 -lpthread'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --exists -foo; echo \$?" \
+@@ -141,15 +141,15 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs paren-quoting" \
+ 
+ # 5) tests for other regressions
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --variable=includedir foo" \
+-	'/usr/include'
++	'/test/include'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs-only-L --keep-system-libs cflags-libs-only" \
+-	'-L/usr/local/lib'
++	'-L/test/local/lib'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs cflags-libs-only" \
+-	'-L/usr/local/lib -lfoo'
++	'-L/test/local/lib -lfoo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs-only-L --libs-only-l cflags-libs-only" \
+-	'-L/usr/local/lib -lfoo'
++	'-L/test/local/lib -lfoo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags-only-I --cflags-only-other cflags-libs-only" \
+-	'-I/usr/local/include'
++	'-I/test/local/include'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs incomplete; echo $?" \
+ 	'0'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags incomplete" \
+@@ -161,19 +161,19 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs incomplete" \
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --modversion pkg-config" \
+ 	'0.28'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --variable=prefix foo" \
+-	'/usr'
+-run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --define-variable=prefix=/test --variable=prefix foo" \
+ 	'/test'
++run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --define-variable=prefix=/test2 --variable=prefix foo" \
++	'/test2'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --variable=pcfiledir foo" \
+ 	"${selfdir}/lib1"
+ 
+ # 7) tests for env modifiers
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' PKG_CONFIG_SYSROOT_DIR='${SYSROOT_DIR}' ${1} --cflags baz" \
+-	"-I${SYSROOT_DIR}/usr/include/foo"
++	"-I${SYSROOT_DIR}/test/include/foo"
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' PKG_CONFIG_SYSROOT_DIR='${SYSROOT_DIR}' ${1} --variable=prefix baz" \
+-	"${SYSROOT_DIR}/usr"
++	"${SYSROOT_DIR}/test"
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' PKG_CONFIG_SYSROOT_DIR='${SYSROOT_DIR}' ${1} --variable=includedir baz" \
+-	"${SYSROOT_DIR}/usr/include"
++	"${SYSROOT_DIR}/test/include"
+ 
+ # 8) tests for 'Conflicts'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs conflicts; echo \$?" \
+@@ -234,11 +234,11 @@ run_test "cp ${selfdir}/lib1/foo.pc . && ${1} --libs foo.pc; rm -f foo.pc" \
+ 
+ # test 47 - framework flags
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs framework-1" \
+-	"-F/usr/lib -framework framework-1"
++	"-F/test/lib -framework framework-1"
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs framework-2" \
+-	"-F/usr/lib -framework framework-2 -framework framework-1"
++	"-F/test/lib -framework framework-2 -framework framework-1"
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs framework-1 framework-2" \
+-	"-F/usr/lib -framework framework-1 -framework framework-2"
++	"-F/test/lib -framework framework-1 -framework framework-2"
+ 
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --exists --print-errors 'foo > 0.6.0 foo < 0.8.0'; echo \$?" \
+ 	'1'
+@@ -247,7 +247,7 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --exists --print-errors 'nonexi
+ 	'1'
+ 
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib2' ${1} ${selfdir}/lib3/bar.pc --cflags" \
+-	'-fPIC -I/usr/include/foo'
++	'-fPIC -I/test/include/foo'
+ 
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --variable=foo case-sensitivity" \
+ 	"3"
+@@ -265,20 +265,20 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' PKG_CONFIG_SYSROOT_DIR='/sysroot' ${
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' PKG_CONFIG_SYSROOT_DIR='/sysroot2' ${1} --libs sysroot-dir" \
+ 	'-L/sysroot2/sysroot/lib -lfoo'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs prefix-foo1" \
+-	'-L/usr/bar/lib -lfoo1'
++	'-L/test/bar/lib -lfoo1'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs prefix-foo1 prefix-foo2" \
+-	'-L/usr/bar/lib -lfoo1 -lfoo2'
++	'-L/test/bar/lib -lfoo1 -lfoo2'
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags prefix-foo1 prefix-foo2" \
+-	'-I/usr/bar/include/foo -DBAR -fPIC -DFOO'
++	'-I/test/bar/include/foo -DBAR -fPIC -DFOO'
+ 
+ # 10) tests for internal getopt implementation with options at the end
+ if [ "x@STRICT_MODE@" = "xno" ]; then
+ 	run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} foo --libs" \
+ 		'-lfoo'
+ 	run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} foo --cflags --libs" \
+-		'-lfoo' '-I/usr/include/foo' '-fPIC'
++		'-lfoo' '-I/test/include/foo' '-fPIC'
+ 	run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags foo --libs" \
+-		'-lfoo' '-I/usr/include/foo' '-fPIC'
++		'-lfoo' '-I/test/include/foo' '-fPIC'
+ fi
+ 
+ run_test "${1} --blah; echo \$?" \
+diff --git a/tests/lib1/quotes.pc b/tests/lib1/quotes.pc
+index bb1282f..b834816 100644
+--- a/tests/lib1/quotes.pc
++++ b/tests/lib1/quotes.pc
+@@ -6,5 +6,5 @@ includedir=${prefix}/include
+ Name: quotes
+ Description: A testing pkg-config file
+ Version: 1.2.3
+-Libs: -L${libdir} -lfoo
++Libs: -L${libdir} -lfoo\ bar
+ Cflags: -DQUOTED=\"bla\"
+diff --git a/tests/run.sh.in b/tests/run.sh.in
+index c971513..411f4c7 100644
+--- a/tests/run.sh.in
++++ b/tests/run.sh.in
+@@ -220,6 +220,8 @@ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --list-all | grep -q 'multiline
+ # test quoted #35
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --cflags quotes" \
+ 	"-DQUOTED=\\\"bla\\\""
++run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs quotes" \
++	'-lfoo\ bar'
+ 
+ run_test "PKG_CONFIG_PATH='${selfdir}/lib1' ${1} --libs nolib; echo \$?" \
+ 	'0'

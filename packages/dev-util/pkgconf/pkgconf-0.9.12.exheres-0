@@ -44,6 +44,10 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -l "${FILES}"/${PNV}-tests.patch
+)
+
 ECONF_SOURCE=${WORK}
 
 src_configure() {
