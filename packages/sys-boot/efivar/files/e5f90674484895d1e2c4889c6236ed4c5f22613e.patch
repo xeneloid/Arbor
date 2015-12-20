@@ -1,0 +1,27 @@
+Upstream: yes
+
+From e5f90674484895d1e2c4889c6236ed4c5f22613e Mon Sep 17 00:00:00 2001
+From: Felix Janda <felix.janda@posteo.de>
+Date: Tue, 14 Jul 2015 05:56:05 -0600
+Subject: [PATCH] Use the more portable major() instead of gnu_dev_major()
+
+Do the same for minor() and gnu_dev_minor()
+---
+ src/linux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/linux.c b/src/linux.c
+index c4d099e..0cbd94a 100644
+--- a/src/linux.c
++++ b/src/linux.c
+@@ -129,8 +129,8 @@ get_partition_number(const char *devpath)
+ 		return -1;
+ 	}
+ 
+-	maj = gnu_dev_major(statbuf.st_rdev);
+-	min = gnu_dev_minor(statbuf.st_rdev);
++	maj = major(statbuf.st_rdev);
++	min = minor(statbuf.st_rdev);
+ 
+ 	rc = sysfs_readlink(&linkbuf, "/sys/dev/block/%u:%u", maj, min);
+ 	if (rc < 0)

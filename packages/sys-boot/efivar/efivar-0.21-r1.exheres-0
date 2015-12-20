@@ -22,7 +22,11 @@ DEPENDENCIES="
         dev-libs/popt
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/a3606c02fd271d32e364fcc540e34ba1899309f6.patch )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/a3606c02fd271d32e364fcc540e34ba1899309f6.patch
+    "${FILES}"/262acfc7c4fbb4bbc76f4235220336fd41993ca8.patch
+    "${FILES}"/e5f90674484895d1e2c4889c6236ed4c5f22613e.patch
+)
 
 DEFAULT_SRC_INSTALL_PARAMS=(
     bindir=/usr/$(exhost --target)/bin

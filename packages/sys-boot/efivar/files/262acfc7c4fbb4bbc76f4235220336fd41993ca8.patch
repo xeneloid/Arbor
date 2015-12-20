@@ -1,0 +1,38 @@
+Upstream: yes
+
+From 262acfc7c4fbb4bbc76f4235220336fd41993ca8 Mon Sep 17 00:00:00 2001
+From: Felix Janda <felix.janda@posteo.de>
+Date: Tue, 14 Jul 2015 05:53:04 -0600
+Subject: [PATCH] Remove -fshort-wchar from CFLAGS
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+-fshort-wchar makes wchar_t 16bit. We are not using wchar_t anywhere,
+so we don't need it. Removing it fixes an compilation error with musl
+libc:
+
+In file included from dp-acpi.c:21:0:
+/usr/lib/gcc/armv7a-hardfloat-linux-musleabi/4.7.4/include/stddef.h:325:24: error: conflicting types for ‘wchar_t’
+In file included from /usr/include/inttypes.h:12:0,
+                 from dp-acpi.c:20:
+/usr/include/bits/alltypes.h:18:18: note: previous declaration of ‘wchar_t’ was here
+make[1]: *** [dp-acpi.o] Error 1
+make: *** [src] Error 2
+---
+ Make.defaults | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Make.defaults b/Make.defaults
+index cc2baa9..7f5ae5e 100644
+--- a/Make.defaults
++++ b/Make.defaults
+@@ -13,7 +13,7 @@ clang_cflags =
+ gcc_cflags = -Wmaybe-uninitialized
+ cflags	:= $(CFLAGS) \
+ 	-Werror -Wall -Wsign-compare -Wstrict-aliasing \
+-	-std=gnu11 -fshort-wchar -fPIC \
++	-std=gnu11 -fPIC \
+ 	-fvisibility=hidden \
+ 	-D_GNU_SOURCE -I${TOPDIR}/src/include/efivar/ \
+ 	$(if $(filter $(CC),clang),$(clang_cflags),) \
