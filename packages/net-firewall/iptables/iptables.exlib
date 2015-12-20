@@ -1,4 +1,4 @@
-# Copyright 2009-2013 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service
@@ -9,9 +9,8 @@ MY_PNV="${PNV/_/-}"
 
 SUMMARY="A Linux kernel packet filter control tool"
 DESCRIPTION="
-iptables is built on top of netfilter, the packet alteration framework for Linux
-2.4.x and 2.6.x. It is a major rewrite of its predecessor ipchains, and is used
-to control packet filtering, Network Address Translation (masquerading,
+iptables is built on top of netfilter, the packet alteration framework for Linux.
+It is used to control packet filtering, Network Address Translation (masquerading,
 portforwarding, transparent proxying), and special effects such as packet mangling.
 "
 HOMEPAGE="http://netfilter.org/projects/${PN}"
@@ -25,16 +24,25 @@ UPSTREAM_DOCUMENTATION="http://netfilter.org/documentation/"
 
 LICENCES="GPL-2"
 SLOT="0"
-MYOPTIONS="
-    nfsynproxy  [[ description = [ Compile a utility for SYNPROXY configuration ] ]]
-"
+# Note: Do NOT (re-)add funny options like nfsynproxy that just control if some
+# tool is installed or not. The nfsynproxy option I killed suspiciously looked
+# like a workaround for deficiencies in obscure tools or funny C libraries...
+# Instead, fix those.
+# And if you add funny options in order to make certain dependencies optional,
+# actually go through with it.
+# Best of all: Just talk to me *before* adding funny stuff. - WK
+MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
         dev-libs/libpcap
-        net-libs/libnfnetlink
+        net-libs/libmnl[>=1.0]
+        net-libs/libnetfilter_conntrack[>=1.0.4]
+        net-libs/libnfnetlink[>=1.0]
+        net-libs/libnftnl[>=1.0.5]
 "
 
+# More funny stuff... Should be annotated but must have been forgotten...
 CFLAGS="${CFLAGS} -D_GNU_SOURCE"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -42,11 +50,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-bpf-compiler
     --enable-devel
     --enable-libipq
-)
-
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
-    # NOTE(somasis): ./configure interprets --disable-nfsynproxy as the same as --enable...
-    "nfsynproxy stupid-configure-workaround nfsynproxy"
+    --enable-nfsynproxy
+    --enable-nftables
+    --disable-static
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1 )
