@@ -1,0 +1,8 @@
+# Copyright 2008-2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+GITHUB_REVISION="1f4b3a8bcdcd97cb501169fd5f5b7f5c0da0b5ab"
+require libarchive autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
+
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+
