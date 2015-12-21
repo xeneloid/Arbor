@@ -26,6 +26,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.1.26-fix_python_paths.patch
     "${FILES}"/${PN}-1.1.27-m4.patch
     "${FILES}"/${PN}-1.1.27-disable_static_modules.patch
+    "${FILES}"/${PNV}-Fix-for-type-confusion-in-preprocessing-attributes.patch
 )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-libxml-prefix=/usr/$(exhost --target)
