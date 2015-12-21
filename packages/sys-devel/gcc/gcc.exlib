@@ -56,6 +56,7 @@ DEPENDENCIES="
             resolution = uninstall-blocked-after
         ]]
     post:
+        sys-libs/libstdc++:${SLOT}[~${PV}]
         app-admin/eclectic-gcc[targets:*(-)?]
 "
 #   build:
