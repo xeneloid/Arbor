@@ -6,8 +6,10 @@
 #     Copyright 1999-2008 Gentoo Foundation.
 
 require bash-completion elisp-optional [ source_directory=Auxiliary ] flag-o-matic
+require freedesktop-desktop freedesktop-mime gtk-icon-cache
 
-export_exlib_phases src_prepare src_configure src_compile src_test src_install
+export_exlib_phases src_prepare src_configure src_compile src_test src_install \
+                    pkg_postinst pkg_postrm
 
 SUMMARY="Cross platform Make"
 HOMEPAGE="http://www.cmake.org/"
@@ -143,6 +145,22 @@ cmake-build_src_install() {
 
         insinto /usr/share/vim/vimfiles/ftdetect
         doins "${FILES}/${VIMFILE}"
+    fi
+}
+
+cmake-build_pkg_postinst() {
+    if option qt4 || option qt5 ; then
+        freedesktop-desktop_pkg_postinst
+        freedesktop-mime_pkg_postinst
+        gtk-icon-cache_pkg_postinst
+    fi
+}
+
+cmake-build_pkg_postrm() {
+    if option qt4 || option qt5 ; then
+        freedesktop-desktop_pkg_postrm
+        freedesktop-mime_pkg_postrm
+        gtk-icon-cache_pkg_postrm
     fi
 }
 
