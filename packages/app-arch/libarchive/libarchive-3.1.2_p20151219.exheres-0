@@ -6,3 +6,6 @@ require libarchive autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+# libarchive and bsdtar tests are broken atm. broken out of sandbox as well.
+RESTRICT=test
+
