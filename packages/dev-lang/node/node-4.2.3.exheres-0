@@ -60,6 +60,7 @@ src_configure() {
 src_install() {
     default
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/man
+    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/doc
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/systemtap
     edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
 }
