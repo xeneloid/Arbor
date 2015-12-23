@@ -103,6 +103,10 @@ libstdc++_src_unpack() {
 libstdc++_src_prepare() {
     edo cd "${ECONF_SOURCE}/.."
     default
+
+    # g++ ${srcdir}/doc/doxygen/stdheader.cc -o ./stdheader
+    # newh=`echo $oldh | ./stdheader`
+    edo sed -i -e "s/^g++ /$(exhost --build)-g++-${SLOT} /" libstdc++-v3/scripts/run_doxygen
 }
 
 libstdc++_src_configure() {
@@ -117,7 +121,7 @@ libstdc++_src_compile() {
 
     if option doc; then
         edo pushd doc
-        emake doc-html
+        emake doc-{html,man}
         edo popd
     fi
 }
@@ -129,7 +133,8 @@ libstdc++_src_install() {
 
     if option doc; then
         edo pushd doc
-        emake -j1 DESTDIR="${IMAGE}" doc-install-html
+        emake -j1 DESTDIR="${IMAGE}" doc-install-{html,man}
+        edo rm "${IMAGE}"/usr/share/man/man3/_*_sys-libs-libstdc__*
         edo popd
     fi
 
@@ -156,6 +161,12 @@ libstdc++_src_install() {
         name=${locale##*/}
         alternatives+=( /${locale} ${name%.mo}-${SLOT}.mo )
         mo_provided+=( /${locale} )
+    done
+
+    for man in usr/share/man/man3/*.3; do
+        [[ -e ${man} ]] || continue
+        name=${man##*/}
+        alternatives+=( /${man} ${name%.3}-${SLOT}.3 )
     done
 
     edo popd
