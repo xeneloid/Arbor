@@ -33,7 +33,7 @@ MYOPTIONS="
 
 DEPENDENCIES="
     run:
-        sys-devel/gcc[>=4.9.2-r10]
+        sys-devel/gcc:*[>=4.9.2-r10]
         !sys-devel/gcc:4.9[<4.9.2-r10]  [[
             description = [ Alternatives conflict ]
             resolution = uninstall-blocked-after
