@@ -19,6 +19,8 @@ MYOPTIONS="acl xattr
     parts: binaries documentation"
 
 DEPENDENCIES="
+    build:
+        dev-lang/perl:*
     build+run:
         dev-libs/popt
         sys-libs/zlib
