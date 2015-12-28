@@ -21,8 +21,6 @@ DEPENDENCIES="
     build+run:
         dev-libs/glib:2[>=2.39.1]
         sys-apps/dbus
-    test:
-        sys-apps/dbus[X] [[ note = [ for autolaunch ] ]]
     suggestion:
         gnome-desktop/dconf-editor [[ description = [ graphical tool to manage dconf ] ]]
 "
