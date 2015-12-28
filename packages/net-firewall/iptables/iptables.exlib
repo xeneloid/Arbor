@@ -24,13 +24,6 @@ UPSTREAM_DOCUMENTATION="http://netfilter.org/documentation/"
 
 LICENCES="GPL-2"
 SLOT="0"
-# Note: Do NOT (re-)add funny options like nfsynproxy that just control if some
-# tool is installed or not. The nfsynproxy option I killed suspiciously looked
-# like a workaround for deficiencies in obscure tools or funny C libraries...
-# Instead, fix those.
-# And if you add funny options in order to make certain dependencies optional,
-# actually go through with it.
-# Best of all: Just talk to me *before* adding funny stuff. - WK
 MYOPTIONS=""
 
 DEPENDENCIES="
@@ -42,9 +35,6 @@ DEPENDENCIES="
         net-libs/libnftnl[>=1.0.5]
 "
 
-# More funny stuff... Should be annotated but must have been forgotten...
-CFLAGS="${CFLAGS} -D_GNU_SOURCE"
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-kernel
     --enable-bpf-compiler
@@ -53,6 +43,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nfsynproxy
     --enable-nftables
     --disable-static
+
+    # NOTE(somasis) declared by default by glibc, but needed
+    #               on musl to expose constants iptables needs
+    CFLAGS="${CFLAGS} -D_GNU_SOURCE"
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1 )
