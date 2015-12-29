@@ -1,7 +1,6 @@
 # Copyright 2013 Ankur Kothari
+# Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
-
-require toolchain-funcs
 
 SUMMARY="A lightweight, fast, and simple standard libc library"
 HOMEPAGE="http://www.musl-libc.org/"
@@ -13,7 +12,10 @@ else
     DOWNLOADS="http://www.musl-libc.org/releases/${PNV}.tar.gz"
 fi
 
-LICENCES="BSD-2 BSD-3 MIT"
+LICENCES="
+    ( BSD-2 BSD-3 ) [[ note = [ utils and bsd-compat headers ] ]]
+    MIT
+"
 
 SLOT="0"
 MYOPTIONS=""
@@ -29,7 +31,7 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 )
 
 src_configure() {
-    if libc-is-musl;then
+    if [[ $(exhost --target) == *-musl* ]];then
         myconf=(
             --disable-gcc-wrapper
             --prefix=/usr/$(exhost --target)
@@ -48,20 +50,37 @@ src_configure() {
             ${myconf[@]}
 }
 
+src_compile() {
+    default
+    if [[ $(exhost --target) == *-musl* ]];then
+        # NOTE(somasis): compile glibc-compatibility utilities
+        for util in getconf getent;do
+            edo $(exhost --tool-prefix)cc ${CFLAGS} "${FILES}"/utils/${util}.c -o "${WORK}"/${util}
+        done
+    fi
+}
+
 src_install() {
     default
 
-    if libc-is-musl; then
+    if [[ $(exhost --target) == *-musl* ]]; then
         # NOTE(somasis): fix programs with bad checks trying to compile with -lintl
         # (libm is an empty archive, it does nothing. i'm not losing my mind okay)
         edo cp "${IMAGE}"/usr/$(exhost --target)/lib/{libm,libintl}.a
 
         # NOTE(somasis): install BSD compatibility headers
+        insinto /usr/$(exhost --target)/include
+        doins "${FILES}"/bsd-compat/stab.h
         insinto /usr/$(exhost --target)/include/sys
-        doins "${FILES}"/bsd-compat/{cdefs,queue,tree}.h
+        doins "${FILES}"/bsd-compat/{cdefs,queue,stab,tree}.h
+
+        dobin "${WORK}"/{getconf,getent}
 
         insinto /usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
+        # NOTE(somasis): compatibility binary to fix wrapped_ldconfig in paludis.
+        # I have a patch for this in gerrit right now, so it shouldn't be needed
+        # once it's accepted...
         herebin ldconfig <<EOF
 #!/bin/sh
 true

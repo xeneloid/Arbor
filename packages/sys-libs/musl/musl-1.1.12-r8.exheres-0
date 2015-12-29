@@ -1,0 +1,12 @@
+# Copyright 2013 Ankur Kothari
+# Distributed under the terms of the GNU General Public License v2
+
+require musl
+
+PLATFORMS="~amd64 ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/b114190b29417fff6f701eea3a3b3b6030338280.patch
+    "${FILES}"/0001-netinet-tcp-Add-TCPOPT-TCPOLEN-constants.patch
+)
+
