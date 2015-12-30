@@ -3,5 +3,9 @@
 
 require linux-headers
 
-PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+PLATFORMS="~amd64 ~arm ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-4.0-musl.patch
+)
 

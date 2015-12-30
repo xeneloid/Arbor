@@ -71,8 +71,8 @@ linux-headers_src_install() {
         headers_install
     edo find "${IMAGE}/usr/${target}/include" -name '.install' -delete -or \
                                               -name '..install.cmd' -delete
-    #
-    # scsi.h is now provided by sys-libs/glibc
+
+    # scsi.h is provided by libc
     ever at_least 2.6.35 || edo rm "${IMAGE}"/usr/${target}/include/scsi/scsi.h
 
     # nuke empty directory
