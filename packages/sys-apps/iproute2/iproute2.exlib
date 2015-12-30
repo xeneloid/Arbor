@@ -86,22 +86,10 @@ iproute2_src_prepare() {
         edo sed -e '/TARGETS/s:arpd::' -i misc/Makefile
     fi
 
-    if ! ever at_least 3.18.0 && libc-is-musl;then
-        # use system headers
-        edo rm -r include/{ip{,6}tables.h,libiptc}
-    fi
-        # use /run instead of /var/run
-        edo sed \
+    # use /run instead of /var/run
+    edo sed \
             -e 's:/var/run:/run:g' \
             -i ip/ipnetns.c man/man8/ip-netns.8
-
-    if libc-is-musl;then
-        # NOTE(somasis): work around kernel header redefinition on musl
-        edo sed -e 's/-D_GNU_SOURCE/& -D__GLIBC__/' -i Makefile
-        if [[ -f include/iptables.h ]];then
-            edo sed '/iptables_common.h/ s|^|#include <sys/types.h>\n|' -i include/iptables.h
-        fi
-    fi
 }
 
 iproute2_src_configure() {
