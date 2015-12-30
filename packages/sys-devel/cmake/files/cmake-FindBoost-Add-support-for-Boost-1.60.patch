@@ -1,0 +1,27 @@
+Upstream: cherry-picked from master
+
+From 60c31b1bf05f6199c6c676ff99ec8b379c331063 Mon Sep 17 00:00:00 2001
+From: Roger Leigh <rleigh@codelibre.net>
+Date: Thu, 17 Dec 2015 21:46:58 +0000
+Subject: [PATCH] FindBoost: Add support for Boost 1.60
+
+---
+ Modules/FindBoost.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Modules/FindBoost.cmake b/Modules/FindBoost.cmake
+index 33e6a49..113cd44 100644
+--- a/Modules/FindBoost.cmake
++++ b/Modules/FindBoost.cmake
+@@ -512,7 +512,7 @@ else()
+   # The user has not requested an exact version.  Among known
+   # versions, find those that are acceptable to the user request.
+   set(_Boost_KNOWN_VERSIONS ${Boost_ADDITIONAL_VERSIONS}
+-
++    "1.60.0" "1.60"
+     "1.59.0" "1.59" "1.58.0" "1.58" "1.57.0" "1.57" "1.56.0" "1.56" "1.55.0" "1.55"
+     "1.54.0" "1.54" "1.53.0" "1.53" "1.52.0" "1.52" "1.51.0" "1.51"
+     "1.50.0" "1.50" "1.49.0" "1.49" "1.48.0" "1.48" "1.47.0" "1.47" "1.46.1"
+-- 
+2.6.4
+
