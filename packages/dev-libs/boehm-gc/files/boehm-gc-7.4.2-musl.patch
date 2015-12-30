@@ -1,8 +1,22 @@
-Upstream: unknown
-Source: Alpine Linux; http://git.alpinelinux.org/cgit/aports/commit/main/gc/fix-boehm-gc.patch?id=cd8870218ef28dab192ae4507698575a33fd91cd
+Upstream: yes, partially (the os_dep patch isn't needed in scm, gcconfig.h was submitted)
+Source: https://github.com/ivmai/bdwgc/pull/84
 
---- gc-7.2.orig/os_dep.c
-+++ gc-7.2/os_dep.c
+diff -ru gc-7.4.2.orig/include/private/gcconfig.h gc-7.4.2/include/private/gcconfig.h
+--- gc-7.4.2.orig/include/private/gcconfig.h    2014-06-03 02:08:02.000000000 -0400
++++ gc-7.4.2/include/private/gcconfig.h 2015-12-30 11:11:51.271729603 -0500
+@@ -2622,7 +2622,8 @@
+ #if ((defined(UNIX_LIKE) && (defined(DARWIN) || defined(HURD) \
+                              || defined(OPENBSD) || defined(ARM32) \
+                              || defined(MIPS) || defined(AVR32))) \
+-     || (defined(LINUX) && (defined(SPARC) || defined(M68K))) \
++     || (defined(LINUX) && ((!defined(__GLIBC__) && !defined(__UCLIBC__)) \
++                             || defined(SPARC) || defined(M68K))) \
+      || ((defined(RTEMS) || defined(PLATFORM_ANDROID)) && defined(I386))) \
+     && !defined(NO_GETCONTEXT)
+ # define NO_GETCONTEXT
+diff -ru gc-7.4.2.orig/os_dep.c gc-7.4.2/os_dep.c
+--- gc-7.4.2.orig/os_dep.c  2014-06-03 02:08:02.000000000 -0400
++++ gc-7.4.2/os_dep.c   2015-12-30 11:10:30.219733513 -0500
 @@ -26,7 +26,7 @@
  #   define __KERNEL__
  #   include <asm/signal.h>
@@ -12,3 +26,4 @@ Source: Alpine Linux; http://git.alpinelinux.org/cgit/aports/commit/main/gc/fix-
      /* Kernels prior to 2.1.1 defined struct sigcontext_struct instead of */
      /* struct sigcontext.  libc6 (glibc2) uses "struct sigcontext" in     */
      /* prototypes, so we have to include the top-level sigcontext.h to    */
+

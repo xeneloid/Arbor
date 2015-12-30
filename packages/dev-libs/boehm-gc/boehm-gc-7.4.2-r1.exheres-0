@@ -3,8 +3,6 @@
 # Based in part upon 'boehm-gc-7.1.ebuild', which is:
 #   Copyright 1999-2008 Gentoo Foundation
 
-require flag-o-matic toolchain-funcs
-
 MY_PNV="gc-${PV/_/}"
 
 SUMMARY="The Boehm-Demers-Weiser conservative garbage collector"
@@ -36,8 +34,4 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 
 WORK=${WORKBASE}/${MY_PNV%d}
-
-pkg_setup() {
-    libc-is-musl && append-flags -DNO_GETCONTEXT
-}
 
