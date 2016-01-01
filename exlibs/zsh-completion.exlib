@@ -10,12 +10,14 @@
 
 MYOPTIONS="zsh-completion"
 
+export ZSHCOMPLETIONDIR=/usr/share/zsh/site-functions
+
 dozshcompletion() {
     illegal_in_global_scope
 
     [[ -z ${1} ]] && die "usage: dozshcompletion <file> [ <installed name> ]"
     if option zsh-completion; then
-        insinto /usr/share/zsh/site-functions
+        insinto "${ZSHCOMPLETIONDIR}"
         newins "${1}" "${2:-${1##*/}}"
     fi
 }
