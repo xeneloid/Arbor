@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-require flag-o-matic toolchain-funcs
+require flag-o-matic
 
 SUMMARY="Libraries/utilities to handle ELF objects"
 HOMEPAGE="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}"
@@ -36,6 +36,10 @@ DEPENDENCIES="
         )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=eu-
     --enable-nls
@@ -44,11 +48,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-lzma
     --with-zlib
 )
-
-src_prepare() {
-    libc-is-musl && expatch "${FILES}"/${PNV}-musl.patch
-    autotools_src_prepare
-}
 
 src_configure() {
     # NOTE (abdulras) tests require that the debug information be present in the tools

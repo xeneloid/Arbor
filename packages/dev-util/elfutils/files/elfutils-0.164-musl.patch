@@ -1,4 +1,4 @@
-Upstream: not yet
+Upstream: no, upstream doesn't care about non-glibc...
 Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6a1439a3be9ce93c534
 
 --- a/configure.ac
