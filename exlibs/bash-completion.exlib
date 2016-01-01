@@ -13,12 +13,14 @@ DEPENDENCIES="
             app-shells/bash-completion
         )"
 
+export BASHCOMPLETIONDIR=/usr/share/bash-completion/completions
+
 dobashcompletion() {
     illegal_in_global_scope
 
     [[ -z "$1" ]] && die "usage: dobashcompletion <file> [ <installed name> ]"
     if option bash-completion; then
-        insinto /usr/share/bash-completion/completions
+        insinto "${BASHCOMPLETIONDIR}"
         newins "${1}" "${2:-${PN}}"
     fi
 }
