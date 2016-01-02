@@ -1,7 +1,7 @@
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require toolchain-funcs flag-o-matic
+require flag-o-matic
 
 if ever is_scm ; then
     SCM_REPOSITORY="https://sourceware.org/git/dwz.git"
@@ -28,13 +28,21 @@ DW_TAG_imported_unit to import it into each CU that needs it.
 "
 HOMEPAGE="https://sourceware.org/git/?p=dwz.git;a=summary"
 
+MYOPTIONS="
+    ( libc: musl )
+"
+
 DEPENDENCIES="
     build+run:
         dev-util/elfutils
+        libc:musl? ( dev-libs/musl-obstack )
 "
 
-src_compile() {
-    libc-is-musl && append-ldflags -lobstack
+pkg_setup() {
+    if [[ $(exhost --target) == *-musl* ]];then
+        # NOTE(somasis) dwz needs an external obstack library on musl
+        append-ldflags -lobstack
+    fi
     default
 }
 
