@@ -3,7 +3,7 @@
 # Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require alternatives toolchain-funcs flag-o-matic
+require toolchain-funcs alternatives flag-o-matic
 
 SUMMARY="BusyBox provides tiny replacements for many common UNIX utilities"
 HOMEPAGE="http://busybox.net"
@@ -36,6 +36,8 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-unzip.patch
     "${FILES}"/${PNV}-unzip-regression.patch
+    "${FILES}"/${PNV}-truncate-open-mode.patch
+    "${FILES}"/${PNV}-musl.patch
 )
 
 bb_make() {
@@ -89,13 +91,7 @@ src_prepare() {
         -e "s:strings -af ../../busybox > foo:$(exhost --tool-prefix)strings -af ../../busybox > foo:" \
         -i testsuite/strings/strings-works-like-GNU
 
-    if libc-is-musl;then
-        edo cp "${FILES}"/${PNV}-musl-config .config
-    elif libc-is-glibc;then
-        edo cp "${FILES}"/${PNV}-glibc-config .config
-    else
-        die "Don't know what ${PNV}-*-config file to use."
-    fi
+    edo cp "${FILES}"/${PNV}-config .config
 
     if ! option systemd;then
         edo sed -e 's/^CONFIG_FEATURE_SYSTEMD.*/# CONFIG_FEATURE_SYSTEMD is not set/'   \
@@ -157,11 +153,8 @@ src_install() {
         nice nohup od printenv printf pwd readlink realpath rm rmdir seq
         sha1sum sha256sum sha512sum shuf sleep sort split stat stty sum
         sync tac tail tee test timeout touch tr true tty uname unexpand
-        uniq unlink wc who whoami yes
+        uniq unlink users wc who whoami yes
     )
-
-    # we disable CONFIG_UTMP on musl, users only exists if it is enabled
-    libc-is-musl || coreutils+=( users )
 
     # alternatives
     local coreutils_alternatives=()
