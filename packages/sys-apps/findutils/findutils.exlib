@@ -6,9 +6,9 @@ if (( $(ever range 2) % 2 )); then
 else
     require gnu [ suffix=gz ]
 fi
-require toolchain-funcs alternatives
+require alternatives
 
-export_exlib_phases src_configure src_test_expensive src_install
+export_exlib_phases src_test_expensive src_install
 
 SUMMARY="Basic directory searching utilities"
 
@@ -25,20 +25,17 @@ DEPENDENCIES="
         dev-util/dejagnu
 "
 
-findutils_src_configure() {
-    econf \
-        gt_cv_func_gnugettext{1,2}_libc=yes \
-        --enable-d_type-optimisation \
-        --enable-leaf-optimisation \
-        --enable-nls \
-        --libexecdir=/usr/$(exhost --target)/libexec/${PN} \
-        --without-selinux \
-        $(if libc-is-musl;then
-            echo --with-included-regex
-        else
-            echo --without-included-regex
-        fi)
-}
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-d_type-optimisation
+    --enable-leaf-optimisation
+    --enable-nls
+    --libexecdir=/usr/$(exhost --target)/libexec/${PN}
+    --without-selinux
+    gt_cv_func_gnugettext{1,2}_libc=yes
+
+    # NOTE(somasis) included regex should be used, otherwise it segfaults on musl
+    --with-included-regex
+)
 
 findutils_src_test_expensive() {
     if exhost --is-native -q; then
@@ -57,7 +54,6 @@ findutils_src_test_expensive() {
 findutils_src_install() {
     local alternatives=(
         locate ${PN} 10
-
         /usr/$(exhost --target)/bin/locate        ${PN}.locate
         /usr/$(exhost --target)/bin/updatedb      ${PN}.updatedb
         /usr/share/man/man1/locate.1    /usr/share/man/man1/${PN}.locate.1
@@ -69,10 +65,10 @@ findutils_src_install() {
 
     alternatives_for "${alternatives[@]}"
 
-    if libc-is-musl;then
-        edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
-        edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
-    fi
+    # NOTE(somasis) remove gettext leftovers on musl
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
+
     edo rmdir "${IMAGE}"/var{/lib,}
 }
 
