@@ -19,23 +19,12 @@ DEPENDENCIES=""
 
 WORK="${WORKBASE}/${MY_PNV}"
 
-configure_string() {
-    # $1=\"${$1}\" => $1=\"${$1} $2\"
-    echo "s:$1=\\\\\"\${$1}\\\\\":$1=\\\\\"${2}\\\\\":"
-}
-
 src_prepare() {
-    edo sed -e "s:^\(CC =\) .*:\1 ${CC}:" \
-            -e "s:^\(CPP =\) .*:\1 ${CPP}:" \
-            -e "/^CFLAGS_NOOPT = /s:$: ${CFLAGS}:" \
-            -e "/^LFLAGS2 = /s:$: ${LDFLAGS}:" \
-            -i unix/Makefile
+    edo sed -i -e "s/\(^LFLAGS1='\)/\1${LDFLAGS}/" unix/configure
 }
 
 src_configure() {
-    # 1) no autotools configure
-    # 2) invoking configure manually results in setting internal CFLAGS
-    emake -f unix/Makefile flags
+    edo sh unix/configure "${CC}" "-I. -DUNIX ${CFLAGS}"
 }
 
 src_compile() {
