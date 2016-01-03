@@ -47,8 +47,13 @@ DEFAULT_SRC_COMPILE_PARAMS=(
     -j1
     GMAKE_NOWARN=true
     INS_BASE=/usr/$(exhost --target)
-    LDPATH="-L/\$(INS_BASE)/lib"
-    RUNPATH="-R/\$(INS_BASE)/lib"
+    LDPATH=""
+    RUNPATH=""
+    ASOPTX="${ASFLAGS}"
+    CPPOPTX="${CPPFLAGS}"
+    COPTX="${CFLAGS}"
+    C++OPTX="${CXXFLAGS}"
+    LDOPTX="${LDFLAGS}"
 )
 DEFAULT_SRC_TEST_PARAMS=( GMAKE_NOWARN=true )
 DEFAULT_SRC_INSTALL_PARAMS=(
@@ -71,6 +76,7 @@ src_prepare() {
             -e "/^CC++_COM_DEF=/s|g++|${CXX}|" \
             -e "/COPTOPT=/s|-O||" \
             -e 's|$(GCCOPTOPT)||' \
+            -e 's/@echo[^;]*; //' \
             -i cc-gcc.rul
 
     edo sed -e "s|^#\(CONFFLAGS +=\).*|\1\t-cc=${CC}|" \
