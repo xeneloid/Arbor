@@ -14,10 +14,14 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
+DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" )
 DEFAULT_SRC_INSTALL_PARAMS=(
     prefix=/usr
     sbindir=/usr/$(exhost --target)/bin
     docdir=/usr/share/doc/${PNVR}
 )
+
+src_prepare() {
+    edo sed -i -e '/^CFLAGS/s/-O2//' Makefile
+}
 
