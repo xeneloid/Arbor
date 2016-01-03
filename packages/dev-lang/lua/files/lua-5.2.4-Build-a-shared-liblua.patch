@@ -67,10 +67,10 @@ index fea895b..fbe778b 100644
 +
 +$(LIB_NAME) $(LIB_NAME:.la=.a): $(LIB_OBJS)
 +	$(LIBTOOL) --mode=link $(CC) -version-info $(LIB_VERSION) \
-+            -rpath $(RPATH) -o $(LIB_NAME) $(LIB_OBJS) $(LIB_LIBS) $(LDFLAGS)
++            -rpath $(RPATH) -o $(LIB_NAME) $(LIB_OBJS) $(LDFLAGS) $(LIB_LIBS)
 +
 +lua$(V): $(LUA_O) $(LIB_NAME)
-+	$(LIBTOOL) --mode=link $(CC) -static -Wl,-E -o $@ $(LUA_O) $(LIB_NAME) $(LUA_LIBS) $(LDFLAGS)
++	$(LIBTOOL) --mode=link $(CC) -static -Wl,-E -o $@ $(LUA_O) $(LIB_NAME) $(LDFLAGS) $(LUA_LIBS)
 +
 +luac$(V): $(LUAC_O) $(LIB_NAME)
 +	$(LIBTOOL) --mode=link $(CC) -static -o $@ $(LUAC_O) $(LIB_NAME) $(LDFLAGS)

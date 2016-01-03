@@ -65,6 +65,9 @@ lua-build_src_compile() {
     ARGS=(
         CC="${CC}"
         CFLAGS="-DLUA_USE_LINUX ${CFLAGS}"
+        # SYSLDFLAGS would be better because it would
+        # show up in the 'echo' but thats not in <5.2
+        MYLDFLAGS="${LDFLAGS}"
         PLAT="linux"
         RPATH="/usr/$(exhost --target)/lib"
     )
