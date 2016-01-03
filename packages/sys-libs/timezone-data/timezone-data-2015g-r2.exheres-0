@@ -29,13 +29,6 @@ DEPENDENCIES="
 
 WORK="${WORKBASE}"
 
-DEFAULT_SRC_COMPILE_PARAMS=(
-    cc="${CC}"
-    AR="${AR}"
-    RANLIB="${RANLIB}"
-    CFLAGS="${CFLAGS}"
-    TZDIR="/usr/share/zoneinfo"
-)
 DEFAULT_SRC_INSTALL_PARAMS=(
     $(exhost --is-native -q || echo zic=build-$(exhost --build)/zic)
     TZDIR=/usr/share/zoneinfo
@@ -86,15 +79,23 @@ src_compile() {
     if ! exhost --is-native -q; then
 
         emake \
-            CC=$(exhost --build)-cc \
+            cc=$(exhost --build)-cc \
+            AR=$(exhost --build)-ar \
+            RANLIB=$(exhost --build)-ranlib \
             CFLAGS="$(print-build-flags CFLAGS)" \
-            CPPFLAGS="$(print-build-flags CPPFLAGS)" \
             LDFLAGS="$(print-build-flags LDFLAGS)" \
+            TZDIR="/usr/share/zoneinfo" \
             -C build-$(exhost --build) \
             zic
     fi
 
-    default
+    emake \
+        cc="${CC}" \
+        AR="${AR}" \
+        RANLIB="${RANLIB}" \
+        CFLAGS="${CFLAGS}" \
+        LDFLAGS="${LDFLAGS}" \
+        TZDIR="/usr/share/zoneinfo"
 }
 
 src_install() {
