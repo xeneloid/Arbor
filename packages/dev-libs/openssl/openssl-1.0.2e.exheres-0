@@ -65,9 +65,19 @@ src_prepare() {
 
     # https://github.com/openssl/openssl/issues/490
     edo chmod 0755 util/pod2mantest
+
+    # verbose
+    edo sed -i -e 's/^#SET_X=/SET_X=/' Makefile.shared
 }
 
 src_configure() {
+    # LDFLAGS is out of the question thanks to the 'clever':
+    # DO_GNU_APP=LDFLAGS="$(CFLAGS) -Wl,-rpath,$(LIBRPATH)"
+    # We would like to use SHARED_LDFLAGS but that only works for .so's
+    # So instead we just cheat and add LDFLAGS to CFLAGS so it gets
+    # everywhere it needs to be along with some places where its harmless.
+    export CFLAGS="${CFLAGS} ${LDFLAGS}"
+
     edo "${WORK}"/Configure $(_openssl_host_os) \
         --test-sanity
 
