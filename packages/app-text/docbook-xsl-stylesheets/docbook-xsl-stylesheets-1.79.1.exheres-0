@@ -31,17 +31,17 @@ src_install() {
     local i
     for sheet in */ ; do
         i=$(basename ${sheet})
-        pushd "${WORK}"/${i} >/dev/null
+        edo pushd "${WORK}"/${i} >/dev/null
         for doc in ChangeLog README; do
             if [[ -e ${doc} ]]; then
-                mv ${doc} ${doc}.${i}
+                edo mv ${doc} ${doc}.${i}
                 dodoc ${doc}.${i}
-                rm ${doc}.${i}
+                edo rm ${doc}.${i}
             fi
         done
 
         doins -r "${WORK}"/${i}
-        popd > /dev/null
+        edo popd > /dev/null
     done
 
     doins VERSION{,.xsl}
