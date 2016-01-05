@@ -13,7 +13,6 @@ LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    npm [[ description = [ install bundled npm module ] ]]
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -23,38 +22,26 @@ DEPENDENCIES="
     build+run:
         dev-libs/icu:=
         dev-libs/libpthread-stubs
-        dev-libs/v8
         sys-libs/zlib
-        npm? ( !dev-node/npm )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
 "
 
-DEFAULT_SRC_COMPILE_PARAMS=(
-    V=1
-)
-
-LD="${CXX}"
+DEFAULT_SRC_COMPILE_PARAMS=( V=1 LD="${CXX}" )
 
 RESTRICT="test"
 
-export PATH="${TMPDIR}:${PATH}"
+PATH="${TMPDIR}:${PATH}"
 
 src_prepare() {
     default
-    # normally we would change the #! line to use python2, but the build STILL
-    # tries to access python, which fails if it's python3. stupid.
-    echo "printf '#!/bin/sh\nexec python2 \"\$@\"\n' > \"${TMPDIR}\"/python"
-    printf '#!/bin/sh\nexec python2 "$@"\n' > "${TMPDIR}"/python
-    edo chmod +x "${TMPDIR}"/python
 
-    edo sed -e "s:pkg-config :${PKG_CONFIG} :g" -i configure
+    edo ln -s /usr/$(exhost --build)/bin/python2 "${TMPDIR}"/python
+    edo sed -e "s:pkg-config :${PKG_CONFIG} :g" -e "s:env python:env python2:" -i configure
 }
 
 src_configure() {
-    edo ./configure --prefix=/usr/$(exhost --target)    \
-                    --shared-openssl --shared-zlib --with-intl=system-icu \
-                    $(option npm '' --without-npm)
+    edo ./configure --prefix=/usr/$(exhost --target) --shared-openssl --shared-zlib --with-intl=system-icu
 }
 
 src_install() {
