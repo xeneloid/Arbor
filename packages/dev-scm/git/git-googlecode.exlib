@@ -33,6 +33,7 @@ MYOPTIONS="
     emacs [[ description = [ Install various Emacs libraries: git.el, git-blame.el and vc-git.el ] ]]
     examples [[ description = [ Install various contributions (i. e. the contrib/ directory) ] ]]
     keyring [[ description = [ Install GNOME keyring credential helper ] ]]
+    pcre [[ description = [ Allow for using Perl-compatible regular expressions in \`git grep\` ] ]]
     python [[ description = [ Install helper scripts for git remote helpers, a compatibility layer with other SCMs ] ]]
     tk
     webdav [[ requires = curl description = [ Adds support for pushing using http:// and https:// transports ] ]]
@@ -47,6 +48,7 @@ DEPENDENCIES="
         sys-libs/zlib
         curl? ( net-misc/curl[>=7.34] )
         keyring? ( gnome-desktop/libgnome-keyring:1 )
+        pcre? ( dev-libs/pcre )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
         tk? (
@@ -122,6 +124,7 @@ git-googlecode_src_configure() {
     option python || myoptions+=( 'NO_PYTHON=YesPlease' )
     option tk || myoptions+=( 'NO_TCLTK=YesPlease' )
     option webdav || myoptions+=( 'NO_EXPAT=YesPlease' )
+    option pcre && myoptions+=( 'USE_LIBPCRE=YesPlease' )
 
     # Note(tanderson): Yes, this is correct; we need to run *both* configure
     # and make with these options. Before multiarch we only did the emake call,
