@@ -244,6 +244,7 @@ setup-py_install_one_multibuild() {
         --install-data=/usr                                     \
         --prefix=/usr/$(exhost --target)                        \
         --no-compile                                            \
+        --force                                                 \
         "${SETUP_PY_SRC_INSTALL_PARAMS[@]}"
 
     python_bytecompile
