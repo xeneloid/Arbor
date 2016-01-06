@@ -1,14 +1,16 @@
 # Copyright (c) 2007 Alexander Færøy <ahf@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require systemd-service alternatives
 
 NTP_PNV="${PNV/_/}"
 
 SUMMARY="OpenNTPD is a free implementation of the Network Time Protocol"
 HOMEPAGE="http://www.openntpd.org/"
-DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/${NTP_PNV}.tar.gz"
+
+# latest upstream has a lot of bugfixes and version-bumped but isn't on openbsd.org...
+DOWNLOADS="https://dev.exherbo.org/~somasis/${NTP_PNV}.tar.xz"
+#DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/${NTP_PNV}.tar.gz"
 
 LICENCES="BSD-2 BSD-3"
 SLOT="0"
@@ -24,10 +26,6 @@ DEPENDENCIES="
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/94073d01eb615badc2c84685fcbbcd98f0c12c5d.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-privsep-user=ntp --localstatedir=/var
@@ -51,6 +49,10 @@ EOF
 
     alternatives_for ntpd ${PN} 500 /usr/$(exhost --target)/bin/ntpd    ${PN}   \
                                     /usr/share/man/man8/ntpd.8          ${PN}
+
+    # openntpd and ntpctl are the same binary so there's no need to have the same binary twice...
+    edo rm "${IMAGE}"/usr/$(exhost --target)/bin/ntpctl
+    dosym "${PN}" /usr/$(exhost --target)/bin/ntpctl
 
     edo sed 's/# use a random selection.*/# use a random time server from the Exherbo vendor pool/
 /servers pool.ntp.org/c \
