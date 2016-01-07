@@ -25,8 +25,9 @@ DEPENDENCIES="
         !bootstrap? ( dev-lang/go[>=1.4] )
 "
 
+# strip is restricted because dwarf_compress can actually cause go to run into some really strange segfaults
 # causes sydbox to hit invalid pointer errors as of 1.5 :(
-RESTRICT=test
+RESTRICT="test strip"
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( PATENTS )
 
