@@ -149,7 +149,7 @@ WORK=${WORKBASE}/${PN}-${MY_PV}
 ImageMagick_src_prepare() {
     default
 
-    # *sigh*, replace hard-coded pkg-config in stupid wrapper script
+    # TODO: report upstream, replace hard-coded pkg-config in wrapper script
     edo sed -e "s:pkg-config:${PKG_CONFIG}:" -i wand/MagickWand-config.in
 }
 
