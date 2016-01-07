@@ -1,6 +1,6 @@
 # Copyright 2008, 2009 Ingmar Vanhassel <ingmar@exherbo.org>
 # Copyright 2010 Cecil Curry <leycec@gmail.com>
-# Copyright 2015 Timo Gurr <tgurr@exherbo.org>
+# Copyright 2015-2016 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'doxygen-1.5.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
@@ -29,7 +29,7 @@ MYOPTIONS="
     dot      [[ description = [ Use the dot tool from graphviz to generate more advanced diagrams
                                 and graphs ] ]]
     examples [[ description = [ Build doxyapp ] ]]
-    qt4      [[ description = [ Build doxywizard ] ]]
+    qt5      [[ description = [ Build doxywizard ] ]]
 "
 
 DEPENDENCIES="
@@ -41,7 +41,7 @@ DEPENDENCIES="
         doc? ( virtual/unzip )
     build+run:
         app-text/ghostscript
-        qt4? ( x11-libs/qt:4[>=4.3.0] )
+        qt5? ( x11-libs/qtbase:5[gui] )
     run:
         dot? (
             media-gfx/graphviz[>=1.8.10]
@@ -51,13 +51,12 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-1.8.10-doc.patch
-    "${FILES}"/379af51e874f86f4f5477e18fd1cf405fe6d8c85.patch
-    "${FILES}"/${PN}-Support-flex-2.6.0.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS+=(
     -Dbuild_doc:BOOL=TRUE
     -Dbuild_search:BOOL=FALSE
+    -Dforce_qt4:BOOL=FALSE
     -Duse_libclang:BOOL=FALSE
     -Duse_sqlite3:BOOL=FALSE
 )
@@ -67,7 +66,7 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( LANGUAGE.HOWTO )
 src_configure() {
     CMAKE_SRC_CONFIGURE_PARAMS+=(
         -Dbuild_app:BOOL=$(option examples TRUE FALSE)
-        -Dbuild_wizard:BOOL=$(option qt4 TRUE FALSE)
+        -Dbuild_wizard:BOOL=$(option qt5 TRUE FALSE)
         -Dbuild_xmlparser:BOOL=$(option examples TRUE FALSE)
     )
 
@@ -83,6 +82,6 @@ src_install() {
     fi
 
     edo rm "${IMAGE}"/usr/share/man/man1/doxy{indexer,search}.1
-    option qt4 || edo rm "${IMAGE}"/usr/share/man/man1/doxywizard.1
+    option qt5 || edo rm "${IMAGE}"/usr/share/man/man1/doxywizard.1
 }
 

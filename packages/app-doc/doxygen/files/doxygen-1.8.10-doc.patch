@@ -21,7 +21,7 @@ diff -Naur doxygen-1.8.10/doc/CMakeLists.txt doxygen-1.8.10.new/doc/CMakeLists.t
          "${PROJECT_BINARY_DIR}/man/doxywizard.1"
          "${PROJECT_BINARY_DIR}/man/doxysearch.1"
          "${PROJECT_BINARY_DIR}/man/doxyindexer.1"
--        DESTINATION man/man1
+-        DESTINATION share/man/man1
 -)
 -
 -install(FILES
