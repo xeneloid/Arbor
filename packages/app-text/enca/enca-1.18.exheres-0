@@ -36,6 +36,3 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( "doc gtk-doc" )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( "recode librecode" )
 
-# https://github.com/nijel/enca/issues/15
-DEFAULT_SRC_TEST_PARAMS=( -j1 )
-
