@@ -72,7 +72,6 @@ MYOPTIONS="
             pg_buffercache [[ description = [ Analyze what's happening in the shared buffer cache ] ]]
             pg_freespacemap [[ description = [ Analyze the free space map ] ]]
             pg_trgm [[ description = [ Trigram support for Full-Text Search ] ]]
-            pg_upgrade [[ description = [ Command line utility to upgrade clusters between major versions ] ]]
             pgcrypto [[ description = [ Cryptographic (hashing, {de,en}cryption, (de)compression etc) functions ] ]]
             pgstattuple [[ description = [ Functions for tuple-level statistics ] ]]
             postgres_fdw [[ description = [ Extension with the Foreign Data Wrapper to access other PostgreSQL servers ] ]]
@@ -122,7 +121,6 @@ OPTIONS_IN_CONTRIB=(
     pg_buffercache
     pg_freespacemap
     pg_trgm
-    pg_upgrade
     pgcrypto
     pgstattuple
     postgres_fdw
@@ -137,6 +135,19 @@ OPTIONS_IN_CONTRIB=(
     uuid-ossp
     xml2
 )
+
+if ever at_least 9.5 ${POSTGRESQL_MAJOR_VERSION}; then
+    MYOPTIONS+="
+        postgresql_extensions:
+            tsm_system_rows [[ description = [ Row-based table sampling method ] ]]
+            tsm_system_time [[ description = [ Time-based table sampling method ] ]]
+    "
+
+    OPTIONS_IN_CONTRIB+=(
+        tsm_system_rows
+        tsm_system_time
+    )
+fi
 
 DEPENDENCIES="
     build:
@@ -170,18 +181,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=docdir
     --enable-nls
     --with-system-tzdata=/usr/share/zoneinfo
+    --with-uuid=e2fs
     --with-zlib
 )
-
-if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
-    DEFAULT_SRC_CONFIGURE_PARAMS+=( --with-uuid=e2fs )
-else
-    DEPENDENCIES+="
-        build+run:
-            postgresql_extensions:uuid-ossp? ( dev-libs/ossp-uuid )
-    "
-    DEFAULT_SRC_CONFIGURE_OPTION_WITHS+=( "postgresql_extensions:uuid-ossp ossp-uuid" )
-fi
 
 postgresql_pkg_pretend() {
     if [[ -z ${POSTGRESQL_MAJOR_UPGRADE} ]] && has_version --root ${CATEGORY}/${PN} && \
@@ -225,7 +227,10 @@ postgresql_src_emake_contrib() {
     # it in the worst times, so let's get them ready upfront
     postgresql_src_emake_contrib_one adminpack $1
     postgresql_src_emake_contrib_one pg_stat_statements $1
-    postgresql_src_emake_contrib_one pg_upgrade_support $1
+    if ! ever at_least 9.5 ${PSQL_MAJOR_VERSION}; then
+        postgresql_src_emake_contrib_one pg_upgrade $1
+        postgresql_src_emake_contrib_one pg_upgrade_support $1
+    fi
     postgresql_src_emake_contrib_one pgrowlocks $1
 }
 
@@ -256,11 +261,9 @@ EOF
 postgresql_src_test() {
     esandbox allow_net "unix:${TEMP}/.s.PGSQL.*"
     esandbox allow_net --connect "unix:${TEMP}/.s.PGSQL.*"
-    if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
-        esandbox allow_net --connect "unix:/run/uuidd/request"
-        esandbox allow_net --connect "inet:0.0.0.0/0@53"
-        esandbox allow_net --connect "inet:127.0.0.1@9"
-    fi
+    esandbox allow_net --connect "unix:/run/uuidd/request"
+    esandbox allow_net --connect "inet:0.0.0.0/0@53"
+    esandbox allow_net --connect "inet:127.0.0.1@9"
 
     PG_REGRESS_SOCK_DIR="${TEMP}" default
 
@@ -272,10 +275,8 @@ postgresql_src_test() {
 
     esandbox disallow_net "unix:${TEMP}/.s.PGSQL.*"
     esandbox disallow_net --connect "unix:${TEMP}/.s.PGSQL.*"
-    if ever at_least 9.4 ${PSQL_MAJOR_VERSION} ; then
-        esandbox disallow_net --connect "unix:/run/uuidd/request"
-        esandbox disallow_net --connect "inet:0.0.0.0/0@53"
-        esandbox disallow_net --connect "inet:127.0.0.1@9"
-    fi
+    esandbox disallow_net --connect "unix:/run/uuidd/request"
+    esandbox disallow_net --connect "inet:0.0.0.0/0@53"
+    esandbox disallow_net --connect "inet:127.0.0.1@9"
 }
 
