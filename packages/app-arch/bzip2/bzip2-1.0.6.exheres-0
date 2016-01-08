@@ -63,7 +63,7 @@ src_compile() {
 src_install() {
     local versioned=
 
-    einstall DESTDIR="${IMAGE}" PREFIX=/usr/$(exhost --target) DATADIR=/usr/share
+    emake -j1 DESTDIR="${IMAGE}" PREFIX=/usr/$(exhost --target) DATADIR=/usr/share install
     emagicdocs
 
     into /usr/$(exhost --target)
