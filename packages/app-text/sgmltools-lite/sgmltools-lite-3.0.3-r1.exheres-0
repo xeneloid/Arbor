@@ -44,8 +44,13 @@ src_prepare() {
 }
 
 src_install() {
-    #FIXME
-    einstall etcdir="${IMAGE}"/etc/sgml
+    #FIXME: Patch to support DESTDIR, it's no longer actively developed though.
+    emake -j1 \
+        etcdir="${IMAGE}"/etc/sgml \
+        bindir="${IMAGE}"/usr/$(exhost --target)/bin \
+        datadir="${IMAGE}"/usr/share \
+        mandir="${IMAGE}"/usr/share/man \
+        install
 
     emagicdocs
     dodoc POSTINSTALL
