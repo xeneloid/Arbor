@@ -72,7 +72,7 @@ src_install() {
         insinto /usr/$(exhost --target)/include
         doins "${FILES}"/bsd-compat/stab.h
         insinto /usr/$(exhost --target)/include/sys
-        doins "${FILES}"/bsd-compat/{cdefs,queue,stab,tree}.h
+        doins "${FILES}"/bsd-compat/{cdefs,queue,tree}.h
 
         dobin "${WORK}"/{getconf,getent}
 
