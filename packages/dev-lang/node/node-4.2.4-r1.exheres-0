@@ -13,8 +13,16 @@ LICENCES="MIT"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
-    ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
+    system-openssl [[
+        description = [ builds node against the system openssl instead of the bundled one ]
+        note = [ bundled openssl is 1.0.2 ]
+    ]]
 "
+# TODO(japaric) re-add libressl provider when libressl catches up with the new API in openssl 1.0.2
+# OR when node officially supports libressl cf. https://github.com/nodejs/node/issues/428
+# context: libressl is on API parity with openssl 1.0.1, but node uses the new API available in
+# openssl 1.0.2 cf. https://github.com/nodejs/node/issues/2783
+#   ( providers: libressl openssl  ) [[ number-selected = exactly-one  ]]
 
 DEPENDENCIES="
     build:
@@ -23,9 +31,11 @@ DEPENDENCIES="
         dev-libs/icu:=
         dev-libs/libpthread-stubs
         sys-libs/zlib
-        providers:libressl? ( dev-libs/libressl:= )
-        providers:openssl? ( dev-libs/openssl )
+        system-openssl? ( dev-libs/openssl[>=1.0.2] )
 "
+# See TODO above
+#        providers:libressl? ( dev-libs/libressl )
+#        providers:openssl? ( dev-libs/openssl  )
 
 DEFAULT_SRC_COMPILE_PARAMS=( V=1 LD="${CXX}" )
 
@@ -41,7 +51,11 @@ src_prepare() {
 }
 
 src_configure() {
-    edo ./configure --prefix=/usr/$(exhost --target) --shared-openssl --shared-zlib --with-intl=system-icu
+    edo ./configure \
+        --prefix=/usr/$(exhost --target) \
+        $(option system-openssl && echo --shared-openssl) \
+        --shared-zlib \
+        --with-intl=system-icu
 }
 
 src_install() {
