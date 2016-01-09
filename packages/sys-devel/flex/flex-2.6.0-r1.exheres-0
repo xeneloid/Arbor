@@ -19,6 +19,7 @@ DEPENDENCIES="
         sys-devel/m4[>=1.4]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Commented-in-C-style-in-skeleton-fixed-sf-195.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
