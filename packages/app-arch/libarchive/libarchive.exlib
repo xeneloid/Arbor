@@ -36,7 +36,7 @@ fi
 
 LICENCES="BSD-2 BSD-3 public-domain"
 SLOT="0"
-MYOPTIONS="acl xattr
+MYOPTIONS="acl lz4 xattr
     ( providers: libressl nettle openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -47,6 +47,7 @@ DEPENDENCIES="
         dev-libs/libxml2:=
         virtual/gzip
         acl? ( sys-apps/acl )
+        lz4? ( app-arch/lz4 )
         xattr? ( sys-apps/attr )
         providers:libressl? ( dev-libs/libressl:= )
         providers:nettle? ( dev-libs/nettle )
@@ -71,7 +72,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-lzmadec
     CFLAGS="${CFLAGS} -Wno-error"
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl xattr )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl lz4 xattr )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'providers:nettle nettle'
     'providers:libressl openssl'
