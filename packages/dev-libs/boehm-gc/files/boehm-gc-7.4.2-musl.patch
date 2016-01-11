@@ -1,4 +1,4 @@
-Upstream: yes, partially (the os_dep patch isn't needed in scm, gcconfig.h was submitted)
+Upstream: yes
 Source: https://github.com/ivmai/bdwgc/pull/84
 
 diff -ru gc-7.4.2.orig/include/private/gcconfig.h gc-7.4.2/include/private/gcconfig.h
