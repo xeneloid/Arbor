@@ -3,8 +3,8 @@
 
 MY_PV=v_$(ever replace_all _)
 
-require github [ user=keplerproject ] \
-        flag-o-matic lua [ multiunpack=true whitelist="5.1 5.2" work=${PN}-${MY_PV} ]
+require github [ user=keplerproject ] flag-o-matic \
+        lua [ multiunpack=true whitelist="5.1 5.2 5.3" work=${PN}-${MY_PV} ]
 
 SUMMARY="a lua filesystem library"
 DESCRIPTION="
