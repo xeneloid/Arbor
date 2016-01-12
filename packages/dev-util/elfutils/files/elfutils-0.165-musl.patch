@@ -148,7 +148,7 @@ Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6
 +++ b/libcpu/i386_disasm.c
 @@ -1,4 +1,4 @@
 -/* Disassembler for x86.
-+﻿/* Disassembler for x86.
++/* Disassembler for x86.
     Copyright (C) 2007, 2008, 2009, 2011 Red Hat, Inc.
     This file is part of elfutils.
     Written by Ulrich Drepper <drepper@redhat.com>, 2007.
@@ -166,8 +166,8 @@ Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6
  		-Wl,--enable-new-dtags,-rpath,$(pkglibdir) \
  		-Wl,--version-script,$<,--no-undefined \
  		-Wl,--whole-archive $(filter-out $<,$^) -Wl,--no-whole-archive\
--		-ldl $(argp_LDADD) $(zip_LIBS)
-+		-ldl $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) $(zip_LIBS)
+-		-ldl -lz $(argp_LDADD) $(zip_LIBS)
++		-ldl -lz $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) $(zip_LIBS)
  	@$(textrel_check)
  	$(AM_V_at)ln -fs $@ $@.$(VERSION)
  
@@ -286,7 +286,7 @@ Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6
  	  /* At the end a special entry.  */
 --- a/src/Makefile.am
 +++ b/src/Makefile.am
-@@ -104,27 +104,28 @@ ranlib_no_Wstack_usage = yes
+@@ -104,28 +104,29 @@
  ar_no_Wstack_usage = yes
  unstrip_no_Wstack_usage = yes
  
@@ -316,6 +316,7 @@ Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6
 -ar_LDADD = libar.a $(libelf) $(libeu) $(argp_LDADD)
 -unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl
 -stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) -ldl $(demanglelib)
+-elfcompress_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD)
 +elflint_LDADD  = $(libebl) $(libelf) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
 +findtextrel_LDADD = $(libdw) $(libelf) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
 +addr2line_LDADD = $(libdw) $(libelf) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) $(demanglelib)
@@ -327,6 +328,7 @@ Source: https://github.com/voidlinux/void-packages/commit/cb86b9c0fdd3339f2b68c6
 +unstrip_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl
 +stack_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD) -ldl \
 +		$(demanglelib)
++elfcompress_LDADD = $(libebl) $(libelf) $(libdw) $(libeu) $(argp_LDADD) $(fts_LDADD) $(obstack_LDADD)
  
  ldlex.o: ldscript.c
  ldlex_no_Werror = yes
