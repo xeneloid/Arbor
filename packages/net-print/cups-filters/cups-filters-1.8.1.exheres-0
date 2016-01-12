@@ -78,6 +78,7 @@ src_configure() {
         --disable-braille
         --disable-static
         --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')$(option ldap && echo 'ldap ')cups"
+        --with-cups-config=/usr/$(exhost --target)/bin/cups-config
         --with-cups-domainsocket=/run/cups/cups.sock
         --with-cups-rundir=/run/cups
         --with-fontdir=fonts/conf.avail
