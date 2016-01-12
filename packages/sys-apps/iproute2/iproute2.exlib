@@ -87,9 +87,15 @@ iproute2_src_prepare() {
     fi
 
     # use /run instead of /var/run
-    edo sed \
+    if ever at_least 3.19.0 ; then
+        edo sed \
+            -e 's:/var/run:/run:g' \
+            -i include/namespace.h man/man8/ip-netns.8
+    else
+        edo sed \
             -e 's:/var/run:/run:g' \
             -i ip/ipnetns.c man/man8/ip-netns.8
+    fi
 }
 
 iproute2_src_configure() {
