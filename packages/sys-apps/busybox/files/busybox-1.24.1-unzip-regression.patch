@@ -1,4 +1,4 @@
-Upstream; yes
+Upstream: yes
 
 From 092fabcf1df5d46cd22be4ffcd3b871f6180eb9c Mon Sep 17 00:00:00 2001
 From: Denys Vlasenko <vda.linux@googlemail.com>
