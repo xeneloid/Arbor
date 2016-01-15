@@ -83,6 +83,7 @@ src_compile() {
             AR=$(exhost --build)-ar \
             RANLIB=$(exhost --build)-ranlib \
             CFLAGS="$(print-build-flags CFLAGS)" \
+            CPPFLAGS="$(print-build-flags CPPFLAGS)" \
             LDFLAGS="$(print-build-flags LDFLAGS)" \
             TZDIR="/usr/share/zoneinfo" \
             -C build-$(exhost --build) \
@@ -94,6 +95,7 @@ src_compile() {
         AR="${AR}" \
         RANLIB="${RANLIB}" \
         CFLAGS="${CFLAGS}" \
+        CPPFLAGS="${CPPFLAGS}" \
         LDFLAGS="${LDFLAGS}" \
         TZDIR="/usr/share/zoneinfo"
 }
