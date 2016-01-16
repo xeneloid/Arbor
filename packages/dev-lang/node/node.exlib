@@ -1,0 +1,81 @@
+# Copyright 2011 Michael Thomas <aelmalinka@gmail.com>
+# Distributed under the terms of the GNU General Public Licesnse v2
+
+MY_PV="v${PV}"
+MY_PNV="${PN}-${MY_PV}"
+WORK="${WORKBASE}/${MY_PNV}"
+
+SUMMARY="Evented I/O for V8 Javascript"
+DESCRIPTION="Designed to provide an easy way to build scalable network applications, similar to Event Machine or Twisted"
+DOWNLOADS="https://nodejs.org/dist/${MY_PV}/${MY_PNV}.tar.gz"
+HOMEPAGE="https://nodejs.org/"
+LICENCES="MIT"
+SLOT="0"
+MYOPTIONS="
+    system-openssl [[
+        description = [ builds node against the system openssl instead of the bundled one ]
+        note = [ bundled openssl is 1.0.2 ]
+    ]]
+"
+# TODO(japaric) re-add libressl provider when libressl catches up with the new API in openssl 1.0.2
+# OR when node officially supports libressl cf. https://github.com/nodejs/node/issues/428
+# context: libressl is on API parity with openssl 1.0.1, but node uses the new API available in
+# openssl 1.0.2 cf. https://github.com/nodejs/node/issues/2783
+#   ( providers: libressl openssl  ) [[ number-selected = exactly-one  ]]
+
+DEPENDENCIES="
+    build:
+        dev-lang/python:*[<3.0]
+    build+run:
+        dev-libs/icu:=
+        dev-libs/libpthread-stubs
+        sys-libs/zlib
+        system-openssl? ( dev-libs/openssl[>=1.0.2] )
+"
+# See TODO above
+#        providers:libressl? ( dev-libs/libressl )
+#        providers:openssl? ( dev-libs/openssl  )
+
+DEFAULT_SRC_COMPILE_PARAMS=( V=1 LD="${CXX}" )
+
+RESTRICT="test"
+
+PATH="${TMPDIR}:${PATH}"
+
+node_src_prepare() {
+    default
+
+    edo ln -s /usr/$(exhost --build)/bin/python2 "${TMPDIR}"/python
+    edo sed -e "s:pkg-config :${PKG_CONFIG} :g" -e "s:env python:env python2:" -i configure
+}
+
+node_src_configure() {
+    edo ./configure \
+        --prefix=/usr/$(exhost --target) \
+        $(option system-openssl && echo --shared-openssl) \
+        --shared-zlib \
+        --with-intl=system-icu
+}
+
+node_src_install() {
+    default
+    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/man
+    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/doc
+    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/systemtap
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
+}
+
+node_src_test() {
+    # rebuild certificates, using updated parameters from ef046bf4f64161c6d0f4c4920ab62895789d576c.patch
+    emake -j1 -C test/fixtures/keys clean
+    emake -j1 -C test/fixtures/keys
+
+    esandbox allow_net "inet:0.0.0.0@0"
+    esandbox allow_net "inet:0.0.0.0@12346"
+    esandbox allow_net "unix:${WORK}/test/tmp/test.sock"
+
+    emake test
+}
+
+export_exlib_phases src_prepare src_configure src_install src_test
+
