@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.11 ] ]
-require python [ blacklist="3" multibuild=false ]
+require python [ blacklist=none multibuild=false ]
 
 SUMMARY="Internalization Tag Set Tool"
 DESCRIPTION="
@@ -26,5 +26,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/itstool-${PV}-python-usage.patch"
     "${FILES}/d75f68cbc58075b57aee53d57b9156655a2fc99a.patch"
+    "${FILES}"/0001-Add-python-3-support.patch
+    "${FILES}"/0002-Fix-problem-with-merging-translations-under-py3.patch
 )
 
