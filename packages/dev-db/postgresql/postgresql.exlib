@@ -81,7 +81,6 @@ MYOPTIONS="
                        requires    = [ ssl ] ]]
             tablefunc [[ description = [ Some set returning functions (normal_rand, crosstab variations and connectby) ] ]]
             tcn [[ description = [ A trigger function to notify listeners of changes ] ]]
-            test_parser [[ description = [ An example parser for full-text search ] ]]
             tsearch2 [[ description = [ Backward-compatible text-search function for tsearch2-compatible applications ] ]]
             unaccent [[ description = [ A text-search dictionnary which removes accents from lexemes ] ]]
             uuid-ossp [[ description = [ Functions for generating UUIDs ] ]]
@@ -129,7 +128,6 @@ OPTIONS_IN_CONTRIB=(
     sslinfo
     tablefunc
     tcn
-    test_parser
     tsearch2
     unaccent
     uuid-ossp
@@ -146,6 +144,15 @@ if ever at_least 9.5 ${POSTGRESQL_MAJOR_VERSION}; then
     OPTIONS_IN_CONTRIB+=(
         tsm_system_rows
         tsm_system_time
+    )
+else
+    MYOPTIONS+="
+        postgresql_extensions:
+            test_parser [[ description = [ An example parser for full-text search ] ]]
+    "
+
+    OPTIONS_IN_CONTRIB+=(
+        test_parser
     )
 fi
 
