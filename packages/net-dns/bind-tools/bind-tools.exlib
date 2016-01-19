@@ -53,7 +53,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-libxml2
     --with-openssl=/usr/$(exhost --target)
-    --with-readline
+    --with-readline=-lreadline
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     geoip
