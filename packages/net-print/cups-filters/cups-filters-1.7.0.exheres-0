@@ -4,7 +4,7 @@
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ] \
         systemd-service [ systemd_files=[ "${WORK}"/utils/cups-browsed.service ] ]
 
-SUMMARY="OpenPrinting CUPS Filters"
+SUMMARY="OpenPrinting CUPS filters"
 DESCRIPTION="
 This distribution contains backends, filters, and other software that was
 once part of the core CUPS distribution but is no longer maintained by
