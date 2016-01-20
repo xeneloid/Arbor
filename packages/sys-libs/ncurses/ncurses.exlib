@@ -141,9 +141,6 @@ ncurses_src_compile() {
 }
 
 ncurses_src_install() {
-    # NOTE(compnerd) generate the data via the CHOST binaries
-    local target=$(if exhost --is-native -q ; then echo install ; else echo install.libs ; fi)
-
     if option compat-libs ; then
         edo cd "${WORKBASE}/build/narrow5"
         emake -j1 DESTDIR="${IMAGE}" install.libs
@@ -153,16 +150,16 @@ ncurses_src_install() {
     fi
 
     edo cd "${WORKBASE}/build/narrow"
-    emake -j1 DESTDIR="${IMAGE}" ${target}
+    emake -j1 DESTDIR="${IMAGE}" install
 
     edo cd "${WORKBASE}/build/wide"
-    emake -j1 DESTDIR="${IMAGE}" ${target}
+    emake -j1 DESTDIR="${IMAGE}" install
 
     edo cd "${WORKBASE}/build/narrowthreads"
-    emake -j1 DESTDIR="${IMAGE}" ${target}
+    emake -j1 DESTDIR="${IMAGE}" install
 
     edo cd "${WORKBASE}/build/widethreads"
-    emake -j1 DESTDIR="${IMAGE}" ${target}
+    emake -j1 DESTDIR="${IMAGE}" install
 
     expart binaries /usr/$(exhost --target)/bin
     expart data /usr/share
