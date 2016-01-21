@@ -1,7 +1,20 @@
-diff -Naur coreutils-8.24_old/man/local.mk coreutils-8.24/man/local.mk
---- coreutils-8.24_old/man/local.mk	2015-06-26 17:04:19.000000000 +0000
-+++ coreutils-8.24/man/local.mk	2015-08-30 20:02:48.661408530 +0000
-@@ -49,150 +49,3 @@
+Upstream: no
+Reason: see comment in coreutils_src_prepare
+
+From e94df61927fa7c7a5c1061b8bb08155fc8e76587 Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Fri, 22 Jan 2016 10:30:55 +0100
+Subject: [PATCH] Remove man page generation
+
+---
+ man/local.mk | 149 -----------------------------------------------------------
+ 1 file changed, 149 deletions(-)
+
+diff --git a/man/local.mk b/man/local.mk
+index f41d969..4add829 100644
+--- a/man/local.mk
++++ b/man/local.mk
+@@ -49,152 +49,3 @@ mandeps += .version
  # This is required so that changes to e.g., emit_bug_reporting_address
  # provoke regeneration of all the manpages.
  mandeps += $(top_srcdir)/src/system.h
@@ -16,6 +29,7 @@ diff -Naur coreutils-8.24_old/man/local.mk coreutils-8.24/man/local.mk
 -man/install.1:   src/ginstall$(EXEEXT)
 -man/test.1:      src/[$(EXEEXT)
 -
+-man/base32.1:    src/base32$(EXEEXT)
 -man/base64.1:    src/base64$(EXEEXT)
 -man/basename.1:  src/basename$(EXEEXT)
 -man/cat.1:       src/cat$(EXEEXT)
@@ -139,7 +153,8 @@ diff -Naur coreutils-8.24_old/man/local.mk coreutils-8.24/man/local.mk
 -	  && $(MKDIR_P) $$t						\
 -	  && (cd $$t && $(LN_S) '$(abs_top_builddir)/src/'$$prog$(EXEEXT) \
 -				$$argv$(EXEEXT))			\
--	  && $(run_help2man)						\
+-	&& : $${SOURCE_DATE_EPOCH=`cat $(srcdir)/.timestamp 2>/dev/null || :`} \
+-	&& export SOURCE_DATE_EPOCH && $(run_help2man)			\
 -		     --source='$(PACKAGE_STRING)'			\
 -		     --include=$(srcdir)/man/$$name.x			\
 -		     --output=$$t/$$name.1				\
@@ -152,3 +167,6 @@ diff -Naur coreutils-8.24_old/man/local.mk coreutils-8.24/man/local.mk
 -	  && rm -rf $$t							\
 -	  && chmod a-w $@-t						\
 -	  && mv $@-t $@
+-- 
+2.7.0
+

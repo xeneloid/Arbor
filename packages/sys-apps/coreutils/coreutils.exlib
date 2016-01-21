@@ -48,7 +48,6 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-remove-man-page-generation.patch
-    "${FILES}"/${PNV}-tmux-addition.patch
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
@@ -65,6 +64,8 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=g
     gt_cv_func_gnugettext{1,2}_libc=yes
 )
+
+DEFAULT_SRC_INSTALL_EXCLUDE=( thanks-gen THANKS.in )
 
 AT_M4DIR=( m4 )
 

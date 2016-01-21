@@ -12,6 +12,6 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 #  test-fchownat test-fdutimensat test-getaddrinfo test-getlogin test-linkat test-symlinkat test-unlinkat test-utimensat
 # broken (recipe for target 'tests/ls/time-style-diag.log' failed):
 #  time-style-diag
-# last checked: 8.24
+# last checked: 8.25
 RESTRICT="test"
 
