@@ -28,11 +28,6 @@ MYOPTIONS="
     ssl? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
 "
 
-if ever at_least 3 ; then
-    MYOPTIONS+="
-        smtputf8 [[ description = [ Allows UTF-8 encoding in mailbox names and header fields ] ]]"
-fi
-
 DEPENDENCIES="
     build+run:
         dev-libs/pcre
@@ -59,7 +54,7 @@ DEPENDENCIES="
 if ever at_least 3 ; then
     DEPENDENCIES+="
         build+run:
-            smtputf8? ( dev-libs/icu:= )
+            dev-libs/icu:=
     "
 fi
 
@@ -143,9 +138,6 @@ postfix_src_configure() {
             shared=yes
             SHLIB_DIR=/usr/$(exhost --target)/lib/postfix
         )
-        if ! option smtputf8 ; then
-            ccargs+=( -DNO_EAI )
-        fi
     fi
 
     export AR="${AR}" RANLIB="${RANLIB}"
