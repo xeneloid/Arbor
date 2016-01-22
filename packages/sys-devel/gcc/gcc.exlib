@@ -37,6 +37,16 @@ CROSS_COMPILE_TARGETS="
     x86_64-pc-linux-musl
     powerpc64-unknown-linux-gnu
 "
+
+if ever at_least 5.1; then
+    CROSS_COMPILE_TARGETS+="
+        armv6-unknown-linux-gnueabi
+        armv6-unknown-linux-gnueabihf
+        armv6-unknown-linux-musleabi
+        armv6-unknown-linux-musleabihf
+    "
+fi
+
 MYOPTIONS="
     ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
     graphite [[ description = [ enable support for Graphite based loop optimizations ] ]]

@@ -43,6 +43,10 @@ linux-headers_src_compile() {
 # TODO(?) need to sanitize headers at some point
 linux-headers_src_install() {
     local _host_architectures=(
+        armv6-unknown-linux-gnueabi:arm
+        armv6-unknown-linux-gnueabihf:arm
+        armv6-unknown-linux-musleabi:arm
+        armv6-unknown-linux-musleabihf:arm
         armv7-unknown-linux-gnueabi:arm
         armv7-unknown-linux-gnueabihf:arm
         armv7-unknown-linux-musleabi:arm

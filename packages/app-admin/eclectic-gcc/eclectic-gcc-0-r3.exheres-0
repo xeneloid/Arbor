@@ -16,6 +16,10 @@ SLOT="0"
 CROSS_COMPILE_TARGETS="
     aarch64-unknown-linux-gnueabi
     aarch64-unknown-linux-musleabi
+    armv6-unknown-linux-gnueabi
+    armv6-unknown-linux-gnueabihf
+    armv6-unknown-linux-musleabi
+    armv6-unknown-linux-musleabihf
     armv7-unknown-linux-gnueabi
     armv7-unknown-linux-gnueabihf
     armv7-unknown-linux-musleabi
