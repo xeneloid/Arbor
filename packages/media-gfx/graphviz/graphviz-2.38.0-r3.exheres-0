@@ -59,6 +59,8 @@ TODO_DEPENDENCIES+="
 # Tests require ksh93
 RESTRICT="test"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/0001-Fix-build-with-ghostscript-9.16.patch" )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --htmldir=/usr/share/doc/${PNVR}/html
     --pdfdir=/usr/share/doc/${PNVR}/pdf

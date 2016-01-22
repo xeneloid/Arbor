@@ -1,0 +1,42 @@
+Source: Self-written
+Upstream: Pull request submitted
+Reason: Fix build with ghostscript 9.18
+
+From 6793697df202fa2a26ec04cbe124029fa8f1b3ae Mon Sep 17 00:00:00 2001
+From: Jakob Nixdorf <flocke@shadowice.org>
+Date: Fri, 22 Jan 2016 20:10:42 +0100
+Subject: [PATCH] Fix build with ghostscript-9.16+.
+
+---
+ plugin/gs/gvloadimage_gs.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/plugin/gs/gvloadimage_gs.c b/plugin/gs/gvloadimage_gs.c
+index 4ed9b71..6d9ed3d 100644
+--- a/plugin/gs/gvloadimage_gs.c
++++ b/plugin/gs/gvloadimage_gs.c
+@@ -32,6 +32,21 @@
+ #include <ghostscript/ierrors.h>
+ #include <cairo/cairo.h>
+ 
++
++/** Ensure compatibility with Ghostscipt versions newer than 9.16 **/
++
++#ifndef e_VMerror
++#define e_VMerror gs_error_VMerror
++#endif
++
++#ifndef e_unregistered
++#define e_unregistered gs_error_unregistered
++#endif
++
++#ifndef e_invalidid
++#define e_invalidid gs_error_invalidid
++#endif
++
+ #ifdef WIN32
+ #define NUL_FILE "nul"
+ #else
+-- 
+2.7.0
+
