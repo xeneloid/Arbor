@@ -24,6 +24,7 @@ DEPENDENCIES="
         app-text/ghostscript[>=8.62]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/libspectre-0.2.7-gs918.patch" )
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 DEFAULT_SRC_CONFIGURE_TESTS=( '--enable-test --disable-test' )
 
