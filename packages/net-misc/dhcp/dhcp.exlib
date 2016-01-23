@@ -1,11 +1,11 @@
 # Copyright 2007-2009 Bryan Østergaard
-# Copyright 2010-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service [ systemd_files=[ dhcpd.service ] ] \
         autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.12 ] ]
 
-export_exlib_phases src_prepare src_install pkg_postinst
+export_exlib_phases src_prepare src_compile src_install pkg_postinst
 
 MY_PNV="${PNV/_rc/rc}"
 MY_PNV="${PNV/_p/-P}"
@@ -57,11 +57,20 @@ dhcp_src_prepare() {
     # ... other parts hardcode it...
     edo echo "AR = ${AR}" >> common/Makefile.am
     edo echo "AR = ${AR}" >> dhcpctl/Makefile.am
-    edo echo "AR = ${AR}" >> dst/Makefile.am
+#    edo echo "AR = ${AR}" >> minires/Makefile.am
     edo echo "AR = ${AR}" >> omapip/Makefile.am
     edo echo "AR = ${AR}" >> tests/Makefile.am
 
     autotools_src_prepare
+}
+
+dhcp_src_compile() {
+    # work around parallel make issues
+    pushd bind
+    emake -j1
+    popd
+
+    default
 }
 
 dhcp_src_install() {
