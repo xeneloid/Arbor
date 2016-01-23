@@ -1,7 +1,7 @@
-# Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2008-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ tag=r${PV//./-} ] systemd-service
+require github [ tag=${PV} ] systemd-service
 
 export_exlib_phases src_prepare src_compile src_install
 
