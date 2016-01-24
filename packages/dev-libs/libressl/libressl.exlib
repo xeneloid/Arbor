@@ -8,7 +8,7 @@ LIBTLS_SOVER=${LIBTLS_VER%%.*}
 
 require alternatives
 
-export_exlib_phases src_configure src_install
+export_exlib_phases src_configure src_install pkg_postinst
 
 SUMMARY="OpenBSD's portable fork of OpenSSL"
 DESCRIPTION="
@@ -119,5 +119,16 @@ libressl_src_install() {
 
     emagicdocs
     keepdir /etc/ssl/{certs,private}
+
+    dobin "${FILES}"/c_rehash
+}
+
+libressl_pkg_postinst() {
+    # ca-certificates' pkg_postinst was broken with libressl for a while, redo the critical part in
+    # this place to catch the case that libressl is being updated from a broken to a fixed version
+
+    if [[ ${ROOT} == "/" ]] && has_version --root app-misc/ca-certificates; then
+        update-ca-certificates || ewarn "update-ca-certificates failed."
+    fi
 }
 
