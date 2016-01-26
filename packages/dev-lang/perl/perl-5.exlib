@@ -106,6 +106,8 @@ perl-5_src_configure() {
         --target=$(exhost --target)
         --target-tools-prefix=$(exhost --tool-prefix)
         --prefix=${perlprefix}
+        --html1dir=/usr/share/doc/${PNVR}/html
+        --html3dir=/usr/share/doc/${PNVR}/html
         $(define cf_by Exherbo)
         # This probably needs some further work... but should be okay for
         # now. At least parrot breaks if we do not have -${osname} in ${archname}
