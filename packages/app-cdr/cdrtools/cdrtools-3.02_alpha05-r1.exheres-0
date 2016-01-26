@@ -95,7 +95,12 @@ src_prepare() {
 
 # ./configure is a shell script that notifies people not to use ./configure anymore, and fails
 src_configure() {
-    :
+    # disable automagics for cdda2wav
+    export ac_cv_lib_ossaudio__oss_ioctl=no
+    export ac_cv_lib_asound_snd_pcm_open=no
+    export ac_cv_lib_sndio_sio_open=no
+    export ac_cv_lib_pulse_pa_strerror=no
+    export ac_cv_lib_pulse_simple_pa_simple_new=no
 }
 
 src_install() {
