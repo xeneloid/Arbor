@@ -27,7 +27,7 @@ DEPENDENCIES="
         !dev-libs/gmp:0[<4.3.2-r1] [[
             description = [ file collisions which will probably break your system ]
         ]]
-        !dev-lang/gmp:6[<6.1.0-r2] [[
+        !dev-libs/gmp:6[<6.1.0-r2] [[
             description = [ File collisions ]
             resolution = upgrade-blocked-before
         ]]
