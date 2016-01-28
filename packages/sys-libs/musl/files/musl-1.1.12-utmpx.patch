@@ -1,0 +1,68 @@
+Upstream: yes
+
+From 378f8cb5222b63e4f8532c757ce54e4074567e1f Mon Sep 17 00:00:00 2001
+From: Kylie McClain <somasis@exherbo.org>
+Date: Fri, 22 Jan 2016 15:17:15 -0500
+Subject: [PATCH 1/2] legacy/utmpx: Add utmp{,x}name stubs
+
+---
+ src/legacy/utmpx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/src/legacy/utmpx.c b/src/legacy/utmpx.c
+index c483e4e..46ca4b8 100644
+--- a/src/legacy/utmpx.c
++++ b/src/legacy/utmpx.c
+@@ -34,6 +34,11 @@ void updwtmpx(const char *f, const struct utmpx *u)
+ {
+ }
+ 
++int __utmpxname(const char *f)
++{
++	return -1;
++}
++
+ weak_alias(endutxent, endutent);
+ weak_alias(setutxent, setutent);
+ weak_alias(getutxent, getutent);
+@@ -41,3 +46,5 @@ weak_alias(getutxid, getutid);
+ weak_alias(getutxline, getutline);
+ weak_alias(pututxline, pututline);
+ weak_alias(updwtmpx, updwtmp);
++weak_alias(__utmpxname, utmpname);
++weak_alias(__utmpxname, utmpxname);
+-- 
+2.6.3
+
+
+From 19df86cbb39f2429f7c7e20c99c606c38a5fd4e9 Mon Sep 17 00:00:00 2001
+From: Rich Felker <dalias@aerifal.cx>
+Date: Thu, 28 Jan 2016 00:38:23 -0500
+Subject: [PATCH 2/2] add errno setting to stub utmpxname function
+
+---
+ src/legacy/utmpx.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/legacy/utmpx.c b/src/legacy/utmpx.c
+index 46ca4b8..e2843c9 100644
+--- a/src/legacy/utmpx.c
++++ b/src/legacy/utmpx.c
+@@ -1,5 +1,6 @@
+ #include <utmpx.h>
+ #include <stddef.h>
++#include <errno.h>
+ #include "libc.h"
+ 
+ void endutxent(void)
+@@ -36,6 +37,7 @@ void updwtmpx(const char *f, const struct utmpx *u)
+ 
+ int __utmpxname(const char *f)
+ {
++	errno = ENOTSUP;
+ 	return -1;
+ }
+ 
+-- 
+2.6.3
+
