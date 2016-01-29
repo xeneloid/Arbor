@@ -11,6 +11,9 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        dev-perl/Module-Build [[
+            note = [ during perl slot upgrades, Module-Build needs to be upgraded before this package ]
+        ]]
         dev-perl/Sub-Uplevel[>=0.18]
 "
 
