@@ -1,0 +1,25 @@
+# Copyright 2016 Kylie McClain <somasis@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+HOMEPAGE="http://git.2f30.org/${PN}"
+DOWNLOADS="http://dl.2f30.org/releases/${PNV}.tar.gz"
+
+SUMMARY="Standalone implementation of FORTIFY_SOURCE"
+SLOT="0"
+LICENCES="BSD-0"
+MYOPTIONS=""
+
+PLATFORMS="~amd64"
+
+DEPENDENCIES=""
+
+DEFAULT_SRC_INSTALL_PARAMS=(
+    DESTDIR="${IMAGE}"
+    PREFIX=/usr/$(exhost --target)
+)
+
+# calls install target
+src_compile() {
+    :
+}
+
