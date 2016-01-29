@@ -86,18 +86,36 @@ binutils_src_configure() {
 
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
-        local myconf=(
-            --target=${target}
-            --disable-werror
-            --enable-install-libiberty
-            --enable-gold
-            --enable-ld
-            --enable-lto
-            --enable-plugins
-            --enable-shared
-            --enable-threads
-            --with-lib-path=${libpath}
-        )
+        local myconf=( --target=${target} --disable-werror --enable-gold --enable-ld --enable-lto )
+
+        if ever at_least 2.26 ; then
+            myconf+=( --enable-compressed-debug-sections=all --with-system-zlib )
+        fi
+
+        # NOTE(compnerd) BFD options
+        myconf+=( --enable-plugins --enable-64-bit-bfd --enable-secureplt --with-mmap )
+        # NOTE(compnerd) glibc has supported this since 2007, if you have an older glibc, we should
+        # conditionalise this on the libc target version
+        myconf+=( --enable-elf-stt-common )
+        # TODO(compnerd) determine the debug location from paludis and pass that along
+        # myconf+=( --wih-separate-debug-dir=/usr/${target}/lib/debug )
+        myconf+=( --with-system-zlib )
+
+        # NOTE(compnerd) binutils options
+        myconf+=( --with-system-zlib )
+
+        # TODO(compnerd) disable installation of libiberty and libbfd
+        # TODO(compnerd) this is not the default behaviour, determine why so we can nix it
+        myconf+=( --enable-shared --enable-install-libbfd --enable-install-libiberty )
+
+        # NOTE(compnerd) gas options
+        myconf+=( --with-system-zlib )
+
+        # NOTE(compnerd) gold options
+        myconf+=( --with-sysroot='""' --enable-threads --enable-plugins --with-lib-path=${libpath} )
+
+        # NOTE(compnerd) ld options
+        myconf+=( --with-lib-path=${libpath} --enable-64-bit-bfd --with-sysroot='""' )
 
         [[ "${target}" == "${host}" ]] && myconf+=( --program-prefix=${host}- )
 
