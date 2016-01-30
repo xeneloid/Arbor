@@ -5,7 +5,7 @@ SUMMARY="ELF prelinking utility to speed up dynamic linking"
 HOMEPAGE="https://people.redhat.com/jakub/${PN}"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.bz2"
 
-LICENCES="GPL"
+LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
