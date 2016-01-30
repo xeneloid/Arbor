@@ -1,0 +1,29 @@
+# Copyright 2016 Alex Elsayed <eternaleye@gmail.com>
+# Distributed under the terms of the GNU General Public License v2
+
+require pypi setup-py [ import=distutils blacklist=2 has_bin=true multibuild=false ]
+
+SUMMARY="A high performance build system"
+DESCRIPTION="
+Meson is a cross-platform build system designed to be both as fast
+and as user friendly as possible. It supports many languages and
+compilers, including GCC, Clang and Visual Studio. Its build
+definitions are written in a simple non-Turing-complete DSL.
+"
+HOMEPAGE="http://mesonbuild.com"
+
+LICENCES="Apache-2.0"
+SLOT="0"
+PLATFORMS="~amd64"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    run:
+        sys-devel/ninja
+        virtual/pkg-config
+"
+
+BUGS_TO="eternaleye@gmail.com"
+
+# TODO: Install Meson cross-compile spec files for Exherbo
+
