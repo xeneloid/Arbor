@@ -1,7 +1,7 @@
 # Copyright 2008 Anders Ossowicki <arkanoid@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require perl-module [ module_author=CWEST ]
+require perl-module [ module_author=RJBS ]
 
 SUMMARY="SSL support for Net::SMTP"
 
@@ -9,6 +9,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="build+run:
-    dev-perl/IO-Socket-SSL"
+DEPENDENCIES="
+    build+run:
+        dev-perl/IO-Socket-SSL
+"
 
