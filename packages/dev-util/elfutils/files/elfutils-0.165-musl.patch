@@ -236,7 +236,7 @@ diff -ru elfutils-0.165.orig/lib/system.h elfutils-0.165/lib/system.h
 +}
 +
 +#else
-+#include "system.h"
++#include <error.h>
 +#endif
 +
  extern void *xmalloc (size_t) __attribute__ ((__malloc__));
