@@ -9,5 +9,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-overflow.patch
     "${FILES}"/${PNV}-constants.patch
     "${FILES}"/${PNV}-utmpx.patch
+    "${FILES}"/${PNV}-regex.patch
 )
 

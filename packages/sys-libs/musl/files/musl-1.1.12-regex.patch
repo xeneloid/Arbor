@@ -1,0 +1,371 @@
+Upstream: yes
+Reason: add some extensions to BRE
+
+From 7eaa76fc2e7993582989d3838b1ac32dd8abac09 Mon Sep 17 00:00:00 2001
+From: Szabolcs Nagy <nsz@port70.net>
+Date: Sat, 18 Apr 2015 15:51:16 +0000
+Subject: [PATCH 1/5] regex: reject repetitions in some cases with REG_BADRPT
+
+Previously repetitions were accepted after empty expressions like
+in (*|?)|{2}, but in BRE the handling of * and \{\} were not
+consistent: they were accepted as literals in some cases and
+repetitions in others.
+
+It is better to treat repetitions after an empty expression as an
+error (this is allowed by the standard, and glibc mostly does the
+same). This is hard to do consistently with the current logic so
+the new rule is:
+
+Reject repetitions after empty expressions, except after assertions
+^*, $? and empty groups ()+ and never treat them as literals.
+
+Empty alternation (|a) is undefined by the standard, but it can be
+useful so that should be accepted.
+---
+ src/regex/regcomp.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/src/regex/regcomp.c b/src/regex/regcomp.c
+index ac207c8..078f657 100644
+--- a/src/regex/regcomp.c
++++ b/src/regex/regcomp.c
+@@ -837,6 +837,10 @@ static reg_errcode_t parse_atom(tre_parse_ctx_t *ctx, const char *s)
+ 			node = tre_ast_new_literal(ctx->mem, v, v, ctx->position++);
+ 			s--;
+ 			break;
++		case '{':
++			/* reject repetitions after empty expression in BRE */
++			if (!ere)
++				return REG_BADRPT;
+ 		default:
+ 			if (!ere && (unsigned)*s-'1' < 9) {
+ 				/* back reference */
+@@ -880,10 +884,14 @@ static reg_errcode_t parse_atom(tre_parse_ctx_t *ctx, const char *s)
+ 		s++;
+ 		break;
+ 	case '*':
+-	case '|':
++		return REG_BADPAT;
+ 	case '{':
+ 	case '+':
+ 	case '?':
++		/* reject repetitions after empty expression in ERE */
++		if (ere)
++			return REG_BADRPT;
++	case '|':
+ 		if (!ere)
+ 			goto parse_literal;
+ 	case 0:
+@@ -964,8 +972,9 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 		}
+ 
+ 	parse_iter:
+-		/* extension: repetitions are accepted after an empty node
+-		   eg. (+), ^*, a$?, a|{2} */
++		/* extension: repetitions are rejected after an empty node
++		   eg. (+), |*, {2}, but assertions are not treated as empty
++		   so ^* or $? are accepted currently. */
+ 		switch (*s) {
+ 		case '+':
+ 		case '?':
+-- 
+2.7.0
+
+
+From da4cc13b9705e7d3a02216959b9711b3b30828c1 Mon Sep 17 00:00:00 2001
+From: Szabolcs Nagy <nsz@port70.net>
+Date: Sat, 18 Apr 2015 16:47:17 +0000
+Subject: [PATCH 2/5] regex: treat \| in BRE as alternation
+
+The standard does not define semantics for \| in BRE, but some code
+depends on it meaning alternation. Empty alternative expression is
+allowed to be consistent with ERE.
+
+Based on a patch by Rob Landley.
+---
+ src/regex/regcomp.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/src/regex/regcomp.c b/src/regex/regcomp.c
+index 078f657..f1f06af 100644
+--- a/src/regex/regcomp.c
++++ b/src/regex/regcomp.c
+@@ -841,6 +841,14 @@ static reg_errcode_t parse_atom(tre_parse_ctx_t *ctx, const char *s)
+ 			/* reject repetitions after empty expression in BRE */
+ 			if (!ere)
+ 				return REG_BADRPT;
++		case '|':
++			/* extension: treat \| as alternation in BRE */
++			if (!ere) {
++				node = tre_ast_new_literal(ctx->mem, EMPTY, -1, -1);
++				s--;
++				goto end;
++			}
++			/* fallthrough */
+ 		default:
+ 			if (!ere && (unsigned)*s-'1' < 9) {
+ 				/* back reference */
+@@ -918,6 +926,7 @@ parse_literal:
+ 		s += len;
+ 		break;
+ 	}
++end:
+ 	if (!node)
+ 		return REG_ESPACE;
+ 	ctx->n = node;
+@@ -1016,13 +1025,20 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 		if ((ere && *s == '|') ||
+ 		    (ere && *s == ')' && depth) ||
+ 		    (!ere && *s == '\\' && s[1] == ')') ||
++		    /* extension: treat \| as alternation in BRE */
++		    (!ere && *s == '\\' && s[1] == '|') ||
+ 		    !*s) {
+ 			/* extension: empty branch is unspecified (), (|a), (a|)
+ 			   here they are not rejected but match on empty string */
+ 			int c = *s;
+ 			nunion = tre_ast_new_union(ctx->mem, nunion, nbranch);
+ 			nbranch = 0;
+-			if (c != '|') {
++
++			if (c == '\\' && s[1] == '|') {
++				s+=2;
++			} else if (c == '|') {
++				s++;
++			} else {
+ 				if (c == '\\') {
+ 					if (!depth) return REG_EPAREN;
+ 					s+=2;
+@@ -1042,7 +1058,6 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 				nunion = tre_stack_pop_voidptr(stack);
+ 				goto parse_iter;
+ 			}
+-			s++;
+ 		}
+ 	}
+ }
+-- 
+2.7.0
+
+
+From 03498ec22a4804ddbd8203d9ac94b6f7b6574b3c Mon Sep 17 00:00:00 2001
+From: Szabolcs Nagy <nsz@port70.net>
+Date: Sat, 18 Apr 2015 17:25:31 +0000
+Subject: [PATCH 3/5] regex: rewrite the repetition parsing code
+
+The goto logic was hard to follow and modify. This is
+in preparation for the BRE \+ and \? support.
+---
+ src/regex/regcomp.c | 59 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 29 insertions(+), 30 deletions(-)
+
+diff --git a/src/regex/regcomp.c b/src/regex/regcomp.c
+index f1f06af..ccd3755 100644
+--- a/src/regex/regcomp.c
++++ b/src/regex/regcomp.c
+@@ -984,41 +984,40 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 		/* extension: repetitions are rejected after an empty node
+ 		   eg. (+), |*, {2}, but assertions are not treated as empty
+ 		   so ^* or $? are accepted currently. */
+-		switch (*s) {
+-		case '+':
+-		case '?':
+-			if (!ere)
++		for (;;) {
++			if (*s!='\\' && *s!='*') {
++				if (!ere)
++					break;
++				if (*s!='+' && *s!='?' && *s!='{')
++					break;
++			}
++			if (*s=='\\' && ere)
+ 				break;
+-			/* fallthrough */
+-		case '*':;
+-			int min=0, max=-1;
+-			if (*s == '+')
+-				min = 1;
+-			if (*s == '?')
+-				max = 1;
+-			s++;
+-			ctx->n = tre_ast_new_iter(ctx->mem, ctx->n, min, max, 0);
+-			if (!ctx->n)
+-				return REG_ESPACE;
++			if (*s=='\\' && s[1]!='{')
++				break;
++			if (*s=='\\')
++				s++;
++
+ 			/* extension: multiple consecutive *+?{,} is unspecified,
+ 			   but (a+)+ has to be supported so accepting a++ makes
+ 			   sense, note however that the RE_DUP_MAX limit can be
+ 			   circumvented: (a{255}){255} uses a lot of memory.. */
+-			goto parse_iter;
+-		case '\\':
+-			if (ere || s[1] != '{')
+-				break;
+-			s++;
+-			goto parse_brace;
+-		case '{':
+-			if (!ere)
+-				break;
+-		parse_brace:
+-			err = parse_dup(ctx, s+1);
+-			if (err != REG_OK)
+-				return err;
+-			s = ctx->s;
+-			goto parse_iter;
++			if (*s=='{') {
++				err = parse_dup(ctx, s+1);
++				if (err != REG_OK)
++					return err;
++				s = ctx->s;
++			} else {
++				int min=0, max=-1;
++				if (*s == '+')
++					min = 1;
++				if (*s == '?')
++					max = 1;
++				s++;
++				ctx->n = tre_ast_new_iter(ctx->mem, ctx->n, min, max, 0);
++				if (!ctx->n)
++					return REG_ESPACE;
++			}
+ 		}
+ 
+ 		nbranch = tre_ast_new_catenation(ctx->mem, nbranch, ctx->n);
+-- 
+2.7.0
+
+
+From 25160f1c08235cf5b6a9617c5640380618a0f6ff Mon Sep 17 00:00:00 2001
+From: Szabolcs Nagy <nsz@port70.net>
+Date: Sat, 18 Apr 2015 17:28:49 +0000
+Subject: [PATCH 4/5] regex: treat \+, \? as repetitions in BRE
+
+These are undefined escape sequences by the standard, but often
+used in sed scripts.
+---
+ src/regex/regcomp.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/regex/regcomp.c b/src/regex/regcomp.c
+index ccd3755..b3dbb25 100644
+--- a/src/regex/regcomp.c
++++ b/src/regex/regcomp.c
+@@ -838,6 +838,9 @@ static reg_errcode_t parse_atom(tre_parse_ctx_t *ctx, const char *s)
+ 			s--;
+ 			break;
+ 		case '{':
++		case '+':
++		case '?':
++			/* extension: treat \+, \? as repetitions in BRE */
+ 			/* reject repetitions after empty expression in BRE */
+ 			if (!ere)
+ 				return REG_BADRPT;
+@@ -993,7 +996,8 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 			}
+ 			if (*s=='\\' && ere)
+ 				break;
+-			if (*s=='\\' && s[1]!='{')
++			/* extension: treat \+, \? as repetitions in BRE */
++			if (*s=='\\' && s[1]!='+' && s[1]!='?' && s[1]!='{')
+ 				break;
+ 			if (*s=='\\')
+ 				s++;
+-- 
+2.7.0
+
+
+From 831e9d9efa61566a25c1dcdbd28f55daeea4dd32 Mon Sep 17 00:00:00 2001
+From: Szabolcs Nagy <nsz@port70.net>
+Date: Sat, 18 Apr 2015 17:53:38 +0000
+Subject: [PATCH 5/5] regex: simplify the {,} repetition parsing logic
+
+---
+ src/regex/regcomp.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
+
+diff --git a/src/regex/regcomp.c b/src/regex/regcomp.c
+index b3dbb25..7ce2988 100644
+--- a/src/regex/regcomp.c
++++ b/src/regex/regcomp.c
+@@ -708,7 +708,7 @@ static const char *parse_dup_count(const char *s, int *n)
+ 	return s;
+ }
+ 
+-static reg_errcode_t parse_dup(tre_parse_ctx_t *ctx, const char *s)
++static const char *parse_dup(const char *s, int ere, int *pmin, int *pmax)
+ {
+ 	int min, max;
+ 
+@@ -723,19 +723,13 @@ static reg_errcode_t parse_dup(tre_parse_ctx_t *ctx, const char *s)
+ 		max > RE_DUP_MAX ||
+ 		min > RE_DUP_MAX ||
+ 		min < 0 ||
+-		(!(ctx->cflags & REG_EXTENDED) && *s++ != '\\') ||
++		(!ere && *s++ != '\\') ||
+ 		*s++ != '}'
+ 	)
+-		return REG_BADBR;
+-
+-	if (min == 0 && max == 0)
+-		ctx->n = tre_ast_new_literal(ctx->mem, EMPTY, -1, -1);
+-	else
+-		ctx->n = tre_ast_new_iter(ctx->mem, ctx->n, min, max, 0);
+-	if (!ctx->n)
+-		return REG_ESPACE;
+-	ctx->s = s;
+-	return REG_OK;
++		return 0;
++	*pmin = min;
++	*pmax = max;
++	return s;
+ }
+ 
+ static int hexval(unsigned c)
+@@ -988,6 +982,8 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 		   eg. (+), |*, {2}, but assertions are not treated as empty
+ 		   so ^* or $? are accepted currently. */
+ 		for (;;) {
++			int min, max;
++
+ 			if (*s!='\\' && *s!='*') {
+ 				if (!ere)
+ 					break;
+@@ -1007,21 +1003,24 @@ static reg_errcode_t tre_parse(tre_parse_ctx_t *ctx)
+ 			   sense, note however that the RE_DUP_MAX limit can be
+ 			   circumvented: (a{255}){255} uses a lot of memory.. */
+ 			if (*s=='{') {
+-				err = parse_dup(ctx, s+1);
+-				if (err != REG_OK)
+-					return err;
+-				s = ctx->s;
++				s = parse_dup(s+1, ere, &min, &max);
++				if (!s)
++					return REG_BADBR;
+ 			} else {
+-				int min=0, max=-1;
++				min=0;
++				max=-1;
+ 				if (*s == '+')
+ 					min = 1;
+ 				if (*s == '?')
+ 					max = 1;
+ 				s++;
+-				ctx->n = tre_ast_new_iter(ctx->mem, ctx->n, min, max, 0);
+-				if (!ctx->n)
+-					return REG_ESPACE;
+ 			}
++			if (max == 0)
++				ctx->n = tre_ast_new_literal(ctx->mem, EMPTY, -1, -1);
++			else
++				ctx->n = tre_ast_new_iter(ctx->mem, ctx->n, min, max, 0);
++			if (!ctx->n)
++				return REG_ESPACE;
+ 		}
+ 
+ 		nbranch = tre_ast_new_catenation(ctx->mem, nbranch, ctx->n);
+-- 
+2.7.0
+
+
