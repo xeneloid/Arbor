@@ -148,6 +148,16 @@ setup-py_prepare_one_multibuild() {
     # from installing setuptools on their own
     rm -rf ez_setup*
     echo "def use_setuptools(*args, **kwargs): pass" > ez_setup.py
+
+    # some tarballs ship with a o-r egg-info dir.
+    # make sure it doesnt end up getting installed as
+    # o-r by fixing up the permissions here. otherwise
+    # we will get bitten by it after installation.
+    # also there are sucky packages who print to stdout in setup.py
+    # so we loop over all the lines and check if this is an actual name
+    local i; ${PYTHON} -B setup.py --name 2>/dev/null | while read -r i; do
+        [[ -d ${i}.egg-info ]] && edo chmod -R o+r "${i}.egg-info"
+    done
 }
 
 prepare_one_multibuild() {
