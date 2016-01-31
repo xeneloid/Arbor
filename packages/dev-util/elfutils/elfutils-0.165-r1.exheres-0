@@ -37,6 +37,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/344ca0775da729e1bfdd61bb88ba4c64befece07.patch
     "${FILES}"/${PN}-0.165-musl.patch
 )
 
