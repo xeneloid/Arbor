@@ -25,11 +25,3 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-languages
 )
 
-src_prepare() {
-    if ! exhost --is-native -q;then
-        edo cp "${FILES}"/lock-obj-pub.cross.h "${WORK}"/src/syscfg/lock-obj-pub.$(exhost --target).h
-    fi
-
-    default
-}
-
