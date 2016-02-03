@@ -17,7 +17,7 @@ file can be used to help with some common tasks.
 HOMEPAGE="http://neil.brown.name/blog/${PN}"
 DOWNLOADS="
     mirror://kernel/linux/utils/raid/${PN}/${PNV}.tar.xz
-    mirror://debian/pool/main/m/${PN}/${PN}_3.3.2-5.debian.tar.xz
+    mirror://debian/pool/main/m/${PN}/${PN}_3.3.4-1.1.debian.tar.xz
 "
 
 LICENCES="
