@@ -209,7 +209,6 @@ systemd_src_prepare() {
     edo sed -i -e '/test-rtnl/s:test-rtnl[^ ]*:$(NULL):' Makefile.am
     edo sed -i -e '/test-cgroup-mask/s:test-cgroup-mask:$(NULL):' Makefile.am
     edo sed -i -e '/test-engine/s:test-engine:$(NULL):' Makefile.am
-    edo sed -i -e '/test-resolve/s:test-resolve:$(NULL):' Makefile.am
     edo sed -i -e '/test-cap-list/s:test-cap-list:$(NULL):' Makefile.am
     edo sed -i -e '/sysv-generator-test.py/s:sysv-generator-test.py:$(NULL):' Makefile.am
     edo sed -i -e '/test-condition/s:test-condition:$(NULL):' Makefile.am
