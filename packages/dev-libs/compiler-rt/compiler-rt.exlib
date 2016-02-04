@@ -31,9 +31,12 @@ DEPENDENCIES="
         dev-lang/clang[~${LLVM_PVR}]
         dev-lang/llvm[~${LLVM_PVR}]
 "
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-cmake-path.patch
-)
+
+if ! ever is_scm ; then
+    DEFAULT_SRC_PREPARE_PATCHES=(
+        "${FILES}"/${PNV}-cmake-path.patch
+    )
+fi
 
 compiler-rt_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
