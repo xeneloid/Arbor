@@ -29,6 +29,10 @@ DEPENDENCIES="
             description = [ ${CATEGORY}/${PN} is a udev daemon which provides the same library and programs that systemd-udev does ]
             resolution = manual
         ]]
+    post:
+        sys-apps/hwids [[
+            description = [ eudev provides an out-of-date hwdb; hwids is an updated one. ]
+        ]]
     recommendation:
         sys-kernel/linux-headers[>=3.8] [[ note = [ Support for in-kernel firmware loading ] ]]
 "
@@ -37,7 +41,7 @@ MYOPTIONS="gtk-doc"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-blkid
-    --enable-hwdb
+    --disable-hwdb # sys-apps/hwids is used
     # eudev's gudev implementation is disabled, and will be removed
     # in favor of gnome-desktop/libgudev in later versions.
     # https://bugs.gentoo.org/show_bug.cgi?id=552036#c2
@@ -90,5 +94,4 @@ pkg_postinst() {
             esac
         fi
     fi
-    nonfatal edo /usr/$(exhost --target)/bin/udevadm hwdb --root="${ROOT}" --update || ewarn "Updating hwdb failed (udevadm hwdb --update)"
 }
