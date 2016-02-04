@@ -47,8 +47,6 @@ llvm_src_prepare() {
     expatch "${FILES}"/${PN}-fix-llvm-config.patch
     if ! ever is_scm ; then
         expatch "${FILES}"/0001-Install-cmake-files-to-lib-cmake-llvm.patch
-    else
-        expatch "${FILES}"/0001-Install-cmake-files-to-lib-cmake-llvm-v2.patch
     fi
 
     default
