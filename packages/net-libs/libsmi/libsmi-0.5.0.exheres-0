@@ -9,13 +9,13 @@ are tools to check, analyze dump, convert, and compare MIB definitions. Finally,
 the distribution contains a steadily maintained and revised archive of all IETF
 and IANA maintained standard MIB and PIB modules.
 "
-HOMEPAGE="http://www.ibr.cs.tu-bs.de/projects/${PN}/"
-DOWNLOADS="ftp://ftp.ibr.cs.tu-bs.de/pub/local/${PN}/${PNV}.tar.gz"
+HOMEPAGE="https://www.ibr.cs.tu-bs.de/projects/${PN}"
+DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.gz"
+UPSTREAM_CHANGELOG="${HOMEPAGE}/ChangeLog.html"
+UPSTREAM_DOCUMENTATION="${HOMEPAGE}/doc.html"
 
 REMOTE_IDS="freecode:${PN}"
 BUGS_TO="philantrop@exherbo.org"
-UPSTREAM_CHANGELOG="http://www.ibr.cs.tu-bs.de/projects/${PN}/ChangeLog.html"
-UPSTREAM_DOCUMENTATION="http://www.ibr.cs.tu-bs.de/projects/${PN}/doc.html"
 
 LICENCES="libsmi"
 
@@ -23,17 +23,23 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/sprintf.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --datadir=/usr/share
     --datarootdir=/usr/share
     --with-mibdir=/usr/share/mibs
     --with-pibdir=/usr/share/pibs
+    --with-yangdir=/usr/share/yang
 )
 
 src_test() {
     # These tests are simply broken.
     edo sed -i '/^[[:space:]]*smidump-cm.test \\$/d' test/Makefile
-    edo sed -i '/^[[:space:]]*smidump-sming.test \\$/d' test/Makefile
+    edo sed -i '/^[[:space:]]*smidump-orig-smiv2.test \\$/d' test/Makefile
+    edo rm test/smidiff/{DISMAN-SCRIPT,IF}-MIB.diff
 
     default
 }
