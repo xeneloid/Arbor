@@ -1,8 +1,9 @@
 # Copyright 2007 Bryan Østergaard
 # Copyright 2008, 2009 Ingmar Vanhassel
+# Copyright 2016 Pierre Lejeune <superheron@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require flag-o-matic
+require flag-o-matic alternatives
 
 SUMMARY="Freely available, patent free, high-quality data compressor"
 HOMEPAGE="http://www.bzip.org"
@@ -61,7 +62,7 @@ src_compile() {
 }
 
 src_install() {
-    local versioned=
+    local versioned= alternatives=()
 
     emake -j1 DESTDIR="${IMAGE}" PREFIX=/usr/$(exhost --target) DATADIR=/usr/share install
     emagicdocs
@@ -87,5 +88,16 @@ src_install() {
     expart development /usr/$(exhost --target)/include
     expart documentation /usr/share/{doc,man}
     expart libraries /usr/$(exhost --target)/lib
+
+    if option parts:binaries; then
+        alternatives+=( /usr/$(exhost --target)/bin/bunzip2    "${PN}".bunzip2
+                        /usr/$(exhost --target)/bin/bzip2      "${PN}".bzip2
+                        /usr/$(exhost --target)/bin/bzcat      "${PN}".bzcat   )
+    fi
+    if option parts:documentation; then
+        alternatives+=( /usr/share/man/man1/bzip2.1            "${PN}".bzip2.1 )
+    fi
+
+    [[ "${#alternatives[@]}" -gt 0 ]] && alternatives_for "bzip2" "${PN}" "100" "${alternatives[@]}"
 }
 
