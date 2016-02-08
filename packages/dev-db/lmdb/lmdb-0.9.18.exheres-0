@@ -5,7 +5,3 @@ require lmdb
 
 PLATFORMS="~amd64"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-0.9.17-fix-man-install-failure.patch
-)
-
