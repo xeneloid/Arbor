@@ -1,0 +1,46 @@
+Upstream: yes, gcc-5-branch and trunk.
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69140
+
+From 11e330df4d27cf801f7edd61605082f66d1ee4ae Mon Sep 17 00:00:00 2001
+From: uros <uros@138bc75d-0d04-0410-961f-82ee72b054a4>
+Date: Mon, 18 Jan 2016 16:19:53 +0000
+Subject: [PATCH] 	Backport from mainline 	2016-01-07  Uros Bizjak 
+ <ubizjak@gmail.com>
+
+	PR target/69140
+	* config/i386/i386.c (ix86_frame_pointer_required): Enable
+	frame pointer for TARGET_64BIT_MS_ABI when stack is misaligned.
+
+testsuite/ChangeLog:
+
+	Backport from mainline
+	2016-01-06  Uros Bizjak  <ubizjak@gmail.com>
+
+	PR target/69140
+	* gcc.target/i386/pr69140.c: New test
+
+
+
+git-svn-id: svn+ssh://gcc.gnu.org/svn/gcc/branches/gcc-5-branch@232528 138bc75d-0d04-0410-961f-82ee72b054a4
+---
+ gcc/config/i386/i386.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/gcc/config/i386/i386.c b/gcc/config/i386/i386.c
+index c1b68aa..504e8b8 100644
+--- a/gcc/config/i386/i386.c
++++ b/gcc/config/i386/i386.c
+@@ -9690,6 +9690,10 @@ ix86_frame_pointer_required (void)
+   if (TARGET_64BIT_MS_ABI && get_frame_size () > SEH_MAX_FRAME_SIZE)
+     return true;
+ 
++  /* SSE saves require frame-pointer when stack is misaligned.  */
++  if (TARGET_64BIT_MS_ABI && ix86_incoming_stack_boundary < 128)
++    return true;
++  
+   /* In ix86_option_override_internal, TARGET_OMIT_LEAF_FRAME_POINTER
+      turns off the frame pointer by default.  Turn it back on now if
+      we've not got a leaf function.  */
+-- 
+2.7.0
+
