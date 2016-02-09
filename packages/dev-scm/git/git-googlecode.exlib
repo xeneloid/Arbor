@@ -99,6 +99,10 @@ git-googlecode_src_unpack() {
 
 git-googlecode_src_prepare() {
     edo sed -i "s#pkg-config#${PKG_CONFIG}#g" contrib/credential/gnome-keyring/Makefile
+
+    # These tests are broken with grep 2.23
+    # https://marc.info/?l=git&m=145486267923534&w=2
+    edo rm t/{t8005-blame-i18n,t9200-git-cvsexportcommit}.sh
 }
 
 # No option: mozsha1/ppcsha1
