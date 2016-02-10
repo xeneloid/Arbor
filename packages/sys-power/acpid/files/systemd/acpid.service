@@ -11,8 +11,8 @@ After=syslog.target
 
 [Service]
 Type=forking
-ExecStart=/usr/sbin/acpid
-ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/usr/host/bin/acpid
+ExecReload=/usr/host/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target
