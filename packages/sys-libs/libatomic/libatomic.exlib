@@ -10,7 +10,8 @@ fi
 
 SUMMARY="GNU Atomic Library"
 LICENCES="GPL-2"
-# Upstream did some version bikeshedding, 5.x. are bugfix releases.
+# TODO(compnerd) drop the 5.x -> 5.1 mapping for the SLOT when 5.x is removed.
+# TODO(compnerd) drop the old slotting when gcc 4.x is removed
 if ever at_least 6.0 ; then
     SLOT="$(ever major)"
 elif ever at_least 5.2 ; then
