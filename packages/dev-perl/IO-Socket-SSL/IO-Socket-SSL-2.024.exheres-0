@@ -13,7 +13,17 @@ DEPENDENCIES="
     build+run:
         dev-perl/IO-Socket-INET6
         dev-perl/Mozilla-CA
-        dev-perl/Net-SSLeay[>=1.43]
+        dev-perl/Net-SSLeay[>=1.46]
+    suggestion:
+        (
+            dev-perl/Net-IDN-Encode
+            dev-perl/Net-LibIDN
+            dev-perl/URI[>=1.50]
+        ) [[
+            description = [ One of these should be installed for handling
+            international domain names. It will work without but croak if you
+            try to verify an international name against a certificate. ]
+        ]]
 "
 
 src_prepare() {
