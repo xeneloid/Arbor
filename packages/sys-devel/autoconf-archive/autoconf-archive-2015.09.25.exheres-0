@@ -3,13 +3,13 @@
 
 require gnu [ suffix=xz ]
 
-SUMMARY="Collection of autoconf macros"
+SUMMARY="Collection of freely re-usable macros for autoconf"
 
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
 
-BUGS_TO="djc@djc.id.au"
+BUGS_TO="flocke@shadowice.org"
 
 src_install() {
     default
