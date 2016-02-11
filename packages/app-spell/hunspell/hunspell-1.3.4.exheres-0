@@ -1,7 +1,7 @@
 # Copyright 2008 Bo Ørsted Andresen <zlin@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix=tar.gz ]
+require github [ tag=v${PV} ]
 
 SUMMARY="Spell checker, stemmer and morphological analyzer"
 DESCRIPTION="
@@ -16,6 +16,9 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
+# https://github.com/hunspell/hunspell/issues/360
+RESTRICT="test"
+
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
@@ -24,10 +27,6 @@ DEPENDENCIES="
     suggestion:
         virtual/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-musl.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
