@@ -62,7 +62,7 @@ DEPENDENCIES="
     suggestion:
         app-crypt/gnupg             [[ description = [ Needed for signing and verifying tags ] ]]
         dev-scm/cvsps               [[ description = [ Dependency for 'git cvsimport' ] ]]
-        dev-scm/git-remote-helpers  [[ description = [ Allows usage of mercuial and bazaar with git ] ]]
+        dev-scm/git-remote-helpers  [[ description = [ Allows usage of mercurial and bazaar with git ] ]]
         dev-perl/DBI                [[ description = [ Dependency for 'git cvsserver' ] ]]
         dev-lang/python:*           [[ description = [ Dependency for 'git p4' ] ]]
         dev-perl/CGI                [[ description = [ Dependency for 'gitweb' ] ]]
