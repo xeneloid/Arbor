@@ -4,12 +4,12 @@
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
 require toolchain-runtime-libraries
 
-if [[ ${PV} == *_pre* ]] ; then
-    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
-fi
-
 SUMMARY="GCC C Runtime Library"
 LICENCES="GPL-2"
+
+if [[ ${PV} == *_pre* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+fi
 
 # TODO(compnerd) drop the 5.x -> 5.1 mapping for the SLOT when 5.x is removed.
 # TODO(compnerd) drop the old slotting when gcc 4.x is removed
@@ -48,8 +48,13 @@ REMOTE_IDS="freecode:gcc"
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}gcc-${SLOT}/"
 UPSTREAM_CHANGELOG="${UPSTREAM_RELEASE_NOTES}changes.html"
 
-ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}"
-WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
+if [[ ${PV} == *_pre* ]] ; then
+    ECONF_SOURCE="${WORKBASE}/gcc-$(ever major)-${PV##*_pre}"
+    WORK="${WORKBASE}/gcc-$(ever major)-${PV##*_pre}/build"
+else
+    ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}"
+    WORK="${WORKBASE}/gcc-${PV/_p?(re)/-}/build"
+fi
 
 # TODO(compnerd) find a way to expose build tools when cross-compiling and replace
 # {AR,RANLIB}_FOR_BUILD accordingly

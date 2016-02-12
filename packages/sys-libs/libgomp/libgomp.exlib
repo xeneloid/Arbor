@@ -4,12 +4,11 @@
 require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
 require toolchain-runtime-libraries
 
-if [[ ${PV} == *_pre* ]] ; then
-    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever range 1-2)-${PV##*_pre}/gcc-$(ever range 1-2)-${PV##*_pre}.tar.bz2"
-fi
-
 SUMMARY="GNU OpenMP Runtime (libgomp)"
 LICENCES="GPL-2"
+if [[ ${PV} == *_pre* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+fi
 
 DEPENDENCIES="
     build:
@@ -68,7 +67,11 @@ UPSTREAM_CHANGELOG="${UPSTREAM_RELEASE_NOTES}changes.html"
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-clocale=gnu --disable-libstdcxx-pch --disable-vtable-verify )
 
-ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}/libgomp"
+if [[ ${PV} == *_pre* ]] ; then
+    ECONF_SOURCE="${WORKBASE}/gcc-$(ever major)-${PV##*_pre}/libgomp"
+else
+    ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}/libgomp"
+fi
 WORK="${WORKBASE}/build/$(exhost --target)/libgomp"
 
 libgomp_src_unpack() {

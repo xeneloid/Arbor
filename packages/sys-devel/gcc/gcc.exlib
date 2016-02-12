@@ -7,7 +7,12 @@ require alternatives
 SUMMARY="stand alone compiler"
 HOMEPAGE="https://gcc.gnu.org/"
 
+if [[ ${PV} == *_pre* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+fi
+
 LICENCES="GPL-2"
+
 # TODO(compnerd) drop the 5.x -> 5.1 mapping for the SLOT when 5.x is removed.
 # TODO(compnerd) drop the old slotting when gcc 4.x is removed
 if ever at_least 6.0 ; then
@@ -82,6 +87,13 @@ else
     "
 fi
 
+if [[ ${PV} == *_pre* ]] ; then
+    ECONF_SOURCE="${WORKBASE}/gcc-$(ever major)-${PV##*_pre}"
+else
+    ECONF_SOURCE="${WORKBASE}/gcc-${PV/_p?(re)/-}"
+fi
+WORK=${ECONF_SOURCE}
+
 gcc_pkg_setup() {
     local target=
 
@@ -108,7 +120,7 @@ gcc_src_configure() {
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local libpath=/usr/${target}/lib
-        local gxx_incdir=/usr/${target}/include/c++/${PV}
+        local gxx_incdir=/usr/${target}/include/c++/${PV%%_p*}
         local target_cflags_var=${target//-/_}_CFLAGS
         local target_cppflags_var=${target//-/_}_CPPFLAGS
         local target_cxxflags_var=${target//-/_}_CXXFLAGS
@@ -138,7 +150,7 @@ gcc_src_configure() {
             CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"   \
             CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"   \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
-        "${WORKBASE}/${PNV}/configure"         \
+        "${ECONF_SOURCE}/configure"                         \
                 --cache-file=config.cache                   \
                 --build=${CHOST}                            \
                 --host=${CHOST}                             \
@@ -264,7 +276,7 @@ gcc_src_install() {
         edo cd "${WORKBASE}/build/${target}"
 
         emake -j1 DESTDIR="${IMAGE}" install
-        edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV}"
+        edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}"
         if [[ ${target} == ${CHOST} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
             for tool in cpp-${SLOT} gcov-${SLOT} ; do
