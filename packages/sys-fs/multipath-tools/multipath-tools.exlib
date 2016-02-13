@@ -29,6 +29,8 @@ DEPENDENCIES="
         sys-fs/sysfsutils[>=2.1.0]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/95c9444f67781f83c5c22c4292a1f16559ea6337.patch )
+
 DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( multipath.conf.annotated multipath.conf.synthetic )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( kpartx )
@@ -36,7 +38,6 @@ DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( kpartx )
 multipath-tools_src_prepare() {
     default
 
-    edo sed -i -e "1iSYSTEMD=1" Makefile.inc
     edo sed -i -e "/KRNLLIB/s:/lib/:/usr/$(exhost --target)/lib:" Makefile
     edo sed -i -e "/libudevdir/s:/lib/:/usr/$(exhost --target)/libexec/:" Makefile.inc
     edo sed -i -e "/unitdir/s:/usr/lib/systemd/system:${SYSTEMDSYSTEMUNITDIR}:" Makefile.inc
