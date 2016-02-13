@@ -39,8 +39,20 @@ src_install() {
     emake PREFIX="${IMAGE}/usr/$(exhost --target)" install
     edo rm -r "${IMAGE}/usr/$(exhost --target)/bin"
 
-    # create the libcrypto++.so.9 needed by megasync
     edo cd "${IMAGE}/usr/$(exhost --target)/lib"
-    edo ln -s libcryptopp.so libcrypto++.so.9
+    # debian has libcrypto++
+    edo mv libcryptopp.so libcrypto++.so.9.0.0
+    edo ln -s libcrypto++.so.9.0.0 libcrypto++.so.9
+    edo ln -s libcrypto++.so.9.0.0 libcrypto++.so
+    # create the libcrypto++.so.9 needed by megasync
+    edo ln -s libcrypto++.so.9.0.0 libcryptopp.so.9
+    edo ln -s libcrypto++.so.9.0.0 libcryptopp.so
+
+    dodir /usr/$(exhost --target)/lib/pkgconfig/
+    edo sed -e "/^prefix/s:@PREFIX@$:/usr/$(exhost --target):" \
+        -e "/^libdir/s:@LIBDIR@$:/usr/$(exhost --target)/lib:" \
+        -e "/^includedir/s:@INCLUDEDIR@$:/usr/$(exhost --target)/include/cryptopp:" \
+        -e "/^Version/s:@VERSION@$:${PV}:" \
+        ${FILES}/libcrypto++.pc > "${IMAGE}"/usr/$(exhost --target)/lib/pkgconfig/libcrypto++.pc
 }
 
