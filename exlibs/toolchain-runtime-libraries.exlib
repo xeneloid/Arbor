@@ -60,13 +60,13 @@ symlink_dynamic_libs() {
 
 # argument: at least one library name (without the .so)
 #
-# convenience function to slott the longest versioned .so with the given name in ${IMAGE}, using
+# convenience function to slot the longest versioned .so with the given name in ${IMAGE}, using
 # alternatives-light and the ${SLOT} as provider and priority
 slot_dynamic_libs() {
     local names=() all=()
     local ext full_so name
 
-    [[ ${#} -lt 1 ]] && die "${FUNCNAME} takes at least 1 arguments"
+    [[ ${#} -lt 1 ]] && die "${FUNCNAME} takes at least 1 argument"
 
     names=( "${@}" )
 
@@ -91,7 +91,7 @@ slot_dynamic_libs() {
 # argument: at least one library name with extension
 #
 # convenience function to slot static libraries and other files in ${libdir} with
-# the given name in ${IMAGE}, usingg alternatives-light and the ${SLOT} as provider and priority
+# the given name in ${IMAGE}, using alternatives-light and the ${SLOT} as provider and priority
 slot_other_libs() {
     local files=()
     local file ext name
