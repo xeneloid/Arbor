@@ -146,6 +146,7 @@ libstdc++_src_install() {
     symlink_dynamic_libs ${PN}
     slot_dynamic_libs ${PN}
     slot_other_libs {${PN},libsupc++}.{a,la}
+    slot_other_libs libstdc++fs.a
 
     edo pushd "${IMAGE}"
 
