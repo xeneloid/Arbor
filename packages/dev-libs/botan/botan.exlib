@@ -10,9 +10,9 @@ and CRLs, PKCS #10 certificate requests, a filter/pipe message
 processing system, and a wide variety of other features,
 all written in portable C++.
 "
-HOMEPAGE="http://botan.randombit.net"
+HOMEPAGE="http://botan.randombit.net/"
 MY_PNV="Botan-${PV}"
-DOWNLOADS="http://files.randombit.net/${PN}/${MY_PNV}.tbz"
+DOWNLOADS="${HOMEPAGE}releases/${MY_PNV}.tgz"
 
 LICENCES="BSD-2"
 SLOT="$(ever at_least 1.10.0 && ever range 1-2 || echo 0)"
