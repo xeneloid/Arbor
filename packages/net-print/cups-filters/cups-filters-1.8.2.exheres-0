@@ -74,6 +74,8 @@ src_prepare() {
 
 src_configure() {
     local myconf=(
+        --enable-foomatic
+        --enable-ghostscript
         --enable-imagefilters
         --disable-braille
         --disable-static
