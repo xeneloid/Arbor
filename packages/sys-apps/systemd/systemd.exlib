@@ -222,6 +222,10 @@ systemd_src_prepare() {
 
 systemd_src_configure() {
     local myconfig=(
+        # Disable -fuse-ld=gold
+        # Works around a bug in binutils[<2.26].
+        cc_cv_LDFLAGS__Wl__fuse_ld_gold=no
+
         --with-rootprefix=/usr/$(exhost --target)
         --libexecdir=/usr/$(exhost --target)/lib
         --localstatedir=/var
