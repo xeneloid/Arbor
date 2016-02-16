@@ -5,7 +5,7 @@ SUMMARY="Virtual: gzip providers"
 HOMEPAGE=""
 
 SLOT="0"
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~armv7"
 MYOPTIONS="
     ( providers:
         gnu

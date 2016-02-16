@@ -17,7 +17,7 @@ LICENCES="|| ( BSD-3 GPL-2 ) public-domain"
 
 MYOPTIONS=""
 
-PLATFORMS="~amd64"
+PLATFORMS="~amd64 ~armv7"
 
 DEPENDENCIES="
     build:
