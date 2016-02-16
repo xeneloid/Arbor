@@ -20,7 +20,10 @@ LICENCES="
 SLOT="0"
 MYOPTIONS=""
 
-DEPENDENCIES=""
+DEPENDENCIES="
+    build:
+        sys-devel/binutils[>=2.25.1-r4] [[ note = [ fixes segfaults with recent musl ] ]]
+"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-hardcode-an-exherbo-specific-ld-config-file.patch
