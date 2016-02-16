@@ -16,6 +16,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        dev-util/intltool
     build+run:
         sys-libs/ncurses
         providers:gnutls? ( dev-libs/gnutls )
