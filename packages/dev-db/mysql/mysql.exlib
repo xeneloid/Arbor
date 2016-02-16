@@ -47,6 +47,7 @@ DEPENDENCIES="
     build+run:
         group/${PN}
         user/${PN}
+        app-admin/eclectic[>=2.0.18] [[ note = [ Split ld-*.path, @TARGET@ substitution ] ]]
         dev-libs/libaio
         sys-libs/zlib[>=1.2.3]
         providers:libressl? ( dev-libs/libressl:= )
@@ -279,7 +280,7 @@ mysql_src_install() {
     fi
 
     hereenvd 46mysql <<EOF
-LDPATH=/usr/host/lib/mysql
+LDPATH=/usr/@TARGET@/lib/mysql
 EOF
 
     insinto /etc/logrotate.d
