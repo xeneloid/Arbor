@@ -12,6 +12,13 @@ MYOPTIONS+="
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-2.22-allow-additional-tests-to-xfail.patch
+    "${FILES}"/${PNV}-Always-enable-pointer-guard-BZ-18928.patch
+    "${FILES}"/${PNV}-Fix-BZ-17905.patch
+    "${FILES}"/${PNV}-Fix-BZ-18985-out-of-range-data-to-strftime-causes-a-.patch
+    "${FILES}"/${PNV}-getmntent-fix-memory-corruption-w-blank-lines-BZ-188.patch
+    "${FILES}"/${PNV}-Handle-overflow-in-__hcreate_r.patch
+    "${FILES}"/${PNV}-Improve-check-against-integer-wraparound-in-hcreate_.patch
+    "${FILES}"/${PNV}-CVE-2015-7547.patch
 )
 
 src_prepare() {

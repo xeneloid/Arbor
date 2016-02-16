@@ -1,0 +1,231 @@
+Upstream: yes
+
+From 3007f797a1a596e954f44879a5a7267966186ba4 Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Fri, 28 Aug 2015 17:08:49 -0400
+Subject: [PATCH] getmntent: fix memory corruption w/blank lines [BZ #18887]
+
+The fix for BZ #17273 introduced a single byte of memory corruption when
+the line is entirely blank.  It would walk back past the start of the
+buffer if the heap happened to be 0x20 or 0x09 and then write a NUL byte.
+	buffer = '\n';
+	end_ptr = buffer;
+	while (end_ptr[-1] == ' ' || end_ptr[-1] == '\t')
+		end_ptr--;
+	*end_ptr = '\0';
+
+Fix that and rework the tests.  Adding the testcase for BZ #17273 to the
+existing \040 parser does not really make sense as it's unrelated, and
+leads to confusing behavior: it implicitly relies on the new entry being
+longer than the previous entry (since it just rewinds the FILE*).  Split
+it out into its own dedicated testcase instead.
+
+(cherry picked from commit b0e805fa0d6fea33745952df7b7f5442ca4c374f)
+---
+ misc/Makefile                                      |  3 +-
+ misc/mntent_r.c                                    |  4 +-
+ .../tst-mntent-blank-corrupt.c                     | 43 +++++++++-------------
+ .../tst-mntent-blank-passno.c                      | 40 +++++++++++---------
+ misc/tst-mntent.c                                  | 20 ----------
+ 5 files changed, 45 insertions(+), 65 deletions(-)
+ copy posix/bug-regex35.c => misc/tst-mntent-blank-corrupt.c (60%)
+ copy math/tst-definitions.c => misc/tst-mntent-blank-passno.c (55%)
+
+diff --git a/misc/Makefile b/misc/Makefile
+index aecb0da..2f5edf6 100644
+--- a/misc/Makefile
++++ b/misc/Makefile
+@@ -76,7 +76,8 @@ install-lib := libg.a
+ gpl2lgpl := error.c error.h
+ 
+ tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent tst-hsearch \
+-	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1
++	 tst-error1 tst-pselect tst-insremque tst-mntent2 bug-hsearch1 \
++	 tst-mntent-blank-corrupt tst-mntent-blank-passno
+ ifeq ($(run-built-tests),yes)
+ tests-special += $(objpfx)tst-error1-mem.out
+ endif
+diff --git a/misc/mntent_r.c b/misc/mntent_r.c
+index 6159873..4f26998 100644
+--- a/misc/mntent_r.c
++++ b/misc/mntent_r.c
+@@ -136,7 +136,9 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
+       end_ptr = strchr (buffer, '\n');
+       if (end_ptr != NULL)	/* chop newline */
+ 	{
+-	  while (end_ptr[-1] == ' ' || end_ptr[-1] == '\t')
++	  /* Do not walk past the start of buffer if it's all whitespace.  */
++	  while (end_ptr != buffer
++		 && (end_ptr[-1] == ' ' || end_ptr[-1] == '\t'))
+             end_ptr--;
+ 	  *end_ptr = '\0';
+ 	}
+diff --git a/posix/bug-regex35.c b/misc/tst-mntent-blank-corrupt.c
+similarity index 60%
+copy from posix/bug-regex35.c
+copy to misc/tst-mntent-blank-corrupt.c
+index e0b61d4..92266a3 100644
+--- a/posix/bug-regex35.c
++++ b/misc/tst-mntent-blank-corrupt.c
+@@ -1,5 +1,6 @@
+-/* Test regcomp with collating symbols in bracket expressions
+-   Copyright (C) 2013-2015 Free Software Foundation, Inc.
++/* Make sure blank lines does not cause memory corruption BZ #18887.
++
++   Copyright (C) 2009-2015 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+@@ -16,35 +17,27 @@
+    License along with the GNU C Library; if not, see
+    <http://www.gnu.org/licenses/>.  */
+ 
++#include <mntent.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <locale.h>
+-#include <regex.h>
+ 
++/* Make sure blank lines don't trigger memory corruption.  This doesn't happen
++   for all targets though, so it's a best effort test BZ #18887.  */
+ static int
+ do_test (void)
+ {
+-  regex_t r;
+-
+-  if (setlocale (LC_ALL, "cs_CZ.UTF-8") == NULL)
+-    {
+-      puts ("setlocale failed");
+-      return 1;
+-    }
+-
+-  if (regcomp (&r, "[[.ch.]]", REG_NOSUB) != 0)
+-    {
+-      puts ("regcomp failed");
+-      return 1;
+-    }
+-
+-  if (regexec (&r, "ch", 0, 0, 0) != 0)
+-    {
+-      puts ("regexec failed");
+-      return 1;
+-    }
+-
+-  regfree (&r);
++  FILE *fp;
++
++  fp = tmpfile ();
++  fputs ("\n \n/foo\\040dir /bar\\040dir auto bind \t \n", fp);
++  rewind (fp);
++
++  /* The corruption happens here ...  */
++  getmntent (fp);
++  /* ... but trigers here.  */
++  endmntent (fp);
++
++  /* If the test failed, we would crash, and not hit this point.  */
+   return 0;
+ }
+ 
+diff --git a/math/tst-definitions.c b/misc/tst-mntent-blank-passno.c
+similarity index 55%
+copy from math/tst-definitions.c
+copy to misc/tst-mntent-blank-passno.c
+index f4ba45e..fc04291 100644
+--- a/math/tst-definitions.c
++++ b/misc/tst-mntent-blank-passno.c
+@@ -1,6 +1,7 @@
+-/* Copyright (C) 2000-2015 Free Software Foundation, Inc.
++/* Make sure trailing whitespace is handled properly BZ #17273.
++
++   Copyright (C) 2009-2015 Free Software Foundation, Inc.
+    This file is part of the GNU C Library.
+-   Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
+ 
+    The GNU C Library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+@@ -16,31 +17,34 @@
+    License along with the GNU C Library; if not, see
+    <http://www.gnu.org/licenses/>.  */
+ 
+-#include <limits.h>
+-#include <math.h>
++#include <mntent.h>
+ #include <stdio.h>
++#include <string.h>
+ 
+-
++/* Check entries to make sure trailing whitespace is ignored and we return the
++   correct passno value BZ #17273.  */
+ static int
+ do_test (void)
+ {
+   int result = 0;
+-
+-  if (FP_ILOGB0 != INT_MIN && FP_ILOGB0 != -INT_MAX)
+-    {
+-      puts ("FP_ILOGB0 has no valid value");
+-      result = 1;
+-    }
+-  else
+-    puts ("FP_ILOGB0 value is OK");
+-
+-  if (FP_ILOGBNAN != INT_MIN && FP_ILOGBNAN != INT_MAX)
++  FILE *fp;
++  struct mntent *mnt;
++
++  fp = tmpfile ();
++  fputs ("/foo\\040dir /bar\\040dir auto bind \t \n", fp);
++  rewind (fp);
++
++  mnt = getmntent (fp);
++  if (strcmp (mnt->mnt_fsname, "/foo dir") != 0
++      || strcmp (mnt->mnt_dir, "/bar dir") != 0
++      || strcmp (mnt->mnt_type, "auto") != 0
++      || strcmp (mnt->mnt_opts, "bind") != 0
++      || mnt->mnt_freq != 0
++      || mnt->mnt_passno != 0)
+     {
+-      puts ("FP_ILOBNAN has no valid value");
++      puts ("Error while reading entry with trailing whitespaces");
+       result = 1;
+     }
+-  else
+-    puts ("FP_ILOGBNAN value is OK");
+ 
+   return result;
+ }
+diff --git a/misc/tst-mntent.c b/misc/tst-mntent.c
+index 876c89f..820b354 100644
+--- a/misc/tst-mntent.c
++++ b/misc/tst-mntent.c
+@@ -73,26 +73,6 @@ main (int argc, char *argv[])
+ 	  puts ("Error while reading written entry back in");
+ 	  result = 1;
+ 	}
+-
+-      /* Part III: Entry with whitespaces at the end of a line. */
+-      rewind (fp);
+-
+-      fputs ("/foo\\040dir /bar\\040dir auto bind \t \n", fp);
+-
+-      rewind (fp);
+-
+-      mnt = getmntent (fp);
+-
+-      if (strcmp (mnt->mnt_fsname, "/foo dir") != 0
+-	  || strcmp (mnt->mnt_dir, "/bar dir") != 0
+-	  || strcmp (mnt->mnt_type, "auto") != 0
+-	  || strcmp (mnt->mnt_opts, "bind") != 0
+-	  || mnt->mnt_freq != 0
+-	  || mnt->mnt_passno != 0)
+-	{
+-	  puts ("Error while reading entry with trailing whitespaces");
+-	  result = 1;
+-	}
+    }
+ 
+   return result;
+-- 
+2.7.1
+
