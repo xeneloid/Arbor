@@ -4,8 +4,7 @@
 # Based in part upon 'debianutils-2.28.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require debian-upstream [ suffix=.tar.xz ]
-require alternatives
+require debian-upstream [ suffix=.tar.xz ] alternatives
 
 SUMMARY="Miscellaneous utilities specific to Debian"
 DESCRIPTION="
@@ -27,8 +26,6 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
-
-WORK=${WORKBASE}/${PN}
 
 src_install() {
     dobin tempfile run-parts installkernel savelog
