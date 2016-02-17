@@ -22,7 +22,7 @@ DEPENDENCIES="
         sys-devel/flex
         virtual/pkg-config[>=0.20]
     build+run:
-        dev-libs/glib:2[>=2.25.9]
+        dev-libs/glib:2[>=2.32.0]
     test:
         gnome-desktop/gobject-introspection:*
         sys-apps/dbus
