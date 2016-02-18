@@ -39,8 +39,10 @@ DEPENDENCIES="
 AT_M4DIR=( m4 )
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/85ead3367ab86198a98190aa4869e59b1fc69c2f.patch
     "${FILES}"/${PN}-1.0.22-automagic-speex.patch
     "${FILES}"/${PN}-1.0.22-quote-quote-quote-quote.patch
+    "${FILES}"/${PN}-1.1.0-ffmpeg3.patch
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
