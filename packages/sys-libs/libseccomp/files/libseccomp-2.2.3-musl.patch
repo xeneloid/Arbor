@@ -1,28 +1,29 @@
-Upstream: submitted
-Source: https://github.com/seccomp/libseccomp/pull/23
+Upstream: yes
 
-From 851e8a1f403f373228d0a5eac2940b43221b980e Mon Sep 17 00:00:00 2001
-From: Kylie McClain <somasis@exherbo.org>
-Date: Fri, 1 Jan 2016 13:12:59 -0500
-Subject: [PATCH] system.h: Remove conflicting kernel header include
+From faf6919f36eae556f1d4e40b8847070221f553c6 Mon Sep 17 00:00:00 2001
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 10 Feb 2016 11:36:42 -0500
+Subject: [PATCH] system: use sys/prctl.h instead of linux/prctl.h
 
-This fixes building on musl libc, since musl does not include kernel
-headers. I've tested this as working on both glibc and musl.
+This should help on systems that use alternate libc implementations.
 
-Signed-off-by: Kylie McClain <somasis@exherbo.org>
+Reported-by: anarchpenguin
+Reported-by: Kylie McClain somasis@exherbo.org
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 ---
- src/system.h | 1 -
- 1 file changed, 1 deletion(-)
+ src/system.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/system.h b/src/system.h
-index 4660679..e84b0a0 100644
+index 4660679..02fd1e9 100644
 --- a/src/system.h
 +++ b/src/system.h
-@@ -23,7 +23,6 @@
+@@ -23,7 +23,7 @@
  #define _SYSTEM_H
  
  #include <linux/filter.h>
 -#include <linux/prctl.h>
++#include <sys/prctl.h>
  
  #include "configure.h"
  
