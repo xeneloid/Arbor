@@ -15,6 +15,11 @@ DEPENDENCIES=""
 BUGS_TO="pioto@exherbo.org"
 
 src_install() {
-    PREFIX="/usr" BASE_DIR="${IMAGE}" MAN_DIR="${IMAGE}/usr/share/man" DISTRIBUTION="gentoo" edo sh ./install.sh
+    PREFIX="/usr" \
+        BASE_DIR="${IMAGE}" \
+        MAN_DIR="${IMAGE}/usr/share/man" \
+        DISTRIBUTION="gentoo" \
+        SCRIPT_DEST="${IMAGE}/usr/$(exhost --target)/bin/hibernate" \
+        edo sh ./install.sh
 }
 
