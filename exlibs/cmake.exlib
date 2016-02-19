@@ -195,6 +195,7 @@ ecmake() {
                -DCMAKE_C_COMPILER:PATH="${CC}"                                       \
                -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                    \
                -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX:=/usr/$(exhost --target)}"      \
+               $(exhost --is-native -q || echo "-DCMAKE_FIND_ROOT_PATH=${PREFIX:=/usr/$(exhost --target)}" ) \
                -DCMAKE_SYSTEM_PREFIX_PATH:PATH="${PREFIX:=/usr/$(exhost --target)}"  \
                -DCMAKE_INSTALL_LIBDIR:STRING='lib'                                   \
                -DCMAKE_INSTALL_DATAROOTDIR:PATH=/usr/share/ ; do
