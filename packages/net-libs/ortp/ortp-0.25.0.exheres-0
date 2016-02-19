@@ -22,7 +22,10 @@ DEPENDENCIES="
         providers:openssl? ( dev-libs/openssl )
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( debug )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    debug
+    "doc documentation"
+)
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-ssl-hmac
     --disable-strict
@@ -37,10 +40,5 @@ src_install() {
     fi
 
     nonfatal edo rm "${IMAGE}"/usr/share/doc/${PNVR}/COPYING
-
-    # There's no option to disable building apidocs, so remove them if not requested
-    if option !doc; then
-        nonfatal edo rm -r "${IMAGE}"/usr/share/doc/${PNVR}/html
-    fi
 }
 
