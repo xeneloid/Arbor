@@ -100,7 +100,10 @@ DEPENDENCIES="
         acl? ( sys-apps/acl )
         cryptsetup? ( sys-fs/cryptsetup[>=1.6.0] )
         efi? ( sys-boot/gnu-efi )
-        gcrypt? ( dev-libs/libgcrypt )
+        gcrypt? (
+            dev-libs/libgcrypt[>=1.4.5]
+            dev-libs/libgpg-error[>=1.12]
+        )
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
         idn? ( net-dns/libidn )
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
