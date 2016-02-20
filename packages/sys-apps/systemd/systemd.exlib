@@ -137,7 +137,7 @@ DEPENDENCIES="
             resolution = upgrade-blocked-before
         ]]
         !sys-apps/eudev [[
-            description = [ ${PN} has a udev daemon which provides the same library and programms that eudev does ]
+            description = [ ${PN} has a udev daemon which provides the same library and programs that eudev does ]
             resolution = manual
         ]]
     suggestion:
