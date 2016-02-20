@@ -1,4 +1,4 @@
-# Copyright 2010-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2010-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.12 1.11 ] ] \
@@ -118,6 +118,7 @@ DEPENDENCIES="
         group/dialout
         group/lock [[ note = [ Required for var-lock service ] ]]
         group/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        group/systemd-coredump [[ note = [ Required for coredumpctl ] ]]
         group/systemd-journal [[ note = [ Required for journal access by non-root users ] ]]
         group/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         group/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
@@ -126,6 +127,7 @@ DEPENDENCIES="
         group/systemd-resolve [[ note = [ Required for systemd-resolved ] ]]
         group/systemd-timesync [[ note = [ Required for systemd-timesyncd ] ]]
         user/systemd-bus-proxy [[ note = [ Required for systemd-bus-proxyd ] ]]
+        user/systemd-coredump [[ note = [ Required for coredumpctl ] ]]
         user/systemd-journal-gateway [[ note = [ Required for systemd-journal-gatewayd ] ]]
         user/systemd-journal-remote [[ note = [ Required for systemd-journal-remote ] ]]
         user/systemd-journal-upload [[ note = [ Required for systemd-journal-upload ] ]]
@@ -137,7 +139,7 @@ DEPENDENCIES="
             resolution = upgrade-blocked-before
         ]]
         !sys-apps/eudev [[
-            description = [ ${PN} has a udev daemon which provides the same library and programs that eudev does ]
+            description = [ ${PN} has the upstream udev daemon instead of Gentoo's fork eudev ]
             resolution = manual
         ]]
     suggestion:
