@@ -96,8 +96,9 @@ binutils_src_configure() {
         myconf+=( --enable-plugins --enable-64-bit-bfd --enable-secureplt --with-mmap )
         # NOTE(compnerd) glibc has supported this since 2007, if you have an older glibc, we should
         # conditionalise this on the libc target version
-        # NOTE(mixi) musl doesn't support this at all
-        [[ $(exhost --target) == *-musl* ]] || myconf+=( --enable-elf-stt-common )
+        # NOTE(mixi) disable this until https://sourceware.org/bugzilla/show_bug.cgi?id=19645 is
+        # fixed or at least a backportable patch is attached
+        # myconf+=( --enable-elf-stt-common )
         # TODO(compnerd) determine the debug location from paludis and pass that along
         # myconf+=( --wih-separate-debug-dir=/usr/${target}/lib/debug )
         myconf+=( --with-system-zlib )
