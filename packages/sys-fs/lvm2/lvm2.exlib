@@ -27,6 +27,7 @@ SLOT="0"
 MYOPTIONS="
     dmeventd [[ description = [ DM event daemon to monitor active mapped devices ] ]]
     fsadm [[ description = [ Utility to resize or check filesystem on a device ] ]]
+    lvmetad [[ description = [ Metadata caching daemon ] ]]
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
@@ -67,13 +68,13 @@ lvm2_src_configure() {
         --with-udevdir="${UDEVRULESDIR}"
         --disable-lockd-dlm
         --disable-lockd-sanlock
-        --disable-lvmetad
         --disable-lvmpolld
         --disable-nls
         --disable-selinux
         --disable-static_link
         $(option_enable dmeventd)
         $(option_enable fsadm)
+        $(option_enable lvmetad)
         $(option_enable providers:systemd udev-systemd-background-jobs)
     )
 
