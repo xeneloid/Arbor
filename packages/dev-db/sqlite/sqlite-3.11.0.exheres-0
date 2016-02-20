@@ -127,7 +127,6 @@ src_install() {
     if expecting_tests ; then
         emake DESTDIR="${IMAGE}" HAVE_TCL="" install
         doman ${PN}${SLOT}.1
-        dodoc autoconf/README
     else
         default
     fi
