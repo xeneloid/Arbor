@@ -28,7 +28,9 @@ create_root_owned_directory() {
 create_device_node() {
     local node=${1} major=${2} minor=${3} owner=${4} perms=${5}
     if [[ ! -e ${ROOT}dev/${node} ]]; then
-        edo mknod "${ROOT}dev/${node}" c ${major} ${minor}
+        # nonfatal because we might not have the capability (CAP_MKNOD) to
+        # create it.
+        nonfatal edo mknod "${ROOT}dev/${node}" c ${major} ${minor}
     fi
     edo chown ${owner} "${ROOT}dev/${node}"
     edo chmod ${perms} "${ROOT}dev/${node}"
