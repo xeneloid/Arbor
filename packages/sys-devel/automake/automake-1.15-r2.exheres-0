@@ -6,6 +6,8 @@ require automake
 SLOT="${APIVERSION}"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-1.15-perl-escape-curly-bracket.patch )
+
 src_install() {
     automake_src_install
 
