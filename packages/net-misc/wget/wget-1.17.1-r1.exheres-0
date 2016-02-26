@@ -1,7 +1,9 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ] option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
+require alternatives
+require gnu [ suffix=xz ]
+require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
 SUMMARY="Wget is a package for retrieving files using HTTP, HTTPS and FTP"
 
@@ -67,5 +69,9 @@ src_install() {
 
     # NOTE(somasis): remove gettext remenants on musl
     edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib
+
+    alternatives_for wget gnu 1000 \
+        /usr/$(exhost --target)/bin/wget gnu${PN} \
+        /usr/share/man/man1/wget.1       gnuwget.1
 }
 
