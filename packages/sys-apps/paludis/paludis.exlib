@@ -61,8 +61,8 @@ DEPENDENCIES="
         dev-cpp/gtest
     run:
         net-misc/rsync[>=3.1.0]
-        net-misc/wget
         sys-apps/sydbox[>=0.7.6]
+        virtual/wget
         bash-completion? ( app-shells/bash-completion[>=1.1] )
     post:
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )
