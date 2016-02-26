@@ -28,6 +28,10 @@ DEPENDENCIES="
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
+        !net-misc/wget[<1.17.1-r1] [[
+            description = [ Alternatives conflict ]
+            resolution = upgrade-blocked-before
+        ]]
         !sys-apps/coreutils[<8.24-r3] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
@@ -204,5 +208,7 @@ src_install() {
         /usr/$(exhost --target)/bin/unzip       /usr/$(exhost --target)/bin/busybox
     alternatives_for vi         ${PN}   75  \
         /usr/$(exhost --target)/bin/vi          /usr/$(exhost --target)/bin/busybox
+    alternatives_for wget       ${PN}   75  \
+        /usr/$(exhost --target)/bin/wget        /usr/$(exhost --target)/bin/busybox
 }
 
