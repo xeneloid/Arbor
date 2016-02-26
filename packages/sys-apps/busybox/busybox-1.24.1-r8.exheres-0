@@ -1,12 +1,13 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Copyright 2009 Daniel Mierswa <impulze@impulze.org>
 # Copyright 2012 Wouter van Kesteren <woutershep@gmail.com>
+# Copyright 2015-2016 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require toolchain-funcs alternatives flag-o-matic
 
 SUMMARY="BusyBox provides tiny replacements for many common UNIX utilities"
-HOMEPAGE="http://busybox.net"
+HOMEPAGE="https://busybox.net"
 DOWNLOADS="${HOMEPAGE}/downloads/${PNV}.tar.bz2"
 
 REMOTE_IDS="freecode:${PN}"
@@ -38,6 +39,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-unzip-regression.patch
     "${FILES}"/${PNV}-truncate-open-mode.patch
     "${FILES}"/${PNV}-musl.patch
+    "${FILES}"/${PNV}-gzip.patch
 )
 
 bb_make() {
@@ -100,7 +102,7 @@ src_prepare() {
 }
 
 src_configure() {
-    bb_make oldconfig
+    yes '' | bb_make oldconfig
 }
 
 src_compile() {
@@ -159,14 +161,9 @@ src_install() {
     # alternatives
     local coreutils_alternatives=()
     for prog in "${coreutils[@]}";do
-        case "${prog}" in
-             hostname|uptime) ;;
-             *)
-                coreutils_alternatives+=(
-                    /usr/$(exhost --target)/bin/${prog} /usr/$(exhost --target)/bin/busybox
-                )
-             ;;
-        esac
+        coreutils_alternatives+=(
+             /usr/$(exhost --target)/bin/${prog} /usr/$(exhost --target)/bin/busybox
+        )
     done
 
     alternatives_for awk        ${PN}   75  \

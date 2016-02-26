@@ -1,0 +1,131 @@
+Upstream: yes
+Reason: allows for using lynx with busybox gzip
+
+From db700330d8951d96ea70102797041730c925eeeb Mon Sep 17 00:00:00 2001
+From: Denys Vlasenko <vda.linux@googlemail.com>
+Date: Sun, 25 Oct 2015 20:36:03 +0100
+Subject: [PATCH] tweak defconfig
+
+MONOTONIC_SYSCALL=y by default
+
+FEATURE_LAST_SMALL is gone: now FEATURE_LAST_FANCY is a "bool", not a "choice".
+
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ archival/bbunzip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/archival/bbunzip.c b/archival/bbunzip.c
+index 90aac14..548882f 100644
+--- a/archival/bbunzip.c
++++ b/archival/bbunzip.c
+@@ -220,7 +220,7 @@ char* FAST_FUNC make_new_name_generic(char *filename, const char *expected_ext)
+ 
+ //config:config UNCOMPRESS
+ //config:	bool "uncompress"
+-//config:	default n
++//config:	default n  # ancient
+ //config:	help
+ //config:	  uncompress is used to decompress archives created by compress.
+ //config:	  Not much used anymore, replaced by gzip/gunzip.
+
+From fbe50cf6bc685f7cf4fbcb9c0c425fc93575a085 Mon Sep 17 00:00:00 2001
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Date: Mon, 26 Oct 2015 23:42:32 +0200
+Subject: [PATCH] gunzip: add support for long options
+
+Add support for long options.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ archival/bbunzip.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/archival/bbunzip.c b/archival/bbunzip.c
+index 548882f..e10372e 100644
+--- a/archival/bbunzip.c
++++ b/archival/bbunzip.c
+@@ -290,6 +290,13 @@ int uncompress_main(int argc UNUSED_PARAM, char **argv)
+ //config:	  gunzip is used to decompress archives created by gzip.
+ //config:	  You can use the `-t' option to test the integrity of
+ //config:	  an archive, without decompressing it.
++//config:
++//config:config FEATURE_GUNZIP_LONG_OPTIONS
++//config:	bool "Enable long options"
++//config:	default y
++//config:	depends on GUNZIP && LONG_OPTS
++//config:	help
++//config:	  Enable use of long options.
+ 
+ //applet:IF_GUNZIP(APPLET(gunzip, BB_DIR_BIN, BB_SUID_DROP))
+ //applet:IF_GUNZIP(APPLET_ODDNAME(zcat, gunzip, BB_DIR_BIN, BB_SUID_DROP, zcat))
+@@ -321,6 +328,16 @@ char* FAST_FUNC make_new_name_gunzip(char *filename, const char *expected_ext UN
+ 	}
+ 	return filename;
+ }
++
++#if ENABLE_FEATURE_GUNZIP_LONG_OPTIONS
++static const char gunzip_longopts[] ALIGN1 =
++	"stdout\0"              No_argument       "c"
++	"to-stdout\0"           No_argument       "c"
++	"force\0"               No_argument       "f"
++	"test\0"                No_argument       "t"
++	;
++#endif
++
+ /*
+  * Linux kernel build uses gzip -d -n. We accept and ignore it.
+  * Man page says:
+@@ -337,6 +354,9 @@ char* FAST_FUNC make_new_name_gunzip(char *filename, const char *expected_ext UN
+ int gunzip_main(int argc, char **argv) MAIN_EXTERNALLY_VISIBLE;
+ int gunzip_main(int argc UNUSED_PARAM, char **argv)
+ {
++#if ENABLE_FEATURE_GUNZIP_LONG_OPTIONS
++	applet_long_options = gunzip_longopts;
++#endif
+ 	getopt32(argv, "cfvqdtn");
+ 	argv += optind;
+ 
+
+From cddc98eab7d770427941db4abae2da4ae68f1e68 Mon Sep 17 00:00:00 2001
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Date: Mon, 26 Oct 2015 23:42:33 +0200
+Subject: [PATCH] gzip: add support for --no-name long option
+
+Add support for --no-name long option. Just silently ignore it
+like the short -n option.
+
+This allows to use busybox gzip with Lynx browser.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+Signed-off-by: Denys Vlasenko <vda.linux@googlemail.com>
+---
+ archival/bbunzip.c | 1 +
+ archival/gzip.c    | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/archival/bbunzip.c b/archival/bbunzip.c
+index e10372e..b4f754e 100644
+--- a/archival/bbunzip.c
++++ b/archival/bbunzip.c
+@@ -335,6 +335,7 @@ static const char gunzip_longopts[] ALIGN1 =
+ 	"to-stdout\0"           No_argument       "c"
+ 	"force\0"               No_argument       "f"
+ 	"test\0"                No_argument       "t"
++	"no-name\0"             No_argument       "n"
+ 	;
+ #endif
+ 
+diff --git a/archival/gzip.c b/archival/gzip.c
+index c917130..f9bb3c7 100644
+--- a/archival/gzip.c
++++ b/archival/gzip.c
+@@ -2160,6 +2160,7 @@ static const char gzip_longopts[] ALIGN1 =
+ 	"quiet\0"               No_argument       "q"
+ 	"fast\0"                No_argument       "1"
+ 	"best\0"                No_argument       "9"
++	"no-name\0"             No_argument       "n"
+ 	;
+ #endif
+ 
