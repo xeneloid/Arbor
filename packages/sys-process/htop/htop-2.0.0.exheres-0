@@ -1,8 +1,6 @@
 # Copyright 2008 Alexander Færøy <ahf@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require freedesktop-desktop
-
 SUMMARY="An interactive process viewer for Linux"
 HOMEPAGE="http://hisham.hm/${PN}"
 DOWNLOADS="${HOMEPAGE}/releases/${PV}/${PNV}.tar.gz"
@@ -36,12 +34,4 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-hwloc
     --disable-static
 )
-
-pkg_postinst() {
-    freedesktop-desktop_pkg_postinst
-}
-
-pkg_postrm() {
-    freedesktop-desktop_pkg_postrm
-}
 
