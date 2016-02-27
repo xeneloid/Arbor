@@ -81,9 +81,7 @@ src_install() {
 
         insinto /usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
-        # NOTE(somasis): compatibility binary to fix wrapped_ldconfig in paludis.
-        # I have a patch for this in gerrit right now, so it shouldn't be needed
-        # once it's accepted...
+        # NOTE(somasis): fix wrapped_ldconfig in paludis.
         herebin ldconfig <<EOF
 #!/bin/sh
 true
