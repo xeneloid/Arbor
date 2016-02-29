@@ -7,8 +7,8 @@
 require freedesktop-mime
 
 SUMMARY="The Shared MIME-info Database specification"
-HOMEPAGE="http://freedesktop.org/wiki/Software/${PN}"
-DOWNLOADS="http://freedesktop.org/~hadess/${PNV}.tar.xz"
+HOMEPAGE="https://freedesktop.org/wiki/Software/${PN}"
+DOWNLOADS="https://people.freedesktop.org/~hadess/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
