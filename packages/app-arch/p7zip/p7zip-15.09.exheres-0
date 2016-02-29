@@ -36,17 +36,17 @@ src_prepare() {
     local makefile
 
     case "$(exhost --target)" in
-    x86_64-pc-linux-gnu)
+    x86_64-*)
         makefile=linux_amd64_asm
         ;;
-    i686-pc-linux-gnu)
+    i686-*)
         makefile=linux_x86_asm_gcc_4.X
         ;;
-    arm-exherbo-linux-gnueabi)
+    arm*-*)
         makefile=linux_cross_arm
         ;;
     *)
-        die "Target platform is not supported"
+        die "Don't know what makefile to use. Find the correct one and patch the exheres to use it."
         ;;
     esac
 
