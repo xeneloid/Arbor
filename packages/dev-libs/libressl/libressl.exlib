@@ -86,9 +86,12 @@ libressl_src_install() {
             /usr/$(exhost --target)/lib/lib${lib}.so{,.${!sover}}
     done
 
+    dobin "${FILES}"/c_rehash
+
     # alternatives to support multiple slots, architecture dependent files
     alternatives_for \
         _$(exhost --target)_${PN} ${SLOT} ${SLOT} \
+        /usr/$(exhost --target)/bin/c_rehash{,-${SLOT}} \
         /usr/$(exhost --target)/bin/openssl{,-${SLOT}} \
         /usr/$(exhost --target)/lib/libcrypto.a{,-${SLOT}} \
         /usr/$(exhost --target)/lib/libcrypto.la{,-${SLOT}} \
@@ -119,8 +122,6 @@ libressl_src_install() {
 
     emagicdocs
     keepdir /etc/ssl/{certs,private}
-
-    dobin "${FILES}"/c_rehash
 }
 
 libressl_pkg_postinst() {
@@ -130,6 +131,11 @@ libressl_pkg_postinst() {
     if [[ ${ROOT} == "/" ]] && has_version --root app-misc/ca-certificates; then
         update-ca-certificates || ewarn "update-ca-certificates failed."
     fi
+
+    # fix c_rehash slotting
+    for f in "${ROOT}"/usr/$(exhost --target)/bin/c_rehash;do
+        [[ -e "${f}" && ! -L "${f}" ]] && nonfatal edo rm "${f}"
+    done
 
     alternatives_pkg_postinst
 }
