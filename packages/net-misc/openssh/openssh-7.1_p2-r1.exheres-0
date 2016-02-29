@@ -8,3 +8,7 @@ require openssh [ X509_version=8.7 ]
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
+)
+

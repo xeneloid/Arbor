@@ -69,9 +69,6 @@ DEPENDENCIES="
         X? ( x11-apps/xauth )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -p0 "${FILES}"/${PN}-4.7_p1-GSSAPI-dns.patch
-)
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --sysconfdir=/etc/ssh
     --datadir=/usr/share/openssh
