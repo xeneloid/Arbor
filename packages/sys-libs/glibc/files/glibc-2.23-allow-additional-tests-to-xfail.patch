@@ -1,0 +1,105 @@
+Source: Timo Gurr <tgurr@exherbo.org>
+Upstream: No
+Reason: Allow additional tests to (x-)fail
+
+diff -Naur glibc-2.22/conform/Makefile glibc-2.22.new/conform/Makefile
+--- glibc-2.22/conform/Makefile	2015-08-05 08:42:21.000000000 +0200
++++ glibc-2.22.new/conform/Makefile	2015-08-10 10:51:15.985505099 +0200
+@@ -301,3 +301,10 @@
+ test-xfail-UNIX98/ndbm.h/linknamespace = yes
+ test-xfail-XOPEN2K/ndbm.h/linknamespace = yes
+ test-xfail-XOPEN2K8/ndbm.h/linknamespace = yes
++
++# Exherbo
++test-xfail-UNIX98/stdlib.h/linknamespace = yes
++test-xfail-XOPEN2K/stdlib.h/linknamespace = yes
++test-xfail-XOPEN2K8/stdlib.h/linknamespace = yes
++test-xfail-XPG3/stdlib.h/linknamespace = yes
++test-xfail-XPG4/stdlib.h/linknamespace = yes
+diff -Naur glibc-2.22/elf/Makefile glibc-2.22.new/elf/Makefile
+--- glibc-2.22/elf/Makefile	2015-08-05 08:42:21.000000000 +0200
++++ glibc-2.22.new/elf/Makefile	2015-08-07 11:12:53.306365679 +0200
+@@ -292,6 +292,11 @@
+ tests-special += $(objpfx)check-abi-ld.out
+ update-abi: update-abi-ld
+ 
++# Exherbo
++test-xfail-tst-ld-sse-use = yes
++test-xfail-tst-protected1a = yes
++test-xfail-tst-protected1b = yes
++
+ include ../Rules
+ 
+ ifeq (yes,$(build-shared))
+diff -Naur glibc-2.22/localedata/Makefile glibc-2.22.new/localedata/Makefile
+--- glibc-2.22/localedata/Makefile	2015-08-05 08:42:21.000000000 +0200
++++ glibc-2.22.new/localedata/Makefile	2015-08-07 11:11:37.597106785 +0200
+@@ -85,6 +85,9 @@
+ endif
+ endif
+ 
++# Exherbo
++test-xfail-sort-test = yes
++
+ # Files to install.
+ install-others := $(addprefix $(inst_i18ndir)/, \
+ 			      $(addsuffix .gz, $(charmaps)) \
+diff -Naur glibc-2.22/nptl/Makefile glibc-2.22.new/nptl/Makefile
+--- glibc-2.22/nptl/Makefile	2015-08-05 08:42:21.000000000 +0200
++++ glibc-2.22.new/nptl/Makefile	2015-08-10 10:52:19.142250402 +0200
+@@ -292,6 +292,29 @@
+ # 18435 - pthread_once hangs when init routine throws an exception.
+ test-xfail-tst-once5 = yes
+ 
++# Exherbo
++test-xfail-tst-cancel24 = yes
++test-xfail-tst-cancelx4 = yes
++test-xfail-tst-cancelx5 = yes
++test-xfail-tst-cancelx9 = yes
++test-xfail-tst-cancelx10 = yes
++test-xfail-tst-cancelx11 = yes
++test-xfail-tst-cancelx13 = yes
++test-xfail-tst-cancelx15 = yes
++test-xfail-tst-cancelx16 = yes
++test-xfail-tst-cancelx17 = yes
++test-xfail-tst-cancelx18 = yes
++test-xfail-tst-cancelx20 = yes
++test-xfail-tst-cancelx21 = yes
++test-xfail-tst-cleanupx0 = yes
++test-xfail-tst-cleanupx1 = yes
++test-xfail-tst-cleanupx3 = yes
++test-xfail-tst-cleanupx4 = yes
++test-xfail-tst-mqueue5 = yes
++test-xfail-tst-oncex3 = yes
++test-xfail-tst-oncex4 = yes
++test-xfail-tst-robust8 = yes
++
+ # Files which must not be linked with libpthread.
+ tests-nolibpthread = tst-unload
+ 
+diff -Naur glibc-2.22/rt/Makefile glibc-2.22.new/rt/Makefile
+--- glibc-2.22/rt/Makefile	2015-08-05 08:42:21.000000000 +0200
++++ glibc-2.22.new/rt/Makefile	2015-08-07 11:09:20.952809281 +0200
+@@ -55,6 +55,9 @@
+ 	 tst-cputimer1 tst-cputimer2 tst-cputimer3 \
+ 	 tst-clock2
+ 
++# Exherbo
++test-xfail-tst-mqueue8x = yes
++
+ extra-libs := librt
+ extra-libs-others := $(extra-libs)
+ 
+diff -Naur glibc-2.23/malloc/Makefile glibc-2.23.new/malloc/Makefile
+--- glibc-2.23/malloc/Makefile	2016-02-18 18:54:00.000000000 +0100
++++ glibc-2.23.new/malloc/Makefile	2016-03-01 19:19:56.189765699 +0100
+@@ -32,6 +32,9 @@
+ 	 tst-malloc-thread-fail
+ test-srcs = tst-mtrace
+ 
++# Exherbo
++test-xfail-tst-malloc-thread-exit = yes
++
+ routines = malloc morecore mcheck mtrace obstack \
+   scratch_buffer_grow scratch_buffer_grow_preserve \
+   scratch_buffer_set_array_size

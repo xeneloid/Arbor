@@ -32,6 +32,9 @@ MYOPTIONS="
     )
 "
 
+# tests are expensive
+RESTRICT=test
+
 # TODO(compnerd): we need a way to handle this sort of dependency
 #        $(for host in arm-exherbo-linux-gnueabi i686-pc-linux-gnu x86_64-pc-linux-gnu ; do
 #            echo "hosts:${host}? ( sys-devel/gcc[targets:${host}] )"
@@ -50,8 +53,12 @@ DEPENDENCIES="
         sys-libs/timezone-data[>=2015f-r1] [[ note = [ files used to collide, rebuild to change mtime ] ]]
 "
 
-# tests are expensive
-RESTRICT=test
+if ever at_least 2.23 ; then
+    DEPENDENCIES="
+        build:
+            sys-devel/gcc:*[>=4.7]
+    "
+fi
 
 ECONF_SOURCE="${WORK}"
 WORK="${WORKBASE}/build"
@@ -114,8 +121,12 @@ glibc_src_unpack() {
 
 glibc_src_prepare() {
     edo cd "${ECONF_SOURCE}"
-    edo sed -i timezone/Makefile \
-            -e '/^install-/d'
+
+    if ! ever at_least 2.23 ; then
+        edo sed -i timezone/Makefile \
+                -e '/^install-/d'
+    fi
+
     default
 }
 
@@ -160,6 +171,10 @@ EOF
         else
             myconf+=( --disable-mathvec )
         fi
+    fi
+
+    if ever at_least 2.23 ; then
+        myconf+=( --disable-timezone-tools )
     fi
 
     # TODO(compnerd) determine how to handle non-gcc compilers
