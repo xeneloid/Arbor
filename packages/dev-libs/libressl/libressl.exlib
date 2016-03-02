@@ -130,5 +130,7 @@ libressl_pkg_postinst() {
     if [[ ${ROOT} == "/" ]] && has_version --root app-misc/ca-certificates; then
         update-ca-certificates || ewarn "update-ca-certificates failed."
     fi
+
+    alternatives_pkg_postinst
 }
 
