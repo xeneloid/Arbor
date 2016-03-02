@@ -44,6 +44,7 @@ DEPENDENCIES="
         dev-python/paramiko
         dev-python/pycrypto
         dev-python/testtools[>=0.9.5]
+        dev-util/subunit
 "
 
 WORK="${WORKBASE}"/${PN}-${MY_PV}
@@ -72,7 +73,7 @@ bzr_src_test_expensive() {
 
     # Some tests expect the usual pyc compiling behaviour.
     python_enable_pyc
-    LC_ALL=C edo "${PYTHON}" bzr --no-plugins selftest \
+    LC_ALL=C edo "${PYTHON}" bzr --no-plugins selftest --parallel=fork \
         -x blackbox \
         -x per_transport \
         -x test_config \
