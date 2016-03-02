@@ -45,11 +45,12 @@ WORK="${WORKBASE}/build/$(exhost --target)/libgfortran"
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-multilib )
 
 # NOTE(compnerd) libgfortran does not have a testsuite
-RESTRICT="test"
+# but libbacktrace does
+#RESTRICT="test"
 
 libgfortran_src_unpack() {
     default
-    edo mkdir -p "${WORK}"
+    edo mkdir -p "${WORK}"{,/../libbacktrace}
 
     # TODO(compnerd) find a more elegant solution to this (potentially addressing one of the
     # upstream FIXMEs in the process)
@@ -66,6 +67,33 @@ libgfortran_src_prepare() {
     default
 }
 
+libgfortran_src_configure() {
+    if ever at_least 6.0; then
+        edo pushd ../libbacktrace
+        ECONF_SOURCE+=/../libbacktrace econf --disable-multilib
+        edo popd
+    fi
+    default
+}
+
+libgfortran_src_compile() {
+    if ever at_least 6.0; then
+        edo pushd ../libbacktrace
+        emake
+        edo popd
+    fi
+    default
+}
+
+libgfortran_src_test() {
+    if ever at_least 6.0; then
+        edo pushd ../libbacktrace
+        # btest is broken with -gdwarf-4 in CFLAGS
+        emake TESTS=stest check
+        edo popd
+    fi
+}
+
 libgfortran_src_install() {
     default
 
@@ -74,5 +102,5 @@ libgfortran_src_install() {
     slot_other_libs ${PN}.a ${PN}.la ${PN}.spec
 }
 
-export_exlib_phases src_unpack src_prepare src_install
+export_exlib_phases src_unpack src_prepare src_configure src_compile src_test src_install
 
