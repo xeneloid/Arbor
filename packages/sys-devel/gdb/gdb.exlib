@@ -3,6 +3,8 @@
 # Based in part upon 'gdb-6.7.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
+require flag-o-matic
+
 export_exlib_phases src_configure src_test_expensive src_install
 
 SUMMARY="The GNU Project Debugger"
