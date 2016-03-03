@@ -32,8 +32,8 @@ create_device_node() {
         # create it.
         nonfatal edo mknod "${ROOT}dev/${node}" c ${major} ${minor}
     fi
-    edo chown ${owner} "${ROOT}dev/${node}"
-    edo chmod ${perms} "${ROOT}dev/${node}"
+    nonfatal edo chown ${owner} "${ROOT}dev/${node}"
+    nonfatal edo chmod ${perms} "${ROOT}dev/${node}"
 }
 
 pkg_pretend() {
