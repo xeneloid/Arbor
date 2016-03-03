@@ -27,6 +27,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-install_contribs_lib.patch
     "${FILES}"/${PNV}-pkgconfig.patch
     "${FILES}"/${PNV}-CLuceneConfig.patch
+    "${FILES}"/gcc6.patch
 )
 
 CMAKE_SRC_CONFIGURE_PARAMS=(
