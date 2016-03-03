@@ -1,0 +1,17 @@
+Title: OpenSSL 1.0.2g security update
+Author: Marc-Antoine Perennou <keruspe@exherbo.org>
+Content-Type: text/plain
+Posted: 2016-03-03
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: dev-libs/openssl[<=1.0.2g]
+
+OpenSSL has released version 1.0.2g which gets rid of SSLv2 for security reasons.
+They removed all symbols for SSL2 with no soname bump, resulting in breakages not
+getting caught by fix-linkage.
+
+Before you do the update, be sure you have the latest wget tarball around in case
+it gets broken, and as soon as you've updated openssl, reinstall all the dependents
+of openssl to be sure nothing's broken.
+
+    cave resolve nothing -D openssl
