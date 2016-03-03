@@ -6,7 +6,7 @@ MY_PNV="${PN}-${MY_PV}"
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-export_exlib_phases src_test src_install
+export_exlib_phases src_prepare src_test src_install
 
 SUMMARY="An 80x86 and x86-64 assembler designed for portability and modularity"
 DESCRIPTION="
@@ -31,7 +31,9 @@ DEPENDENCIES=""
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-2.11.05-automagic-deps.patch
 )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-werror
     --without-acrodist
     --without-asciidoc
     --without-ps2pdf
@@ -40,6 +42,15 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 )
 
 WORK="${WORKBASE}/${MY_PNV}"
+
+nasm_src_prepare() {
+    # http://bugzilla.nasm.us/show_bug.cgi?id=3392340
+    edo sed \
+        -e "s:-Werror::" \
+        -i configure.in
+
+    autotools_src_prepare
+}
 
 nasm_src_test() {
     emake -C test golden
