@@ -35,11 +35,11 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-unzip.patch
-    "${FILES}"/${PNV}-unzip-regression.patch
-    "${FILES}"/${PNV}-truncate-open-mode.patch
-    "${FILES}"/${PNV}-musl.patch
-    "${FILES}"/${PNV}-gzip.patch
+    "${FILES}"/0001-unzip.patch
+    "${FILES}"/0002-unzip-regression.patch
+    "${FILES}"/0003-truncate-open-mode.patch
+    "${FILES}"/0004-musl.patch
+    "${FILES}"/0005-gzip.patch
 )
 
 bb_make() {
@@ -93,7 +93,7 @@ src_prepare() {
         -e "s:strings -af ../../busybox > foo:$(exhost --tool-prefix)strings -af ../../busybox > foo:" \
         -i testsuite/strings/strings-works-like-GNU
 
-    edo cp "${FILES}"/${PNV}-config .config
+    edo cp "${FILES}"/config .config
 
     if ! option systemd;then
         edo sed -e 's/^CONFIG_FEATURE_SYSTEMD.*/# CONFIG_FEATURE_SYSTEMD is not set/'   \
