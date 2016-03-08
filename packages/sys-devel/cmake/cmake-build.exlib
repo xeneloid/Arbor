@@ -37,13 +37,17 @@ DEPENDENCIES="
         app-arch/libarchive[>=3.0.0]
         app-arch/xz
         dev-libs/expat[>=2.0.1]
-        dev-libs/libxml2:2.0[>=2.6.28]
         net-misc/curl[>=7.16.4][ssl(+)]
         sys-libs/ncurses
         !bootstrap? ( dev-libs/jsoncpp[>=0.6.0] )
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
+# TODO: Versions >= 3.5.0 bundle KWIML (Kitware Information Macro Library,
+# https://github.com/Kitware/KWIML ). It's currently not used elsewhere,
+# handled a bit differently than other bundled dependencies and, most
+# importantly, there's no released tarball. So for now we stick with the
+# bundled version.
 
 BASH_COMPLETIONS=(
     Auxiliary/bash-completion/cmake
@@ -63,7 +67,6 @@ VIMFILE="${PN}.vim"
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-remove-test-failure-submits-via-network2.patch
     "${FILES}"/${PN}-install-cmake.m4-to-usr-share-aclocal.patch
-    "${FILES}"/${PN}-Allow-to-set-CMAKE_SHARE_DIR.patch
 )
 DEFAULT_SRC_TEST_PARAMS=( ARGS=--verbose )
 
