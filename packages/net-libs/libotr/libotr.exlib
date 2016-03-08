@@ -11,7 +11,7 @@ Off-the-Record (OTR) Messaging allows you to have private conversations over ins
   However, during a conversation, your correspondent is assured the messages he sees are authentic and unmodified.
 * Perfect forward secrecy: If you lose control of your private keys, no previous conversation is compromised.
 "
-HOMEPAGE="http://www.cypherpunks.ca/otr/"
+HOMEPAGE="https://otr.cypherpunks.ca"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
 
 LICENCES="LGPL-2.1 GPL-2"
@@ -20,6 +20,9 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        dev-libs/libgcrypt[>=1.2.0]
         dev-libs/libgpg-error
-        dev-libs/libgcrypt[>=1.2.0]"
+"
+
+DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
