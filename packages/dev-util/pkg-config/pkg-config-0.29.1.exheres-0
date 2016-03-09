@@ -4,8 +4,8 @@
 require alternatives
 
 SUMMARY="Helper tool for compiling applications and libraries"
-HOMEPAGE="http://www.freedesktop.org/wiki/Software/${PN}"
-DOWNLOADS="http://pkgconfig.freedesktop.org/releases/${PNV}.tar.gz"
+HOMEPAGE="https://www.freedesktop.org/wiki/Software/${PN}"
+DOWNLOADS="https://${PN}.freedesktop.org/releases/${PNV}.tar.gz"
 
 CROSS_COMPILE_TARGETS="
     arm-unknown-linux-gnueabi
