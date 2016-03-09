@@ -1,0 +1,24 @@
+Title: Tidy version scheme changed
+Author: Kylie McClain <somasis@exherbo.org>
+Content-Type: text/plain
+Posted: 2016-03-10
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: app-text/tidy[>=20000000]
+Display-If-Installed: app-text/tidy-html5
+
+app-text/tidy has changed its versioning scheme, due to the upstream now having
+new maintainers, with new releases as opposed to the CVS snapshots that have
+been used for years.
+
+Because of this, upon upgrading, you will be prompted to downgrade app-text/tidy
+to 5.1.25, because it appears to be a lesser version than the date scheme being
+used previously.
+
+To deal with this:
+
+    cave resolve -1 app-text/tidy --permit-downgrade app-text/tidy
+
+In addition, if you have app-text/tidy-html5::alip installed, you'll be asked to
+remove it before upgrading app-text/tidy.
+
