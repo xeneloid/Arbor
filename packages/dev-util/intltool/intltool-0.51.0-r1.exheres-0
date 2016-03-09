@@ -4,7 +4,7 @@
 require launchpad [ branch=trunk ]
 
 SUMMARY="Tools for extracting translatable strings from source files"
-HOMEPAGE+=" http://www.freedesktop.org/wiki/Software/${PN}"
+HOMEPAGE+=" https://www.freedesktop.org/wiki/Software/${PN}"
 
 REMOTE_IDS+=" freecode:${PN}"
 
@@ -18,4 +18,8 @@ DEPENDENCIES="
         dev-perl/XML-Parser
         dev-lang/perl:*[>=5.8.1]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-0.51.0-perl-5.22.patch
+)
 
