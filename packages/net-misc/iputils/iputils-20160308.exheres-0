@@ -4,14 +4,15 @@
 require github [ tag="s${PV}" ]
 
 SUMMARY="Small useful utilities for networking"
-HOMEPAGE="http://www.skbuff.net/${PN}"
+HOMEPAGE+=" http://www.linuxfoundation.org/collaborate/workgroups/networking/${PN}"
 LICENCES="BSD-4 GPL-2"
 DOWNLOADS+=" https://dev.gentoo.org/~polynomial-c/${PN}-s${PV}-manpages.tar.xz"
 
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
-    caps idn
+    caps
+    idn
     ( providers: gcrypt libressl nettle openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -45,10 +46,12 @@ src_compile() {
 src_install() {
     dobin arping clockdiff ipg ping rarpd rdisc tftpd tracepath tracepath6
     edo chmod +s "${IMAGE}"/usr/$(exhost --target)/bin/ping
+
     doman doc/*.8
     edo rm "${IMAGE}"/usr/share/man/man8/traceroute6.8
     edo ln -s ping "${IMAGE}"/usr/$(exhost --target)/bin/ping6
     edo ln -s ping.8 "${IMAGE}"/usr/share/man/man8/ping6.8
+
     emagicdocs
 }
 
