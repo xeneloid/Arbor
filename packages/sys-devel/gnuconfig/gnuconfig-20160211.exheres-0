@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-commit=7ac240afb7e4cc6c93a32dfcb6c39893988b5749
+commit=bb8fb4029563dcd564ece143ce558ea44c720a15
 WORK=${WORKBASE}/config-${commit:0:7}
 
 SUMMARY="GNU config.guess and config.sub scripts"
