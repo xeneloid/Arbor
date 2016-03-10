@@ -3,7 +3,7 @@
 #   Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
 
 SUMMARY="C programming interface to determine the call-chain of a program"
 DESCRIPTION="
