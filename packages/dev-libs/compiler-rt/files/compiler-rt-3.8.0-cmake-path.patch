@@ -1,4 +1,4 @@
-Upstream: No
+Upstream: Yes
 Reason: We install the arch-dependant cmake files to lib instead of share
 
 From c7bd4be475835e653a27a9725128a3eae067ad35 Mon Sep 17 00:00:00 2001
