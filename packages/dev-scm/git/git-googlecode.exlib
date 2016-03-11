@@ -17,7 +17,7 @@ DESCRIPTION="
 Git is a fast, scalable, distributed revision control system with an unusually
 rich command set that provides both high-level operations and full access to internals
 "
-HOMEPAGE="http://git-scm.com/"
+HOMEPAGE="https://git-scm.com/"
 DOWNLOADS="mirror://kernel/software/scm/git/${PNV}.tar.xz"
 exparam -b htmldocs && DOWNLOADS+=" doc? ( mirror://kernel/software/scm/${PN}/${PN}-htmldocs-${PV}.tar.xz )"
 exparam -b manpages && DOWNLOADS+=" mirror://kernel/software/scm/${PN}/${PN}-manpages-${PV}.tar.xz"
