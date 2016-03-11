@@ -1,4 +1,4 @@
-Upstream: No. This is the easy way out for now, but clang's build system could be improved.
+Upstream: Yes.
 Reason: Fixes for multiarch
 
 From 4a8126ab082bca33c29b71cab52b7ae565a2c670 Mon Sep 17 00:00:00 2001

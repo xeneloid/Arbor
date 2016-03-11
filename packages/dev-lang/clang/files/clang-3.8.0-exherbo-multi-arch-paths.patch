@@ -1,0 +1,343 @@
+Upstream: No, this is Exherbo specific
+Reason: Adjust the loader paths to our multiarch layout
+
+From 135d92e5fa391c5b94e9d64d000f101d6eaec579 Mon Sep 17 00:00:00 2001
+From: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date: Fri, 11 Mar 2016 22:40:47 +0100
+Subject: [PATCH] exherbo multi-arch paths
+
+---
+ lib/Driver/Tools.cpp       | 16 ++++++++--------
+ test/Driver/coverage-ld.c  |  6 +++---
+ test/Driver/instrprof-ld.c | 24 ++++++++++++------------
+ test/Driver/sanitizer-ld.c | 28 ++++++++++++++--------------
+ 4 files changed, 37 insertions(+), 37 deletions(-)
+
+diff --git a/lib/Driver/Tools.cpp b/lib/Driver/Tools.cpp
+index b7ac24f..2df8e4f 100644
+--- a/lib/Driver/Tools.cpp
++++ b/lib/Driver/Tools.cpp
+@@ -8634,7 +8634,7 @@ static std::string getLinuxDynamicLinker(const ArgList &Args,
+       return "/system/bin/linker";
+   } else if (Arch == llvm::Triple::x86 || Arch == llvm::Triple::sparc ||
+              Arch == llvm::Triple::sparcel)
+-    return "/lib/ld-linux.so.2";
++    return "/usr/i686-pc-linux-gnu/lib/ld-linux.so.2";
+   else if (Arch == llvm::Triple::aarch64)
+     return "/lib/ld-linux-aarch64.so.1";
+   else if (Arch == llvm::Triple::aarch64_be)
+@@ -8642,9 +8642,9 @@ static std::string getLinuxDynamicLinker(const ArgList &Args,
+   else if (Arch == llvm::Triple::arm || Arch == llvm::Triple::thumb) {
+     if (ToolChain.getTriple().getEnvironment() == llvm::Triple::GNUEABIHF ||
+         arm::getARMFloatABI(ToolChain, Args) == arm::FloatABI::Hard)
+-      return "/lib/ld-linux-armhf.so.3";
++      return "/usr/@@ARMHF_TARGET@@/lib/ld-linux-armhf.so.3";
+     else
+-      return "/lib/ld-linux.so.3";
++      return "/usr/@@ARM_TARGET@@/lib/ld-linux.so.3";
+   } else if (Arch == llvm::Triple::armeb || Arch == llvm::Triple::thumbeb) {
+     // TODO: check which dynamic linker name.
+     if (ToolChain.getTriple().getEnvironment() == llvm::Triple::GNUEABIHF ||
+@@ -8669,11 +8669,11 @@ static std::string getLinuxDynamicLinker(const ArgList &Args,
+ 
+     return (LibDir + "/" + LibName).str();
+   } else if (Arch == llvm::Triple::ppc)
+-    return "/lib/ld.so.1";
++    return "/usr/powerpc64-unknown-linux-gnueabi/lib/ld.so.1";
+   else if (Arch == llvm::Triple::ppc64) {
+     if (ppc::hasPPCAbiArg(Args, "elfv2"))
+-      return "/lib64/ld64.so.2";
+-    return "/lib64/ld64.so.1";
++      return "/usr/powerpc64-unknown-linux-gnueabi/lib/ld64.so.1";
++    return "/usr/powerpc64-unknown-linux-gnueabi/lib/ld.so.1";
+   } else if (Arch == llvm::Triple::ppc64le) {
+     if (ppc::hasPPCAbiArg(Args, "elfv1"))
+       return "/lib64/ld64.so.1";
+@@ -8684,9 +8684,9 @@ static std::string getLinuxDynamicLinker(const ArgList &Args,
+     return "/lib64/ld-linux.so.2";
+   else if (Arch == llvm::Triple::x86_64 &&
+            ToolChain.getTriple().getEnvironment() == llvm::Triple::GNUX32)
+-    return "/libx32/ld-linux-x32.so.2";
++    return "/usr/x86_64-pc-linux-gnu/lib/ld-linux-x32.so.2";
+   else
+-    return "/lib64/ld-linux-x86-64.so.2";
++    return "/usr/x86_64-pc-linux-gnu/lib/ld-linux-x86-64.so.2";
+ }
+ 
+ static void AddRunTimeLibs(const ToolChain &TC, const Driver &D,
+diff --git a/test/Driver/coverage-ld.c b/test/Driver/coverage-ld.c
+index 1eda5f1..159ced8 100644
+--- a/test/Driver/coverage-ld.c
++++ b/test/Driver/coverage-ld.c
+@@ -6,7 +6,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-I386 %s
+ //
+-// CHECK-LINUX-I386: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-I386: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-I386: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-i386.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -15,7 +15,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-X86-64 %s
+ //
+-// CHECK-LINUX-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-x86_64.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -24,7 +24,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_freebsd64_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-FREEBSD-X86-64 %s
+ //
+-// CHECK-FREEBSD-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-FREEBSD-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-FREEBSD-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}freebsd{{/|\\\\}}libclang_rt.profile-x86_64.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+diff --git a/test/Driver/instrprof-ld.c b/test/Driver/instrprof-ld.c
+index 05f65d6..feb097b 100644
+--- a/test/Driver/instrprof-ld.c
++++ b/test/Driver/instrprof-ld.c
+@@ -6,7 +6,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-I386 %s
+ //
+-// CHECK-LINUX-I386: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-I386: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-I386: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-i386.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -15,7 +15,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-X86-64 %s
+ //
+-// CHECK-LINUX-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-x86_64.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -24,7 +24,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-NOSTDLIB-X86-64 %s
+ //
+-// CHECK-LINUX-NOSTDLIB-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-NOSTDLIB-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-NOSTDLIB-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-x86_64.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -33,7 +33,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_freebsd64_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-FREEBSD-X86-64 %s
+ //
+-// CHECK-FREEBSD-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-FREEBSD-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-FREEBSD-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}freebsd{{/|\\\\}}libclang_rt.profile-x86_64.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -43,7 +43,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-I386-SHARED %s
+ //
+-// CHECK-LINUX-I386-SHARED: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-I386-SHARED: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-I386-SHARED: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-i386.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -53,7 +53,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LINUX-X86-64-SHARED %s
+ //
+-// CHECK-LINUX-X86-64-SHARED: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LINUX-X86-64-SHARED: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LINUX-X86-64-SHARED: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-x86_64.a" {{.*}} "-lc"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -63,7 +63,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_freebsd64_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-FREEBSD-X86-64-SHARED %s
+ //
+-// CHECK-FREEBSD-X86-64-SHARED: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-FREEBSD-X86-64-SHARED: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-FREEBSD-X86-64-SHARED: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}freebsd{{/|\\\\}}libclang_rt.profile-x86_64.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -71,7 +71,7 @@
+ // RUN:     -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   | FileCheck --check-prefix=CHECK-DARWIN-X86-64 %s
+ //
+-// CHECK-DARWIN-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-DARWIN-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-DARWIN-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_osx.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -79,7 +79,7 @@
+ // RUN:     -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   | FileCheck --check-prefix=CHECK-DARWIN-NOSTDLIB-X86-64 %s
+ //
+-// CHECK-DARWIN-NOSTDLIB-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-DARWIN-NOSTDLIB-X86-64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-DARWIN-NOSTDLIB-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_osx.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -87,7 +87,7 @@
+ // RUN:     -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   | FileCheck --check-prefix=CHECK-DARWIN-ARM64 %s
+ //
+-// CHECK-DARWIN-ARM64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-DARWIN-ARM64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-DARWIN-ARM64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_ios.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -95,7 +95,7 @@
+ // RUN:     -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   | FileCheck --check-prefix=CHECK-TVOS-ARMV7 %s
+ //
+-// CHECK-TVOS-ARMV7: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-TVOS-ARMV7: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-TVOS-ARMV7: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_tvos.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -103,7 +103,7 @@
+ // RUN:     -resource-dir=%S/Inputs/resource_dir \
+ // RUN:   | FileCheck --check-prefix=CHECK-WATCHOS-ARMV7 %s
+ //
+-// CHECK-WATCHOS-ARMV7: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-WATCHOS-ARMV7: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-WATCHOS-ARMV7: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_watchos.a"
+ //
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+diff --git a/test/Driver/sanitizer-ld.c b/test/Driver/sanitizer-ld.c
+index 0e9c596..d612193 100644
+--- a/test/Driver/sanitizer-ld.c
++++ b/test/Driver/sanitizer-ld.c
+@@ -6,7 +6,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX %s
+ //
+-// CHECK-ASAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-ASAN-LINUX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-ASAN-LINUX-NOT: "-lc"
+ // CHECK-ASAN-LINUX: libclang_rt.asan-i386.a"
+ // CHECK-ASAN-LINUX-NOT: "-export-dynamic"
+@@ -22,7 +22,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-SHARED-ASAN-LINUX %s
+ //
+-// CHECK-SHARED-ASAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-SHARED-ASAN-LINUX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-SHARED-ASAN-LINUX-NOT: "-lc"
+ // CHECK-SHARED-ASAN-LINUX-NOT: libclang_rt.asan-i386.a"
+ // CHECK-SHARED-ASAN-LINUX: libclang_rt.asan-i386.so"
+@@ -39,7 +39,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-DSO-SHARED-ASAN-LINUX %s
+ //
+-// CHECK-DSO-SHARED-ASAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-DSO-SHARED-ASAN-LINUX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-DSO-SHARED-ASAN-LINUX-NOT: "-lc"
+ // CHECK-DSO-SHARED-ASAN-LINUX-NOT: libclang_rt.asan-i386.a"
+ // CHECK-DSO-SHARED-ASAN-LINUX-NOT: "libclang_rt.asan-preinit-i386.a"
+@@ -56,7 +56,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_freebsd_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-ASAN-FREEBSD %s
+ //
+-// CHECK-ASAN-FREEBSD: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-ASAN-FREEBSD: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-ASAN-FREEBSD-NOT: "-lc"
+ // CHECK-ASAN-FREEBSD-NOT: libclang_rt.asan_cxx
+ // CHECK-ASAN-FREEBSD: freebsd{{/|\\+}}libclang_rt.asan-i386.a"
+@@ -72,7 +72,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_freebsd_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-ASAN-FREEBSD-LDL %s
+ //
+-// CHECK-ASAN-FREEBSD-LDL: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-ASAN-FREEBSD-LDL: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-ASAN-FREEBSD-LDL-NOT: "-ldl"
+ 
+ // RUN: %clangxx -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -81,7 +81,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX-CXX %s
+ //
+-// CHECK-ASAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-ASAN-LINUX-CXX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-ASAN-LINUX-CXX-NOT: "-lc"
+ // CHECK-ASAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+ // CHECK-ASAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan_cxx-i386.a" "-no-whole-archive"
+@@ -97,7 +97,7 @@
+ // RUN:     -lstdc++ -static 2>&1 \
+ // RUN:   | FileCheck --check-prefix=CHECK-ASAN-LINUX-CXX-STATIC %s
+ //
+-// CHECK-ASAN-LINUX-CXX-STATIC: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-ASAN-LINUX-CXX-STATIC: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-ASAN-LINUX-CXX-STATIC-NOT: stdc++
+ // CHECK-ASAN-LINUX-CXX-STATIC: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
+ // CHECK-ASAN-LINUX-CXX-STATIC: stdc++
+@@ -157,7 +157,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-TSAN-LINUX-CXX %s
+ //
+-// CHECK-TSAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-TSAN-LINUX-CXX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-TSAN-LINUX-CXX-NOT: stdc++
+ // CHECK-TSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.tsan-x86_64.a" "-no-whole-archive"
+ // CHECK-TSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.tsan-x86_64.a.syms"
+@@ -175,7 +175,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-MSAN-LINUX-CXX %s
+ //
+-// CHECK-MSAN-LINUX-CXX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-MSAN-LINUX-CXX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-MSAN-LINUX-CXX-NOT: stdc++
+ // CHECK-MSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.msan-x86_64.a" "-no-whole-archive"
+ // CHECK-MSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.msan-x86_64.a.syms"
+@@ -276,7 +276,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-LSAN-LINUX %s
+ //
+-// CHECK-LSAN-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-LSAN-LINUX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-LSAN-LINUX-NOT: "-lc"
+ // CHECK-LSAN-LINUX: libclang_rt.lsan-x86_64.a"
+ // CHECK-LSAN-LINUX: "-lpthread"
+@@ -339,7 +339,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-LINUX %s
+ //
+-// CHECK-SAFESTACK-LINUX: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-SAFESTACK-LINUX: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-SAFESTACK-LINUX-NOT: "-lc"
+ // CHECK-SAFESTACK-LINUX: libclang_rt.safestack-x86_64.a"
+ // CHECK-SAFESTACK-LINUX: "-lpthread"
+@@ -350,7 +350,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_android_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-ARM %s
+ //
+-// CHECK-SAFESTACK-ANDROID-ARM: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-SAFESTACK-ANDROID-ARM: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-SAFESTACK-ANDROID-ARM-NOT: libclang_rt.safestack
+ 
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o -shared 2>&1 \
+@@ -358,7 +358,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_android_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-ARM %s
+ //
+-// CHECK-SAFESTACK-SHARED-ANDROID-ARM: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-SAFESTACK-SHARED-ANDROID-ARM: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-SAFESTACK-SHARED-ANDROID-ARM-NOT: libclang_rt.safestack
+ 
+ // RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+@@ -366,7 +366,7 @@
+ // RUN:     --sysroot=%S/Inputs/basic_android_tree \
+ // RUN:   | FileCheck --check-prefix=CHECK-SAFESTACK-ANDROID-AARCH64 %s
+ //
+-// CHECK-SAFESTACK-ANDROID-AARCH64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
++// CHECK-SAFESTACK-ANDROID-AARCH64: "{{(.*[^.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+ // CHECK-SAFESTACK-ANDROID-AARCH64-NOT: libclang_rt.safestack
+ 
+ // RUN: %clang -fsanitize=undefined %s -### -o %t.o 2>&1 \
+-- 
+2.7.2
+
