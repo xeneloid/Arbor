@@ -65,10 +65,6 @@ llvm_src_configure() {
         -DSUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG:BOOL=NO
     )
 
-    if ever is_scm; then
-        args+=( --hates=CMAKE_BUILD_TYPE )
-    fi
-
     ecmake "${args[@]}"
 }
 
