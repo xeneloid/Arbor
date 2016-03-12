@@ -9,7 +9,7 @@ myexparam pn=${MY_PN:-${PN}}
 myexparam pv=${MY_PV:-${PV}}
 myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
-HOMEPAGE="https://www.gnu.org/software/${MY_PN:-${PN}}/"
+HOMEPAGE="https://www.gnu.org/software/$(exparam pn)/"
 if exparam -b alpha; then
     DOWNLOADS="ftp://alpha.gnu.org/pub/gnu/"
 else
