@@ -1,8 +1,0 @@
-# Copyright 2012 Elias Pipping <pipping@exherbo.org>
-# Copyright 2014 Pierre Lejeune <superheron@gmail.com>
-# Distributed under the terms of the GNU General Public License v2
-
-require llvm
-
-PLATFORMS="~amd64 ~x86"
-

@@ -44,11 +44,9 @@ llvm_src_prepare() {
     # These tests fail if gcc is not in path
     edo sed -e "s/bugpoint/\0 --gcc=${CC}/" -i test/BugPoint/*.ll
 
-    if ever at_least 3.8.0; then
-        expatch "${FILES}"/0001-Allow-CMAKE_BUILD_TYPE-None.patch
-    fi
-
+    expatch "${FILES}"/0001-Allow-CMAKE_BUILD_TYPE-None.patch
     expatch "${FILES}"/${PN}-fix-llvm-config.patch
+
     if ! ever is_scm; then
         expatch "${FILES}"/${PNV}-Install-cmake-files-to-lib-cmake-llvm.patch
     fi
