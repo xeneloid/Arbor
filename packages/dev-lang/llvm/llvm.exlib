@@ -49,10 +49,8 @@ llvm_src_prepare() {
     fi
 
     expatch "${FILES}"/${PN}-fix-llvm-config.patch
-    if ever at_least 3.8.0 ; then
+    if ! ever is_scm; then
         expatch "${FILES}"/${PNV}-Install-cmake-files-to-lib-cmake-llvm.patch
-    else
-        expatch "${FILES}"/0001-Install-cmake-files-to-lib-cmake-llvm.patch
     fi
 
     default

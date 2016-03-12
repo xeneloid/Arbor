@@ -1,4 +1,4 @@
-Upstream: No. This is the easy way out for now, but llvm's build system could be improved.
+Upstream: Yes.
 Reason: Fixes for multiarch
 
 From f9400f3011b8139ce8be51831cde0c51e0927baf Mon Sep 17 00:00:00 2001
