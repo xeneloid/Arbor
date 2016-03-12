@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge [ suffix=tar.gz ]
+require sourceforge [ suffix=tar.bz2 ]
 
 SUMMARY="Stream-oriented XML parser written in C"
 
@@ -11,8 +11,6 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="parts: binaries development documentation libraries"
 
 DEPENDENCIES=""
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-2.1.0-mozilla-sanity-check-size.patch )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
