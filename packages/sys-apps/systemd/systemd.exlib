@@ -51,7 +51,6 @@ MYOPTIONS="
     gnutls [[ description = [ Enable certificate support for journal-remote, journal-gatewayd & friends ] ]]
     idn  [[ description = [ Support Internationalised Domain Names in systemd-resolved ] ]]
     journal-gateway [[ description = [ Enable journal gateway daemon to access the journal via HTTP and JSON ] ]]
-    kdbus [[ description = [ Use the kernel D-Bus implementation by default ] ]]
     libcurl [[ description = [ Build systemd-importd and support pushing journal data to a remote system ] ]]
     lz4 [[ description = [ Use LZ4 compression for longer journal fields ] ]]
     man-index [[ description = [ Build the man page index ] ]]
@@ -275,6 +274,7 @@ systemd_src_configure() {
         --disable-audit
         --disable-apparmor
         --disable-ima
+        --disable-kdbus
         --disable-selinux
         --disable-smack
         --with-certificate-root=/etc/ssl
@@ -300,7 +300,6 @@ systemd_src_configure() {
         $(option_enable gnutls)
         $(option_enable idn libidn)
         $(option_enable journal-gateway microhttpd)
-        $(option_enable kdbus)
         $(option_enable libcurl)
         $(option_enable lz4)
         $(option_enable nat libiptc)
