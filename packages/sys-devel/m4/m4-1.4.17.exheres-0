@@ -27,6 +27,9 @@ src_prepare() {
     edo sed -e '/^AR = /c AR = @host@-ar'  \
             -i "${WORK}/lib/Makefile.in"    \
             -i "${WORK}/tests/Makefile.in"
+
+    # http://git.savannah.gnu.org/cgit/gnulib.git/commit/build-aux/update-copyright?h=841d0dcfa8103235836a1aeb0c1ad657f43ade85
+    edo sed -i -e '/^my [$]circle_c_re =/s/{}/\\{}/' build-aux/update-copyright
 }
 
 src_install() {
