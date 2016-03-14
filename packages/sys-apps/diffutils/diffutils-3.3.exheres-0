@@ -26,6 +26,10 @@ DEFAULT_SRC_TEST_PARAMS=( AR="${AR}" )
 src_prepare() {
     # This tests hangs for 10 minutes using sydbox
     edo sed -i -e 's/10m/0/g' tests/help-version
+
+    # http://git.savannah.gnu.org/cgit/gnulib.git/commit/build-aux/update-copyright?h=841d0dcfa8103235836a1aeb0c1ad657f43ade85
+    edo sed -i -e '/^my [$]circle_c_re =/s/{}/\\{}/' build-aux/update-copyright
+
     default
 }
 
