@@ -105,7 +105,7 @@ src_install() {
         edo cd "${WORKBASE}/build/${target}"
         emake -j1 DESTDIR="${IMAGE}" install
 
-        alternatives+=( /usr/$(exhost --target)/bin/${target}-${PN} ${target}-${PN}.pkg-config )
+        alternatives+=( /usr/$(exhost --target)/bin/${target}-pkg-config ${target}-pkg-config.${PN} )
     done
 
     alternatives_for "${alternatives[@]}"
