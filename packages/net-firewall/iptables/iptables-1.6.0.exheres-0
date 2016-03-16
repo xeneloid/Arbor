@@ -5,3 +5,7 @@ require iptables
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/bdf27a0985bc4677196c76d52e4be1254ec841bd.patch
+)
+
