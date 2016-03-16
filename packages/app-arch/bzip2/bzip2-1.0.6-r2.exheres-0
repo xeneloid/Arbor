@@ -101,3 +101,13 @@ src_install() {
     [[ "${#alternatives[@]}" -gt 0 ]] && alternatives_for "bzip2" "${PN}" "100" "${alternatives[@]}"
 }
 
+pkg_postinst() {
+    if [[ -f /usr/share/man/man1/bzip2.1 && ! -L /usr/share/man/man1/bzip2.1 ]]; then
+        echo "rm /usr/share/man/man1/bzip2.1" &&
+            rm /usr/share/man/man1/bzip2.1 ||
+            ewarn "Failed to rm /usr/share/man/man1/bzip2.1"
+    fi
+
+    alternatives_pkg_postinst
+}
+
