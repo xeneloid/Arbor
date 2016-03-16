@@ -11,6 +11,14 @@ PLATFORMS="~amd64 ~x86"
 
 BUGS_TO="flocke@shadowice.org"
 
+DEPENDENCIES="
+    run:
+        !gnome-desktop/gnome-common[<3.18.0-r1] [[
+            description = [ File conflicts ]
+            resolution = upgrade-blocked-before
+        ]]
+"
+
 src_install() {
     default
 
