@@ -6,3 +6,7 @@ require git-googlecode
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PN}-CVE-2016-2315_2324.patch
+)
+
