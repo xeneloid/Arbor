@@ -1,4 +1,4 @@
-# Copyright 2013-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2013-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="ipset is used to maintain IP sets in the kernel"
@@ -16,7 +16,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64"
-MYOPTIONS=""
+MYOPTIONS="bash-completion"
 
 DEPENDENCIES="
     build+run:
@@ -26,5 +26,9 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --without-kmod
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    "bash-completion bashcompl"
 )
 
