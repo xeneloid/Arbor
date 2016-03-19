@@ -3,7 +3,7 @@
 
 # Need autotools for AC_FUNC_MALLOC, AC_FUNC_REALLOC
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
-require sourceforge [ suffix=tar.xz ]
+require github [ user=westes tag=v${PV} ]
 
 SUMMARY="Tool for generating lexical scanners"
 
@@ -19,7 +19,6 @@ DEPENDENCIES="
         sys-devel/m4[>=1.4]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-Commented-in-C-style-in-skeleton-fixed-sf-195.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
@@ -27,7 +26,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_COMPILE_PARAMS=( AR="${AR}" )
 DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
-AT_M4DIR=( m4 )
+src_prepare() {
+    edo ./autogen.sh
+}
 
 src_test() {
     # make check wants to rebuild this just because of autoreconf
