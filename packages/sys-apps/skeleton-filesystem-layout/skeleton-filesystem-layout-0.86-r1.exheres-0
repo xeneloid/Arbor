@@ -50,7 +50,8 @@ src_install() {
     insinto /etc
     doins -r *
     edo mkdir -p "${IMAGE}"/usr/$(exhost --target)/lib
-    edo mv -v "${IMAGE}"/etc/os-release "${IMAGE}"/usr/$(exhost --target)/lib
+    edo mv "${IMAGE}"/etc/os-release "${IMAGE}"/usr/$(exhost --target)/lib
+    edo ln -s ../usr/host/lib/os-release "${IMAGE}"/etc/os-release
 }
 
 pkg_preinst() {
@@ -68,7 +69,7 @@ pkg_postinst() {
     # create directory structure. for readability leave out /usr and /var
     # structures and create them separately.
     for x in boot dev{,/pts} etc home mnt media opt proc run; do
-            create_root_owned_directory "${ROOT}${x}"
+        create_root_owned_directory "${ROOT}${x}"
     done
     edo touch "${ROOT}"/opt/.keep
     if [[ ! -e ${ROOT}/sys ]]; then
