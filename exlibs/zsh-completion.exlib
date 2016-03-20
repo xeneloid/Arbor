@@ -22,7 +22,7 @@ dozshcompletion() {
     fi
 }
 
-install-zsh-completions() {
+zsh-completion_src_install() {
     illegal_in_global_scope
 
     local c
@@ -30,4 +30,11 @@ install-zsh-completions() {
         dozshcompletion ${c}
     done
 }
+
+# Kept for backward compatibility
+install-zsh-completions() {
+    zsh-completion_src_install
+}
+
+export_exlib_phases src_install
 
