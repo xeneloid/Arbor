@@ -35,12 +35,13 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-unzip.patch
-    "${FILES}"/0002-unzip-regression.patch
-    "${FILES}"/0003-truncate-open-mode.patch
-    "${FILES}"/0004-musl.patch
-    "${FILES}"/0005-gzip.patch
+    "${FILES}"/4d76d9b69503b1ad61cf857d83cb8c4d5d92465b.patch
+    "${FILES}"/db700330d8951d96ea70102797041730c925eeeb.patch
+    "${FILES}"/3a76bb5136d05f94ee62e377aa723e63444912c7.patch
+    "${FILES}"/3c4de6e36c4d387a648622e7b828a05f2b1b47e6.patch
+    "${FILES}"/4194c2875310c13ee3ca2bb0e1aea6a2ae67c55a.patch
 )
+
 
 bb_make() {
     local make_options=(
