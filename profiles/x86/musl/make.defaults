@@ -8,6 +8,4 @@ FILESYSTEM_LAYOUT="cross"
 # these variables may be overridden by the user
 
 CHOST="i686-pc-linux-musl"
-CFLAGS="-pipe -Os -g"
-CXXFLAGS="-pipe -Os -g"
 

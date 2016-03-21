@@ -38,3 +38,17 @@ MULTIBUILD_PYTHON_ABIS_3_1_PROFILE_PYTHON="python3.1"
 
 XDG_RUNTIME_DIR=${TEMP}
 
+# (C|CXX)FLAGS which are to be used by default should be listed here
+# Don't use generic flags, use -march=native and such whenever possible
+armv7_unknown_linux_gnueabi_CFLAGS="-march=native -O2 -pipe"
+armv7_unknown_linux_gnueabi_CXXFLAGS="-march=native -O2 -pipe"
+armv7_unknown_linux_gnueabihf_CFLAGS="-march=native -mfloat-abi=hard -O2 -pipe"
+armv7_unknown_linux_gnueabihf_CXXFLAGS="-march=native -mfloat-abi=hard -O2 -pipe"
+i686_pc_linux_gnu_CFLAGS="-march=native -O2 -pipe"
+i686_pc_linux_gnu_CXXFLAGS="-march=native -O2 -pipe"
+i686_pc_linux_musl_CFLAGS="-march=native -O2 -pipe"
+i686_pc_linux_musl_CXXFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_gnu_CFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_gnu_CXXFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_musl_CFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_musl_CXXFLAGS="-march=native -O2 -pipe"
