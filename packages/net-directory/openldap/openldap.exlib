@@ -3,7 +3,7 @@
 
 require systemd-service [ systemd_files=[ "slapd.service" ] ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ]
-export_exlib_phases src_prepare src_compile src_install src_test_expensive
+export_exlib_phases src_prepare src_configure src_compile src_install src_test_expensive
 
 SUMMARY="An open source implementation of the Lightweight Directory Access Protocol"
 DESCRIPTION="
@@ -69,6 +69,11 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-tls=openssl # openssl/gnutls
     --with-mp=gmp
 
+    # Whether select yields when using pthreads
+    # Cannot be tested with cross; is always yes
+    # for both glibc and musl libc.
+    --with-yielding_select=yes
+
     --enable-slapd
     --enable-spasswd
 
@@ -112,6 +117,16 @@ openldap_src_prepare() {
     edo rm -rf libraries/liblmdb
 
     eautoconf
+}
+
+openldap_src_configure() {
+    default
+
+# Work around OpenLDAP's crap cross-compilation support
+cat >> include/portable.h <<'OVERRIDES'
+#define URANDOM_DEVICE "/dev/urandom"
+#undef NEED_MEMCMP_REPLACEMENT
+OVERRIDES
 }
 
 openldap_src_compile() {
