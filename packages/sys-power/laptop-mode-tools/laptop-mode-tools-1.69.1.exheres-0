@@ -12,12 +12,9 @@ life of your laptop. It does this by making disk write activity
 It causes a significant improvement in battery life (for usage patterns
 that allow it).
 "
-HOMEPAGE="http://samwel.tk/laptop_mode"
 
 BUGS_TO="pioto@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
-
-UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/changelog"
 
 LICENCES="GPL-2"
 SLOT="0"
