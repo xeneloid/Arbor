@@ -40,6 +40,10 @@ DEPENDENCIES="
         zsh-completion? ( app-shells/zsh )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-libressl.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{cookies,crypto-auth,largefile,manual,proxy,rt,tls-srp}
     --enable-{dict,file,ftp,gopher,http,ipv6,imap,pop3,rtsp,smb,smtp,telnet,tftp,unix-sockets}
