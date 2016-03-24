@@ -365,6 +365,22 @@ gcc_src_install() {
         edo popd
     done
 
+    edo pushd "${IMAGE}"
+    for tool in usr/"${CHOST}"/bin/"${CHOST}"-*-${SLOT}; do
+        [[ ${tool} =~ ^.*/${CHOST}-(.*)-${SLOT}$ ]] && local name=${BASH_REMATCH[1]}
+        dosym "${CHOST}-${name}-${SLOT}" /usr/"${CHOST}"/bin/${name}-${SLOT}
+        dobanned ${name}-${SLOT}
+        alternatives+=(
+            "${BANNEDDIR}"/${name}       ${name}-${SLOT}
+            /usr/"${CHOST}"/bin/${name}  ${name}-${SLOT}
+        )
+        if [[ -e usr/share/man/man1/${CHOST}-${name}-${SLOT}.1 ]]; then
+            dosym "${CHOST}-${name}-${SLOT}.1"    /usr/share/man/man1/${name}-${SLOT}.1
+            alternatives+=( /usr/share/man/man1/${name}.1  ${name}-${SLOT}.1 )
+        fi
+    done
+    edo popd
+
     alternatives_for gcc ${SLOT} ${SLOT} "${alternatives[@]}"
 
     edo find "${IMAGE}" -depth -type d -empty -delete
