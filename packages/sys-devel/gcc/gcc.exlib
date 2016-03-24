@@ -288,6 +288,10 @@ gcc_src_install() {
 
         edo pushd "${IMAGE}"
 
+        # c++ is provided by eclectic-gcc
+        nonfatal edo rm usr/"${CHOST}"/bin/{,${target}-}c++-${SLOT}
+        nonfatal edo rm usr/share/man/man1/{,${target}-}c++-${SLOT}.1
+
         edo rm "usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}"
 
         if [[ ${target} == ${CHOST} ]] ; then
@@ -298,7 +302,7 @@ gcc_src_install() {
                 fi
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
-            for tool in c++-${SLOT} g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
+            for tool in g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
                 edo rm "usr/${CHOST}/bin/${tool}"
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
@@ -352,5 +356,16 @@ gcc_src_install() {
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
 
-export_exlib_phases pkg_setup src_prepare src_configure src_compile src_install
+gcc_pkg_postinst() {
+    alternatives_pkg_postinst
+
+    # gcc erroneously installed ${target}-c++ in [<=4.9.2-r12] [<=5.3.0-r2] and [<=6.0.0_pre20160207-r1]
+    # which wil vanish when updating it. Regenerate the symlink with the alternative from eclectic-gcc
+    if ! nonfatal edo eclectic alternatives update c++; then
+        exlogfailure
+        eerror 'failed to update c++ alternative. Run "eclectic alternatives update c++" manually'
+    fi
+}
+
+export_exlib_phases pkg_setup src_prepare src_configure src_compile src_install pkg_postinst
 
