@@ -284,28 +284,26 @@ gcc_src_install() {
         echo "    Cross-Compile Target: ${target}"
 
         edo cd "${WORKBASE}/build/${target}"
-
         emake -j1 DESTDIR="${IMAGE}" install
-        edo rm "${IMAGE}/usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}"
+
+        edo pushd "${IMAGE}"
+
+        edo rm "usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}"
+
         if [[ ${target} == ${CHOST} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
             for tool in cpp-${SLOT} gcov-${SLOT} gcov-tool-${SLOT} ; do
-                if [[ -e "${IMAGE}"/usr/${CHOST}/bin/${tool} ]]; then
-                    edo mv "${IMAGE}"/usr/${CHOST}/bin/{,${target}-}${tool}
+                if [[ -e usr/${CHOST}/bin/${tool} ]]; then
+                    edo mv usr/${CHOST}/bin/{,${target}-}${tool}
                 fi
-                nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
+                nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
             for tool in c++-${SLOT} g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
-                edo rm "${IMAGE}/usr/${CHOST}/bin/${tool}"
-                nonfatal edo mv "${IMAGE}"/usr/share/man/man1/{,${target}-}${tool}.1
+                edo rm "usr/${CHOST}/bin/${tool}"
+                nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
         fi
 
-        for tool in gfortran ; do
-            nonfatal edo mv "${IMAGE}"/usr/share/info/${tool}{.info,-${SLOT}.info}
-        done
-
-        edo pushd "${IMAGE}"
 
         local unset_nullglob=
         shopt -q nullglob || unset_nullglob=1
@@ -324,10 +322,6 @@ gcc_src_install() {
         for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
             alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
         done
-
-        alternatives+=( "/usr/${CHOST}/bin/${target}-gcc" "${target}-gcc-${SLOT}" )
-        alternatives+=( "/usr/${CHOST}/bin/${target}-gfortran" "${target}-gfortran-${SLOT}" )
-        alternatives+=( "/usr/${CHOST}/bin/${target}-gcc-cpp" "${target}-gcc-cpp-${SLOT}" )
 
         for man in usr/share/man/man*/*.*; do
             local ext=${man##*.}
