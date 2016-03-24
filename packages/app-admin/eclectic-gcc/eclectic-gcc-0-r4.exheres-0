@@ -50,21 +50,25 @@ DEPENDENCIES="
 
 WORK="${WORKBASE}"
 
+eclectic-gcc_alternatives() {
+    local target=${1} name=${2} gnu_name=${3}
+
+    local alternatives=(
+        /usr/$(exhost --target)/bin/${target}-${name}   ${target}-${gnu_name}
+        /usr/share/man/man1/${target}-${name}.1         ${target}-${gnu_name}.1
+        /usr/$(exhost --target)/bin/${name}             ${gnu_name}
+        "${BANNEDDIR}"/${name}                          ${gnu_name}
+    )
+    alternatives_for ${name} gcc 1000 "${alternatives[@]}"
+}
+
 src_install() {
     for target in ${CROSS_COMPILE_TARGETS};do
         if option targets:${target};then
-            alternatives_for cc     gcc 1000    \
-                /usr/$(exhost --target)/bin/${target}-cc    ${target}-gcc       \
-                /usr/share/man/man1/${target}-cc.1          ${target}-gcc.1
-            alternatives_for c++    gcc 1000    \
-                /usr/$(exhost --target)/bin/${target}-c++   ${target}-g++       \
-                /usr/share/man/man1/${target}-c++.1         ${target}-g++.1
-            alternatives_for cpp    gcc 1000    \
-                /usr/$(exhost --target)/bin/${target}-cpp   ${target}-gcc-cpp   \
-                /usr/share/man/man1/${target}-cpp.1         ${target}-gcc-cpp.1
-            alternatives_for fc     gcc 1000    \
-                /usr/$(exhost --target)/bin/${target}-fc    ${target}-gfortran  \
-                /usr/share/man/man1/${target}-fc.1          ${target}-gfortran.1
+            eclectic-gcc_alternatives ${target} cc  gcc
+            eclectic-gcc_alternatives ${target} c++ g++
+            eclectic-gcc_alternatives ${target} cpp gcc-cpp
+            eclectic-gcc_alternatives ${target} fc  gfortran
         fi
     done
 }
