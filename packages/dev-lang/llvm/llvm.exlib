@@ -59,8 +59,9 @@ llvm_src_configure() {
     # TODO(compnerd) hidden inline visibility causes test tools to fail to build as a required
     # method is hidden; move the definition out of line, and export the interface
     local args=(
-        -DBUILD_SHARED_LIBS:BOOL=$(option static FALSE TRUE)
         -DLLVM_BINUTILS_INCDIR:STRING=/usr/$(exhost --target)/include
+        -DLLVM_BUILD_LLVM_DYLIB:BOOL=$(option static FALSE TRUE)
+        -DLLVM_LINK_LLVM_DYLIB:BOOL=$(option static FALSE TRUE)
         -DLLVM_DEFAULT_TARGET_TRIPLE:STRING=$(exhost --target)
         -DLLVM_ENABLE_ASSERTIONS:BOOL=$(option asserts TRUE FALSE)
         -DLLVM_INCLUDE_TESTS:BOOL=TRUE
