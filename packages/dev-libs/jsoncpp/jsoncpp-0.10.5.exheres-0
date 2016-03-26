@@ -2,6 +2,7 @@
 # Copyright 2015 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require alternatives
 require github [ user="open-source-parsers" ] cmake [ api=2 ]
 require python [ blacklist=none has_bin=true has_lib=false ]
 
@@ -12,7 +13,7 @@ to read and write. It is easy for machines to parse and generate.
 "
 
 LICENCES="|| ( public-domain MIT )"
-SLOT="0"
+SLOT=$(ever major)
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS="doc"
 
@@ -23,10 +24,14 @@ DEPENDENCIES="
         dev-lang/python:*[>=2.6]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-gcc6.patch
+)
+
 CMAKE_SRC_CONFIGURE_PARAMS+=(
     # Avoid conflicts with dev-libs/json-c
     -DINCLUDE_INSTALL_DIR=/usr/$(exhost --target)/include/${PN}
-    -DJSONCPP_LIB_BUILD_SHARED:BOOL=TRUE
+    -DBUILD_SHARED_LIBS:BOOL=TRUE
     -DJSONCPP_WITH_CMAKE_PACKAGE:BOOL=TRUE
     -DJSONCPP_WITH_POST_BUILD_UNITTEST:BOOL=FALSE
     -DJSONCPP_WITH_WARNING_AS_ERROR:BOOL=FALSE
@@ -54,8 +59,14 @@ src_install() {
     if option doc; then
         edo pushd "${CMAKE_SOURCE}"/dist/doxygen
         docinto html
-        dodoc -r ${PN}-api-html-${PV}/*
+        # Versions compiled with C++11 begin with 1 instead of 0
+        dodoc -r ${PN}-api-html-1.$(ever range 2-3)/*
         edo popd
     fi
-}
 
+    alternatives_for _${PN} ${SLOT} ${SLOT} \
+        /usr/$(exhost --target)/lib/libjsoncpp.a            libjsoncpp-${SLOT}.a    \
+        /usr/$(exhost --target)/lib/libjsoncpp.so           libjsoncpp-${SLOT}.so   \
+        /usr/$(exhost --target)/lib/pkgconfig/jsoncpp.pc    jsoncpp-${SLOT}.pc      \
+        /usr/$(exhost --target)/include/jsoncpp             jsoncpp-${SLOT}
+}
