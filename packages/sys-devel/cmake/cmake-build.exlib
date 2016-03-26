@@ -39,7 +39,7 @@ DEPENDENCIES="
         dev-libs/expat[>=2.0.1]
         net-misc/curl[>=7.16.4][ssl(+)]
         sys-libs/ncurses
-        !bootstrap? ( dev-libs/jsoncpp[>=0.6.0] )
+        !bootstrap? ( dev-libs/jsoncpp:=[>=0.15.5] )
         qt4? ( x11-libs/qt:4 )
         qt5? ( x11-libs/qtbase:5 )
 "
