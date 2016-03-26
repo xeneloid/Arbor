@@ -5,6 +5,8 @@ require alternatives
 
 export_exlib_phases src_prepare src_configure src_install src_test pkg_postinst
 
+SLOT="${PV:-${SLOT}}"
+
 SUMMARY="International Components for Unicode"
 HOMEPAGE="http://site.${PN}-project.org"
 DOWNLOADS="http://download.${PN}-project.org/files/${PN}4c/${PV}/${PN}4c-${PV//./_}-src.tgz"
@@ -60,6 +62,12 @@ icu_src_install() {
             alternatives_for _${host}_${PN} ${SLOT} ${SLOT} /usr/${host}/lib/pkgconfig/${pc_file} ${pc_file:0:-3}${SLOT}.pc
         done
         edo popd
+
+        # icu makes some symlinks at /usr/host/lib/icu/{Makefile.inc,current,pkgdata.inc};
+        # current points to the latest installed slot, Makefile.inc and pkgdata.inc point to current/'s copies of the files
+        edo rm "${IMAGE}"/usr/${host}/lib/${PN}/{current,Makefile.inc,pkgdata.inc}
+        alternatives_for _${host}_${PN} ${SLOT} ${SLOT} \
+            /usr/${host}/lib/${PN}/current /usr/${host}/lib/${PN}/${SLOT}
     fi
     edo popd
 
@@ -121,6 +129,12 @@ icu_pkg_postinst() {
             [[ -e ${f} && ! -L ${f} ]] && ( nonfatal edo rm -r "${f}" || eerror "rm -r ${f}" );
         done
     fi
+
+    for f in "${ROOT}"/usr/${host}/lib/${PN}/{Makefile.inc,pkgdata.in};do
+        if [[ "$(readlink "${f}" 2>/dev/null)" != current/* ]];then
+            nonfatal edo rm "${f}" && nonfatal ln -s current/${f##*/} "${f}"
+        fi
+    done
 
     alternatives_pkg_postinst
 }
