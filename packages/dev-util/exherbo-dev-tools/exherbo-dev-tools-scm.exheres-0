@@ -19,9 +19,9 @@ DEPENDENCIES="
         dev-ruby/ruby-filemagic
         dev-scm/git
         dev-util/ack
-        net-misc/wget
         sys-apps/paludis[ruby]
         sys-apps/pax-utils [[ note = [ scanelf is needed by mscan ] ]]
+        virtual/wget
 "
 
 src_install() {
