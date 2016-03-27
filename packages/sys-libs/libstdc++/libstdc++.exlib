@@ -145,8 +145,7 @@ libstdc++_src_install() {
 
     symlink_dynamic_libs ${PN}
     slot_dynamic_libs ${PN}
-    slot_other_libs {${PN},libsupc++}.{a,la}
-    slot_other_libs libstdc++fs.a
+    slot_other_libs {${PN},libstdc++fs,libsupc++}.{a,la}
 
     edo pushd "${IMAGE}"
 
@@ -162,6 +161,9 @@ libstdc++_src_install() {
 
     alternatives=()
     mo_provided=()
+
+    alternatives+=( /usr/share/gdb/python/libstdcxx /usr/share/gdb/python/libstdcxx-${SLOT} )
+
     for locale in usr/share/locale/*/*/*.mo; do
         [[ -e ${locale} ]] || continue
         name=${locale##*/}
