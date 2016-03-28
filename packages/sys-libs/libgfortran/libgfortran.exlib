@@ -8,6 +8,8 @@ SUMMARY="GCC Fortran Runtime Library"
 LICENCES="GPL-2"
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+elif [[ ${PV} == *_rc* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-RC-${PV##*_rc}/gcc-${PV%_rc*}-RC-${PV##*_rc}.tar.bz2"
 fi
 
 # TODO(compnerd) drop the 5.x -> 5.1 mapping for the SLOT when 5.x is removed.
