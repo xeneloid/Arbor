@@ -8,6 +8,8 @@ export_exlib_phases src_unpack src_prepare src_configure src_compile src_install
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+elif [[ ${PV} == *_rc* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-RC-${PV##*_rc}/gcc-${PV%_rc*}-RC-${PV##*_rc}.tar.bz2"
 fi
 
 SUMMARY="GNU C++ Runtime (libstdc++)"
