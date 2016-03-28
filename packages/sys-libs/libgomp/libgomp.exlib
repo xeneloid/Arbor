@@ -8,6 +8,8 @@ SUMMARY="GNU OpenMP Runtime (libgomp)"
 LICENCES="GPL-2"
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+elif [[ ${PV} == *_rc* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-RC-${PV##*_rc}/gcc-${PV%_rc*}-RC-${PV##*_rc}.tar.bz2"
 fi
 
 DEPENDENCIES="
