@@ -1,4 +1,4 @@
-# Copyright 2008, 2009, 2011 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008, 2009, 2011, 2014 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'sqlite-3.5.6.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
@@ -61,6 +61,12 @@ src_prepare() {
     # http://mailinglists.sqlite.org/cgi-bin/mailman/private/sqlite-dev/2015-May/002575.html
     expecting_tests && edo sed -e "/if {\$i==0x0D /s/\$i==0x0D /&|| (\$i>=0xE0 \&\& \$i<=0xEF) /" \
             -i test/shell1.test
+
+    edo cd "${WORKBASE}/${PN}-autoconf-${SCHNARF_PV}"
+    expatch "${FILES}"/sqlite-3.11.0-nonfull_tarball-SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER.patch
+
+    edo cd "${WORKBASE}/${PN}-src-${SCHNARF_PV}"
+    expatch "${FILES}"/sqlite-3.11.0-full_tarball-SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER.patch
 
     default
 }
