@@ -4,20 +4,28 @@
 require gnu [ suffix=bz2 subdir=${PNV} ]
 require alternatives
 
-SUMMARY="stand alone compiler"
+SUMMARY="The GNU Compiler Collection - free and open compilers for C, C++, Obj-C, and more."
 HOMEPAGE="https://gcc.gnu.org/"
 
 if [[ ${PV} == *_pre* ]] ; then
     DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-${PV##*_pre}/gcc-$(ever major)-${PV//*_pre}.tar.bz2"
+elif [[ ${PV} == *_rc* ]] ; then
+    DOWNLOADS="ftp://gcc.gnu.org/pub/gcc/snapshots/$(ever major)-RC-${PV##*_rc}/gcc-${PV%_rc*}-RC-${PV##*_rc}.tar.bz2"
 fi
 
 LICENCES="GPL-2"
+
+
+# See https://gcc.gnu.org/develop.html#num_scheme for the logic about versioning
+# in short: x.x.0 is experimental, x.x.1 is pre-release, x.1.0 is release
+# because this needed to be complicated further..
+# From now on, just use the major version as the slot. This matches with how upstream does maintainence releases.
 
 # TODO(compnerd) drop the 5.x -> 5.1 mapping for the SLOT when 5.x is removed.
 # TODO(compnerd) drop the old slotting when gcc 4.x is removed
 if ever at_least 6.0 ; then
     SLOT="$(ever major)"
-elif ever at_least 5.2 ; then
+elif ever at_least 5.0 ; then
     SLOT=5.1
 else
     SLOT="$(ever range 1-2)"
@@ -82,7 +90,12 @@ DEPENDENCIES="
 #   buil+run:
 #       sys-libs/glibc[hosts:*(-)?]
 
-if ever at_least 5.1.0 ; then
+if ever at_least 6.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            graphite? ( dev-libs/isl:=[>=0.15] )
+    "
+elif ever at_least 5.1.0 ; then
     DEPENDENCIES+="
         build+run:
             graphite? ( dev-libs/isl:=[>=0.12] )

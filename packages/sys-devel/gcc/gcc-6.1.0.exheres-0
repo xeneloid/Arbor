@@ -8,7 +8,5 @@ PLATFORMS="~x86 ~amd64 ~armv7"
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
     "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
-    "${FILES}/e5d1ea319e04039a041a128ab3ab108ba990fc4a.patch"
-    "${FILES}/9181a4ec92be4b84074240badb99dec5a35c34aa.patch"
 )
 
