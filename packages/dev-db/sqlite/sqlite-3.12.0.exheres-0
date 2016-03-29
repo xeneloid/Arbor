@@ -62,12 +62,6 @@ src_prepare() {
     expecting_tests && edo sed -e "/if {\$i==0x0D /s/\$i==0x0D /&|| (\$i>=0xE0 \&\& \$i<=0xEF) /" \
             -i test/shell1.test
 
-    edo cd "${WORKBASE}/${PN}-autoconf-${SCHNARF_PV}"
-    expatch "${FILES}"/sqlite-3.11.0-nonfull_tarball-SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER.patch
-
-    edo cd "${WORKBASE}/${PN}-src-${SCHNARF_PV}"
-    expatch "${FILES}"/sqlite-3.11.0-full_tarball-SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER.patch
-
     default
 }
 
