@@ -184,7 +184,12 @@ git-googlecode_src_install() {
         myemake ASCIIDOC8=YesPlease ASCIIDOC_NO_ROFF=YesPlease install-man
     fi
 
-    dodoc README Documentation/{SubmittingPatches,CodingGuidelines}
+    if ever at_least 2.8.0 ; then
+        dodoc README.md
+    else
+        dodoc README
+    fi
+    dodoc Documentation/{SubmittingPatches,CodingGuidelines}
     for d in / /howto/ /technical/ ; do
         docinto ${d}
         dodoc Documentation${d}*.txt
