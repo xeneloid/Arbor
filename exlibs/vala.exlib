@@ -4,15 +4,14 @@
 # This exlib is for Vala-based packages
 # Mainly handle the VALAC export
 #
-# required parameters:
-#     vala_slots=[ slots ]
-# Sort slots in order of preference, preferred first
-
-require dependencies-helpers
+# optional parameters:
+#     vala_slots=[ supported slots ]
 
 myexparam -b vala_dep=$(ever is_scm && echo true || echo false)
-myexparam vala_slots[]
 myexparam -b with_opt=false
+
+# If the package doesn't support all slots you have to list them yourself
+myexparam vala_slots=[ 0.30 0.32 ]
 
 exparam -b with_opt && myexparam option_name=vapi
 
@@ -22,28 +21,34 @@ if exparam -b with_opt; then
     MYOPTIONS="${OPTION_NAME}"
 fi
 
+if [[ -n "${vala_slots[*]}" ]]; then
+    MYOPTIONS+=" ( vala_abis: ${vala_slots[*]} ) [[ number-selected = exactly-one ]]"
+fi
 
 export_exlib_phases pkg_setup
+
+print_vala_dependencies() {
+    for slot in "${vala_slots[@]}"; do
+        echo "vala_abis:${slot}? ( dev-lang/vala:${slot} )"
+    done
+}
 
 if exparam -b vala_dep; then
     DEPENDENCIES="
         $(exparam -b with_opt && echo ${OPTION_NAME}?) (
             build:
-                $(print_slot_dependencies dev-lang/vala ${vala_slots[@]})
+                $(print_vala_dependencies)
         )
     "
 fi
 
 vala_get_abi() {
-    illegal_in_global_scope # has_version isn't allowed in global so this isn't either
-
-    echo -n "$(get_best_slot_dependency dev-lang/vala ${vala_slots[@]})"
+    echo -n "${VALA_ABIS}"
 }
 
 vala_pkg_setup() {
     if exparam -b vala_dep && { ! exparam -b with_opt || { exparam -b with_opt && option ${OPTION_NAME} ; } }; then
-        local vala_version=$(get_best_slot_dependency dev-lang/vala ${vala_slots[@]})
-        [[ -z ${vala_version} ]] && die "No vala installed"
+        local vala_version="$(vala_get_abi)"
         export VALAC="$(type -P valac-${vala_version})"
         export VAPIGEN="$(type -P vapigen-${vala_version})"
     else
