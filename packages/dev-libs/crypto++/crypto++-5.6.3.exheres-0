@@ -48,6 +48,9 @@ src_install() {
     edo ln -s libcrypto++.so.9.0.0 libcryptopp.so.9
     edo ln -s libcrypto++.so.9.0.0 libcryptopp.so
 
+    # Install our own .pc file for libcrypto++, since upstream won't provide one. This seemed the
+    # easiest way, upstream added a cmake buildsystem to git, but that's far from mature, see
+    # https://github.com/weidai11/cryptopp/issues/133 for my upstream report.
     dodir /usr/$(exhost --target)/lib/pkgconfig/
     edo sed -e "/^prefix/s:@PREFIX@$:/usr/$(exhost --target):" \
         -e "/^libdir/s:@LIBDIR@$:/usr/$(exhost --target)/lib:" \
