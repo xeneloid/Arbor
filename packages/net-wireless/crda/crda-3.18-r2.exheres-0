@@ -20,8 +20,7 @@ SLOT="0"
 PLATFORMS="~x86 ~amd64"
 
 MYOPTIONS="
-    gcrypt [[ description = [ Use Libgcrypt instead of OpenSSL ] ]]
-    !gcrypt? ( ( providers: libressl openssl ) [[ number-selected = exactly-one ]] )
+    ( providers: gcrypt libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -32,11 +31,9 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         net-libs/libnl:3.0
-        !gcrypt? (
-            providers:libressl? ( dev-libs/libressl:= )
-            providers:openssl? ( dev-libs/openssl )
-        )
-        gcrypt? ( dev-libs/libgcrypt )
+        providers:gcrypt? ( dev-libs/libgcrypt )
+        providers:libressl? ( dev-libs/libressl:= )
+        providers:openssl? ( dev-libs/openssl )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -70,28 +67,20 @@ src_prepare() {
 }
 
 src_compile() {
-    local mymake
-
-    option !gcrypt && mymake+=( USE_OPENSSL=1 )
-
     emake REG_BIN=${CRDA_DIR}/regulatory.bin \
           PUBKEY_DIR=${CRDA_DIR}/pubkeys \
           CC="${CC}" \
-          ${mymake[@]} \
+          $(option providers:gcrypt || echo USE_OPENSSL=1) \
           all_noverify \
           $(exhost --is-native -q && echo verify)
 }
 
 src_install() {
-    local mymake
-
-    option !gcrypt && mymake+=( USE_OPENSSL=1 )
-
     emake DESTDIR="${IMAGE}" \
           UDEV_RULE_DIR="${UDEVRULESDIR}" \
           SBINDIR=/usr/$(exhost --target)/bin/ \
           PREFIX=/usr/$(exhost --target) \
-          ${mymake[@]} \
+          $(option providers:gcrypt || echo USE_OPENSSL=1) \
           install
 
     emagicdocs
