@@ -78,7 +78,8 @@ src_compile() {
           PUBKEY_DIR=${CRDA_DIR}/pubkeys \
           CC="${CC}" \
           ${mymake[@]} \
-          crda verify
+          all_noverify \
+          $(exhost --is-native -q && echo verify)
 }
 
 src_install() {
