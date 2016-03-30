@@ -190,6 +190,9 @@ libstdc++_pkg_postinst() {
         fi
     done
 
+    # fix alternatives junk
+    [[ -d "${ROOT}/usr/share/gdb/python/libstdcxx" ]] && nonfatal edo rm -rf "${ROOT}/usr/share/gdb/python/libstdcxx"
+
     alternatives_pkg_postinst
 }
 
