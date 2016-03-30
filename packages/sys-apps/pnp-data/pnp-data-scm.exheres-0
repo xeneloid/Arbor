@@ -2,8 +2,11 @@
 # Copyright 2015 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+MY_PN=hwdata
+
+require fedorahosted
+
 SUMMARY="PNP ID data"
-HOMEPAGE="https://git.fedorahosted.org/cgit/hwdata.git"
 DOWNLOADS=""
 
 LICENCES="|| ( GPL-2 GPL-3 X11 )"
@@ -19,7 +22,7 @@ src_fetch_extra() {
     for path in ${PALUDIS_FETCHERS_DIRS[@]};do
         export PATH="${PATH}:${path}"
     done
-    dohttps "${HOMEPAGE}/plain/pnp.ids?h=master" "${FETCHEDDIR}"/pnp.ids
+    dohttps "https://git.fedorahosted.org/cgit/${MY_PN}.git/plain/pnp.ids?h=master" "${FETCHEDDIR}"/pnp.ids
 }
 
 src_unpack() {

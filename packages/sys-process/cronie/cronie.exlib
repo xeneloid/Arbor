@@ -2,6 +2,7 @@
 # Copyright 2011-2014 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require fedorahosted
 require pam systemd-service [ systemd_files=[ cronie.service ] ] cron-install [ crond=src/crond crontab=src/crontab ] alternatives
 
 export_exlib_phases src_install pkg_postinst
@@ -13,9 +14,6 @@ programs at scheduled times and related tools. It is based on the original cron
 and has security and configuration enhancements like the ability to use PAM,
 inotify and SELinux.
 "
-BASE_URI="https://fedorahosted.org"
-HOMEPAGE="${BASE_URI}/${PN}/"
-DOWNLOADS="${BASE_URI}/releases/${PN:0:1}/${PN:1:1}/${PN}/${PNV}.tar.gz"
 
 BUGS_TO="nwmcsween@gmail.com philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
