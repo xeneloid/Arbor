@@ -1,0 +1,31 @@
+# Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+commit=46edc38005ce47bdaae656a541858735a8ba5f26
+MY_PNV=${PN}-${commit}
+
+require emacs
+
+PLATFORMS="~amd64 ~armv7 ~x86"
+
+DEPENDENCIES="
+    build+run:
+        dev-libs/gnutls[>=2.8]
+"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-musl.patch
+)
+
+# All of this can be removed once we switch back to an alpha/stable version
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
+DOWNLOADS="
+    http://git.savannah.gnu.org/cgit/${PN}.git/snapshot/${MY_PNV}.tar.gz
+"
+
+src_prepare() {
+    emacs_src_prepare
+    eautoreconf
+}
+

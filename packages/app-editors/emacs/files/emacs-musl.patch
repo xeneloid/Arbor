@@ -1,0 +1,30 @@
+Upstream: submitted
+Source: https://lists.gnu.org/archive/html/emacs-devel/2016-03/msg01592.html
+
+From 18a04abedffd316ad42767d4d6f91860d778394b Mon Sep 17 00:00:00 2001
+From: Kylie McClain <somasis@exherbo.org>
+Date: Wed, 30 Mar 2016 01:13:18 -0400
+Subject: [PATCH] src/print.c: Check for __GLIBC__ rather than GNU_LINUX
+
+Not all Linux libcs (ex. musl libc) support the functionality used
+under this #ifdef.
+---
+ src/print.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/print.c b/src/print.c
+index 2b53d75..331f3c4 100644
+--- a/src/print.c
++++ b/src/print.c
+@@ -775,7 +775,7 @@ debug_output_compilation_hack (bool x)
+   print_output_debug_flag = x;
+ }
+ 
+-#if defined (GNU_LINUX)
++#if defined (__GLIBC__)
+ 
+ /* This functionality is not vitally important in general, so we rely on
+    non-portable ability to use stderr as lvalue.  */
+-- 
+2.7.4
+
