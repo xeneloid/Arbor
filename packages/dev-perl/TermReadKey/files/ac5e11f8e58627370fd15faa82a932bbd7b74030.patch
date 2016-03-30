@@ -1,0 +1,39 @@
+Upstream: yes
+Reason: fixes tests if not ran on a terminal
+
+From ac5e11f8e58627370fd15faa82a932bbd7b74030 Mon Sep 17 00:00:00 2001
+From: Jonathan Stowe <jns+git@gellyfish.co.uk>
+Date: Fri, 5 Jun 2015 20:24:55 +0100
+Subject: [PATCH] Totally bail on the 02_terminal_functions.t if STDIN isn't a
+ terminal This should fix RT#96824
+
+---
+ t/02_terminal_functions.t | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/t/02_terminal_functions.t b/t/02_terminal_functions.t
+index 09fe2e4..be86e37 100644
+--- a/t/02_terminal_functions.t
++++ b/t/02_terminal_functions.t
+@@ -2,11 +2,20 @@ use strict;
+ use warnings;
+ 
+ 
+-use Test::More tests => 7;
++use Test::More ;
++
++if ( -t STDIN ) {
++   plan tests => 7;
++}
++else {
++   plan skip_all => "Need a terminal to test";
++}
+ 
+ use Term::ReadKey;
+ use Fcntl;
+ 
++$| = 1;
++
+ if ( not exists $ENV{COLUMNS} ){
+     $ENV{COLUMNS} = 80;
+     $ENV{LINES}   = 24;
