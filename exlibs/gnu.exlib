@@ -11,7 +11,7 @@ myexparam pnv=${MY_PNV:-$(exparam pn)-$(exparam pv)}
 
 HOMEPAGE="https://www.gnu.org/software/$(exparam pn)/"
 if exparam -b alpha; then
-    DOWNLOADS="ftp://alpha.gnu.org/pub/gnu/"
+    DOWNLOADS="http://alpha.gnu.org/pub/gnu/"
 else
     DOWNLOADS="mirror://gnu/"
 fi
