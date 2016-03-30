@@ -38,18 +38,20 @@ LICENCES="BSD-2 BSD-3 public-domain"
 SLOT="0"
 MYOPTIONS="acl lz4 xattr
     ( providers: libressl nettle openssl ) [[ number-selected = exactly-one ]]
+    ( providers: libxml2 expat ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
     build+run:
         app-arch/bzip2
         app-arch/xz
-        dev-libs/libxml2:=
         virtual/gzip
         acl? ( sys-apps/acl )
         lz4? ( app-arch/lz4 )
         xattr? ( sys-apps/attr )
+        providers:expat? ( dev-libs/expat )
         providers:libressl? ( dev-libs/libressl:= )
+        providers:libxml2? ( dev-libs/libxml2:= )
         providers:nettle? ( dev-libs/nettle )
         providers:openssl? ( dev-libs/openssl )
     run:
@@ -63,11 +65,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-bsdcpio=shared
     --enable-bsdtar=shared
     --disable-static
-    # Enable gzip, bzip2, xz, xar support
-    --with-{zlib,bz2lib,lzma,xml2}
+    # Enable gzip, bzip2, xz support
+    --with-{zlib,bz2lib,lzma}
     --without-lzo2
-    # Use libxml2 instead of expat for xar support
-    --without-expat
     # Disable old app-arch/lzma support
     --without-lzmadec
     CFLAGS="${CFLAGS} -Wno-error"
@@ -76,7 +76,10 @@ DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl xattr )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'lz4'
     'providers:nettle nettle'
+    'providers:expat expat'
     'providers:libressl openssl'
+    'providers:libxml2 xml2'
+    'providers:nettle nettle'
     'providers:openssl openssl'
 )
 
