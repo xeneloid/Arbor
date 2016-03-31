@@ -1,0 +1,25 @@
+Title: Default libjpeg provider has changed to libjpeg-turbo
+Author: Calvin Walton <calvin.walton@kepstin.ca>
+Content-Type: text/plain
+Posted: 2016-03-31
+Revision: 1
+News-Item-Format: 1.0
+Display-If-Installed: media-libs/jpeg
+
+The default libjpeg provider has switched from ijg-jpeg (the "Independent JPEG Group"
+implementation) to libjpeg-turbo.
+
+This change has been made to match the same default as many other Linux distributions
+use. Many recent Linux packages are tested only with libjpeg-turbo now, so you
+are more likely to see errors - build failures, test failures, possibly runtime
+errors - if you keep using ijg-jpeg.
+
+As long as you don't have any packages installed which depend directly on
+media-libs/jpeg, a simple cave resolve command should complete the switch:
+
+cave resolve -c world --permit-uninstall media-libs/jpeg
+
+If you wish to keep using ijg-jpeg despite the warning above, add a line like the
+following to your options.conf:
+
+*/* PROVIDERS: -jpeg-turbo ijg-jpeg
