@@ -29,6 +29,7 @@ DEFAULT_SRC_COMPILE_PARAMS=(
     AR=$(exhost --tool-prefix)ar
     CC=$(exhost --tool-prefix)cc
     RANLIB=$(exhost --tool-prefix)ranlib
+    prefix=/usr/$(exhost --target)
     lib=lib
     PAM_CAP=yes
 )
