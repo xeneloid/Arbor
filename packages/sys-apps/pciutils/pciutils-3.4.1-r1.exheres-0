@@ -49,6 +49,7 @@ src_compile() {
         CC="${CC}"
         PKG_CONFIG="$(exhost --tool-prefix)pkg-config"
         DNS="no"
+        PREFIX=/usr/$(exhost --target)
         IDSDIR=/usr/share/misc
         OPT="${CFLAGS} -fPIC"
         RANLIB="${RANLIB}"
