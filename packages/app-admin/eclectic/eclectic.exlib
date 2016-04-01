@@ -3,22 +3,20 @@
 
 require bash-completion zsh-completion
 
-SUMMARY="Modular -config replacement utility."
+SUMMARY="Utility for managing alternatives, configuration files, and reading news"
 DESCRIPTION="
-This is Exherbo's fork of eselect, a modular -config replacement
-utility. The main reason for the fork was to add support for an
-alternatives framework into eselect's core, to eliminiate most of the
-effort required to write and maintain modules for things like vi, perl,
-etc.
-
-It also contains bugfixes to the config module, and a few other
-unreleased features from eselect's trunk.
+${PN} is a utility forked from eselect, meant to act as a general utility for
+administrating some of an Exherbo system's aspects, such as alternatives to be used,
+reading news items from installed repositories, and handling the reviewing and
+merging of configuration files installed by packages.
 "
-HOMEPAGE="https://www.exherbo.org/"
+
+HOMEPAGE="https://git.exherbo.org/${PN}.git"
 DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
-MYOPTIONS="doc"
+
+MYOPTIONS="doc vim-syntax"
 
 DEPENDENCIES="
     build:
@@ -28,7 +26,6 @@ DEPENDENCIES="
         virtual/sed
 "
 
-MYOPTIONS+=" vim-syntax"
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( vim-syntax )
 
 BUGS_TO="eclectic@exherbo.org"
