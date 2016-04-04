@@ -1,8 +1,7 @@
 # Copyright 2012-2016 Timo Gurr <tgurr@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ] \
-        systemd-service [ systemd_files=[ "${WORK}"/utils/cups-browsed.service ] ]
+require systemd-service [ systemd_files=[ "${WORK}"/utils/cups-browsed.service ] ]
 
 SUMMARY="OpenPrinting CUPS filters"
 DESCRIPTION="
@@ -13,7 +12,7 @@ independently of Apple, especially filters for the PDF-centric printing
 workflow introduced by OpenPrinting.
 "
 HOMEPAGE="http://www.linuxfoundation.org/collaborate/workgroups/openprinting/${PN}"
-DOWNLOADS="http://www.openprinting.org/download/${PN}/${PNV}.tar.xz"
+DOWNLOADS="https://openprinting.org/download/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2 GPL-3 MIT"
 SLOT="0"
@@ -65,17 +64,11 @@ DEPENDENCIES="
 
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
-src_prepare() {
-    edo sed -e "s:\(AC_PATH_PROG(PKGCONFIG, \)\(pkg-config\):\1${PKG_CONFIG}:" \
-            -i configure.ac
-
-    autotools_src_prepare
-}
-
 src_configure() {
     local myconf=(
         --enable-foomatic
         --enable-ghostscript
+        --enable-ijs
         --enable-imagefilters
         --disable-braille
         --disable-static
@@ -105,6 +98,7 @@ src_install() {
 
     install_systemd_files
 
+    # adjust to CUPS upstream systemd unit file name
     edo sed -e 's:cups.service:org.cups.cupsd.service:g' \
             -i "${IMAGE}"/usr/$(exhost --target)/lib/systemd/system/cups-browsed.service
 
