@@ -18,11 +18,15 @@ LICENCES="
 "
 
 SLOT="0"
-MYOPTIONS=""
+MYOPTIONS="
+    ( libc: musl )
+"
 
 DEPENDENCIES="
     build:
         sys-devel/binutils[>=2.25.1-r4] [[ note = [ fixes segfaults with recent musl ] ]]
+    post:
+        libc:musl? ( sys-libs/musl-compat )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
@@ -53,39 +57,12 @@ src_configure() {
             ${myconf[@]}
 }
 
-src_compile() {
-    default
-    if [[ $(exhost --target) == *-musl* ]];then
-        # NOTE(somasis): compile glibc-compatibility utilities
-        for util in getconf getent;do
-            edo $(exhost --tool-prefix)cc ${CFLAGS} "${FILES}"/utils/${util}.c -o "${WORK}"/${util}
-        done
-    fi
-}
-
 src_install() {
     default
 
     if [[ $(exhost --target) == *-musl* ]]; then
-        # NOTE(somasis): fix programs with bad checks trying to compile with -lintl
-        # (libm is an empty archive, it does nothing. i'm not losing my mind okay)
-        edo cp "${IMAGE}"/usr/$(exhost --target)/lib/{libm,libintl}.a
-
-        # NOTE(somasis): install BSD compatibility headers
-        insinto /usr/$(exhost --target)/include
-        doins "${FILES}"/bsd-compat/stab.h
-        insinto /usr/$(exhost --target)/include/sys
-        doins "${FILES}"/bsd-compat/{cdefs,queue,tree}.h
-
-        dobin "${WORK}"/{getconf,getent}
-
         insinto /usr/$(exhost --target)/bin
         dosym ../lib/libc.so /usr/$(exhost --target)/bin/ldd
-        # NOTE(somasis): fix wrapped_ldconfig in paludis.
-        herebin ldconfig <<EOF
-#!/bin/sh
-true
-EOF
     else
         dosym ../lib/libc.so /usr/$(exhost --target)/musl/bin/ldd
 
@@ -99,3 +76,13 @@ EOF
     edo mkdir -p "${IMAGE}"/etc/env.d/targets
     edo touch "${IMAGE}"/etc/env.d/targets/$(exhost --target)
 }
+
+pkg_preinst() {
+    # make sure paludis doesn't fail after merging due to lack of ldconfig when
+    # upgrading to musl 1.1.14-r2 which has ldconfig provided by musl-compat
+    if [[ $(exhost --target) == *-musl* && ! -x /usr/$(exhost --target)/bin/ldconfig ]];then
+        nonfatal printf '#!/bin/sh\ntrue\n' > /usr/$(exhost --target)/bin/ldconfig
+        nonfatal edo chmod +x /usr/$(exhost --target)/bin/ldconfig
+    fi
+}
+
