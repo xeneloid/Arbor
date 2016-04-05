@@ -47,6 +47,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
+    --disable-alsabat-backend-tiny
     # disable alsaconf like all other distros do
     --disable-alsaconf
     --disable-xmlto
