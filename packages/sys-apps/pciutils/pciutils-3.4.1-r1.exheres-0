@@ -70,6 +70,15 @@ src_compile() {
     edo popd
 }
 
+src_test() {
+    edo pushd "${WORKBASE}"/static
+    default
+    edo popd
+    edo pushd "${WORKBASE}"/shared
+    default
+    edo popd
+}
+
 src_install() {
     params=(
         DESTDIR="${IMAGE}"
