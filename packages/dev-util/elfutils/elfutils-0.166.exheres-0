@@ -1,12 +1,11 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
+require fedorahosted [ suffix=tar.bz2 ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require flag-o-matic
 
 SUMMARY="Libraries/utilities to handle ELF objects"
-HOMEPAGE="https://fedorahosted.org/releases/${PN:0:1}/${PN:1:1}/${PN}"
-DOWNLOADS="${HOMEPAGE}/${PV}/${PNV}.tar.bz2"
 
 BUGS_TO="philantrop@exherbo.org"
 
