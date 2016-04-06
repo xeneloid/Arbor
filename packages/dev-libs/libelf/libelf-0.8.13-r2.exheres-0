@@ -14,7 +14,7 @@ new applications (and as a light-weight alternative to libbfd).
 HOMEPAGE="http://www.mr511.de/software/english.html"
 DOWNLOADS="http://www.mr511.de/software/${PNV}.tar.gz"
 
-LICENCES="|| ( LGPL-3 LGPL-2.1 )"
+LICENCES="|| ( LGPL-2.1 LGPL-3 )"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
 MYOPTIONS=""
@@ -23,7 +23,10 @@ DEPENDENCIES="
     build:
         sys-devel/gettext
     build+run:
-        !dev-util/elfutils
+        !dev-util/elfutils [[
+            description = [ installs the same headers, but the libraries are ABI incompatible ]
+            resolution = uninstall-blocked-before
+        ]]
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --hates=docdir --hates=datarootdir )
