@@ -5,6 +5,8 @@ require fedorahosted
 
 SUMMARY="Programming library for color text mode, widget based user interfaces"
 
+BUGS_TO="frrrwww@gmail.com"
+
 LICENCES="LGPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
@@ -25,19 +27,20 @@ DEPENDENCIES="
         sys-libs/gpm [[ description = [ Console-based mouse input support via sys-libs/gpm ] ]]
 "
 
-BUGS_TO="frrrwww@gmail.com"
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --with-gpm-support
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( python tcl )
-DEFAULT_SRC_COMPILE_PARAMS=( "CPP=${CC} -E" )
 
 DEFAULT_SRC_INSTALL_PARAMS=( INSTALL=install )
 
 src_prepare() {
-    edo sed -i "s/ar rv/${AR} rv/" Makefile.in
+    # TODO: report upstream
+    edo sed \
+        -e "s/ar rv/${AR} rv/" \
+        -i Makefile.in
+
     default
 }
 
