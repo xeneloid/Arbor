@@ -2,8 +2,7 @@
 # Copyright 2016 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-# currently has a commit bumping the version, but no tagged release...
-require github [ user=htacg pn=tidy-html5 rev=3c8d9bf3f64b57d45cef3c3e9708715eb44d85f4 ] # tag=v${PV}
+require github [ user=htacg pn=tidy-html5 ]
 require cmake [ api=2 cmake_minimum_version=2.8.8 ]
 
 SUMMARY="Tidy the layout and correct errors in HTML and XML documents"
