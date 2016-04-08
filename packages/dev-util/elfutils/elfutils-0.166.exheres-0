@@ -1,7 +1,7 @@
 # Copyright 2009, 2010 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require fedorahosted [ suffix=tar.bz2 ]
+require fedorahosted [ prefix=${PV}/ suffix=tar.bz2 ]
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require flag-o-matic
 
