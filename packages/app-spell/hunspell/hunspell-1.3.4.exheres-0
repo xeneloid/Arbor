@@ -16,9 +16,6 @@ SLOT="0"
 PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
-# https://github.com/hunspell/hunspell/issues/360
-RESTRICT="test"
-
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
@@ -27,6 +24,10 @@ DEPENDENCIES="
     suggestion:
         virtual/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/ded5b4c62c37084d216154e02e4d5e6efbd3ccfa.patch
+)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls

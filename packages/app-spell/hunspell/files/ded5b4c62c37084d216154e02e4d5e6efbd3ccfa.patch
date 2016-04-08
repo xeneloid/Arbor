@@ -1,0 +1,24 @@
+From ded5b4c62c37084d216154e02e4d5e6efbd3ccfa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Ra=C3=BAl=20Benencia?= <rul@kalgan.cc>
+Date: Wed, 9 Mar 2016 23:14:56 +0100
+Subject: [PATCH] Fix FTBFS due new grep binary matching behavior
+
+(cherry-picked from
+https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=814968#16)
+---
+ tests/test.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/test.sh b/tests/test.sh
+index c6755c6..f7e852f 100755
+--- a/tests/test.sh
++++ b/tests/test.sh
+@@ -136,7 +136,7 @@ check_valgrind_log "morphological analysis"
+ 
+ # Tests suggestions
+ if test -f $TESTDIR/$NAME.sug; then
+-    hunspell $* -a -d $TESTDIR/$NAME <$TESTDIR/$NAME.wrong | grep '^&' | \
++    hunspell $* -a -d $TESTDIR/$NAME <$TESTDIR/$NAME.wrong | grep -a '^&' | \
+         sed 's/^[^:]*: //' >$TEMPDIR/$NAME.sug 
+     if ! cmp $TEMPDIR/$NAME.sug $TESTDIR/$NAME.sug >/dev/null; then
+         echo "============================================="
