@@ -15,7 +15,7 @@ else
     PATCH_LEVEL=0
 fi
 
-SUMMARY="Bash shell"
+SUMMARY="Bourne-Again SHell, an enhanced sh-compatible command interpreter"
 DESCRIPTION="
 Bash is the shell, or command language interpreter, that will appear in
 the GNU operating system. Bash is an sh-compatible shell that
