@@ -23,7 +23,11 @@
 require vim-doc flag-o-matic alternatives
 require github [ pn=vim tag=v${PV} ]
 
-[[ "${PN}" != 'vim-runtime' ]] && require python [ blacklist="3.1" multibuild=false with_opt=true ]
+if [[ "${PN}" != 'vim-runtime' ]]; then
+    require python [ blacklist="3.1" multibuild=false with_opt=true ]
+    require lua [ multibuild=false with_opt=true ]
+fi
+
 [[ "${PN}" != 'gvim' ]] && require bash-completion
 
 export_exlib_phases src_prepare src_configure src_compile src_test src_install pkg_postinst pkg_prerm pkg_postrm
@@ -60,7 +64,6 @@ if [[ ${PN} != vim-runtime ]]; then
     DEPENDENCIES+="
         build+run:
             gpm?     ( sys-libs/gpm[>=1.19.3] )
-            lua?     ( dev-lang/lua:= )
             !minimal? ( app-editors/vim-runtime:${VIM_VERSION} )
             perl?    ( dev-lang/perl:* )
             ruby?    ( dev-lang/ruby:* )
@@ -150,6 +153,10 @@ vim_src_configure() {
     # everyone since previous flag filtering bugs have turned out to affect
     # multiple archs...
     replace-flags -O3 -O2
+
+    # make sure AC_PATH_PROG(vi_cv_path_plain_lua, lua) picks up on the right lua
+    [[ "${PN}" != 'vim-runtime' ]] && option lua && \
+        eval "$(eclectic lua script --sh $(lua_get_abi))"
 
     # Fix bug 18245: Prevent "make" from the following chain:
     # (1) Notice configure.in is newer than auto/configure
