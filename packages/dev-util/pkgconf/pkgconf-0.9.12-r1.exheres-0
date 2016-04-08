@@ -123,14 +123,25 @@ src_install() {
         edo cd "${WORKBASE}/build/${target}"
         emake -j1 DESTDIR="${IMAGE}" install
         edo mv "${IMAGE}/usr/$(exhost --target)/bin/${PN}" "${IMAGE}/usr/$(exhost --target)/bin/${target}-pkg-config"
+        edo mv "${IMAGE}/usr/share/man/man1/${PN}.1"       "${IMAGE}/usr/share/man/man1/${target}-pkg-config.1"
 
         alternatives+=(
-            /usr/$(exhost --target)/bin/${target}-pkg-config ${target}-pkg-config.${PN}
+            /usr/$(exhost --target)/bin/${target}-pkg-config    ${target}-pkg-config.${PN}
+            /usr/share/man/man1/${target}-pkg-config.1          ${target}-pkg-config.${PN}.1
         )
     done
 
+    dosym $(exhost --target)-pkg-config.${PN}   /usr/$(exhost --target)/bin/pkg-config.${PN}
+    dosym $(exhost --target)-pkg-config.${PN}.1 /usr/share/man/man1/pkg-config.${PN}.1
+    dobanned pkg-config.${PN}
+
     alternatives+=(
-        /usr/share/aclocal/pkg.m4 pkg_${PN}.m4
+        /usr/share/aclocal/pkg.m4               pkg_${PN}.m4
+        /usr/share/man/man1/pkg-config.1        pkg-config.${PN}.1
+
+        # install the unprefixed tool for the native target
+        /usr/$(exhost --target)/bin/pkg-config  pkg-config.${PN}
+        "${BANNEDDIR}"/pkg-config               pkg-config.${PN}
     )
 
     alternatives_for "${alternatives[@]}"
