@@ -7,7 +7,7 @@ WORK="${WORKBASE}/${MY_PNV}"
 
 require gnu [ suffix=gz ]
 
-export_exlib_phases src_prepare src_configure src_install pkg_preinst
+export_exlib_phases src_prepare src_install pkg_preinst
 
 if [[ ${PV} == *_p* ]] ; then
     PATCH_LEVEL=${PNV##*_p}
@@ -40,7 +40,10 @@ REMOTE_IDS="freecode:gnu${PN}"
 
 LICENCES="GPL-3"
 SLOT="0"
-MYOPTIONS="parts: binaries configuration documentation"
+MYOPTIONS="
+    static
+    parts: binaries configuration documentation
+"
 
 DEPENDENCIES="
     build:
@@ -50,10 +53,15 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    CC_FOR_BUILD=$(exhost --build)-gcc
-    '--enable-nls'
-    '--without-installed-readline'
-    '--with-curses'
+    CC_FOR_BUILD=$(exhost --build)-cc
+    --enable-nls
+    --without-bash-malloc           # should go unused on both glibc and musl
+    --without-installed-readline
+    --with-curses
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'static static-link'
 )
 
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES=( doc )
@@ -71,12 +79,6 @@ bash_src_prepare() {
 
     default
     echo '#define SYS_BASHRC "/etc/bash/bashrc"' >> config-top.h
-}
-
-bash_src_configure() {
-    econf \
-        $([[ "$(exhost --target)" == *-musl* ]] && echo "--without-bash-malloc")    \
-        ${DEFAULT_SRC_CONFIGURE_PARAMS}
 }
 
 bash_src_install() {
