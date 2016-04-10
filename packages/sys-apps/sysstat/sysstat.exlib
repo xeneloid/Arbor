@@ -38,6 +38,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        sys-devel/gettext
     build+run:
         sensors? ( sys-apps/lm_sensors )
     suggestion:
