@@ -47,5 +47,6 @@ DEFAULT_SRC_INSTALL_EXCLUDE=( README.{Win32,aix,dag,hpux,macosx,septel,sita,tru6
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/libpcap-1.7.4-bluez5.patch
+    "${FILES}"/libpcap-1.7.4-pkg-config.patch
 )
 
