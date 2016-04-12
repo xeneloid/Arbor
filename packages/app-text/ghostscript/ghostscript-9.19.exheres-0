@@ -3,11 +3,11 @@
 # Based in part upon 'ghostscript-8.62.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require github [ user=ArtifexSoftware project=ghostpdl-downloads release=gs$(ever delete_all) suffix=tar.bz2 ] \
+    autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="An interpreter for the PostScript language and for PDF"
 HOMEPAGE="http://${PN}.com"
-DOWNLOADS="http://downloads.${PN}.com/public/${PNV}.tar.bz2"
 
 LICENCES="AGPL-3"
 SLOT="0"
@@ -15,13 +15,13 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS="
     cups
     dbus
-    idn
     gtk [[ requires = [ X ] ]]
+    idn
+    jpeg2000
     X
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
-# system openjpeg cannot be used; see http://bugs.ghostscript.com/show_bug.cgi?id=694449
 DEPENDENCIES="
     build:
         virtual/pkg-config
@@ -40,6 +40,7 @@ DEPENDENCIES="
         dbus? ( sys-apps/dbus )
         gtk? ( x11-libs/gtk+:3 )
         idn? ( net-dns/libidn )
+        jpeg2000? ( media-libs/OpenJPEG:2[>=2.1.0] )
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         X? (
@@ -51,16 +52,8 @@ DEPENDENCIES="
         fonts/urw-fonts[>=20150629] [[ note = [ PostScript standard fonts ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-9.18-system-zlib.patch
-    "${FILES}"/b68e05c3b78c19ae06003281adaa2736cb53e605.patch
-    "${FILES}"/95553954b8d150e847090ec03db3b10a998e82be.patch
-    "${FILES}"/74ba28a80804f82aaa68682733c7d7a3cd5f9cbd.patch
-    "${FILES}"/feafe5e540a0545ec5d28f3f66bb542056bba495.patch
-)
-
 src_prepare() {
-    edo rm -r ./{cups/libs,freetype,jbig2dec,jpeg,lcms2,libpng,tiff,zlib}
+    edo rm -r ./{cups/libs,freetype,jbig2dec,jpeg,lcms2,libpng,openjpeg,tiff,zlib}
 
     # remove internal CMaps (CMaps from poppler-data are used instead)
     edo rm -r ./Resource/CMap
@@ -104,7 +97,6 @@ src_configure() {
         --enable-dynamic \
         --enable-freetype \
         --enable-fontconfig \
-        --enable-openjpeg \
         --enable-threading \
         --disable-compile-inits \
         --with-drivers=ALL \
@@ -117,6 +109,7 @@ src_configure() {
         $(option_enable cups) \
         $(option_enable dbus) \
         $(option_enable gtk) \
+        $(option_enable jpeg2000 openjpeg) \
         $(option_with cups pdftoraster) \
         $(option_with idn libidn) \
         $(option_with X x)
