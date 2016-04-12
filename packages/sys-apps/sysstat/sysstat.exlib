@@ -61,7 +61,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( sensors )
 
 sysstat_src_prepare() {
-    # Respect datarootdir
+    # TODO: report upstream, respect datarootdir
     edo sed -e 's:$(PREFIX)/share/locale:$(datarootdir)/locale:' \
             -i Makefile.in
 
