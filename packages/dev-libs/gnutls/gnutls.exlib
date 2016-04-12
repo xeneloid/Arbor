@@ -2,12 +2,12 @@
 # Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_prepare src_test
 
 SUMMARY="TLS 1.0/1.1 and SSL 3.0 Implementation"
-HOMEPAGE="http://www.${PN}.org/"
+HOMEPAGE="https://www.${PN}.org/"
 DOWNLOADS="ftp://ftp.${PN}.org/gcrypt/${PN}/v$(ever range 1-2)/${PNV}.tar.xz"
 
 LICENCES="LGPL-2.1"
