@@ -22,6 +22,8 @@ DOWNLOADS="
     mirror://sourceware/${PN}/old/LVM2.${PV}.tgz
 "
 
+UPSTREAM_RELEASE_NOTES="https://git.fedorahosted.org/cgit/${PN}.git/tree/WHATS_NEW?id=v${PV//./_}"
+
 LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="
@@ -31,21 +33,20 @@ MYOPTIONS="
     ( providers: eudev systemd ) [[ number-selected = exactly-one ]]
 "
 
-UPSTREAM_RELEASE_NOTES="https://git.fedorahosted.org/cgit/${PN}.git/tree/WHATS_NEW?id=v${PV//./_}"
+# The tests are expensive, unreliable, they need write access to /dev and /etc
+# and leave stale volumes lingering around if they fail
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
+        sys-devel/autoconf-archive [[ note = [ required for AC_PYTHON_MODULE ] ]]
         virtual/pkg-config
     build+run:
         sys-apps/util-linux[>=2.24]
         sys-libs/readline
         providers:eudev? ( sys-apps/eudev )
-        providers:systemd? ( sys-apps/systemd[>=205] )
+        providers:systemd? ( sys-apps/systemd[>=221] )
 "
-
-# The tests are expensive, unreliable, they need write access to /dev and /etc
-# and leave stale volumes lingering around if they fail
-RESTRICT="test"
 
 WORK=${WORKBASE}/LVM2.${PV}
 
@@ -66,10 +67,15 @@ lvm2_src_configure() {
         --with-default-run-dir=/run/lvm
         --with-tmpfilesdir=/usr/$(exhost --target)/lib/tmpfiles.d
         --with-udevdir="${UDEVRULESDIR}"
+        --disable-dbus-service
         --disable-lockd-dlm
         --disable-lockd-sanlock
         --disable-lvmpolld
         --disable-nls
+        --disable-notify-dbus
+        --disable-python_bindings
+        --disable-python2_bindings
+        --disable-python3_bindings
         --disable-selinux
         --disable-static_link
         $(option_enable dmeventd)
@@ -90,3 +96,4 @@ lvm2_src_install() {
 
     install_systemd_files
 }
+
