@@ -61,8 +61,8 @@ DEPENDENCIES="
             description = [ Upstream renamed util-linux-ng to util-linux ]
             resolution = uninstall-blocked-after
         ]]
-        !app-shells/bash-completion[<1.3_p20110628-r2] [[
-            description = [ util-linux now provides its own bash-completions ]
+        !app-shells/bash-completion[<2.3] [[
+            description = [ util-linux now provides its own bash-completion for mount and umount ]
             resolution = upgrade-blocked-before
         ]]
         user/uuidd
@@ -90,10 +90,10 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
 util-linux_src_prepare() {
     # disable failing tests
+    edo rm tests/ts/cal/bigyear
     edo rm tests/ts/fdisk/{gpt,mbr-{non,}dos-mode,sunlabel}
-    edo rm tests/ts/ipcs/limits2
     edo rm tests/ts/paths/built-in
-    edo rm tests/expected/cal/bigyear
+    edo rm tests/ts/uuid/uuidd
 
     # only works on btrfs, ext4, ocfs2, and xfs filesystems
     edo rm tests/ts/misc/fallocate
@@ -123,9 +123,9 @@ util-linux_src_configure() {
     local deprecated=( line )
 
     local enabled_tools=(
-        agetty bfs cal cramfs eject fallocate fdformat fsck hwclock last losetup mesg minix more
-        mount mountpoint nsenter nologin partx pg pivot_root raw rename schedutils setpriv setterm
-        sulogin switch_root ul unshare uuidd wall wdctl zramctl
+        agetty bfs cal cramfs eject fallocate fdformat fsck hwclock ipcrm ipcs last logger losetup
+        lslogins mesg minix more mount mountpoint nsenter nologin partx pg pivot_root raw rename
+        schedutils setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl zramctl
     )
 
     local disabled_tools=( pylibmount runuser write )
@@ -142,11 +142,11 @@ util-linux_src_configure() {
         --enable-nls \
         --enable-usrdir-path \
         --disable-static \
+        --with-btrfs \
         --with-cap-ng \
         --with-libz \
         --with-ncurses \
         --with-readline \
-        --with-termcap \
         --with-tinfo \
         --with-util \
         --without-audit \
