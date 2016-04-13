@@ -1,0 +1,33 @@
+Upstream: submitted
+Source: https://github.com/scop/bash-completion/pull/28
+
+From 7fe4c52aba946c23513174d21bcd18f89175ad50 Mon Sep 17 00:00:00 2001
+From: Kylie McClain <somasis@exherbo.org>
+Date: Tue, 12 Apr 2016 23:20:09 -0400
+Subject: [PATCH] man: Improve usage with alternate man implementations
+
+This commit sets a fallback MANPATH to use, for man implementations
+such as busybox's man, which does not print the MANPATH when just
+given `man -w`.
+---
+ completions/man | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/completions/man b/completions/man
+index e1b587d..d7a68a0 100644
+--- a/completions/man
++++ b/completions/man
+@@ -57,8 +57,9 @@ _man()
+     fi
+ 
+     local manpath
++    MANPATH="${MANPATH-/usr/share/man:/usr/local/share/man}"
+     if [[ $OSTYPE == *@(darwin|linux|freebsd|cygwin)* ]] || _userland GNU; then
+-        manpath=$( manpath 2>/dev/null || command man -w )
++        manpath=$( manpath 2>/dev/null || command man -w 2>/dev/null || echo "$MANPATH")
+     else
+         manpath=$MANPATH
+     fi
+-- 
+2.8.1
+
