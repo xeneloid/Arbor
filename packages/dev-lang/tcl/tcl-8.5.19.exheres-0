@@ -19,8 +19,6 @@ truly cross platform, easily deployed and highly extensible.
 "
 HOMEPAGE="http://www.tcl.tk/"
 
-REMOTE_IDS+=" freecode:tcltk"
-
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
@@ -67,7 +65,6 @@ src_configure() {
 
     econf \
         --enable-threads \
-        --hates=docdir \
         $(option_enable debug symbols) "${extra_params[@]}"
 }
 
@@ -75,8 +72,6 @@ src_install() {
     local host=$(exhost --target)
 
     default
-
-    keepdir /usr/${host}/lib/${PN}8/8.3/
 
     local v1=$(ever range 1-2)
     dosym tclsh${v1} /usr/${host}/bin/tclsh
