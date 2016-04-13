@@ -30,6 +30,11 @@ DEPENDENCIES="
         providers:systemd? ( sys-apps/systemd )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0a6856a348f7354bf6caa405e1262efb30aac865.patch
+    "${FILES}"/9a24615c8d9711679031d3110ac560bc29285253.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --dbdir=/var/lib/dhcpcd
     --libexecdir=/usr/$(exhost --target)/lib/dhcpcd
