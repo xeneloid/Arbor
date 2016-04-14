@@ -51,11 +51,6 @@ DEPENDENCIES="
 
 ECONF_SOURCE="${WORK}"
 
-binutils_src_unpack() {
-    default
-    edo mkdir "${WORK}"
-}
-
 binutils_src_prepare() {
     # fixup broken locale install paths
     edo sed -e '/^localedir = /clocaledir = /usr/share/locale'          \
