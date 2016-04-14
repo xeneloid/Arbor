@@ -54,7 +54,8 @@ DEPENDENCIES="
         tk? ( dev-lang/tk )
 "
 
-DEFAULT_SRC_COMPILE_PARAMS=( EXTLDFLAGS="${LDFLAGS}" )
+# Q= disables silent compilation
+DEFAULT_SRC_COMPILE_PARAMS=( Q= EXTLDFLAGS="${LDFLAGS}" )
 
 WORK=${WORKBASE}/${MY_PNV}
 
