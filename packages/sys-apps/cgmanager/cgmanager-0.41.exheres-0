@@ -2,10 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require pam systemd-service
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require github [ user='lxc' tag="v${PV}" ]
 
-SUMMARY="Control Group manager"
+BASE_URL="https://linuxcontainers.org"
+HOMEPAGE="${BASE_URL}/${PN}"
+DOWNLOADS="${BASE_URL}/downloads/${PN}/${PNV}.tar.gz"
+
+SUMMARY="Daemon to manage cgroups via a D-Bus API"
 SLOT="0"
 LICENCES="LGPL-2.1"
 
