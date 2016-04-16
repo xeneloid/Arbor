@@ -70,6 +70,10 @@ src_prepare() {
     edo sed -e 's:^\(docdir=\).*$:\1@docdir@:' \
             -i Makefile.in base/*.mak
 
+    # http://bugs.ghostscript.com/show_bug.cgi?id=696708
+    edo sed -e 's/AC_PATH_PROG(PKGCONFIG, pkg-config)/AC_PATH_TOOL(PKGCONFIG, pkg-config)/' \
+            -i configure.ac
+
     default
     eautoreconf
     nonfatal edo automake -afi
