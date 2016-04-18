@@ -12,7 +12,7 @@ export_exlib_phases src_prepare src_configure src_compile src_test src_install \
                     pkg_postinst pkg_postrm
 
 SUMMARY="Cross platform Make"
-HOMEPAGE="http://www.cmake.org/"
+HOMEPAGE="https://www.cmake.org"
 DOWNLOADS="${HOMEPAGE}/files/v$(ever range 1-2)/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
