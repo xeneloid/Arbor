@@ -22,6 +22,8 @@ MYOPTIONS="
     vim-syntax
     xml          [[ description = [ Enable parsing of xml files, for GLSA and metadata.xml support, only useful with Gentoo repositories ] ]]
     ruby? ( ( ruby_abis: ${MY_RUBY_ABIS[*]} ) [[ number-selected = exactly-one ]] )
+
+    ( providers: elfutils ) [[ number-selected = at-most-one ]]
 "
 LICENCES="GPL-2 vim-syntax? ( vim )"
 SLOT="0"
@@ -67,7 +69,7 @@ DEPENDENCIES="
     post:
         vim-syntax? ( app-editors/vim-runtime:*[>=7] )
     recommendation:
-        sys-devel/dwz [[ description = [ Support for compressing debuggin information before merging packages ] ]]
+        providers:elfutils? ( sys-devel/dwz [[ description = [ Support for compressing debugging information before merging packages ] ]] )
 "
 
 paludis_pkg_setup() {
