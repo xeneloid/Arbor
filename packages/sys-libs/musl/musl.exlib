@@ -80,7 +80,7 @@ src_install() {
 pkg_preinst() {
     # make sure paludis doesn't fail after merging due to lack of ldconfig when
     # upgrading to musl 1.1.14-r2 which has ldconfig provided by musl-compat
-    if [[ $(exhost --target) == *-musl* && ! -x /usr/$(exhost --target)/bin/ldconfig ]];then
+    if [[ $(exhost --target) == *-musl* ]] && ! has_version sys-libs/musl-compat;then
         nonfatal printf '#!/bin/sh\ntrue\n' > /usr/$(exhost --target)/bin/ldconfig
         nonfatal edo chmod +x /usr/$(exhost --target)/bin/ldconfig
     fi
