@@ -18,7 +18,10 @@ scons_src_configure() {
     echo -e "clean \n exit" | escons \
         --config=force \
         --interactive \
-        "${SCONS_SRC_CONFIGURE_PARAMS[@]}"
+        "${SCONS_SRC_CONFIGURE_PARAMS[@]}" \
+        $(for s in "${SCONS_SRC_CONFIGURE_OPTIONS[@]}" ; do
+            option ${s}
+        done )
 }
 
 scons_src_compile() {
