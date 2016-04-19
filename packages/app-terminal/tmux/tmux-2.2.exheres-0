@@ -9,7 +9,10 @@ require github [ release=${PV} suffix=tar.gz ]
 
 DOWNLOADS+="
     bash-completion? ( https://github.com/przepompownia/tmux-bash-completion/archive/${TMUX_BASH_COMPLETION_VERSION}.tar.gz -> tmux-bash-completion-${TMUX_BASH_COMPLETION_VERSION}.tar.gz )
-    vim-syntax? ( https://raw.githubusercontent.com/keith/tmux.vim/${TMUX_VIM_SYNTAX_VERSION}/syntax/tmux.vim )
+    vim-syntax? (
+        https://raw.githubusercontent.com/keith/tmux.vim/${TMUX_VIM_SYNTAX_VERSION}/syntax/tmux.vim
+            -> tmux-${TMUX_VIM_SYNTAX_VERSION}.vim
+    )
 "
 
 SUMMARY="A terminal multiplexer, it enables a number of terminals (or windows) to be accessed and controlled from a single terminal"
