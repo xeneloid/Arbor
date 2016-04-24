@@ -55,7 +55,7 @@ MYOPTIONS="
             tidy          [[ description = [ Include TIDY support. ] ]]
             unixodbc      [[ description = [ Support for using ODBC database connections using unixODBC. ] ]]
             xml           [[ description = [ Support for XML parsing/reading/writing. ] ]]
-            xmlrpc        [[ description = [ Support for writing XML-RPC servers and clients. ] ]]
+            xmlrpc        [[ description = [ Support for writing XML-RPC servers and clients. ] requires = [ php_extensions: xml ] ]]
             xsl           [[ description = [ Include XSL support. ] ]]
     )
 
