@@ -3,9 +3,10 @@
 # Based in part upon 'build-docbook-catalog-1.2.ebuild' from Gentoo, which is:
 #  Copyright 1999-2008 Gentoo Foundation
 
+require github [ user='somasis' tag=v${PV} ]
+
 SUMMARY="DocBook XML catalog auto-updater"
-HOMEPAGE="http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-src/${PN}"
-DOWNLOADS="mirror://gentoo/${PNV}.tar.xz"
+HOMEPAGE+=" http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-src/${PN}"
 
 LICENCES="GPL-2"
 SLOT="0"
@@ -13,11 +14,14 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES="
+    build:
+        virtual/sed
     run:
-        sys-apps/util-linux
+        dev-libs/libxml2 [[ note = [ xmlcatalog ] ]]
+        sys-apps/util-linux [[ note = [ getopt ] ]]
 "
 
-DEFAULT_SRC_INSTALL_PARAMS=( SBINDIR=/usr/$(exhost --target)/bin )
+DEFAULT_SRC_INSTALL_PARAMS=( prefix=/usr exec_prefix=/usr/$(exhost --target) )
 
 pkg_postinst() {
     build-docbook-catalog || ewarn "build-docbook-catalog failed."
