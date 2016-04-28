@@ -3,18 +3,18 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A lightweight, fast, and simple standard libc library"
-HOMEPAGE="http://www.musl-libc.org/"
+HOMEPAGE="https://www.musl-libc.org/"
 
 if ever is_scm ; then
     SCM_REPOSITORY="git://git.musl-libc.org/${PN}"
     require scm-git
 else
-    DOWNLOADS="http://www.musl-libc.org/releases/${PNV}.tar.gz"
+    DOWNLOADS="${HOMEPAGE}/releases/${PNV}.tar.gz"
 fi
 
 LICENCES="
-    ( BSD-2 BSD-3 ) [[ note = [ utils and bsd-compat headers ] ]]
     MIT
+    BSD-2 BSD-3 as-is
 "
 
 SLOT="0"
