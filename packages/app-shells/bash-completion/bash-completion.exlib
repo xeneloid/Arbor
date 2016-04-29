@@ -22,7 +22,6 @@ DEPENDENCIES="
             resolution = uninstall-blocked-after
         ]]
     run:
-        app-admin/eclectic
         app-shells/bash[>=3.2_p19]
 "
 
