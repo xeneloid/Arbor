@@ -15,11 +15,12 @@ LICENCES="
 "
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS=""
+MYOPTIONS="caps"
 
 DEPENDENCIES="
     build+run:
         dev-libs/libgpg-error[>=1.13]
+        caps? ( sys-libs/libcap )
 "
 
 src_configure() {
@@ -38,6 +39,7 @@ src_configure() {
         --disable-O-flag-munging \
         --disable-padlock-support \
         --with-gpg-error-prefix=/usr/$(exhost --target) \
-        ac_cv_sys_symbol_underscore=no
+        ac_cv_sys_symbol_underscore=no \
+        $(option_with caps capabilities)
 }
 
