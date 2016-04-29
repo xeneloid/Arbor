@@ -7,3 +7,7 @@ require boost
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    -p2 "${FILES}"/f2c465ffa508459216f7093bf95ba001ad994206.patch
+)
+
