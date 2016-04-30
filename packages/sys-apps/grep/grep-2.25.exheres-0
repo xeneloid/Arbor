@@ -38,7 +38,7 @@ src_test() {
 src_install() {
     default
 
-    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias && nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 
     alternatives_for grep gnu 1000  \
         /usr/$(exhost --target)/bin/grep    ggrep       \
