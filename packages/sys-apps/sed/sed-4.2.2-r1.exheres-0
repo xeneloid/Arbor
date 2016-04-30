@@ -40,7 +40,8 @@ src_configure() {
 src_install() {
     default
 
-    edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 
     option parts:binaries && alternatives_for sed gnu 1000 /usr/$(exhost --target)/bin/sed gsed
     option parts:documentation && alternatives_for sed gnu 1000 /usr/share/man/man1/sed.1 gsed.1
