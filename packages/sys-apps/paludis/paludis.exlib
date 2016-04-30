@@ -23,7 +23,7 @@ MYOPTIONS="
     xml          [[ description = [ Enable parsing of xml files, for GLSA and metadata.xml support, only useful with Gentoo repositories ] ]]
     ruby? ( ( ruby_abis: ${MY_RUBY_ABIS[*]} ) [[ number-selected = exactly-one ]] )
 
-    ( providers: elfutils ) [[ number-selected = at-most-one ]]
+    ( providers: elfutils )
 "
 LICENCES="GPL-2 vim-syntax? ( vim )"
 SLOT="0"
