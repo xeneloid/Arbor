@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Contains error handling functions used by GnuPG software"
-HOMEPAGE="http://www.gnupg.org/related_software/${PN}/index.en.html"
+HOMEPAGE="https://www.gnupg.org/related_software/${PN}/index.en.html"
 DOWNLOADS="mirror://gnupg/${PN}/${PNV}.tar.bz2"
 
 LICENCES="LGPL-2.1"
