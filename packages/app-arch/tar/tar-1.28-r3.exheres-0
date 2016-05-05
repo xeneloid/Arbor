@@ -38,6 +38,7 @@ src_install() {
         /usr/$(exhost --target)/bin/tar gtar    \
         /usr/share/man/man1/tar.1       gtar.1
 
-    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 }
 
