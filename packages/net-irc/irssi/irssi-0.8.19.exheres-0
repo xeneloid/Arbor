@@ -4,8 +4,3 @@
 require irssi autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 PLATFORMS="~amd64 ~x86"
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/06bf25bfbaaf33772e36317dba28ce5b6a301616.patch
-)
-
