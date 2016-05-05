@@ -131,7 +131,8 @@ coreutils_src_install() {
     edo rm "${IMAGE}"/usr/share/man/man1/ggroups.1
 
     # musl file conflicts
-    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 
     local coreutils_alternatives=()
     for prog in "${IMAGE}"/usr/$(exhost --target)/bin/*;do
