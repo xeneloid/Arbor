@@ -5,8 +5,7 @@
 require systemd-service
 
 if ever is_scm; then
-    SCM_REPOSITORY="https://git.kernel.org/pub/scm/boot/${PN}/${PN}.git"
-    require scm-git
+    require github [ user=dracutdevs ]
 else
     DOWNLOADS="mirror://kernel/linux/utils/boot/${PN}/${PNV}.tar.gz"
 fi
