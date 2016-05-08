@@ -1,5 +1,5 @@
 # Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
-# Copyright 2008-2015 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2008-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
@@ -72,7 +72,6 @@ bind_src_prepare() {
     edo sed -i 's/"nm"/"'$(exhost --tool-prefix)'nm"/' util/mksymtbl.pl
 
     expatch "${FILES}"/${PN}-fixMakefile.patch
-    expatch "${FILES}"/${PN}-libressl.patch
 
     eautoconf
 }
