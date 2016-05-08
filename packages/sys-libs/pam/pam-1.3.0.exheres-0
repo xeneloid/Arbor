@@ -1,4 +1,4 @@
-# Copyright 2009-2015 Wulf C. Krueger
+# Copyright 2009-2016 Wulf C. Krueger
 # Distributed under the terms of the GNU General Public License v2
 
 require pam_build
@@ -6,7 +6,6 @@ require pam_build
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/musl-innetgr.patch
     "${FILES}"/musl-fix-compat.patch
     "${FILES}"/musl-pam_exec.patch
 )
