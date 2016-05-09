@@ -128,10 +128,8 @@ config_enable_eap() {
 }
 
 wpa_supplicant_src_prepare() {
-    default
-
     edo pushd ${WORKBASE}/${PNV}
-    expatch "${FILES}"/${PNV}-Fix-build-with-libressl.patch
+    default
     edo popd
 
     # FILES is a reserved exheres-0 variable
