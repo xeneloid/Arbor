@@ -3,8 +3,6 @@
 
 require flag-o-matic github [ release=v${PV} suffix=tar.xz ]
 
-export_exlib_phases pkg_setup src_prepare src_install
-
 SUMMARY="Utilities to create and check MS-DOS filesystems under Linux"
 DESCRIPTION="MS-DOS filesystem programs mkfs.fat, fatlabel and fsck.fat."
 
@@ -14,31 +12,9 @@ LICENCES="GPL-3"
 SLOT="0"
 MYOPTIONS=""
 
-# test target doesn't exist
-RESTRICT="test"
-
 DEPENDENCIES=""
 
-DEFAULT_SRC_COMPILE_PARAMS=( CC="${CC}" )
-
-dosfstools_pkg_setup() {
-    append-flags -D_GNU_SOURCE -Du_int32_t=uint32_t
-}
-
-dosfstools_src_prepare() {
-    default
-
-    edo sed -e "/^PREFIX/s:=.*:= /usr:" \
-            -e '/^OPTFLAGS/d' \
-            -e '/^DEBUGFLAGS/d' \
-            -e "/^SBINDIR/s:=.*:= /usr/$(exhost --target)/bin:" \
-            -i Makefile
-}
-
-dosfstools_src_install() {
-    default
-
-    edo mv "${IMAGE}"/usr/share/doc/{${PN}/*,${PNVR}}
-    edo rmdir "${IMAGE}"/usr/share/doc/${PN}
-}
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --enable-compat-symlinks
+)
 
