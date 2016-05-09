@@ -26,7 +26,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     # (if GNU tools are installed it will hardcode the absolute paths for them,
     # which breaks upon uninstallation of them)
     GREP=/usr/host/bin/grep
-    SEd=/usr/host/bin/sed
+    SED=/usr/host/bin/sed
 )
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( docs/PLATFORMS )
