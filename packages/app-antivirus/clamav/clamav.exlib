@@ -3,6 +3,8 @@
 # Based in part upon 'clamav-0.93.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
+require systemd-service
+
 export_exlib_phases src_install
 
 SUMMARY="Clam Anti-Virus Scanner"
@@ -36,8 +38,9 @@ DEPENDENCIES="
         dev-libs/gmp:= [[ note = [ optional; for digital signatures ] ]]
         dev-libs/json-c [[ note = [ optional; for file property meta data collecting ] ]]
         dev-libs/libxml2:2.0 [[ note = [ optional; for DMG and XAR support ] ]]
-        dev-libs/pcre[>=8.38]
+        dev-libs/pcre[>=8.38] [[ note = [ prioritizes PCRE2 over PCRE ] ]]
         net-misc/curl [[ note = [ freshclam dependency ] ]]
+        sys-apps/systemd [[ note = [ automagic in systemd.m4 ] ]]
         sys-libs/ncurses [[ note = [ optional; for clamdtop ] ]]
         milter? (
             mail-filter/libmilter
@@ -58,6 +61,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-fanotify
     --enable-id-check       # Use id utility instead of /etc/passwd parsing (Gentoo #72540)
     --enable-ipv6
+    --enable-libfreshclam
     --enable-xml
     --enable-yara
     --disable-check
@@ -66,6 +70,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-dbdir=/var/lib/clamav
     --with-iconv
     --with-libjson=/usr
+    --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR}
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( milter unrar )
 
@@ -82,7 +87,7 @@ EOF
 
     # Set up some default configs
     edo sed -e "s:.*\(PidFile\) .*:\1 /run/clamav/clamd.pid:" \
-            -e "s:.*\(LocalSocket\) .*:\1 /run/clamav/clamd.sock:" \
+            -e "s:.*\(LocalSocket\) .*:\1 /run/clamav/clamd.ctl:" \
             -e "s:.*\(User\) .*:\1 clamav:" \
             -e "s:^\#\(LogFile\) .*:\1 /var/log/clamav/clamd.log:" \
             -i "${IMAGE}"/etc/clamd.conf.sample
