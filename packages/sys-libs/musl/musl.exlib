@@ -26,7 +26,10 @@ DEPENDENCIES="
     build:
         sys-devel/binutils[>=2.25.1-r4] [[ note = [ fixes segfaults with recent musl ] ]]
     post:
-        libc:musl? ( sys-libs/musl-compat )
+        libc:musl? (
+            sys-libs/fortify-headers
+            sys-libs/musl-compat
+        )
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
