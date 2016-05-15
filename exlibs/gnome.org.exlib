@@ -9,7 +9,7 @@ myexparam suffix=.tar.bz2
 myexparam -b no_tarball=false
 
 HOMEPAGE="http://projects.gnome.org/$(exparam pn)"
-REMOTE_IDS="gnome:${PN}"
+REMOTE_IDS="gnome:$(exparam pn)"
 
 if ever is_scm || exparam -b no_tarball ; then
     DOWNLOADS=""
