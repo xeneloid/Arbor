@@ -3,6 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service udev-rules
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 # fixes malloc() detection avoiding undefined reference to `rpl_malloc'
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
@@ -95,5 +96,6 @@ lvm2_src_install() {
     emake DESTDIR="${IMAGE}" install_tmpfiles_configuration
 
     install_systemd_files
+    install_openrc_files
 }
 
