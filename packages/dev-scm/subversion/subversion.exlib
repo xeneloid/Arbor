@@ -1,5 +1,5 @@
 # Copyright 2008 Bryan Østergaard <kloeri@exherbo.org>
-# Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008, 2009, 2010, 2016 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'subversion-1.4.6-r2.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
@@ -71,6 +71,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-perl-vendor.patch
     "${FILES}"/${PN}-perl-ccopts.patch
+    "${FILES}"/0001-Don-t-underlink-perl-module.patch
 )
 
 subversion_src_prepare() {
