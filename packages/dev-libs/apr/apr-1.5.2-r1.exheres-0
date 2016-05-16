@@ -26,6 +26,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-installbuilddir=/usr/$(exhost --target)/lib/${PN}-build-$(ever major)
 )
+DEFAULT_SRC_TEST_PARAMS=( -j1 )
 
 AT_M4DIR=( build )
 
