@@ -6,7 +6,7 @@ require alternatives
 
 SUMMARY="Tar archiver"
 
-LICENCES="( GPL-3 ) [[ last-checked = 1.28 ]]"
+LICENCES="( GPL-3 ) [[ last-checked = 1.29 ]]"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="acl"
