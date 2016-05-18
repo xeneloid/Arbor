@@ -15,6 +15,7 @@ MYOPTIONS="
     zsh-completion
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
+
 DEPENDENCIES="
     build:
         dev-lang/perl:*
@@ -39,10 +40,6 @@ DEPENDENCIES="
     run:
         zsh-completion? ( app-shells/zsh )
 "
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-libressl.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{cookies,crypto-auth,largefile,manual,proxy,rt,tls-srp}
@@ -89,6 +86,9 @@ src_test() {
 507
 # Fails with too many open files
 537
+# Can't open perl script "./manpage-scan.pl": No such file or directory
+1139
+1140
 EOF
     esandbox allow_net --connect "inet:127.0.0.1@9011"
     esandbox allow_net --connect "inet:127.0.0.1@60000"
