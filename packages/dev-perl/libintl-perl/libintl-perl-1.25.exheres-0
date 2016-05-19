@@ -16,11 +16,13 @@ written in Perl. Its main features are:
   * utility functions for locale settings in server applications
   * extensive documentation including a sample application
 "
-HOMEPAGE="http://guido-flohr.net/projects/${PN} ${HOMEPAGE}"
 
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 REMOTE_IDS="freecode:${PN}"
+
+# tests fail with certain locales (e.g. de_* )
+RESTRICT="test"
 
