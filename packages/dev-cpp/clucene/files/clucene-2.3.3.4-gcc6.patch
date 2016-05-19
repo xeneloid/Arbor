@@ -1,4 +1,4 @@
-Upstream: no, its dead
+Upstream: Reported, https://sourceforge.net/p/clucene/code/merge-requests/1/
 Author: Wouter van Kesteren <woutershep@gmail.com>
 Reason: ftbfs with gcc6
 
