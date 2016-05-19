@@ -5,3 +5,8 @@ require iproute2
 
 PLATFORMS="~amd64 ~arm ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-musl.patch
+)
+
+
