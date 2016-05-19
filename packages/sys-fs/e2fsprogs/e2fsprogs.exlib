@@ -8,6 +8,7 @@ require sourceforge [ suffix=tar.gz ]
 export_exlib_phases src_configure src_test src_install
 
 SUMMARY="Utilities for managing ext2/ext3/ext4 filesystems"
+DOWNLOADS="mirror://kernel/linux/kernel/people/tytso/${PN}/v${PV}/${PNV}.tar.xz"
 
 LICENCES="
     GPL-2
@@ -15,7 +16,13 @@ LICENCES="
     MIT [[ note = [ et and ss libraries ] ]]
 "
 SLOT="0"
-MYOPTIONS=""
+MYOPTIONS="
+    fuse [[ description = [ FUSE file system client for ext2/ext3/ext4 file systems ] ]]
+"
+
+# TODO: Find out why most tests are failing under sydbox since 1.42.10
+# 58 tests succeeded / 265 tests failed (last checked: 1.43)
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
@@ -23,11 +30,27 @@ DEPENDENCIES="
         virtual/pkg-config[>=0.20]
     build+run:
         sys-apps/util-linux[>=2.16.2] [[ note = [ to ensure that libblkid and libuuid from util-linux-ng is used ] ]]
+        fuse? ( sys-fs/fuse[>=2.9] )
 "
 
-# TODO: Find out why most tests are failing under sydbox since 1.42.10
-# 43 tests succeeded / 107 tests failed (last checked: 1.42.13)
-RESTRICT="test"
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    gt_cv_func_gnugettext{1,2}_libc=yes
+    --enable-bmap-stats
+    --enable-elf-shlibs
+    --enable-mmp
+    --enable-nls
+    --enable-symlink-install
+    --enable-tls
+    --enable-verbose-makecmds
+    --disable-bmap-stats-ops
+    --disable-fsck
+    --disable-libblkid
+    --disable-libuuid
+    --disable-uuidd
+)
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'fuse fuse2fs'
+)
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( RELEASE-NOTES )
 DEFAULT_SRC_INSTALL_PARAMS=( install-libs )
@@ -37,18 +60,15 @@ e2fsprogs_src_configure() {
     export ac_cv_path_LDCONFIG=:
     export STRIP=:
 
+    local myconf=(
+        "${DEFAULT_SRC_CONFIGURE_PARAMS[@]}" \
+        $(for s in "${DEFAULT_SRC_CONFIGURE_OPTION_ENABLES[@]}" ; do \
+            option_enable ${s} ; \
+        done )
+    )
+
     BUILD_CC=$(exhost --build)-cc \
-    econf \
-        --enable-elf-shlibs \
-        --enable-nls \
-        --enable-symlink-install \
-        --enable-tls \
-        --enable-verbose-makecmds \
-        --disable-uuidd \
-        --disable-fsck \
-        --disable-libblkid \
-        --disable-libuuid \
-        gt_cv_func_gnugettext{1,2}_libc=yes
+        econf ${myconf[@]}
 }
 
 e2fsprogs_src_test() {
