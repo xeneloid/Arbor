@@ -1,0 +1,20 @@
+Title: Unprefixed tools now available again
+Author: Benedikt Morbach <moben@exherbo.org>
+Content-Type: text/plain
+Posted: 2016-05-19
+Revision: 1
+News-Item-Format: 1.0
+
+Since the multiarch migration it has not been possible to call gcc or cc etc. for instance when
+building a new kernel. This has been fixed and unprefixed variants of toolchain binaries are now
+available to make it easier to compile software outside exheres.
+
+They can be used normally in user sessions but are banned in exheres and will produce an error if
+called there.
+
+To get them you must first update paludis, then the affected packages:
+
+    cave resolve -1 paludis
+    cave resolve -1 binutils gcc eclectic-gcc pkg-config
+
+If you use pkgconf instead of pkg-config, update that instead.
