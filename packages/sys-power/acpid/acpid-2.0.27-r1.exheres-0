@@ -5,6 +5,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 require sourceforge [ project=${PN}2 suffix=tar.xz ] systemd-service
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 SUMMARY="A configurable ACPI policy daemon for Linux"
 DESCRIPTION="
@@ -47,6 +48,7 @@ src_install() {
     dodoc -r samples
 
     install_systemd_files
+    install_openrc_files
 
     insinto /etc/acpi/events
     newins samples/powerbtn/powerbtn-conf powerbtn
