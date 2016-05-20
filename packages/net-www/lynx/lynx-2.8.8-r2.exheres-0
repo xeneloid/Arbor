@@ -12,6 +12,7 @@ LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
+    debug
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -30,11 +31,18 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-file-upload
     --enable-ipv6
     --enable-nls
+    --with-nls-datadir=/usr/share
     --hates=docdir
     --sysconfdir='/etc/lynx'
-    --with-pkg-config=$(type -fPp ${PKG_CONFIG})
+    --with-pkg-config=/usr/$(exhost --build)/bin/$(exhost --tool-prefix)pkg-config
     --with-screen=ncursesw
     cf_cv_func_gettext=yes # lynx uses an old macro for detecting gettext
+)
+
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    debug
+    'debug find-leaks'
+    'debug vertrace'
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
@@ -43,11 +51,7 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
 )
 
 src_prepare() {
-    edo intltoolize --force --automake --copy
-}
-
-src_install() {
     default
-    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share/
+    edo intltoolize --force --automake --copy
 }
 
