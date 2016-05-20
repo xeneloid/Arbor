@@ -199,7 +199,7 @@ binutils_src_install() {
 
             alternatives=( ld ${provider} ${priority} )
             for m in "${em[@]}" ; do
-                alternatives+=( "${m}" ld.${provider} )
+                alternatives+=( "${m}" "${m##*/}".${provider} )
             done
             alternatives_for "${alternatives[@]}"
         done
