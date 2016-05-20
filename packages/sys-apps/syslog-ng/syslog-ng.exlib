@@ -6,6 +6,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 require github [ user=balabit suffix=tar.gz release=${PNV} ]
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 require systemd-service [ systemd_files=[ contrib/systemd/syslog-ng.service ] ]
 
 export_exlib_phases src_install pkg_postinst
@@ -131,6 +132,8 @@ syslog-ng_src_install() {
 
     edo rmdir "${IMAGE}"/var/lib
     keepdir /var/log
+
+    install_openrc_files
 }
 
 syslog-ng_pkg_postinst() {
