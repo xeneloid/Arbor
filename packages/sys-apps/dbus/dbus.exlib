@@ -9,7 +9,7 @@ else
     DOWNLOADS="http://dbus.freedesktop.org/releases/${PN}/${PNV}.tar.gz"
 fi
 
-require flag-o-matic systemd-service
+require flag-o-matic openrc-service systemd-service
 
 export_exlib_phases src_configure src_compile src_test src_install
 
@@ -156,5 +156,7 @@ dbus_src_install() {
 
     # keepdir legacy locations until our packages are migrated
     keepdir /etc/dbus-1/{session,system}.d/
+
+    install_openrc_files
 }
 
