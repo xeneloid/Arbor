@@ -3,6 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require systemd-service udev-rules
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 SUMMARY="ALSA utilities"
 DESCRIPTION="
@@ -67,5 +68,7 @@ src_install() {
         "${IMAGE}"/etc/alsa/state-daemon.conf
 
     edo rmdir "${IMAGE}"/usr/share/man/man7
+
+    install_openrc_files
 }
 
