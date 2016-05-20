@@ -180,12 +180,6 @@ binutils_src_install() {
             local name=${f##*/}
 
             dosym ..${t} /usr/${host}/bin/${target}-${name}
-
-            # install unprefixed tools for the native target
-            if [[ ${target} == ${host} ]]; then
-                dosym ${target}-${name} /usr/${host}/bin/${name}
-                dobanned ${name}
-            fi
         done
 
         # provided by alternatives
@@ -209,6 +203,14 @@ binutils_src_install() {
             done
             alternatives_for "${alternatives[@]}"
         done
+    done
+
+    # install unprefixed tools for the native target
+    for f in "${IMAGE}"/usr/${host}/bin/${host}-*; do
+        local name=${f##*/${host}-}
+
+        dosym ${host}-${name} /usr/${host}/bin/${name}
+        dobanned ${name}
     done
 
     # install unprefixed man pages
