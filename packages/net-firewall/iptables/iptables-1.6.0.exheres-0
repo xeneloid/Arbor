@@ -2,10 +2,16 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require iptables
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/bdf27a0985bc4677196c76d52e4be1254ec841bd.patch
 )
+
+src_prepare() {
+    iptables_src_prepare
+    eautoreconf
+}
 

@@ -1,7 +1,6 @@
 # Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require systemd-service
 
 export_exlib_phases src_prepare src_install
