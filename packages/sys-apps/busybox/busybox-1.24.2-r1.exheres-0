@@ -75,6 +75,13 @@ pkg_pretend() {
 src_prepare() {
     default
 
+    # NOTE(somasis) fix linux-headers usage on musl
+    if [[ $(exhost --target) == *-musl* ]];then
+        edo sed \
+            -e 's|#include <linux/.*|#ifndef __GLIBC__\n#define __GLIBC__\n#endif\n&\n#undef __GLIBC__|g'   \
+            -i networking/tcpudp.c
+    fi
+
     # /var/run -> /run
     edo find ./ -type f -exec sed -i -e 's:/var/run:/run:g' -- {} +
 
