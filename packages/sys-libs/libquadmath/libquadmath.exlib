@@ -30,7 +30,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build:
         sys-apps/texinfo
-        sys-devel/gcc
+        sys-devel/gcc:${SLOT}
 "
 
 REMOTE_IDS="freecode:gcc"
