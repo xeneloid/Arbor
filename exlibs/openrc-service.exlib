@@ -87,11 +87,11 @@ _openrc_doins() {
 
     # whether this is an initd or confd installation
     if [[ ${1} == "--initd" ]] ; then
-        exeinto "${OPENRC_INITD_DIR}"
+        _openrc_cmd() { doinitd "$@" ; }
         fallbackdir="${FILES}"/openrc/initd
         expartdir="${OPENRC_INITD_DIR}"
     elif [[ ${1} == "--confd" ]] ; then
-        exeinto "${OPENRC_CONFD_DIR}"
+        _openrc_cmd() { doconfd "$@" ; }
         fallbackdir="${FILES}"/openrc/confd
         expartdir="${OPENRC_CONFD_DIR}"
     else
@@ -102,15 +102,15 @@ _openrc_doins() {
     # install files and record them in _openrc_expart_files array
     for service_file in "$@"; do
         if [[ -d "${service_file}" ]]; then
-            doexe "${service_file}"/*
+            _openrc_cmd "${service_file}"/*
             for i in "${service_file}"/* ; do
                 _openrc_expart_files+=( "${expartdir}/${i##*/}" )
             done
         elif [[ -f "${service_file}" ]]; then
-            doexe "${service_file}"
+            _openrc_cmd "${service_file}"
             _openrc_expart_files+=( "${expartdir}/${service_file##*/}" )
         else
-            doexe "${fallbackdir}/${service_file}"
+            _openrc_cmd "${fallbackdir}/${service_file}"
             _openrc_expart_files+=( "${expartdir}/${service_file##*/}" )
         fi
     done
