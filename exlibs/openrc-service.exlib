@@ -33,7 +33,7 @@ exparam -v _do_parts do_parts
 
 # add parts option
 if [[ ${_do_parts} == true ]] ; then
-    MYOPTIONS="parts: openrc [[ description = [ Install openrc service files ] ]]"
+    MYOPTIONS="parts: openrc [[ description = [ OpenRC service files ] ]]"
 fi
 
 # Internal variable to track actual installed openrc files, so
