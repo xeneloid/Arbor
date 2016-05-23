@@ -71,16 +71,8 @@ iproute2_src_prepare() {
     # apply version-specific patches
     default
 
-    if [[ $(exhost --target) == *-musl* ]];then
-        # fix redefinition issues
-        edo sed \
-            -e '/<linux\/in.h>/d'   \
-            -e '/<linux\/in6.h>/d'  \
-            -i include/linux/*.h
-    else
-        # use system headers
-        edo rm -r include/{linux,netinet}
-    fi
+    # use system headers
+    edo rm -r include/{linux,netinet}
 
     # honor user CFLAGS, nuke -Werror
     edo sed -e "/^CCOPTS =/s|-O2|${CFLAGS}|" \
