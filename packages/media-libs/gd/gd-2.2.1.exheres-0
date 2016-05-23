@@ -39,10 +39,6 @@ DEPENDENCIES="
         )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/38241013cc048af7c03daf6e9a75b4f42bffb200.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-jpeg
