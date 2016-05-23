@@ -136,6 +136,10 @@ gcc_pkg_setup() {
             [[ -n "$(print-flags ${target} CFLAGS)" ]]  || die "CFLAGS for ${target} are not set"
         fi
     done
+
+    # These flags are used with the build compiler as well as the host
+    # compiler and therefore cannot contain arch specific flags
+    unset CPPFLAGS CFLAGS CXXFLAGS
 }
 
 gcc_src_prepare() {
@@ -145,11 +149,10 @@ gcc_src_prepare() {
 }
 
 gcc_src_configure() {
-    local target=
+    local build=$(exhost --build) host=$(exhost --target) target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local gxx_incdir=/usr/${target}/include/c++/${PV%%_p*}
-        local tool_prefix=$(exhost --tool-prefix)
 
         if option !targets:${target} ; then
             echo "    Cross-Compile Target: ${target} (disabled)"
@@ -162,23 +165,31 @@ gcc_src_configure() {
         edo cd "${WORKBASE}/build/${target}"
 
         edo env                                                     \
-            AR=${CHOST}-ar                                          \
-            RANLIB=${CHOST}-ranlib                                  \
-            AR_FOR_TARGET=${tool_prefix}ar                          \
-            AS_FOR_TARGET=${tool_prefix}as                          \
-            CPP_FOR_TARGET=${tool_prefix}cpp                        \
-            READELF_FOR_TARGET=${tool_prefix}readelf                \
-            NM_FOR_TARGET=${tool_prefix}nm                          \
-            OBJDUMP_FOR_TARGET=${tool_prefix}objdump                \
+            AR=${build}-ar                                          \
+            RANLIB=${build}-ranlib                                  \
+            AR_FOR_TARGET=${target}-ar                              \
+            AS_FOR_TARGET=${target}-as                              \
+            CPP_FOR_TARGET=${target}-cpp                            \
+            READELF_FOR_TARGET=${target}-readelf                    \
+            NM_FOR_TARGET=${target}-nm                              \
+            OBJDUMP_FOR_TARGET=${target}-objdump                    \
             CFLAGS_FOR_TARGET="$(print-flags ${target} CFLAGS)"     \
             CPPFLAGS_FOR_TARGET="$(print-flags ${target} CPPFLAGS)" \
             CXXFLAGS_FOR_TARGET="$(print-flags ${target} CXXFLAGS)" \
             LDFLAGS_FOR_TARGET="$(print-flags ${target} LDFLAGS)"   \
+            CC_FOR_BUILD=${build}-cc                                \
+            CXX_FOR_BUILD=${build}-c++                              \
+            AR_FOR_BUILD=${build}-ar                                \
+            RANLIB_FOR_BUILD=${build}-ranlib                        \
+            CFLAGS_FOR_BUILD="$(print-build-flags CFLAGS)"          \
+            CPPFLAGS_FOR_BUILD="$(print-build-flags CPPFLAGS)"      \
+            CXXFLAGS_FOR_BUILD="$(print-build-flags CXXFLAGS)"      \
+            LDFLAGS_FOR_BUILD="$(print-build-flags LDFLAGS)"        \
         "${ECONF_SOURCE}/configure"                                 \
-                --build=${CHOST}                                    \
-                --host=${CHOST}                                     \
+                --build=${build}                                    \
+                --host=${host}                                      \
                 --target=${target}                                  \
-                --prefix=/usr/${CHOST}                              \
+                --prefix=/usr/${host}                               \
                 --datarootdir=/usr/share                            \
                 --localstatedir=/var                                \
                 --sysconfdir=/etc                                   \
@@ -231,7 +242,7 @@ gcc_src_configure() {
                   fi)                                               \
                 $(optionq threads || echo --with-newlib)            \
                 $(optionq threads || echo --without-headers)        \
-                $(if [[ ${target} == ${CHOST} ]] ; then
+                $(if [[ ${target} == ${host} ]] ; then
                     echo --program-transform="s,$,-${SLOT},"
                   else
                     echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
@@ -271,18 +282,23 @@ gcc_src_compile() {
         # honour the target specific flags.
         unset CPP
 
-        AR_FOR_TARGET=$(exhost --tool-prefix)ar                 \
-        READELF_FOR_TARGET=$(exhost --tool-prefix)readelf       \
+        AR_FOR_TARGET=${target}-ar                              \
+        READELF_FOR_TARGET=${target}-readelf                    \
         CFLAGS_FOR_TARGET="$(print-flags ${target} CFLAGS)"     \
         CPPFLAGS_FOR_TARGET="$(print-flags ${target} CPPFLAGS)" \
         CXXFLAGS_FOR_TARGET="$(print-flags ${target} CXXFLAGS)" \
         LDFLAGS_FOR_TARGET="$(print-flags ${target} LDFLAGS)"   \
+        CFLAGS_FOR_BUILD="$(print-build-flags CFLAGS)"          \
+        CPPFLAGS_FOR_BUILD="$(print-build-flags CPPFLAGS)"      \
+        CXXFLAGS_FOR_BUILD="$(print-build-flags CXXFLAGS)"      \
+        LDFLAGS_FOR_BUILD="$(print-build-flags LDFLAGS)"        \
             default
     done
 }
 
 gcc_src_install() {
-    local target= alternatives=()
+    local host=$(exhost --target) target=
+    local alternatives=()
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
         if option !targets:${target} ; then
@@ -298,21 +314,21 @@ gcc_src_install() {
         edo pushd "${IMAGE}"
 
         # c++ is provided by eclectic-gcc
-        nonfatal edo rm usr/${CHOST}/bin/{,${target}-}c++-${SLOT}
+        nonfatal edo rm usr/${host}/bin/{,${target}-}c++-${SLOT}
         nonfatal edo rm usr/share/man/man1/{,${target}-}c++-${SLOT}.1
 
-        edo rm usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}
+        edo rm usr/${host}/bin/${target}-gcc-${PV%%_p*}
 
-        if [[ ${target} == ${CHOST} ]] ; then
+        if [[ ${target} == ${host} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
             for tool in cpp-${SLOT} gcov-${SLOT} gcov-tool-${SLOT} ; do
-                if [[ -e usr/${CHOST}/bin/${tool} ]]; then
-                    edo mv usr/${CHOST}/bin/{,${target}-}${tool}
+                if [[ -e usr/${host}/bin/${tool} ]]; then
+                    edo mv usr/${host}/bin/{,${target}-}${tool}
                 fi
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
             for tool in g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
-                edo rm usr/${CHOST}/bin/${tool}
+                edo rm usr/${host}/bin/${tool}
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
         fi
@@ -323,7 +339,7 @@ gcc_src_install() {
         shopt -s nullglob
 
         # allow for C pre-preprocessor alternatives to be set correctly
-        edo pushd usr/${CHOST}/bin
+        edo pushd usr/${host}/bin
         edo mv ${target}-cpp-${SLOT} ${target}-gcc-cpp-${SLOT}
         nonfatal edo rm ${target}-cpp
         edo popd
@@ -332,7 +348,7 @@ gcc_src_install() {
         nonfatal edo rm ${target}-cpp.1
         edo popd
 
-        for tool in usr/${CHOST}/bin/${target}-*-${SLOT}; do
+        for tool in usr/${host}/bin/${target}-*-${SLOT}; do
             alternatives+=( /${tool%-${SLOT}} ${tool##*/} )
         done
 
@@ -361,16 +377,16 @@ gcc_src_install() {
     done
 
     edo pushd "${IMAGE}"
-    for tool in usr/${CHOST}/bin/${CHOST}-*-${SLOT}; do
-        [[ ${tool} =~ ^.*/${CHOST}-(.*)-${SLOT}$ ]] && local name=${BASH_REMATCH[1]}
-        dosym ${CHOST}-${name}-${SLOT} /usr/${CHOST}/bin/${name}-${SLOT}
+    for tool in usr/${host}/bin/${host}-*-${SLOT}; do
+        [[ ${tool} =~ ^.*/${host}-(.*)-${SLOT}$ ]] && local name=${BASH_REMATCH[1]}
+        dosym ${host}-${name}-${SLOT} /usr/${host}/bin/${name}-${SLOT}
         dobanned ${name}-${SLOT}
         alternatives+=(
             "${BANNEDDIR}"/${name}       ${name}-${SLOT}
-            /usr/${CHOST}/bin/${name}    ${name}-${SLOT}
+            /usr/${host}/bin/${name}     ${name}-${SLOT}
         )
-        if [[ -e usr/share/man/man1/${CHOST}-${name}-${SLOT}.1 ]]; then
-            dosym ${CHOST}-${name}-${SLOT}.1 /usr/share/man/man1/${name}-${SLOT}.1
+        if [[ -e usr/share/man/man1/${host}-${name}-${SLOT}.1 ]]; then
+            dosym ${host}-${name}-${SLOT}.1 /usr/share/man/man1/${name}-${SLOT}.1
             alternatives+=( /usr/share/man/man1/${name}.1  ${name}-${SLOT}.1 )
         fi
     done
