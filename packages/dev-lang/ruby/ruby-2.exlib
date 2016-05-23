@@ -129,6 +129,10 @@ ruby-2_src_install() {
         target=${src/${SLOT}}
         alternatives+=( /${target} ${src##*/} )
     done
+    for target in usr/$(exhost --target)/lib/lib${PN}*; do
+        src=${target/lib${PN}/lib${PN}-${SLOT}}
+        alternatives+=( /${target} ${src##*/} )
+    done
 
     if ever at_least 2.2.1; then
         # Ruby 2.2.1 already supports Gem.vendor_dir (/usr/lib64/ruby/vendor_ruby/gems/VERSION)
