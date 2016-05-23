@@ -5,7 +5,7 @@
 
 require kernel
 
-export_exlib_phases pkg_pretend src_compile src_install
+export_exlib_phases pkg_pretend src_prepare src_compile src_install
 
 myexparam path=
 
@@ -33,6 +33,25 @@ linux-headers_pkg_pretend() {
         ewarn "Kernel headers version mismatch: Installing kernel headers newer than the"
         ewarn "running kernel can break your system. Do not proceed unless you know what"
         ewarn "you're doing."
+    fi
+}
+
+linux-headers_src_prepare() {
+    default
+    if [[ $(exhost --target) == *-musl* ]];then
+        einfo "Please note that non-upstream patches are being applied to ${PN} for musl support."
+        einfo "This means you will likely not get any support from the kernel upstream with issues"
+        einfo "relating to the userspace headers. So, if you have any issues, report them to"
+        einfo "Kylie McClain <somasis@exherbo.org> or somasis on #exherbo@freenode."
+        if [[ -f "${FILES}"/${PNV}-musl.patch ]];then
+            expatch "${FILES}"/${PNV}-musl.patch
+        elif [[ -f "${FILES}"/${PN}-musl.patch ]];then
+            expatch "${FILES}"/${PN}-musl.patch
+        else
+            ewarn "No patch for musl support could be found. You will have problems compiling programs"
+            ewarn "which use the kernel's headers; notably, iproute2, iptables, anything network related."
+            ewarn "You should track the latest kernel version whenever possible."
+        fi
     fi
 }
 
