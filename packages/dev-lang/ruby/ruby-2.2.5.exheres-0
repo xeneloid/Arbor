@@ -14,7 +14,6 @@ DEPENDENCIES="
 # The disabled test hangs with sydbox-1.0.3.
 # TODO(heirecka): Try to fix this in sydbox.
 DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-2.2.3-libressl.patch
     "${FILES}"/${PN}-test_fork-Disable-a-test-which-makes-sydbox-hang.patch
 )
 
