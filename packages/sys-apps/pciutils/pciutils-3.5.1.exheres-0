@@ -36,8 +36,6 @@ DEPENDENCIES="
         sys-apps/pciutils-data [[ description = [ Up-to-date pci.ids to complement udev's hwdb ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-expose-pci_init_v30.patch )
-
 DEFAULT_SRC_INSTALL_EXCLUDE=( "README.Windows" )
 
 src_prepare() {
