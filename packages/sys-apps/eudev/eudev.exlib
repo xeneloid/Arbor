@@ -13,7 +13,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] 
 require udev-rules
 require openrc-service [ openrc_initd_files=[ "${WORKBASE}/udev-init-scripts-${OPENRC_SCRIPTS_VER}/init.d" "${FILES}"/openrc/initd ] openrc_confd_files=[ "${WORKBASE}/udev-init-scripts-${OPENRC_SCRIPTS_VER}/conf.d" ] ]
 
-DOWNLOADS+=" https://dev.gentoo.org/~williamh/dist/udev-init-scripts-${OPENRC_SCRIPTS_VER}.tar.gz"
+DOWNLOADS+=" parts:openrc? ( https://dev.gentoo.org/~williamh/dist/udev-init-scripts-${OPENRC_SCRIPTS_VER}.tar.gz )"
 
 SUMMARY="A device manager for the Linux kernel; fork of systemd-udev"
 SLOT="0"
