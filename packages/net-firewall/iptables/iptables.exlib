@@ -3,7 +3,7 @@
 
 require systemd-service
 
-export_exlib_phases src_prepare src_install
+export_exlib_phases src_install
 
 MY_PNV="${PNV/_/-}"
 
@@ -54,11 +54,6 @@ DEFAULT_SRC_COMPILE_PARAMS=( V=1 )
 DEFAULT_SRC_INSTALL_EXCLUDE=( "release.sh" )
 
 WORK=${WORKBASE}/${MY_PNV}
-
-iptables_src_prepare() {
-    default
-    edo rm include/linux/types.h
-}
 
 iptables_src_install() {
     default
