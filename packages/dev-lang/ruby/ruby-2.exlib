@@ -161,7 +161,7 @@ ruby-2_src_install() {
     keepdir ${rubylibprefix}/${SLOT}/racc/rdoc
 
     # remove empty directory
-    ever at_least 2.2.0 && edo rmdir "${IMAGE}"/${rubylibdir}/rake/lib
+    ever at_least 2.2.0 && ! ever at_least 2.3 && edo rmdir "${IMAGE}"/${rubylibdir}/rake/lib
 
     # if dependencies are met, C API docs are installed
     edo find "${IMAGE}"/usr/share/doc/${PNVR} -empty -type d -delete
