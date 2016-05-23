@@ -48,6 +48,10 @@ _openrc_expart_files=(  )
 #
 # Takes no arguments.
 install_openrc_files() {
+    if [[ "${_do_parts}" == true ]] && ! option parts:openrc;then
+        return
+    fi
+
     exparam -v openrc_initd_files openrc_initd_files[@]
     exparam -v openrc_confd_files openrc_confd_files[@]
 
@@ -57,7 +61,7 @@ install_openrc_files() {
     [[ -n "${openrc_confd_files}" ]] &&
         openrc_confd_doins "${openrc_confd_files[@]}"
 
-    if [[ ${_do_parts} == true ]] ; then
+    if [[ "${_do_parts}" == true ]] ; then
         openrc_expart "${_openrc_expart_files[@]}"
     fi
 }
