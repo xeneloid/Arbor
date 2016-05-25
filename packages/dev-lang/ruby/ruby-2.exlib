@@ -7,7 +7,7 @@
 
 require alternatives
 
-export_exlib_phases src_configure src_test src_install
+export_exlib_phases src_configure src_test src_install pkg_preinst
 
 MY_PNV="${PN}-$(ever replace 3 '-')"
 SLOT=$(ever range 1-2)
@@ -129,7 +129,7 @@ ruby-2_src_install() {
         target=${src/${SLOT}}
         alternatives+=( /${target} ${src##*/} )
     done
-    for target in usr/$(exhost --target)/lib/lib${PN}*; do
+    for target in usr/$(exhost --target)/lib/lib${PN}{.so,-static.a}; do
         src=${target/lib${PN}/lib${PN}-${SLOT}}
         alternatives+=( /${target} ${src##*/} )
     done
@@ -169,3 +169,7 @@ ruby-2_src_install() {
     edo popd
 }
 
+ruby-2_pkg_preinst() {
+    # Some libraries were mistakenly added to alternatives, breaking non selected versions
+    eclectic ruby files | grep -q /usr/$(exhost --target)/lib/lib${PN}.so.${SLOT} && eclectic ${PN} unset
+}
