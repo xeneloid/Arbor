@@ -12,7 +12,7 @@ SUMMARY="Portable Network Graphics library"
 
 REMOTE_IDS+=" freecode:${PN}"
 
-LICENCES="ZLIB"
+LICENCES="libpng"
 SLOT="0"
 MYOPTIONS="
     arm_cpu_features: neon
