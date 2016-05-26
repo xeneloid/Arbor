@@ -6,6 +6,7 @@
 #     Copyright 1999-2007 Gentoo Foundation
 
 require alternatives
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 export_exlib_phases src_prepare src_configure src_test src_install pkg_preinst
 
@@ -54,6 +55,8 @@ DEPENDENCIES="
         tk? ( dev-lang/tk )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-configure-use-PKG_PROG_PKG_CONFIG.patch )
+
 # Q= disables silent compilation
 DEFAULT_SRC_COMPILE_PARAMS=( Q= EXTLDFLAGS="${LDFLAGS}" )
 
@@ -63,7 +66,9 @@ ruby-2_src_prepare() {
     # Disable test that hangs in sydbox
     edo rm bootstraptest/test_fork.rb
 
-    default
+    edo sed -e "s/pkg-config/${PKG_CONFIG}/g" -i lib/mkmf.rb
+
+    autotools_src_prepare
 }
 
 ruby-2_src_configure() {
@@ -178,5 +183,5 @@ ruby-2_src_install() {
 
 ruby-2_pkg_preinst() {
     # Some libraries were mistakenly added to alternatives, breaking non selected versions
-    eclectic ruby files | grep -q /usr/$(exhost --target)/lib/lib${PN}.so.${SLOT} && eclectic ${PN} unset
+    eclectic ${PN} files | grep -q /usr/$(exhost --target)/lib/lib${PN}.so.${SLOT} && eclectic ${PN} unset
 }
