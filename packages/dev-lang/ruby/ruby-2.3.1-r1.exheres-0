@@ -11,10 +11,3 @@ DEPENDENCIES="
         dev-libs/gmp:=
 "
 
-src_prepare() {
-    # Disable test that hangs in sydbox
-    edo rm bootstraptest/test_fork.rb
-
-    default
-}
-

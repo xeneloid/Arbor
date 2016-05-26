@@ -7,7 +7,7 @@
 
 require alternatives
 
-export_exlib_phases src_configure src_test src_install pkg_preinst
+export_exlib_phases src_prepare src_configure src_test src_install pkg_preinst
 
 MY_PNV="${PN}-$(ever replace 3 '-')"
 SLOT=$(ever range 1-2)
@@ -58,6 +58,13 @@ DEPENDENCIES="
 DEFAULT_SRC_COMPILE_PARAMS=( Q= EXTLDFLAGS="${LDFLAGS}" )
 
 WORK=${WORKBASE}/${MY_PNV}
+
+ruby-2_src_prepare() {
+    # Disable test that hangs in sydbox
+    edo rm bootstraptest/test_fork.rb
+
+    default
+}
 
 ruby-2_src_configure() {
     # picked up by ext/socket/extconf
