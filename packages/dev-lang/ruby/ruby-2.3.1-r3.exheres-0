@@ -11,3 +11,7 @@ DEPENDENCIES="
         dev-libs/gmp:=
 "
 
+pkg_postinst() {
+    # Ruby 2.3 screws directory permissions
+    edo chmod 755 /usr/$(exhost --target)/lib/ruby/{,gems/{,${SLOT}}}
+}
