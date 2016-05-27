@@ -11,6 +11,13 @@ DEPENDENCIES="
         dev-libs/gmp:=
 "
 
+src_prepare() {
+    # Causes eautoreconf to do only half its job
+    edo rm aclocal.m4
+
+    ruby-2_src_prepare
+}
+
 pkg_postinst() {
     # Ruby 2.3 screws directory permissions
     edo chmod 755 /usr/$(exhost --target)/lib/ruby/{,gems/{,${SLOT}}}

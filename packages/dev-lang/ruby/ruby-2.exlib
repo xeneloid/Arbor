@@ -14,20 +14,15 @@ MY_PNV="${PN}-$(ever replace 3 '-')"
 SLOT=$(ever range 1-2)
 
 SUMMARY="An object-oriented scripting language"
-DESCRIPTION="A dynamic, open source programming language with a focus on
-simplicity and productivity. It has an elegant syntax that is natural to
-read and easy to write."
+DESCRIPTION="
+    A dynamic, open source programming language with a focus on simplicity and
+    productivity. It has an elegant syntax that is natural to read and easy to
+    write.
+"
 HOMEPAGE="https://www.ruby-lang.org"
 DOWNLOADS="mirror://ruby/${SLOT}/${MY_PNV}.tar.bz2"
 
-MYOPTIONS="
-    berkdb
-    doc
-    examples
-    gdbm
-    ncurses
-    readline
-    tk
+MYOPTIONS="berkdb doc examples gdbm ncurses readline tk
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
 
@@ -55,19 +50,19 @@ DEPENDENCIES="
         tk? ( dev-lang/tk )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-configure-use-PKG_PROG_PKG_CONFIG.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/0001-configure-use-PKG_PROG_PKG_CONFIG.patch" )
 
 # Q= disables silent compilation
 DEFAULT_SRC_COMPILE_PARAMS=( Q= EXTLDFLAGS="${LDFLAGS}" )
 
-WORK=${WORKBASE}/${MY_PNV}
+WORK="${WORKBASE}/${MY_PNV}"
 
 ruby-2_src_prepare() {
     # Disable test that hangs in sydbox
     edo rm bootstraptest/test_fork.rb
 
+    # Doesn't seem to be configurable during the build process
     edo sed -e "s/pkg-config/${PKG_CONFIG}/g" -i lib/mkmf.rb
-    edo rm -f aclocal.m4
 
     autotools_src_prepare
 }
@@ -77,18 +72,19 @@ ruby-2_src_configure() {
     unset SOCKS_SERVER
 
     local cfargs=(
-        --enable-ipv6
-        $(option_enable doc install-doc)
+        --program-suffix=${SLOT}
 
         --with-ruby-version=minor
         --with-rubylibprefix=/usr/$(exhost --target)/lib/ruby
         --with-rubyhdrdir=/usr/$(exhost --target)/include/ruby-${SLOT}
 
-        --program-suffix=${SLOT}
-        --enable-shared
-
         # Possible dbm providers
         --with-dbm-type=db,gdbm
+
+        --enable-ipv6
+        --enable-shared
+
+        $(option_enable doc install-doc)
     )
 
     # Disable modules that were not requested
@@ -172,11 +168,8 @@ ruby-2_src_install() {
     # FIXME: I don't know what this is
     keepdir ${rubylibprefix}/${SLOT}/racc/rdoc
 
-    # remove empty directory
-    ever at_least 2.2.0 && ! ever at_least 2.3 && edo rmdir "${IMAGE}"/${rubylibdir}/rake/lib
-
-    # if dependencies are met, C API docs are installed
-    edo find "${IMAGE}"/usr/share/doc/${PNVR} -empty -type d -delete
+    # if dependencies are met, C API docs are installed and for some versions an empty rake lib dir too
+    edo find "${IMAGE}"/usr/ -empty -type d -delete
 
     alternatives_for ${PN} ${SLOT} ${SLOT} "${alternatives[@]}"
     edo popd
