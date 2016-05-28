@@ -111,7 +111,7 @@ DEPENDENCIES="
         gnutls? ( dev-libs/gnutls[>=3.1.4] )
         idn? ( net-dns/libidn )
         journal-gateway? ( net-libs/libmicrohttpd[>=0.9.33] )
-        libcurl? ( net-misc/curl )
+        libcurl? ( net-misc/curl[>=7.32.0] )
         lz4? ( app-arch/lz4[>=125] )
         nat? ( net-firewall/iptables )
         polkit? ( sys-auth/polkit:1 )
@@ -292,6 +292,8 @@ systemd_src_configure() {
         --with-sysvrcnd-path=""
         --with-tty-gid=5
         --with-ntp-servers="0.exherbo.pool.ntp.org 1.exherbo.pool.ntp.org 2.exherbo.pool.ntp.org 3.exherbo.pool.ntp.org"
+        # Keep lingering processes (e. g. tmux, screen) after the user logs out
+        --without-kill-user-processes
         $(option_enable acl)
         $(option_enable cryptsetup libcryptsetup)
         $(option_enable efi)
@@ -315,8 +317,9 @@ systemd_src_configure() {
 
     if ever at_least 230; then
         myconfig+=(
-            --disable-tpm
             --enable-wheel-group
+            --disable-adm-group
+            --disable-tpm
             --with-default-dnssec=allow-downgrade
         )
     else

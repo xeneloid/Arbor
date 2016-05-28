@@ -1,0 +1,32 @@
+From ac3608cdbc28a14acd4c087ca6cd80d396f15eec Mon Sep 17 00:00:00 2001
+From: Michael Biebl <mbiebl@gmail.com>
+Date: Sat, 28 May 2016 11:03:03 +0200
+Subject: [PATCH] login: Fix policy for org.freedesktop.login1.set-self-linger
+ (#3365) (#3373)
+
+We need to explicitly define authorizations for allow_inactive and
+allow_active. Otherwise one is getting "Access denied" when run from a
+local console:
+
+$ loginctl enable-linger
+Could not enable linger: Access denied
+---
+ src/login/org.freedesktop.login1.policy.in | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/login/org.freedesktop.login1.policy.in b/src/login/org.freedesktop.login1.policy.in
+index 1fa6441..66cbce3 100644
+--- a/src/login/org.freedesktop.login1.policy.in
++++ b/src/login/org.freedesktop.login1.policy.in
+@@ -116,6 +116,8 @@
+                 <_message>Explicit request is required to run programs as a non-logged-in user.</_message>
+                 <defaults>
+                         <allow_any>yes</allow_any>
++                        <allow_inactive>yes</allow_inactive>
++                        <allow_active>yes</allow_active>
+                 </defaults>
+         </action>
+ 
+-- 
+2.8.3
+

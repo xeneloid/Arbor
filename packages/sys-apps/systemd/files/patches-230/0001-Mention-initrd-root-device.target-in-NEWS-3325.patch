@@ -1,0 +1,28 @@
+From 4f9020fa10df674fcda82ec97f77e24e3c5b042e Mon Sep 17 00:00:00 2001
+From: Dave Reisner <d@falconindy.com>
+Date: Mon, 23 May 2016 10:31:47 +0200
+Subject: [PATCH] Mention initrd-root-device.target in NEWS (#3325)
+
+---
+ NEWS | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/NEWS b/NEWS
+index 7c3f99d..cfe21bc 100644
+--- a/NEWS
++++ b/NEWS
+@@ -207,6 +207,11 @@ CHANGES WITH 230:
+           for backwards compatibility). AmbientCapabilities= and
+           CapabilityBoundingSet= should be used instead.
+ 
++        * A new special target has been added, initrd-root-device.target,
++          which creates a synchronization point for dependencies of the root
++          device in early userspace. Initramfs builders must ensure that this
++          target is now included in early userspace.
++
+         Contributions from: Alban Crequy, Alexander Kuleshov, Alexander Shopov,
+         Alex Crawford, Andre Klärner, Andrew Eikum, Beniamino Galvani, Benjamin
+         Robin, Biao Lu, Bjørnar Ness, Calvin Owens, Christian Hesse, Clemens
+-- 
+2.8.3
+
