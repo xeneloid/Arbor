@@ -1,9 +1,9 @@
-# Copyright 2008, 2009, 2011 Ingmar Vanhassel <ingmar@exherbo.org>
+# Copyright 2008, 2009, 2011, 2016 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'tk-8.5.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 1.12 1.11 1.10 ] ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 1.12 1.11 1.10 ] ]
 require sourceforge [ pnv=${PN}${PV}-src project=tcl suffix=tar.gz ]
 
 MY_PNV="${PN}${PV}"
