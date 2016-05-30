@@ -15,5 +15,3 @@ MYOPTIONS=""
 
 DEPENDENCIES=""
 
-WORK="${WORKBASE}/gettext-${PV}"
-
