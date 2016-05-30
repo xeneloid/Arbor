@@ -2,6 +2,7 @@
 # Copyright 2009-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require fedorahosted
 require systemd-service udev-rules
 require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
