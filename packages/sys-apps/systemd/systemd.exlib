@@ -581,7 +581,6 @@ systemd_pkg_postinst() {
                 nonfatal edo systemctl --system daemon-reexec
                 nonfatal edo systemctl --system restart systemd-udevd.service
                 nonfatal edo systemctl --system restart systemd-journald.service
-                nonfatal edo systemctl --system restart systemd-logind.service
             else
                 # No need to ewarn or something because udevd might not be running.
                 nonfatal edo pkill -TERM udevd
