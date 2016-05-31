@@ -1,16 +1,16 @@
 # Copyright (c) 2007 Alexander Færøy <ahf@exherbo.org>
+# Copyright (c) 2016 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require systemd-service alternatives
-
 NTP_PNV="${PNV/_/}"
+
+require github [ user=${PN}-portable pn=${PN}-portable tag=${NTP_PNV} ]
+require systemd-service alternatives
 
 SUMMARY="OpenNTPD is a free implementation of the Network Time Protocol"
 HOMEPAGE="http://www.openntpd.org/"
 
-# latest upstream has a lot of bugfixes and version-bumped but isn't on openbsd.org...
-DOWNLOADS="https://dev.exherbo.org/~somasis/${NTP_PNV}.tar.xz"
-#DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/${NTP_PNV}.tar.gz"
+DOWNLOADS="http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/${NTP_PNV}.tar.gz"
 
 LICENCES="BSD-2 BSD-3"
 SLOT="0"
