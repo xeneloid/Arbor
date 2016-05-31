@@ -23,7 +23,8 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-Revert-SV-44742-Fix-double-colon-rules-plus-parallel.patch
+    "${FILES}"/4762480ae9cb8df4878286411f178d32db14eff0.patch
+    "${FILES}"/a3d8c086d54c112fecfa2b9026a32a14f741f5f5.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
