@@ -32,7 +32,3 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
 DEFAULT_SRC_TEST_PARAMS=( VERBOSE=1 )
 
-src_prepare() {
-    autotools_src_prepare
-}
-
