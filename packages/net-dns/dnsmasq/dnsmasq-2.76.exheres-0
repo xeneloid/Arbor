@@ -48,7 +48,7 @@ DEPENDENCIES="
 "
 
 src_prepare() {
-    expatch "${FILES}/0001-Fix-crash-when-empty-address-from-DNS-overlays-A-rec.patch"
+    default
 
     # Use a more sane lease directory
     edo sed -e 's:^#dhcp-leasefile=.*:dhcp-leasefile=/var/lib/dnsmasq/dnsmasq.leases:' \
