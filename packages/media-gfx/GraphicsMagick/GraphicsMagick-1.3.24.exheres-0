@@ -45,6 +45,9 @@ MYOPTIONS="
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
+# Tests fail with different compile time options not enabled
+RESTRICT=test
+
 DEPENDENCIES="
     build+run:
         dev-libs/libxml2:2.0[>=2.7.8]
@@ -79,14 +82,11 @@ DEPENDENCIES="
         sci-apps/gnuplot [[ description = [ Support for reading GNUPlot files ] ]]
 "
 
-# Tests fail with different compile time options not enabled
-RESTRICT=test
-
 # TODO
 # - configure.ac also has checks for: rst2html, txt2html p7zip, zip, but none of these are required
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-shared
+    --disable-broken-coders
     # Disable OpenMP for algorithms which sometimes run slower
     --disable-openmp-slow
     --disable-static
@@ -108,7 +108,10 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --without-perl
     --without-trio
 )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'imagemagick magick-compat' 'openmp' )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    'imagemagick magick-compat'
+    'openmp'
+)
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'X x'
     'fpx'
