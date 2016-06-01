@@ -7,29 +7,30 @@
 require sourceforge [ suffix=tar.xz ]
 
 SUMMARY="System call trace utility"
-HOMEPAGE="http://sourceforge.net/projects/${PN}"
-LICENCES="BSD-3"
+HOMEPAGE="https://sourceforge.net/projects/${PN}"
 
 BUGS_TO="philantrop@exherbo.org"
-
-UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/files/${PN}/${PV}/README-${PV}.txt/view"
 REMOTE_IDS="freecode:${PN}"
 
+UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/files/${PN}/${PV}/README-${PV}.txt/view"
+
+LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
+
+# sydbox makes the tests fail even with all the disabled stuff below and
+# RESTRICT="userpriv" due to the usage of ptrace. Last checked: 4.11
+RESTRICT="test"
 
 DEPENDENCIES="
     test:
         sys-apps/busybox
 "
 
-# sydbox makes the tests fail even with all the disabled stuff below and
-# RESTRICT="userpriv" due to the usage of ptrace. Last checked: 4.11
-RESTRICT="test"
-
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-musl.patch )
 DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD=$(exhost --tool-prefix)cc )
+
+DEFAULT_SRC_COMPILE_PARAMS=( AR=${AR} )
 
 src_prepare() {
     default
@@ -39,7 +40,6 @@ src_prepare() {
             -e '/check_prog $time/d'                    \
             -i tests/strace-f.test
 }
-
 
 src_test() {
     esandbox disable
