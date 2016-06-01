@@ -35,7 +35,7 @@ DEPENDENCIES="
         net-misc/curl[>=7.10]
         sys-libs/readline
         hkps? ( dev-libs/gnutls[>=3.0] )
-        smartcard? ( dev-libs/libusb:1.0 )
+        smartcard? ( dev-libs/libusb:1 )
         tofu? ( dev-db/sqlite[>=3.7] )
     recommendation:
         app-crypt/pinentry [[ description = [
