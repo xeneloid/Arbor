@@ -49,11 +49,11 @@ gem_dependencies() {
 }
 
 if [[ -z ${DOWNLOADS} ]]; then
-    DOWNLOADS="http://gems.rubyforge.org/gems/${RUBY_PNV}.gem"
-    REMOTE_IDS="rubyforge:${RUBY_PN}"
+    DOWNLOADS="https://rubygems.org/downloads/${RUBY_PNV}.gem"
+    REMOTE_IDS="rubygems:${RUBY_PN}"
 fi
 
-HOMEPAGE="http://${RUBY_PN}.rubyforge.org"
+HOMEPAGE="https://rubygems.org/gems/${RUBY_PN}"
 MYOPTIONS="$(gem_myoptions)"
 
 DEPENDENCIES="
