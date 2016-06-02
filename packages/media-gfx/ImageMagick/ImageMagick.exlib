@@ -105,8 +105,10 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-indirect-reads
     --disable-opencl
     --disable-legacy-support
+    --disable-pipes
     --disable-static
     --with-bzlib
     --with-dejavu-font-dir=/usr/share/fonts/X11/dejavu
