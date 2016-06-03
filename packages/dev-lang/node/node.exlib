@@ -46,7 +46,7 @@ node_src_prepare() {
     default
 
     edo ln -s /usr/$(exhost --build)/bin/python2 "${TMPDIR}"/python
-    edo sed -e "s:pkg-config :${PKG_CONFIG} :g" -e "s:env python:env python2:" -i configure
+    edo sed -e "s:env python:env python2:" -i configure
 }
 
 node_src_configure() {
@@ -60,9 +60,9 @@ node_src_configure() {
 node_src_install() {
     default
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/man
-    edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/doc
+    edo mv "${IMAGE}"/usr/$(exhost --target)/share/doc/node/* "${IMAGE}"/usr/share/doc/"${PNVR}"/
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/systemtap
-    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share
+    edo rm -r "${IMAGE}"/usr/$(exhost --target)/share
 }
 
 node_src_test() {
