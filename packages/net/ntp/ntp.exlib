@@ -5,7 +5,7 @@
 
 require systemd-service alternatives
 
-export_exlib_phases src_install
+export_exlib_phases src_compile src_install
 
 MY_PNV=${PNV/_p/p}
 SUMMARY="Network Time Protocol suite/programs"
@@ -20,7 +20,6 @@ Positioning Service (GPS) receiver, for example.
 HOMEPAGE="http://www.${PN}.org"
 DOWNLOADS="
     https://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}$(ever major)/${PN}-${PV:0:3}/${MY_PNV}.tar.gz
-    https://dev.exherbo.org/distfiles/${PN}/${MY_PNV}-manpages.tar.bz2
 "
 
 UPSTREAM_RELEASE_NOTES="https://www.eecis.udel.edu/~${PN}/${PN}_spool/${PN}4/NEWS"
@@ -36,6 +35,8 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
+    build:
+        dev-libs/libxslt [[ description = [ for generating manpages ] ]]
     build+run:
         sys-libs/ncurses[>=5.2]
         sys-libs/readline[>=4.1]
@@ -71,12 +72,23 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( WHERE-TO-START )
 
 WORK=${WORKBASE}/${MY_PNV}
 
+ntp_src_compile() {
+    default
+
+    # generate manpages; based off genmans.sh
+    edo mkdir man
+    for f in ntp{date,dc,d,q,time,trace,dsim} keygen tickadj;do
+        edo sed -e "s:<csobj.*<:csobj>/:" ./html/"$f".html > ./."$f".html
+        edo xsltproc --html --stringparam version "${PV}" "${FILES}"/ntp.xsl ./."$f".html > ./man/"$f".8
+    done
+}
+
 ntp_src_install() {
     local host=$(exhost --target)
 
     default
 
-    doman "${WORKBASE}"/man/*.[58]
+    doman man/*.[58]
     insinto /usr/share/doc/${PNVR}/
     doins -r html/
 
