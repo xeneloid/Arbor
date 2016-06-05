@@ -85,7 +85,10 @@ binutils_src_configure() {
 
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
-        local myconf=( --target=${target} --disable-werror --enable-gold --enable-ld --enable-lto )
+
+        # NOTE(compnerd) explicitly disable gdb incase we are building from scm.  Upstream bundles
+        # gdb and binutils and this will otherwise build gdb which is packaged separately.
+        local myconf=( --target=${target} --disable-werror --disable-gdb --enable-gold --enable-ld --enable-lto )
 
         if ever at_least 2.26 ; then
             myconf+=( --enable-compressed-debug-sections=all --with-system-zlib )
