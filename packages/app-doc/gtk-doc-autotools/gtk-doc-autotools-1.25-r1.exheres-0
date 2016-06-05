@@ -38,6 +38,10 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${MY_PN}-${PV}
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-depscan-fixxref-rebase-Don-t-hardcode-pkg-config-bin.patch
+)
+
 src_compile() {
     :
 }

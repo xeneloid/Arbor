@@ -1,0 +1,57 @@
+From ff0e6bf88e0f28caf40054ec4dbf5edc3627b87f Mon Sep 17 00:00:00 2001
+From: Marvin Schmidt <marv@exherbo.org>
+Date: Sun, 5 Jun 2016 10:13:56 +0200
+Subject: [PATCH] depscan/fixxref/rebase: Don't hardcode pkg-config binary
+
+`pkg-config` is not necessarily the correct pkg-config binary,
+especially in cross-compilation scenarios. Use the pkg-config binary
+that PKG_PROG_PKG_CONFIG (which looks for host-prefixed pkg-config)
+found and defined in PKG_CONFIG
+---
+ gtkdoc-depscan.in | 2 +-
+ gtkdoc-fixxref.in | 2 +-
+ gtkdoc-rebase.in  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/gtkdoc-depscan.in b/gtkdoc-depscan.in
+index 83af01b..accc7d0 100644
+--- a/gtkdoc-depscan.in
++++ b/gtkdoc-depscan.in
+@@ -264,7 +264,7 @@ def merge_gnome_path(options):
+     path = path and path.split(':') or []
+ 
+     prefix = popen(
+-        'pkg-config --variable=prefix glib-2.0'
++        '@PKG_CONFIG@ --variable=prefix glib-2.0'
+         ).readline().rstrip()
+ 
+     path.insert(0, prefix)
+diff --git a/gtkdoc-fixxref.in b/gtkdoc-fixxref.in
+index 3d9e8d0..b86bc88 100755
+--- a/gtkdoc-fixxref.in
++++ b/gtkdoc-fixxref.in
+@@ -124,7 +124,7 @@ EOF
+     
+     # We scan the directory containing GLib and any directories in GNOME2_PATH
+     # first, but these will be overriden by any later scans.
+-    $dir = `pkg-config --variable=prefix glib-2.0`;
++    $dir = `@PKG_CONFIG@ --variable=prefix glib-2.0`;
+     $dir =~ s/\s+$//;
+     $dir = $dir . "/share/gtk-doc/html";
+     if (-d $dir) {
+diff --git a/gtkdoc-rebase.in b/gtkdoc-rebase.in
+index 375482d..ca5c9d5 100644
+--- a/gtkdoc-rebase.in
++++ b/gtkdoc-rebase.in
+@@ -113,7 +113,7 @@ EOF
+         }
+     }
+     
+-    $dir = `pkg-config --variable=prefix glib-2.0`;
++    $dir = `@PKG_CONFIG@ --variable=prefix glib-2.0`;
+     $dir =~ s/^\s*(\S*)\s*$/$1/;
+     $dir = $dir . "/share/gtk-doc/html";
+     print "Prepending GLib directory $dir\n" if $VERBOSE;
+-- 
+2.8.3
+
