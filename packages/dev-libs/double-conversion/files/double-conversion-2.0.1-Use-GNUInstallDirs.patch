@@ -1,0 +1,106 @@
+Upstream: yes, cherry-picked from master
+
+From 7164d2f43f72496493af079210c6382c052f41fa Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Sun, 5 Jun 2016 21:28:56 +0200
+Subject: [PATCH] Use GNUInstallDirs
+
+GNUInstallDirs was introduced with cmake-2.8.5 and provides
+variables similar to the ones usually provided by autotools which
+allow fine tuning the installation location.
+Also install cmake files to a lower case 'cmake' dir which seems
+more common than with a upper case 'C'.
+---
+ CMakeLists.txt                   | 25 ++++---------------------
+ double-conversionConfig.cmake.in |  2 +-
+ src/CMakeLists.txt               |  8 ++++----
+ 3 files changed, 9 insertions(+), 26 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7b09be0..fbb09ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,8 @@
+-cmake_minimum_required(VERSION 2.8)
++cmake_minimum_required(VERSION 2.8.5)
+ project(double-conversion)
+ 
++include(GNUInstallDirs)
++
+ # pick a version #
+ set(double-conversion_VERSION 2.0.1)
+ set(double-conversion_SOVERSION_MAJOR 1)
+@@ -9,26 +11,13 @@ set(double-conversion_SOVERSION_PATCH 0)
+ set(double-conversion_SOVERSION
+   ${double-conversion_SOVERSION_MAJOR}.${double-conversion_SOVERSION_MINOR}.${double-conversion_SOVERSION_PATCH})
+ 
+-# set paths for install -- empty initially
+-# Offer the user the choice of overriding the installation directories
+-set(INSTALL_BIN_DIR CACHE PATH "Installation directory for libraries")
+-set(INSTALL_LIB_DIR CACHE PATH "Installation directory for libraries")
+-set(INSTALL_INCLUDE_DIR CACHE PATH "Installation directory for include")
+ # set suffix for CMake files used for packaging
+ if(WIN32 AND NOT CYGWIN)
+   set(INSTALL_CMAKE_DIR CMake)
+ else()
+-  set(INSTALL_CMAKE_DIR lib/CMake/double-conversion)
++  set(INSTALL_CMAKE_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/double-conversion)
+ endif()
+ 
+-# Make relative paths absolute (needed later)
+-foreach(p LIB BIN INCLUDE CMAKE)
+-  set(var INSTALL_${p}_DIR)
+-  if(NOT IS_ABSOLUTE "${${var}}")
+-    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+-  endif()
+-endforeach()
+-
+ #
+ # set up include dirs
+ include_directories("${PROJECT_SOURCE_DIR}/src"
+@@ -64,12 +53,6 @@ configure_file(double-conversionBuildTreeSettings.cmake.in
+   @ONLY)
+ 
+ #
+-# determine where include is relative to the CMake dir in
+-# in installed tree
+-file(RELATIVE_PATH CONF_REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+-  "${INSTALL_INCLUDE_DIR}")
+-
+-#
+ # sets up config to be used by CMake find_package
+ configure_file(double-conversionConfig.cmake.in
+   "${PROJECT_BINARY_DIR}/double-conversionConfig.cmake"
+diff --git a/double-conversionConfig.cmake.in b/double-conversionConfig.cmake.in
+index bbe784b..388c251 100644
+--- a/double-conversionConfig.cmake.in
++++ b/double-conversionConfig.cmake.in
+@@ -9,7 +9,7 @@ if(EXISTS "${double-conversion_CMAKE_DIR}/CMakeCache.txt")
+   include("${double-conversion_CMAKE_DIR}/double-conversionBuildTreeSettings.cmake")
+ else()
+   set(double-conversion_INCLUDE_DIRS
+-    "${double-conversion_CMAKE_DIR}/@CONF_REL_INCLUDE_DIR@/include/double-conversion")
++    "${double-conversion_CMAKE_DIR}/@CMAKE_INSTALL_FULL_INCLUDEDIR@/include/double-conversion")
+ endif()
+ 
+ include("${double-conversion_CMAKE_DIR}/double-conversionLibraryDepends.cmake")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0da50b1..b166ce3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -41,8 +41,8 @@ endif()
+ # pulls along all the header files with the library.
+ install(TARGETS double-conversion
+   EXPORT double-conversionLibraryDepends
+-  RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
+-  LIBRARY DESTINATION "${INSTALL_LIB_DIR}/lib" COMPONENT shlib
+-  ARCHIVE DESTINATION "${INSTALL_LIB_DIR}/lib" COMPONENT lib
+-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/include/double-conversion"
++  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
++  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
++  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib
++  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/double-conversion"
+   COMPONENT dev)
+-- 
+2.8.3
+

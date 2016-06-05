@@ -1,0 +1,11 @@
+# Copyright 2016 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require double-conversion
+
+PLATFORMS="~amd64"
+
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-Use-GNUInstallDirs.patch
+)
+

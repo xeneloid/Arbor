@@ -1,0 +1,25 @@
+# Copyright 2016 Heiko Becker <heirecka@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require github [ user=google tag=v${PV} ] cmake [ api=2 ]
+
+SUMMARY="Efficient binary <-> decimal conversion routines for IEEE doubles"
+DESCRIPTION="
+This project provides binary-decimal and decimal-binary
+routines for IEEE doubles.
+
+The library consists of efficient conversion routines that have been extracted
+from the V8 JavaScript engine. The code has been refactored and improved so
+that it can be used more easily in other projects.
+"
+
+LICENCES="BSD-3"
+SLOT="0"
+MYOPTIONS=""
+
+DEPENDENCIES=""
+
+CMAKE_SRC_CONFIGURE_PARAMS+=(
+    -DBUILD_SHARED_LIBS:BOOL=TRUE
+)
+
