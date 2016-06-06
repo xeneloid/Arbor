@@ -60,9 +60,9 @@ node_src_configure() {
 node_src_install() {
     default
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/man
-    edo mv "${IMAGE}"/usr/$(exhost --target)/share/doc/node/* "${IMAGE}"/usr/share/doc/"${PNVR}"/
+    edo mv "${IMAGE}"/usr/$(exhost --target)/share/doc/${PN}/* "${IMAGE}"/usr/share/doc/"${PNVR}"/
     edo mv "${IMAGE}"/usr/{$(exhost --target)/,}share/systemtap
-    edo rm -r "${IMAGE}"/usr/$(exhost --target)/share
+    edo rmdir "${IMAGE}"/usr/$(exhost --target)/share/{doc/{${PN}/,},}
 }
 
 node_src_test() {
