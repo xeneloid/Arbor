@@ -10,7 +10,7 @@ SUMMARY="Paludis, the one true package mangler"
 HOMEPAGE="http://paludis.exherbo.org"
 DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
 
-MY_RUBY_ABIS=( 2.1 2.2 2.3 )
+MY_RUBY_ABIS=( 2.1 2.2 )
 MYOPTIONS="
     doc
     gemcutter    [[ description = [ Enable Gemcutter-based support for ruby gems ] ]]
