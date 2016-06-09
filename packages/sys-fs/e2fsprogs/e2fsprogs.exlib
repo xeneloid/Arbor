@@ -46,6 +46,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-fsck
     --disable-libblkid
     --disable-libuuid
+    --disable-tdb
     --disable-uuidd
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
