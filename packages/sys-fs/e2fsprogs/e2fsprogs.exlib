@@ -5,6 +5,9 @@
 
 require sourceforge [ suffix=tar.gz ]
 
+# autotools regeneration can be removed by next release (needed for musl support in gettext macros)
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
 export_exlib_phases src_configure src_test src_install
 
 SUMMARY="Utilities for managing ext2/ext3/ext4 filesystems"
@@ -34,7 +37,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    gt_cv_func_gnugettext{1,2}_libc=yes
     --enable-bmap-stats
     --enable-elf-shlibs
     --enable-mmp
