@@ -86,7 +86,7 @@ DEPENDENCIES="
 
 WORK=${WORKBASE}/${PNV/_/.}
 
-git-googlecode_src_unpack() {
+git-build_src_unpack() {
     unpack ${PNV}.tar.xz
     edo cd "${WORK}"
     exparam -b manpages && unpack ${PN}-manpages-${PV}.tar.xz
@@ -97,7 +97,7 @@ git-googlecode_src_unpack() {
     fi
 }
 
-git-googlecode_src_prepare() {
+git-build_src_prepare() {
     edo sed -i "s#pkg-config#${PKG_CONFIG}#g" contrib/credential/gnome-keyring/Makefile
 
     # These tests are broken with grep 2.23
@@ -107,7 +107,7 @@ git-googlecode_src_prepare() {
 
 # No option: mozsha1/ppcsha1
 # TODO Check whether we want NO_CROSS_DIRECTORY_HARDLINKS wrt pbins
-git-googlecode_src_configure() {
+git-build_src_configure() {
     # Note(tanderson): Run perlinfo here to set ${VENDOR_LIB} for INSTALLSITELIB;
     # Really, this is used in src_{compile,install} but set it here so we don't
     # have to modify 'myoptions' later.
@@ -162,20 +162,20 @@ myemake() {
         "${@}"
 }
 
-git-googlecode_src_compile() {
+git-build_src_compile() {
     myemake V=1 all
     elisp-optional_src_compile
     option keyring && myemake -C contrib/credential/gnome-keyring
 }
 
-git-googlecode_src_test() {
+git-build_src_test() {
     esandbox allow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
     # default_src_test executes the wrong target, "make check", first
     myemake -j1 test
     esandbox disallow_net "unix:${WORK%/}/t/trash directory.t0301-credential-cache/.git-credential-cache/socket";
 }
 
-git-googlecode_src_install() {
+git-build_src_install() {
     myemake install
 
     if exparam -b manpages ; then
