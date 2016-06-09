@@ -29,7 +29,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --hates=datarootdir
     --hates=docdir
     --disable-static
-    --with-jpeg7
     --with-jpeg8
     --with-pic
 )
