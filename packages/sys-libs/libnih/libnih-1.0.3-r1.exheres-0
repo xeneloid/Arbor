@@ -37,7 +37,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
-    gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
 src_prepare() {
@@ -46,10 +45,5 @@ src_prepare() {
         -i nih{,-dbus}/Makefile.am
 
     autotools_src_prepare
-}
-
-src_install() {
-    default
-    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 }
 
