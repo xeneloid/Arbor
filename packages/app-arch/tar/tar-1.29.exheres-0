@@ -21,7 +21,9 @@ DEPENDENCIES="
         )
 "
 
+# this can be removed by next release (can't regenerate autotools stuff because of gnulib)
 DEFAULT_SRC_CONFIGURE_PARAMS=( gt_cv_func_gnugettext{1,2}_libc=yes )
+
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'acl posix-acls' )
 
 src_test() {
@@ -38,6 +40,7 @@ src_install() {
         /usr/$(exhost --target)/bin/tar gtar    \
         /usr/share/man/man1/tar.1       gtar.1
 
+    # these can be removed by next release
     nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
     nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 }
