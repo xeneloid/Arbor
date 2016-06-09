@@ -5,6 +5,9 @@ require alternatives
 require gnu [ suffix=xz ]
 require option-renames [ renames=[ 'gnutls providers:gnutls' ] ]
 
+# autotools regeneration can be removed by next release (needed for musl support in gettext macros)
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+
 SUMMARY="Wget is a package for retrieving files using HTTP, HTTPS and FTP"
 
 REMOTE_IDS="freecode:${PN}"
@@ -43,7 +46,6 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MAILING-LIST doc/sample.wgetrc )
 
 src_configure() {
     local myconf=(
-        gt_cv_func_gnugettext{1,2}_libc=yes
         --enable-ipv6
         --enable-nls
         --disable-assert
@@ -66,9 +68,6 @@ src_test() {
 
 src_install() {
     default
-
-    # NOTE(somasis): remove gettext remenants on musl
-    edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib
 
     alternatives_for wget gnu 1000 \
         /usr/$(exhost --target)/bin/wget gnu${PN} \
