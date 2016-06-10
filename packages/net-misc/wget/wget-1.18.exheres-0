@@ -13,6 +13,7 @@ LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
+    ares [[ description = [ Enable support for C-Ares DNS lookup ] ]]
     idn [[ description = [ Enable support for internationalized domain names ] ]]
     ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
 "
@@ -25,6 +26,7 @@ DEPENDENCIES="
         dev-libs/pcre
         sys-apps/util-linux [[ note = [ for libuuid ] ]]
         sys-libs/zlib
+        ares? ( net-dns/c-ares )
         idn? ( net-dns/libidn )
         providers:gnutls? (
             dev-libs/gmp:=
@@ -53,6 +55,7 @@ src_configure() {
         --without-libpsl
         --without-metalink
         $(option_enable idn iri)
+        $(option_with ares cares)
     )
 
     econf ${myconf[@]}
