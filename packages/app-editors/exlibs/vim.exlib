@@ -126,6 +126,11 @@ vim_src_prepare() {
     # -D_FORTIFY_SOURCE=0 instead.
     sed -i 's/-D_FORTIFY_SOURCE=1/-D_FORTIFY_SOURCE=0/g' "${WORK}"/src/configure.in || die 'fortify sed failed'
 
+    # GCC 5.3 converts type mismatches to errors.  With patchset 1402 and newer, this will cause a
+    # compilation failure due to a type mismatch for _Xmblen.  Work around that by relying on the
+    # header declaration.
+    sed -i '/_Xmblen(char/d' "${WORK}/src/osdef2.h.in" || die "_Xmblen sed failed"
+
     # if we USE vim-pager, make the manpager.sh script
     if has vim-pager ${MYOPTIONS} && option vim-pager ; then
         cat <<END > "${WORK}"/runtime/macros/manpager.sh
