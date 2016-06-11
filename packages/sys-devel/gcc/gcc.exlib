@@ -309,10 +309,10 @@ gcc_src_install() {
         edo pushd "${IMAGE}"
 
         # c++ is provided by eclectic-gcc
-        nonfatal edo rm usr/"${CHOST}"/bin/{,${target}-}c++-${SLOT}
+        nonfatal edo rm usr/${CHOST}/bin/{,${target}-}c++-${SLOT}
         nonfatal edo rm usr/share/man/man1/{,${target}-}c++-${SLOT}.1
 
-        edo rm "usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}"
+        edo rm usr/${CHOST}/bin/${target}-gcc-${PV%%_p*}
 
         if [[ ${target} == ${CHOST} ]] ; then
             # TODO(compnerd) tweak build to automatically name these tools properly
@@ -323,7 +323,7 @@ gcc_src_install() {
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
             for tool in g++-${SLOT} gcc-${SLOT} gcc-ar-${SLOT} gcc-nm-${SLOT} gcc-ranlib-${SLOT} gfortran-${SLOT} ; do
-                edo rm "usr/${CHOST}/bin/${tool}"
+                edo rm usr/${CHOST}/bin/${tool}
                 nonfatal edo mv usr/share/man/man1/{,${target}-}${tool}.1
             done
         fi
@@ -334,7 +334,7 @@ gcc_src_install() {
         shopt -s nullglob
 
         # allow for C pre-preprocessor alternatives to be set correctly
-        edo pushd usr/"${CHOST}"/bin
+        edo pushd usr/${CHOST}/bin
         edo mv ${target}-cpp-${SLOT} ${target}-gcc-cpp-${SLOT}
         nonfatal edo rm ${target}-cpp
         edo popd
@@ -343,8 +343,8 @@ gcc_src_install() {
         nonfatal edo rm ${target}-cpp.1
         edo popd
 
-        for tool in usr/"${CHOST}"/bin/${target}-*-${SLOT}; do
-            alternatives+=( /"${tool%-${SLOT}}" "${tool##*/}" )
+        for tool in usr/${CHOST}/bin/${target}-*-${SLOT}; do
+            alternatives+=( /${tool%-${SLOT}} ${tool##*/} )
         done
 
         for man in usr/share/man/man*/*.*; do
@@ -372,16 +372,16 @@ gcc_src_install() {
     done
 
     edo pushd "${IMAGE}"
-    for tool in usr/"${CHOST}"/bin/"${CHOST}"-*-${SLOT}; do
+    for tool in usr/${CHOST}/bin/${CHOST}-*-${SLOT}; do
         [[ ${tool} =~ ^.*/${CHOST}-(.*)-${SLOT}$ ]] && local name=${BASH_REMATCH[1]}
-        dosym "${CHOST}-${name}-${SLOT}" /usr/"${CHOST}"/bin/${name}-${SLOT}
+        dosym ${CHOST}-${name}-${SLOT} /usr/${CHOST}/bin/${name}-${SLOT}
         dobanned ${name}-${SLOT}
         alternatives+=(
             "${BANNEDDIR}"/${name}       ${name}-${SLOT}
-            /usr/"${CHOST}"/bin/${name}  ${name}-${SLOT}
+            /usr/${CHOST}/bin/${name}    ${name}-${SLOT}
         )
         if [[ -e usr/share/man/man1/${CHOST}-${name}-${SLOT}.1 ]]; then
-            dosym "${CHOST}-${name}-${SLOT}.1"    /usr/share/man/man1/${name}-${SLOT}.1
+            dosym ${CHOST}-${name}-${SLOT}.1 /usr/share/man/man1/${name}-${SLOT}.1
             alternatives+=( /usr/share/man/man1/${name}.1  ${name}-${SLOT}.1 )
         fi
     done
