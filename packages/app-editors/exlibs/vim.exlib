@@ -229,8 +229,8 @@ vim_src_configure() {
             gvim)
             myconf+=" --with-vim-name=gvim \
                       --with-x
-                      --enable-gtk2-check \
-                      --enable-gui=gtk2"
+                      --enable-gtk3-check \
+                      --enable-gui=gtk3"
         #   elif option motif ; then
         #       echo "Building gvim with the MOTIF GUI"
         #       myconf+=" --enable-gui=motif"
