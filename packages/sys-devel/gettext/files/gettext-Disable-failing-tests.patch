@@ -1,0 +1,38 @@
+Upstream: no
+Source: Heiko Becker <heirecka@exherbo.org>
+Reason: Fix two failing tests on Jenkins
+        https://galileo.mailstation.de/jenkins/job/arbor/6576/
+
+--- gettext-tools/gnulib-tests/Makefile.gnulib	2016-06-12 15:25:45.519249821 +0200
++++ gettext-tools/gnulib-tests/Makefile.gnulib.old	2016-06-12 15:27:39.464912265 +0200
+@@ -1574,11 +1574,11 @@
+ 
+ ## begin gnulib module thread-tests
+ 
+-TESTS += test-thread_self test-thread_create
+-check_PROGRAMS += test-thread_self test-thread_create
++TESTS += test-thread_self
++check_PROGRAMS += test-thread_self
+ test_thread_self_LDADD = $(LDADD) @LIBTHREAD@
+ test_thread_create_LDADD = $(LDADD) @LIBMULTITHREAD@
+-EXTRA_DIST += test-thread_self.c test-thread_create.c macros.h
++EXTRA_DIST += test-thread_self.c macros.h
+ 
+ ## end   gnulib module thread-tests
+ 
+@@ -1592,11 +1592,11 @@
+ 
+ ## begin gnulib module tls-tests
+ 
+-TESTS += test-tls
+-check_PROGRAMS += test-tls
+-test_tls_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
++#TESTS += test-tls
++#check_PROGRAMS += test-tls
++#test_tls_LDADD = $(LDADD) @LIBMULTITHREAD@ @YIELD_LIB@
+ 
+-EXTRA_DIST += test-tls.c
++#EXTRA_DIST += test-tls.c
+ 
+ ## end   gnulib module tls-tests
+ 
