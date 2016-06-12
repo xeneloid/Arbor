@@ -89,7 +89,11 @@ binutils_src_configure() {
 
         # NOTE(compnerd) explicitly disable gdb incase we are building from scm.  Upstream bundles
         # gdb and binutils and this will otherwise build gdb which is packaged separately.
-        local myconf=( --target=${target} --disable-werror --disable-gdb --enable-gold --enable-ld --enable-lto )
+        local myconf=( --target=${target} --disable-werror --disable-gdb --enable-ld --enable-lto )
+        case "${target}" in
+        i686-unknown-windows-gnu|i686-unknown-windows-msvc|i686-unknown-windows-cygnus) ;;
+        *) myconf+=( --enable-gold ) ;;
+        esac
 
         if ever at_least 2.26 ; then
             myconf+=( --enable-compressed-debug-sections=all --with-system-zlib )
@@ -158,6 +162,13 @@ binutils_src_test_expensive() {
     done
 }
 
+linkers_for_target() {
+    case "${1}" in
+    i686-unknown-windows-gnu|i686-unknown-windows-msvc|i686-unknown-windows-cygnus) echo bfd ;;
+    *) echo bfd gold ;;
+    esac
+}
+
 binutils_src_install() {
     local host=$(exhost --target) target=
 
@@ -192,7 +203,7 @@ binutils_src_install() {
         done
 
         # alternatives setup
-        for provider in bfd gold ; do
+        for provider in $(linkers_for_target ${target}) ; do
             local priority=
             local alternatives=()
 
