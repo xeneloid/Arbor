@@ -1,0 +1,46 @@
+Upstream: yes
+Reason: http://www.openwall.com/lists/oss-security/2016/06/11/2
+
+From 23e77869225f66716e0e1974dacb1febbdb022c9 Mon Sep 17 00:00:00 2001
+From: Benjamin Peterson <benjamin@python.org>
+Date: Wed, 20 Jan 2016 22:23:44 -0800
+Subject: [PATCH] prevent buffer overflow in get_data (closes #26171)
+
+---
+ Misc/NEWS           | 3 +++
+ Modules/zipimport.c | 5 +++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/Misc/NEWS b/Misc/NEWS
+index 0d17645..995ad1b 100644
+--- a/Misc/NEWS
++++ b/Misc/NEWS
+@@ -36,6 +36,9 @@ Core and Builtins
+   __str__, __trunc__, and __float__ returning instances of subclasses of
+   str, long, and float to subclasses of str, long, and float correspondingly.
+ 
++- Issue #26171: Fix possible integer overflow and heap corruption in
++  zipimporter.get_data().
++
+ Library
+ -------
+ 
+diff --git a/Modules/zipimport.c b/Modules/zipimport.c
+index 27a082d..006be3c 100644
+--- a/Modules/zipimport.c
++++ b/Modules/zipimport.c
+@@ -895,6 +895,11 @@ get_data(char *archive, PyObject *toc_entry)
+         PyMarshal_ReadShortFromFile(fp);        /* local header size */
+     file_offset += l;           /* Start of file data */
+ 
++    if (data_size > LONG_MAX - 1) {
++        fclose(fp);
++        PyErr_NoMemory();
++        return NULL;
++    }
+     raw_data = PyString_FromStringAndSize((char *)NULL, compress == 0 ?
+                                           data_size : data_size + 1);
+     if (raw_data == NULL) {
+-- 
+2.8.4
+

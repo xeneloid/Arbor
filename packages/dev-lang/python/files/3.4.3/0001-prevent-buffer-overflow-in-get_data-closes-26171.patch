@@ -1,0 +1,46 @@
+Upstream: yes
+Reason: http://www.openwall.com/lists/oss-security/2016/06/11/2
+
+From 6e3e267696656a272b4689064fd0a580649996bb Mon Sep 17 00:00:00 2001
+From: Benjamin Peterson <benjamin@python.org>
+Date: Wed, 20 Jan 2016 22:23:44 -0800
+Subject: [PATCH] prevent buffer overflow in get_data (closes #26171)
+
+---
+ Misc/NEWS           | 3 +++
+ Modules/zipimport.c | 5 +++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/Misc/NEWS b/Misc/NEWS
+index 298d027..5f1929d 100644
+--- a/Misc/NEWS
++++ b/Misc/NEWS
+@@ -10,6 +10,9 @@ Release date: tba
+ Core and Builtins
+ -----------------
+ 
++- Issue #26171: Fix possible integer overflow and heap corruption in
++  zipimporter.get_data().
++
+ Library
+ -------
+ 
+diff --git a/Modules/zipimport.c b/Modules/zipimport.c
+index 55bfb5d..83fa8f9 100644
+--- a/Modules/zipimport.c
++++ b/Modules/zipimport.c
+@@ -1111,6 +1111,11 @@ get_data(PyObject *archive, PyObject *toc_entry)
+     }
+     file_offset += l;           /* Start of file data */
+ 
++    if (data_size > LONG_MAX - 1) {
++        fclose(fp);
++        PyErr_NoMemory();
++        return NULL;
++    }
+     bytes_size = compress == 0 ? data_size : data_size + 1;
+     if (bytes_size == 0)
+         bytes_size++;
+-- 
+2.8.4
+
