@@ -1,0 +1,47 @@
+Upstream: yes
+From a3071999b83f53b37b24140baf64ef771b9f3e26 Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Thu, 9 Jun 2016 10:51:20 +0200
+Subject: [PATCH] udev-builtin-blkid: fix GPT_FLAG_NO_AUTO check for ESP
+ (#3450)
+
+The flags check was accidentally placed in the ESP if block, but should be in
+the root if block.
+
+This corrects: 0238d4c660e732dd03ba0cdb54a29ec5870ee849
+
+Fixes: #3440
+
+Also see: #3441
+---
+ src/udev/udev-builtin-blkid.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/udev/udev-builtin-blkid.c b/src/udev/udev-builtin-blkid.c
+index ed0ea5c..3c58445 100644
+--- a/src/udev/udev-builtin-blkid.c
++++ b/src/udev/udev-builtin-blkid.c
+@@ -147,11 +147,6 @@ static int find_gpt_root(struct udev_device *dev, blkid_probe pr, bool test) {
+ 
+                 if (sd_id128_equal(type, GPT_ESP)) {
+                         sd_id128_t id, esp;
+-                        unsigned long long flags;
+-
+-                        flags = blkid_partition_get_flags(pp);
+-                        if (flags & GPT_FLAG_NO_AUTO)
+-                                continue;
+ 
+                         /* We found an ESP, let's see if it matches
+                          * the ESP we booted from. */
+@@ -167,6 +162,11 @@ static int find_gpt_root(struct udev_device *dev, blkid_probe pr, bool test) {
+                                 found_esp = true;
+ 
+                 } else if (sd_id128_equal(type, GPT_ROOT_NATIVE)) {
++                        unsigned long long flags;
++
++                        flags = blkid_partition_get_flags(pp);
++                        if (flags & GPT_FLAG_NO_AUTO)
++                                continue;
+ 
+                         /* We found a suitable root partition, let's
+                          * remember the first one. */
