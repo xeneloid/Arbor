@@ -82,6 +82,8 @@ grub_src_configure() {
         --disable-libzfs
 
         --disable-werror
+
+        gt_cv_func_gnugettext{1,2}_libc=yes
     )
 
     option efi && myconf+=( '--with-platform=efi' )
@@ -96,6 +98,8 @@ grub_src_install() {
     default
 
     dodoc "${WORK}"/docs/grub.cfg
+
+    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 
     edo rm "${IMAGE%/}"/etc/bash_completion.d/${PN}
     edo rmdir "${IMAGE%/}"/etc/bash_completion.d/

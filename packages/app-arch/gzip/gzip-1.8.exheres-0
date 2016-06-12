@@ -4,9 +4,6 @@
 
 require gnu [ suffix=xz ] alternatives
 
-# autotools regeneration can be removed by next release (needed for musl support in gettext macros)
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-
 SUMMARY="Compression utility designed to be a replacement for compress"
 
 LICENCES="GPL-3"
@@ -17,6 +14,7 @@ MYOPTIONS=""
 DEPENDENCIES=""
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
+    gt_cv_func_gnugettext{1,2}_libc=yes
     --prefix=/usr/$(exhost --target)
 )
 
@@ -30,5 +28,7 @@ src_install() {
                      /usr/share/man/man1/gunzip.1           "${PN}".gunzip.1    \
                      /usr/share/man/man1/gzip.1             "${PN}".gzip.1      \
                      /usr/share/man/man1/zcat.1             "${PN}".zcat.1
+
+    edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
 }
 

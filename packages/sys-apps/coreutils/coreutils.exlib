@@ -7,9 +7,6 @@
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 require gnu [ suffix=xz ] alternatives
 
-# autotools regeneration can be removed by next release (needed for musl support in gettext macros)
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-
 export_exlib_phases src_{prepare,configure,test,test_expensive,install} \
                     pkg_{preinst,postinst}
 
@@ -65,6 +62,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-install-program=arch,hostname
     --enable-largefile
     --program-prefix=g
+    gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
 DEFAULT_SRC_INSTALL_EXCLUDE=( thanks-gen THANKS.in )
@@ -131,6 +129,10 @@ coreutils_src_install() {
     # since shadow deals with logins and such anyway, it is preferred
     edo rm "${IMAGE}"/usr/$(exhost --target)/bin/ggroups
     edo rm "${IMAGE}"/usr/share/man/man1/ggroups.1
+
+    # musl file conflicts
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 
     local coreutils_alternatives=()
     for prog in "${IMAGE}"/usr/$(exhost --target)/bin/*;do

@@ -34,8 +34,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --with-readline
     --with-ui
-
-    # this can be removed by next release
     gt_cv_func_gnugettext{1,2}_libc=yes
 )
 

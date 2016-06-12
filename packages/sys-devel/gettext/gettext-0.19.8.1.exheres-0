@@ -32,7 +32,6 @@ src_configure() {
     econf \
         --htmldir=/usr/share/doc/${PNVR}/html   \
         --enable-curses                         \
-        --enable-nls                            \
         --disable-csharp                        \
         --disable-java                          \
         --disable-native-java                   \
@@ -46,7 +45,13 @@ src_configure() {
         --without-included-gettext              \
         $(option_enable acl)                    \
         $(option_enable openmp)                 \
-        $(option_with emacs)
+        $(option_with emacs)                    \
+        $(if [[ $(exhost --target) == *-musl* ]];then
+            # NOTE(somasis) musl provides its own gettext API; we only need the utilities, basically.
+            echo --disable-nls
+        else
+            echo --enable-nls
+        fi)
 }
 
 src_install() {

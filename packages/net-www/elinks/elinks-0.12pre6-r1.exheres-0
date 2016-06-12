@@ -4,9 +4,6 @@
 require python [ with_opt=true multibuild=false blacklist='3' ]
 require lua [ with_opt=true multibuild=false ]
 
-# autotools regeneration can be removed by next release (needed for musl support in gettext macros)
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-
 HOMEPAGE="http://www.${PN}.cz"
 DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
 
@@ -65,6 +62,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-256-colors
     --enable-nls
     --with-zlib
+    gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
@@ -93,4 +91,10 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     python
     ruby
 )
+
+src_install() {
+    default
+    nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
+    nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
+}
 

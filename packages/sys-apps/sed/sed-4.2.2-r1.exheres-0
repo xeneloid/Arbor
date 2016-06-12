@@ -24,8 +24,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --without-included-gettext
     --program-prefix=g
-
-    # this can be removed by next release (can't regenerate autotools because of gnulib)
     gt_cv_func_gnugettext{1,2}_libc=yes
 )
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( acl )
@@ -42,7 +40,6 @@ src_configure() {
 src_install() {
     default
 
-    # these can be removed by next release
     nonfatal edo rm -rf "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
     nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 

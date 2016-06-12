@@ -31,8 +31,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --libexecdir=/usr/$(exhost --target)/libexec/${PN}
     --without-selinux
-
-    # this can be removed by next release (can't regenerate autotools because of gnulib)
     gt_cv_func_gnugettext{1,2}_libc=yes
 
     # NOTE(somasis) included regex should be used, otherwise it segfaults on musl
@@ -67,7 +65,7 @@ findutils_src_install() {
 
     alternatives_for "${alternatives[@]}"
 
-    # this can be removed by next release
+    # NOTE(somasis) remove gettext leftovers on musl
     nonfatal edo rm -f "${IMAGE}"/usr/$(exhost --target)/lib/charset.alias
     nonfatal edo rmdir "${IMAGE}"/usr/$(exhost --target)/lib
 
