@@ -73,6 +73,7 @@ DEPENDENCIES="
         (
             dev-perl/Authen-SASL
             dev-perl/Crypt-RC4
+            dev-perl/MIME-Base64
             dev-perl/Net-SMTP-SSL
             virtual/mta
         ) [[ *description = [ Dependency for 'git send-email' ] *group-name = [ git-send-email ] ]]
@@ -99,10 +100,6 @@ git-build_src_unpack() {
 
 git-build_src_prepare() {
     edo sed -i "s#pkg-config#${PKG_CONFIG}#g" contrib/credential/gnome-keyring/Makefile
-
-    # These tests are broken with grep 2.23
-    # https://marc.info/?l=git&m=145486267923534&w=2
-    edo rm t/{t8005-blame-i18n,t9200-git-cvsexportcommit}.sh
 }
 
 # No option: mozsha1/ppcsha1
@@ -184,12 +181,7 @@ git-build_src_install() {
         myemake ASCIIDOC8=YesPlease ASCIIDOC_NO_ROFF=YesPlease install-man
     fi
 
-    if ever at_least 2.8.0 ; then
-        dodoc README.md
-    else
-        dodoc README
-    fi
-    dodoc Documentation/{SubmittingPatches,CodingGuidelines}
+    dodoc README.md Documentation/{SubmittingPatches,CodingGuidelines}
     for d in / /howto/ /technical/ ; do
         docinto ${d}
         dodoc Documentation${d}*.txt
