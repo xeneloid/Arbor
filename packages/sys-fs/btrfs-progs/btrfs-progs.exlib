@@ -29,7 +29,7 @@ DEPENDENCIES="
         app-arch/lzo:2
         sys-apps/acl
         sys-apps/util-linux
-        sys-fs/e2fsprogs
+        sys-fs/e2fsprogs[>=1.42]
     suggestion:
         dev-python/matplotlib [[ description = [ for btrfs-show-blocks & other debugging tools ] ]]
 "
