@@ -140,6 +140,9 @@ binutils_src_configure() {
         # NOTE(compnerd) ld options
         myconf+=( --with-lib-path=${libpath} --enable-64-bit-bfd --with-sysroot='""' )
 
+        # NOTE(somasis) default to creating archives deterministically; good for reproducible building
+        myconf+=( --enable-deterministic-archives )
+
         [[ "${target}" == "${host}" ]] && myconf+=( --program-prefix=${host}- )
 
         econf "${myconf[@]}"
