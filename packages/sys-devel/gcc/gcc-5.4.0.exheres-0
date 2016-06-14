@@ -11,8 +11,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
     "${FILES}/${PN}-${SLOT}-musl-posix_memalign.patch"
     "${FILES}/a2e31d0681d8a47389b8a3552622fbd9827bcef4.patch"
-    "${FILES}/11e330df4d27cf801f7edd61605082f66d1ee4ae.patch"
-    "${FILES}/1e5f1089dec3af328fd03125d6778f666d0bd4e4.patch"
     "${FILES}/${PN}-6-objdump-name.patch"
 )
 
