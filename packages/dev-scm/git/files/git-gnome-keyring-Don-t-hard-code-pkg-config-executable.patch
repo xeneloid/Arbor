@@ -1,0 +1,39 @@
+Upstream: sent to ML,
+          http://article.gmane.org/gmane.comp.version-control.git/297290
+
+From 0e1ecfa1b570e7f0fcaf9587ce1d2a0616759efd Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Tue, 14 Jun 2016 10:34:08 +0200
+Subject: [PATCH] gnome-keyring: Don't hard-code pkg-config executable
+
+Helpful if your pkg-config executable has a prefix based on the
+architecture, for example.
+
+Signed-off-by: Heiko Becker <heirecka@exherbo.org>
+---
+ contrib/credential/gnome-keyring/Makefile | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/contrib/credential/gnome-keyring/Makefile b/contrib/credential/gnome-keyring/Makefile
+index c3c7c98..22c19df 100644
+--- a/contrib/credential/gnome-keyring/Makefile
++++ b/contrib/credential/gnome-keyring/Makefile
+@@ -4,12 +4,13 @@ all:: $(MAIN)
+ CC = gcc
+ RM = rm -f
+ CFLAGS = -g -O2 -Wall
++PKG_CONFIG = pkg-config
+ 
+ -include ../../../config.mak.autogen
+ -include ../../../config.mak
+ 
+-INCS:=$(shell pkg-config --cflags gnome-keyring-1 glib-2.0)
+-LIBS:=$(shell pkg-config --libs gnome-keyring-1 glib-2.0)
++INCS:=$(shell $(PKG_CONFIG) --cflags gnome-keyring-1 glib-2.0)
++LIBS:=$(shell $(PKG_CONFIG) --libs gnome-keyring-1 glib-2.0)
+ 
+ SRCS:=$(MAIN).c
+ OBJS:=$(SRCS:.c=.o)
+-- 
+2.9.0
+

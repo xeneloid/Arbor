@@ -10,7 +10,7 @@ exparam -v GIT_REMOTE_HELPERS git_remote_helpers[@]
 
 require perl-module python bash-completion elisp-optional [ source_directory=contrib/emacs ] systemd-service zsh-completion
 
-export_exlib_phases src_{unpack,prepare,configure,compile,test,install}
+export_exlib_phases src_unpack src_configure src_compile src_test src_install
 
 SUMMARY="A distributed VCS focused on speed, effectivity and real-world usability on large projects"
 DESCRIPTION="
@@ -96,10 +96,6 @@ git-build_src_unpack() {
         edo cd Documentation
         unpack ${PN}-htmldocs-${PV}.tar.xz
     fi
-}
-
-git-build_src_prepare() {
-    edo sed -i "s#pkg-config#${PKG_CONFIG}#g" contrib/credential/gnome-keyring/Makefile
 }
 
 # No option: mozsha1/ppcsha1
