@@ -18,7 +18,7 @@ DEPENDENCIES="
         sys-apps/sed
         net-misc/wget
     suggestion:
-        x11-utils/xclip"
+        x11-utils/xclip [[ description = [ Read input from clipboard, or write pastebin url to clipboard ] ]]"
 
 src_install() {
     into /usr/$(exhost --target)
