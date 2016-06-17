@@ -30,6 +30,13 @@ CROSS_COMPILE_TARGETS="
     x86_64-pc-linux-musl
     powerpc64-unknown-linux-gnu
 "
+
+if ever at_least 2.26 ; then
+    CROSS_COMPILE_TARGETS+="
+        i686-unknown-windows-gnu
+    "
+fi
+
 MYOPTIONS="
     ( targets: ${CROSS_COMPILE_TARGETS} ) [[ number-selected = at-least-one ]]
     ( linguas:
@@ -49,6 +56,13 @@ DEPENDENCIES="
         dev-tcl/expect
         sys-apps/bc
 "
+
+if ever at_least 2.26 ; then
+    DEPENDENCIES+="
+        build:
+            sys-devel/gnuconfig[>=20160211-r1]
+    "
+fi
 
 ECONF_SOURCE="${WORK}"
 

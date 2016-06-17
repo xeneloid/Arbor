@@ -6,7 +6,8 @@ require binutils
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-Set-development-to-false.patch
-    "${FILES}"/${PNV}-Update-symbol-version-for-symbol-from-linker-script.patch
+    "${FILES}/${PN}-Set-development-to-false.patch"
+    "${FILES}/${PNV}-Update-symbol-version-for-symbol-from-linker-script.patch"
+    "${FILES}/0001-support-canonical-windows-targets.patch"
 )
 
