@@ -181,7 +181,6 @@ gcc_src_configure() {
             CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"   \
             LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
         "${ECONF_SOURCE}/configure"                         \
-                --cache-file=config.cache                   \
                 --build=${CHOST}                            \
                 --host=${CHOST}                             \
                 --target=${target}                          \
