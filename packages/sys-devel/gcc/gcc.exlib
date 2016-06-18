@@ -147,7 +147,6 @@ gcc_src_configure() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
-        local libpath=/usr/${target}/lib
         local gxx_incdir=/usr/${target}/include/c++/${PV%%_p*}
         local tool_prefix=$(exhost --tool-prefix)
 
@@ -235,7 +234,7 @@ gcc_src_configure() {
                   else
                     echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
                   fi)                                               \
-                --with-lib-path=${libpath}                          \
+                --with-lib-path=/usr/${target}/lib                  \
                 --with-as=/usr/${CHOST}/bin/${target}-as            \
                 --with-ld=/usr/${CHOST}/bin/${target}-ld            \
                 --with-system-zlib                                  \
