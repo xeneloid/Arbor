@@ -217,7 +217,8 @@ gcc_src_configure() {
                 --disable-nls                                       \
                 --disable-shared                                    \
                 --enable-lto                                        \
-                --disable-plugin                                    \
+                --enable-plugin                                     \
+                --enable-plugins                                    \
                 $(option_enable threads)                            \
                 --enable-languages=c,c++,fortran,objc,obj-c++       \
                 --with-sysroot='""'                                 \
