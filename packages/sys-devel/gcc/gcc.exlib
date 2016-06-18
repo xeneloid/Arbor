@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require gnu [ suffix=bz2 subdir=${PNV} ]
-require alternatives
+require alternatives flag-o-matic
 
 SUMMARY="The GNU Compiler Collection - free and open compilers for C, C++, Obj-C, and more."
 HOMEPAGE="https://gcc.gnu.org/"
@@ -128,13 +128,11 @@ gcc_pkg_setup() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
-        local target_cflags_var=${target//-/_}_CFLAGS
-
         # NOTE(compnerd) ensure that CFLAGS_FOR_TARGET are specified by the user as otherwise the
         # generated target components will be invalid as they will be compiled with CFLAGS for the
         # host.
-        if option targets:${target}; then
-            [[ -n ${!target_cflags_var} ]] || die "CFLAGS for ${target} are not set"
+        if option targets:${target} ; then
+            [[ -n "$(print-flags ${target} CFLAGS)" ]]  || die "CFLAGS for ${target} are not set"
         fi
     done
 }
@@ -151,10 +149,6 @@ gcc_src_configure() {
     for target in ${CROSS_COMPILE_TARGETS} ; do
         local libpath=/usr/${target}/lib
         local gxx_incdir=/usr/${target}/include/c++/${PV%%_p*}
-        local target_cflags_var=${target//-/_}_CFLAGS
-        local target_cppflags_var=${target//-/_}_CPPFLAGS
-        local target_cxxflags_var=${target//-/_}_CXXFLAGS
-        local target_ldflags_var=${target//-/_}_LDFLAGS
         local tool_prefix=$(exhost --tool-prefix)
 
         if option !targets:${target} ; then
@@ -167,93 +161,93 @@ gcc_src_configure() {
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
 
-        edo env                                             \
-            AR=${CHOST}-ar                                  \
-            RANLIB=${CHOST}-ranlib                          \
-            AR_FOR_TARGET=${tool_prefix}ar                  \
-            AS_FOR_TARGET=${tool_prefix}as                  \
-            CPP_FOR_TARGET=${tool_prefix}cpp                \
-            READELF_FOR_TARGET=${tool_prefix}readelf        \
-            NM_FOR_TARGET=${tool_prefix}nm                  \
-            OBJDUMP_FOR_TARGET=${tool_prefix}objdump        \
-            CFLAGS_FOR_TARGET="${!target_cflags_var}"       \
-            CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"   \
-            CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"   \
-            LDFLAGS_FOR_TARGET="${!target_ldflags_var}"     \
-        "${ECONF_SOURCE}/configure"                         \
-                --build=${CHOST}                            \
-                --host=${CHOST}                             \
-                --target=${target}                          \
-                --prefix=/usr/${CHOST}                      \
-                --datarootdir=/usr/share                    \
-                --localstatedir=/var                        \
-                --sysconfdir=/etc                           \
-                --disable-dependency-tracking               \
-                --enable-fast-install                       \
-                --enable-serial-configure                   \
-                --disable-bootstrap                         \
-                --disable-decimal-float                     \
-                --disable-install-libiberty                 \
-                --disable-libada                            \
-                --disable-libatomic                         \
-                --disable-libcilkrts                        \
-                --disable-libffi                            \
-                --disable-libgfortran                       \
-                --disable-libgo                             \
-                --disable-libgomp                           \
-                --disable-libitm                            \
-                --disable-libjava                           \
+        edo env                                                     \
+            AR=${CHOST}-ar                                          \
+            RANLIB=${CHOST}-ranlib                                  \
+            AR_FOR_TARGET=${tool_prefix}ar                          \
+            AS_FOR_TARGET=${tool_prefix}as                          \
+            CPP_FOR_TARGET=${tool_prefix}cpp                        \
+            READELF_FOR_TARGET=${tool_prefix}readelf                \
+            NM_FOR_TARGET=${tool_prefix}nm                          \
+            OBJDUMP_FOR_TARGET=${tool_prefix}objdump                \
+            CFLAGS_FOR_TARGET="$(print-flags ${target} CFLAGS)"     \
+            CPPFLAGS_FOR_TARGET="$(print-flags ${target} CPPFLAGS)" \
+            CXXFLAGS_FOR_TARGET="$(print-flags ${target} CXXFLAGS)" \
+            LDFLAGS_FOR_TARGET="$(print-flags ${target} LDFLAGS)"   \
+        "${ECONF_SOURCE}/configure"                                 \
+                --build=${CHOST}                                    \
+                --host=${CHOST}                                     \
+                --target=${target}                                  \
+                --prefix=/usr/${CHOST}                              \
+                --datarootdir=/usr/share                            \
+                --localstatedir=/var                                \
+                --sysconfdir=/etc                                   \
+                --disable-dependency-tracking                       \
+                --enable-fast-install                               \
+                --enable-serial-configure                           \
+                --disable-bootstrap                                 \
+                --disable-decimal-float                             \
+                --disable-install-libiberty                         \
+                --disable-libada                                    \
+                --disable-libatomic                                 \
+                --disable-libcilkrts                                \
+                --disable-libffi                                    \
+                --disable-libgfortran                               \
+                --disable-libgo                                     \
+                --disable-libgomp                                   \
+                --disable-libitm                                    \
+                --disable-libjava                                   \
                 $(if ! ever at_least 4.9 ; then
                     echo --disable-libmudflap
-                  fi)                                       \
+                  fi)                                               \
                 $(if ever at_least 5.0 ; then
                     echo --disable-libmpx
-                  fi)                                       \
-                --disable-libobjc                           \
+                  fi)                                               \
+                --disable-libobjc                                   \
                 $(if ever at_least 5.0 ; then
                     echo --disable-liboffloadmic
-                  fi)                                       \
-                --disable-libquadmath                       \
-                --disable-libsanitizer                      \
-                --disable-libssp                            \
-                --disable-libstdcxx                         \
-                --disable-libstdc++-v3                      \
-                --disable-libvtv                            \
-                --disable-vtable-verify                     \
-                --disable-multilib                          \
-                --disable-nls                               \
-                --disable-shared                            \
-                --enable-lto                                \
-                --disable-plugin                            \
-                $(option_enable threads)                    \
-                --enable-languages=c,c++,fortran,objc,obj-c++ \
-                --with-sysroot='""'                         \
-                --with-gxx-include-dir="${gxx_incdir}"      \
+                  fi)                                               \
+                --disable-libquadmath                               \
+                --disable-libsanitizer                              \
+                --disable-libssp                                    \
+                --disable-libstdcxx                                 \
+                --disable-libstdc++-v3                              \
+                --disable-libvtv                                    \
+                --disable-vtable-verify                             \
+                --disable-multilib                                  \
+                --disable-nls                                       \
+                --disable-shared                                    \
+                --enable-lto                                        \
+                --disable-plugin                                    \
+                $(option_enable threads)                            \
+                --enable-languages=c,c++,fortran,objc,obj-c++       \
+                --with-sysroot='""'                                 \
+                --with-gxx-include-dir="${gxx_incdir}"              \
                 $(if ever at_least 5.1 ; then
                     option_with graphite isl
                   else
                     option_with graphite cloog
-                  fi)                                       \
-                $(optionq threads || echo --with-newlib)    \
-                $(optionq threads || echo --without-headers)\
+                  fi)                                               \
+                $(optionq threads || echo --with-newlib)            \
+                $(optionq threads || echo --without-headers)        \
                 $(if [[ ${target} == ${CHOST} ]] ; then
                     echo --program-transform="s,$,-${SLOT},"
                   else
                     echo --program-transform="s,^,${target}-,;s,$,-${SLOT},"
-                  fi)                                       \
-                --with-lib-path=${libpath}                  \
-                --with-as=/usr/${CHOST}/bin/${target}-as    \
-                --with-ld=/usr/${CHOST}/bin/${target}-ld    \
-                --with-system-zlib                          \
+                  fi)                                               \
+                --with-lib-path=${libpath}                          \
+                --with-as=/usr/${CHOST}/bin/${target}-as            \
+                --with-ld=/usr/${CHOST}/bin/${target}-ld            \
+                --with-system-zlib                                  \
                 $(if [[ ${target} == armv7* ]] ; then
                         # TODO(compnerd) use the variant agnostic architecture by default
                         echo --with-arch=armv7-a
-                  fi)                                       \
+                  fi)                                               \
                 $(if [[ ${target} == arm*-*-*-*hf ]] ; then
                     echo --with-float=hard
-                  fi)                                       \
-                --with-glibc-version=2.11                   \
-                --enable-linker-build-id                    \
+                  fi)                                               \
+                --with-glibc-version=2.11                           \
+                --enable-linker-build-id                            \
                 --with-multilib-list=
     done
 }
@@ -262,11 +256,6 @@ gcc_src_compile() {
     local target=
 
     for target in ${CROSS_COMPILE_TARGETS} ; do
-        local target_cflags_var=${target//-/_}_CFLAGS
-        local target_cppflags_var=${target//-/_}_CPPFLAGS
-        local target_cxxflags_var=${target//-/_}_CXXFLAGS
-        local target_ldflags_var=${target//-/_}_LDFLAGS
-
         if option !targets:${target} ; then
             echo "    Cross-Compile Target: ${target} (disabled)"
             continue
@@ -281,13 +270,13 @@ gcc_src_compile() {
         # honour the target specific flags.
         unset CPP
 
-        AR_FOR_TARGET=$(exhost --tool-prefix)ar           \
-        READELF_FOR_TARGET=$(exhost --tool-prefix)readelf \
-        CFLAGS_FOR_TARGET="${!target_cflags_var}"         \
-        CPPFLAGS_FOR_TARGET="${!target_cppflags_var}"     \
-        CXXFLAGS_FOR_TARGET="${!target_cxxflags_var}"     \
-        LDFLAGS_FOR_TARGET="${!target_ldflags_var}"       \
-        default
+        AR_FOR_TARGET=$(exhost --tool-prefix)ar                 \
+        READELF_FOR_TARGET=$(exhost --tool-prefix)readelf       \
+        CFLAGS_FOR_TARGET="$(print-flags ${target} CFLAGS)"     \
+        CPPFLAGS_FOR_TARGET="$(print-flags ${target} CPPFLAGS)" \
+        CXXFLAGS_FOR_TARGET="$(print-flags ${target} CXXFLAGS)" \
+        LDFLAGS_FOR_TARGET="$(print-flags ${target} LDFLAGS)"   \
+            default
     done
 }
 
