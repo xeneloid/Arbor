@@ -22,10 +22,7 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
-DEPENDENCIES="
-    test:
-        sys-apps/grep
-"
+DEPENDENCIES=""
 
 WORK="${WORKBASE}"
 
@@ -69,8 +66,6 @@ src_test() {
     # Don't validate webpages as that requires dependencies on open{jade,sp}
     edo sed -i -e 's: check_web::' Makefile
 
-    # NOTE(somasis): Tests fail without GNU grep, not sure why yet
-    edo eval $(eclectic grep script gnu)
     emake AWK=awk check
 }
 
