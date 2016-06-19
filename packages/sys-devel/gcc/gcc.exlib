@@ -125,8 +125,6 @@ else
 fi
 WORK=${ECONF_SOURCE}
 
-DEFAULT_SRC_PREPARE_PATCHES+=( "${FILES}/0001-plugins-do-not-hardcode-objdump-sometimes.patch" )
-
 gcc_pkg_setup() {
     local target=
 
