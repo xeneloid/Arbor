@@ -1,4 +1,4 @@
-# Copyright 2015 Kylie McClain <somasis@exherbo.org>
+# Copyright 2015-2016 Kylie McClain <somasis@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="Virtual: grep providers"
@@ -17,7 +17,11 @@ MYOPTIONS="
 "
 
 DEPENDENCIES="
-    providers:busybox? ( sys-apps/busybox )
+    providers:busybox? (
+        sys-apps/busybox[>=1.24.2-r3] [[
+            description = [ version constraint because r3 added unicode support in the config ]
+        ]]
+    )
     providers:gnu? ( sys-apps/grep )
 "
 
