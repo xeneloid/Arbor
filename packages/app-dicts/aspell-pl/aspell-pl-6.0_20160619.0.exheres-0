@@ -8,10 +8,12 @@ MY_PNV=${PN}-$(ever replace 1 -)
 require aspell-dict [ major_pv="6" desc="Polish" ]
 
 HOMEPAGE+=" http://sjp.pl/slownik/en"
+DOWNLOADS="http://sjp.pl/slownik/ort/sjp-${MY_PNV}.tar.bz2"
 
 LICENCES="Apache-2.0 CCPL-ShareAlike-1.0 GPL-2 LGPL-2.1 MPL-1.1"
 SLOT="0"
 PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
 
-DOWNLOADS="http://sjp.pl/slownik/ort/sjp-${MY_PNV}.tar.bz2"
+DEPENDENCIES=""
 
