@@ -1,0 +1,63 @@
+Upstream: yes, http://roy.marples.name/projects/dhcpcd/info/c1fd142a5b6f41ab
+          http://roy.marples.name/archives/dhcpcd-discuss/2016/1389.html
+
+From f90b34965f4b9c11897507c336be93bc1685e1fe Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Tue, 21 Jun 2016 01:16:41 +0200
+Subject: [PATCH] configure: Don't hard-code pkg-config executable
+
+Helpful if your pkg-config executable has a prefix based on the
+architecture, for example.
+
+Signed-off-by: Heiko Becker <heirecka@exherbo.org>
+---
+ configure | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/configure b/configure
+index f11c797..7f8992c 100755
+--- a/configure
++++ b/configure
+@@ -56,6 +56,7 @@ for x do
+ 	--datadir) DATADIR=$var;;
+ 	--with-ccopts|CFLAGS) CFLAGS=$var;;
+ 	CC) CC=$var;;
++	PKG_CONFIG) PKG_CONFIG=$var;;
+ 	CPPFLAGS) CPPFLAGS=$var;;
+ 	--with-hook) HOOKSCRIPTS="$HOOKSCRIPTS${HOOKSCRIPTS:+ }$var";;
+ 	--with-hooks|HOOKSCRIPTS) HOOKSCRIPTS=$var; HOOKSET=true;;
+@@ -141,6 +142,7 @@ Some influential environment variables:
+   CPPFLAGS    C/C++ preprocessor flags, e.g. -I<include dir> if you have
+               headers in a nonstandard directory <include dir>
+   CPP         C preprocessor
++  PKG_CONFIG  pkg-config executable
+ 
+ Use these variables to override the choices made by \`configure' or to help
+ it to find libraries and programs with nonstandard names/locations.
+@@ -280,6 +282,10 @@ if ! type "$CC" >/dev/null 2>&1; then
+ 	done
+ fi
+ 
++if [ -z "$PKG_CONFIG" ]; then
++	PKG_CONFIG=pkg-config
++fi
++
+ # Set to blank, then append user config
+ # We do this so our SED call to append to XCC remains portable
+ if [ -n "$CFLAGS" ]; then
+@@ -1204,9 +1210,9 @@ fi
+ 
+ if [ "$DEV" != no -a "$UDEV" != no ]; then
+ 	printf "Checking for libudev ... "
+-	if type pkg-config >/dev/null 2>&1; then
+-		LIBUDEV_CFLAGS=$(pkg-config --cflags libudev 2>&3)
+-		LIBUDEV_LIBS=$(pkg-config --libs libudev 2>&3)
++	if type "$PKG_CONFIG" >/dev/null 2>&1; then
++		LIBUDEV_CFLAGS=$("$PKG_CONFIG" --cflags libudev 2>&3)
++		LIBUDEV_LIBS=$("$PKG_CONFIG" --libs libudev 2>&3)
+ 	fi
+ fi
+ if [ "$DEV" != no -a "$UDEV" != no -a -n "$LIBUDEV_LIBS" ]; then
+-- 
+2.9.0
+
