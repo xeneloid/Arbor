@@ -45,12 +45,12 @@ linux-headers_src_prepare() {
         einfo "Kylie McClain <somasis@exherbo.org> or somasis on #exherbo@freenode."
         if [[ -f "${FILES}"/${PNV}-musl.patch ]];then
             expatch "${FILES}"/${PNV}-musl.patch
-        elif [[ -f "${FILES}"/${PN}-musl.patch ]];then
-            expatch "${FILES}"/${PN}-musl.patch
+        elif [[ -f "${FILES}"/${PN}-$(ever major)-musl.patch ]];then
+            nonfatal expatch "${FILES}"/${PN}-$(ever major)-musl.patch || \
+                die "Failed to patch ${PV} for musl support. Use a new kernel or adapt the patch."
         else
-            ewarn "No patch for musl support could be found. You will have problems compiling programs"
-            ewarn "which use the kernel's headers; notably, iproute2, iptables, anything network related."
-            ewarn "You should track the latest kernel version whenever possible."
+            die "No patch for musl support could be found. A patch is required for musl support." \
+                "Either upgrade your kernel version to a supported one, or adapt the patch."
         fi
     fi
 }
