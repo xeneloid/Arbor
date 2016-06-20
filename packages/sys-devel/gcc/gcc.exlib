@@ -3,6 +3,7 @@
 
 require gnu [ suffix=bz2 subdir=${PNV} ]
 require alternatives flag-o-matic
+require toolchain-runtime-libraries
 
 SUMMARY="The GNU Compiler Collection - free and open compilers for C, C++, Obj-C, and more."
 HOMEPAGE="https://gcc.gnu.org/"
@@ -377,12 +378,25 @@ gcc_src_install() {
     done
     edo popd
 
+    # slot libcc1 with alternatives-light. Has to be handled specifically because it's
+    # in "lib" and not "lib/<target>/<gcc version>"
+    symlink_dynamic_libs libcc1
+    slot_dynamic_libs libcc1
+
     alternatives_for gcc ${SLOT} ${SLOT} "${alternatives[@]}"
 
     edo find "${IMAGE}" -depth -type d -empty -delete
 }
 
 gcc_pkg_postinst() {
+    # make sure libcc1.so.0.0.0 gets replaced with the alternative
+    if ever at_least 5.1; then
+        libcc1=usr/$(exhost --target)/lib/libcc1.so.0.0.0
+        if [[ -f ${ROOT}${libcc1} && ! -L ${ROOT}${libcc1} ]]; then
+            edo rm "${ROOT}${libcc1}"
+        fi
+    fi
+
     alternatives_pkg_postinst
 
     # gcc erroneously installed ${target}-c++ in [<=4.9.2-r12] [<=5.3.0-r2] and [<=6.0.0_pre20160207-r1]
