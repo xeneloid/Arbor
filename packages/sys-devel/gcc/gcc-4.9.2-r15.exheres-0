@@ -5,6 +5,9 @@ require gcc
 
 PLATFORMS="~x86 ~amd64"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
-                              "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}/${PN}-${SLOT}-exherbo-multiarch-paths.patch"
+    "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
+    "${FILES}/8c3fa311caa86f61b4e28d1563d1110b44340fb2.patch"
+)
 
