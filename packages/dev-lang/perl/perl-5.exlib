@@ -78,9 +78,8 @@ perl-5_src_prepare() {
             -i ext/Errno/Errno_pm.PL
 
     disabled_tests=(
-        lib/ExtUtils/t/Embed.t      # likely due to bad cross compilation checks
         lib/perl5db.t               # fails with busybox man
-        t/porting/globvar.t         # "No plan found in TAP output"
+        t/porting/customized.t      # Failed test 6 - SHA for cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm
     )
 
     # chmod is needed because perl devs don't know how to distribute files that are rw by default
@@ -181,6 +180,10 @@ perl-5_src_test() {
 
     # Skip tests that require a tty (op/stat.t)
     export PERL_SKIP_TTY_TEST=1
+
+    # This fixes the lib/ExtUtils/t/Embed.t test, which will otherwise try
+    # to link against the installed libperl
+    edo ln -s libperl.so.${SLOT}.0 libperl.so
 
     TEST_JOBS="${EXJOBS:-1}" emake test
 
