@@ -17,12 +17,12 @@ written in Perl. Its main features are:
   * extensive documentation including a sample application
 "
 
+REMOTE_IDS="freecode:${PN}"
+
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+MYOPTIONS=""
 
-REMOTE_IDS="freecode:${PN}"
-
-# tests fail with certain locales (e.g. de_* )
-RESTRICT="test"
+DEPENDENCIES=""
 
