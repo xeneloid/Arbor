@@ -12,12 +12,6 @@ MYOPTIONS="parts: binaries development documentation libraries"
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-2.1.1-CVE-2015-1283-refix.patch
-    "${FILES}"/${PN}-2.1.1-CVE-2016-0718-v2-2-1.patch
-    "${FILES}"/${PN}-2.1.1-CVE-2012-6702-plus-CVE-2016-5300-v1.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
 src_install() {
