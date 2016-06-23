@@ -14,7 +14,7 @@ can be used as a standalone executable or as a module under a variety of Web ser
 It has excellent support for databases, XML, LDAP, IMAP, Java, various Internet
 protocols, and general data manipulation, and is extensible via its powerful API.
 "
-HOMEPAGE="http://www.${PN}.net"
+HOMEPAGE="https://secure.${PN}.net"
 DOWNLOADS="${HOMEPAGE}/distributions/${PNV}.tar.bz2"
 
 LICENCES="PHP-3"
