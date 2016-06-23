@@ -1,0 +1,13 @@
+Upstream: no, should be fixed in musl soon
+
+--- btrfs-progs-v4.6.orig/chunk-recover.c	2016-06-07 13:28:04.000000000 -0400
++++ btrfs-progs-v4.6/chunk-recover.c	2016-06-23 00:05:51.203757783 -0400
+@@ -887,7 +887,7 @@
+ 		for (i = 0; i < devidx; i++) {
+ 			if (dev_scans[i].bytenr == -1)
+ 				continue;
+-			ret = pthread_tryjoin_np(t_scans[i],
++			ret = pthread_join(t_scans[i],
+ 						 (void **)&t_rets[i]);
+ 			if (ret == EBUSY) {
+ 				all_done = 0;

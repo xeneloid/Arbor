@@ -13,5 +13,6 @@ WORK="${WORKBASE}/${PN}-v${PV}"
 DEFAULT_SRC_PREPARE_PATCHES=(
     # TODO(sardemff7) Submit upstream
     "${FILES}"/0001-configure.ac-Use-PKG_CONFIG-everywhere.patch
+    "${FILES}"/${PN}-musl.patch
 )
 
