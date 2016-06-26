@@ -1,0 +1,43 @@
+Upstream: submitted, https://patchwork.kernel.org/patch/9177155/
+
+From b53cb0ec0cb7b82696a30c38c52aac03a3ce3023 Mon Sep 17 00:00:00 2001
+From: Benedikt Morbach <benedikt.morbach@googlemail.com>
+Date: Wed, 15 Jun 2016 00:20:19 +0200
+Subject: [PATCH] btrfs-progs: receive: handle root subvol path in clone
+
+otherwise we get
+
+    ERROR: cannot open <subvol_path>: No such file or directory
+
+because <full_root_path>/<subvol_path> doesn't exist, so openat() will fail below.
+
+Signed-off-by: Benedikt Morbach <benedikt.morbach@googlemail.com>
+---
+ cmds-receive.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/cmds-receive.c b/cmds-receive.c
+index f4a3a4f..a975fdd 100644
+--- a/cmds-receive.c
++++ b/cmds-receive.c
+@@ -753,6 +753,17 @@ static int process_clone(const char *path, u64 offset, u64 len,
+ 		subvol_path = strdup(si->path);
+ 	}
+ 
++	/* strip the subvolume that we are receiving to from the start of subvol_path */
++	if (r->full_root_path &&
++		strstr(subvol_path, r->full_root_path) == subvol_path) {
++		size_t root_len = strlen(r->full_root_path);
++		size_t sub_len = strlen(subvol_path);
++
++		memmove(subvol_path,
++			subvol_path + root_len + 1,
++			sub_len - root_len);
++	}
++
+ 	ret = path_cat_out(full_clone_path, subvol_path, clone_path);
+ 	if (ret < 0) {
+ 		error("clone: target path invalid: %s", clone_path);
+-- 
+2.9.0
+

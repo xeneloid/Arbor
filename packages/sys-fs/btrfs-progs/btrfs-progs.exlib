@@ -47,6 +47,8 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
     show-blocks
 )
 
+AT_M4DIR=( m4 )
+
 btrfs-progs_src_test() {
     edo mkdir "${TEMP}"/{dev,mnt}
     edo sed -i -e "/TEST_DEV=/s:$:${TEMP}/dev:" tests/fsck-tests.sh
