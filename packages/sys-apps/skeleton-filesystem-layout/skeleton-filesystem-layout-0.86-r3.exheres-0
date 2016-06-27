@@ -68,10 +68,11 @@ pkg_postinst() {
     local x
     # create directory structure. for readability leave out /usr and /var
     # structures and create them separately.
-    for x in boot dev{,/pts} etc home mnt media opt proc run; do
+    for x in boot dev{,/pts} etc home mnt media opt proc run srv; do
         create_root_owned_directory "${ROOT}${x}"
     done
     edo touch "${ROOT}"/opt/.keep
+    edo touch "${ROOT}"/srv/.keep
     if [[ ! -e ${ROOT}/sys ]]; then
         edo mkdir -p "${ROOT}"/sys
     fi
