@@ -91,7 +91,7 @@ python-build_src_prepare() {
     # linux-3 support, applied upstream, python-3.3+ only has `plat-linux`
     ever at_least 3.3 || edo cp -r Lib/plat-linux2 Lib/plat-linux3
 
-    [[ -d ${FILES}/${PV} ]] && expatch "${FILES}/${PV}/"
+    expatch "${FILES}/${SLOT}/"
 
     edo cp "${FILES}"/"${PN}"-config.py .
 
