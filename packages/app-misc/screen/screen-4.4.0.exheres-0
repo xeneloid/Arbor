@@ -5,7 +5,3 @@ require gnu [ suffix=gz ] screen
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-CVE-2015-6806.patch
-)
-
