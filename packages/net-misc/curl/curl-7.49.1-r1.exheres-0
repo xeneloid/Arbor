@@ -13,7 +13,7 @@ MYOPTIONS="
     ldap
     rtmp
     zsh-completion
-    ( providers: gnutls libressl openssl ) [[ number-selected = exactly-one ]]
+    ( providers: gnutls libressl mbedtls openssl ) [[ number-selected = exactly-one ]]
 "
 
 DEPENDENCIES="
@@ -36,6 +36,7 @@ DEPENDENCIES="
             dev-libs/nettle
         )
         providers:libressl? ( dev-libs/libressl:= )
+        providers:mbedtls? ( dev-libs/mbedtls )
         providers:openssl? ( dev-libs/openssl )
     run:
         zsh-completion? ( app-shells/zsh )
@@ -60,10 +61,14 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     'kerberos gssapi'
     'rtmp librtmp'
     'zsh-completion zsh-functions-dir /usr/share/zsh/site-functions'
-    '!providers:gnutls ca-path /etc/ssl/certs'
-    '!providers:gnutls ssl'
-    'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
     'providers:gnutls gnutls'
+    'providers:gnutls ca-bundle /etc/ssl/certs/ca-certificates.crt'
+    'providers:libressl ssl'
+    'providers:libressl ca-path /etc/ssl/certs'
+    'providers:mbedtls mbedtls'
+    'providers:mbedtls ca-bundle /etc/ssl/certs/ca-certificates.crt'
+    'providers:openssl ssl'
+    'providers:openssl ca-path /etc/ssl/certs'
 )
 DEFAULT_SRC_INSTALL_EXTRA_PREFIXES=( docs/ )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( BINDINGS DISTRO FEATURES INTERNALS MANUAL RESOURCES TheArtOfHttpScripting )
