@@ -12,6 +12,7 @@ HOMEPAGE="https://nodejs.org/"
 LICENCES="MIT"
 SLOT="0"
 MYOPTIONS="
+    gdb [[ description = [ enable GDB JIT interface for v8 ] ]]
     system-openssl [[
         description = [ builds node against the system openssl instead of the bundled one ]
         note = [ bundled openssl is 1.0.2 ]
@@ -54,7 +55,8 @@ node_src_configure() {
         --prefix=/usr/$(exhost --target) \
         $(option system-openssl && echo --shared-openssl) \
         --shared-zlib \
-        --with-intl=system-icu
+        --with-intl=system-icu \
+        $(option gdb && echo --gdb)
 }
 
 node_src_install() {
