@@ -17,6 +17,6 @@ if ! ever is_scm; then
 fi
 
 # See RDF data @ ${HOMEPAGE}$(exparam branch)/${PV}/+rdf
-REMOTE_IDS+=" launchpad:$(exparam project) "
+REMOTE_IDS+=" launchpad:$(exparam project)/$(exparam branch) "
 UPSTREAM_RELEASE_NOTES="${HOMEPAGE}$(exparam branch)/$(exparam pv)/"
 
