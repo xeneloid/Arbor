@@ -1,7 +1,7 @@
 # Copyright 2016 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require debian-upstream [ suffix=.tar.xz ]
+require debian-upstream [ suffix=tar.xz ]
 
 SUMMARY="Preload library and program to fake the system date"
 

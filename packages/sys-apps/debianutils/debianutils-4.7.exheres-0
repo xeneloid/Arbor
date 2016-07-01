@@ -4,7 +4,7 @@
 # Based in part upon 'debianutils-2.28.5.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require debian-upstream [ suffix=.tar.xz ] alternatives
+require debian-upstream [ suffix=tar.xz ] alternatives
 
 SUMMARY="Miscellaneous utilities specific to Debian"
 DESCRIPTION="
