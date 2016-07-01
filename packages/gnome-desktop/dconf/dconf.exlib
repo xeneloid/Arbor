@@ -1,7 +1,7 @@
 # Copyright 2010 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License
 
-require bash-completion gnome.org [ suffix=.tar.xz ]
+require bash-completion gnome.org [ suffix=tar.xz ]
 require gtk-icon-cache test-dbus-daemon
 require gsettings
 

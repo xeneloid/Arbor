@@ -4,7 +4,7 @@
 #     Copyright 1999-2010 Gentoo Foundation
 
 MY_PN="gtk-doc"
-require gnome.org [ suffix=.tar.xz ]
+require gnome.org [ suffix=tar.xz ]
 
 SUMMARY="Macros and utilities used by autotools from gtk-doc"
 DESCRIPTION="
