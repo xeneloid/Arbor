@@ -2,7 +2,7 @@
 # Copyright 2015 Marc-Antoine Perennou <keruspe@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 pn=gcc subdir=gcc-${PV} ]
+require gnu [ suffix=tar.bz2 pn=gcc subdir=gcc-${PV} ]
 require alternatives toolchain-runtime-libraries
 
 DOWNLOADS+=" mirror://sourceware/java/ecj-${ECJ_JAR_PV}.jar"

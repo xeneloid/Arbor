@@ -5,7 +5,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
-require gnu [ suffix=xz ] alternatives
+require gnu [ suffix=tar.xz ] alternatives
 
 export_exlib_phases src_{prepare,configure,test,test_expensive,install} \
                     pkg_{preinst,postinst}

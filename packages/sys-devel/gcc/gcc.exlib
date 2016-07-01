@@ -1,7 +1,7 @@
 # Copyright 2012 © Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 subdir=${PNV} ]
+require gnu [ suffix=tar.bz2 subdir=${PNV} ]
 require alternatives flag-o-matic
 require toolchain-runtime-libraries
 

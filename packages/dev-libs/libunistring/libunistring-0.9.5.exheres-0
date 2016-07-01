@@ -1,7 +1,7 @@
 # Copyright 2010 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ]
+require gnu [ suffix=tar.xz ]
 
 SUMMARY="Provides functions for manipulating Unicode strings and for manipulating C strings
 according to the Unicode standard."

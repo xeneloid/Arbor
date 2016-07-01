@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require bash-completion
-require gnu [ suffix=xz ]
+require gnu [ suffix=tar.xz ]
 require flag-o-matic
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 

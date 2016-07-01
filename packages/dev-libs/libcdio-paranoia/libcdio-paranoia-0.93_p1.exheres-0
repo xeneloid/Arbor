@@ -4,7 +4,7 @@
 MY_PN=${PN/-paranoia/}
 MY_PNV=${PN}-10.2+${PV/_p/+}
 
-require gnu [ suffix=bz2 pnv=${MY_PNV} ]
+require gnu [ suffix=tar.bz2 pnv=${MY_PNV} ]
 
 SUMMARY="Extracts CDDA in a jitter- and error-tolerant way"
 DESCRIPTION="

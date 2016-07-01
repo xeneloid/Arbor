@@ -7,9 +7,9 @@ require option-renames [ renames=[ 'gtk providers:gtk2' 'gtk3 providers:gtk3' ] 
 require game alternatives elisp-module
 
 if [[ -z $(ever range 3) ]]; then
-    require gnu [ suffix=xz ]
+    require gnu [ suffix=tar.xz ]
 else
-    require gnu [ alpha=true subdir=pretest suffix=xz ]
+    require gnu [ alpha=true subdir=pretest suffix=tar.xz ]
 fi
 
 if [[ $(ever range 3) == rc* ]]; then

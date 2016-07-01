@@ -13,7 +13,7 @@ fi
 
 # Need autotools for AC_FUNC_STRCOLL
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 1.13 ] ]
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 export_exlib_phases src_prepare src_install
 

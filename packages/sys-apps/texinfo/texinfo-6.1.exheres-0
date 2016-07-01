@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require gnu [ suffix=tar.xz ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="GNU Documentation System"
 

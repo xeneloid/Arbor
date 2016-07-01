@@ -4,7 +4,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require alternatives
-require gnu [ suffix=xz ]
+require gnu [ suffix=tar.xz ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
 HOMEPAGE="http://${PN}lib.org"

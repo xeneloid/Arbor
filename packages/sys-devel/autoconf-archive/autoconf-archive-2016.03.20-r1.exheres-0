@@ -1,7 +1,7 @@
 # Copyright 2011 Dan Callaghan <djc@djc.id.au>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ]
+require gnu [ suffix=tar.xz ]
 
 SUMMARY="Collection of freely re-usable macros for autoconf"
 

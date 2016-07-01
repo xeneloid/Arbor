@@ -1,7 +1,7 @@
 # Copyright 2009, 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 export_exlib_phases pkg_pretend src_configure src_compile src_install
 

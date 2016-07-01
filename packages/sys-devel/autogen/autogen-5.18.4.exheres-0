@@ -3,7 +3,7 @@
 
 LIBOPTS_VERSION="41.0.16"
 
-require gnu [ suffix=xz subdir=rel${PV} ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
+require gnu [ suffix=tar.xz subdir=rel${PV} ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.13 ] ]
 
 SUMMARY="AutoGen is a tool designed to simplify the creation and maintenance of programs that contain large amounts of repetitious text"
 

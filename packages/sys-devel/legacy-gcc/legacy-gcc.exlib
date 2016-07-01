@@ -9,7 +9,7 @@ MY_PNV=gcc-${PV}
 MY_PNVR=gcc-${PVR}
 
 require alternatives versionator
-require gnu [ suffix=bz2 subdir=${MY_PNV} ]
+require gnu [ suffix=tar.bz2 subdir=${MY_PNV} ]
 
 export_exlib_phases src_unpack src_prepare src_configure src_compile src_install \
     pkg_postinst pkg_prerm pkg_postrm

@@ -1,7 +1,7 @@
 # Copyright 2015 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=bz2 subdir=gcc-${PV} pn=gcc ]
+require gnu [ suffix=tar.bz2 subdir=gcc-${PV} pn=gcc ]
 require alternatives toolchain-runtime-libraries
 
 export_exlib_phases src_unpack src_prepare src_configure src_compile src_install pkg_postinst

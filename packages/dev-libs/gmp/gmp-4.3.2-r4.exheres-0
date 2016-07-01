@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 require alternatives
-require gnu [ suffix=bz2 ]
+require gnu [ suffix=tar.bz2 ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
 

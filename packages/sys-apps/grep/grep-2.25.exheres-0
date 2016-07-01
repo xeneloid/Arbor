@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ] alternatives
+require gnu [ suffix=tar.xz ] alternatives
 
 SUMMARY="Grep searches input files for matches to specified patterns"
 

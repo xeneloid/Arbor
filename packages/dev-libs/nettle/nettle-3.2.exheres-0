@@ -1,7 +1,7 @@
 # Copyright 2011 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 SUMMARY="A cryptographic library that is designed to fit easily in more or less any context"
 HOMEPAGE="http://www.lysator.liu.se/~nisse/${PN}"

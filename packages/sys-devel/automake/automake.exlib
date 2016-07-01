@@ -4,11 +4,11 @@
 
 MY_PNV=${PNV/_/-}
 if ever at_least 1.11.3; then
-    require gnu [ suffix=xz ]
+    require gnu [ suffix=tar.xz ]
 elif ever at_least 1.6.1; then
-    require gnu [ suffix=bz2 ]
+    require gnu [ suffix=tar.bz2 ]
 else
-    require gnu [ suffix=gz ]
+    require gnu [ suffix=tar.gz ]
 fi
 
 require alternatives

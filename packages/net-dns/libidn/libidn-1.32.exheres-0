@@ -3,7 +3,7 @@
 # Based in part upon 'libidn-1.5-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 SUMMARY="Internationalized Domain Names (IDN) implementation"
 

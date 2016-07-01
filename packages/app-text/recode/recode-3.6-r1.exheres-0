@@ -3,7 +3,7 @@
 # Based in part upon 'recode-3.6-r2.ebuild' by Gentoo which is:
 #   Copyright 1999-2008 Gentoo Foundation
 
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 SUMMARY="Convert files between various character sets"
 HOMEPAGE="http://recode.progiciels-bpi.ca/"

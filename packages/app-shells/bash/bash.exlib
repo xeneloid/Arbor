@@ -5,7 +5,7 @@
 MY_PNV=${PNV%_p*}
 WORK="${WORKBASE}/${MY_PNV}"
 
-require gnu [ suffix=gz ]
+require gnu [ suffix=tar.gz ]
 
 export_exlib_phases src_prepare src_install pkg_preinst
 

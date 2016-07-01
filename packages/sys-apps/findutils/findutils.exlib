@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 if (( $(ever range 2) % 2 )); then
-    require gnu [ alpha=true suffix=gz ]
+    require gnu [ alpha=true suffix=tar.gz ]
 else
-    require gnu [ suffix=gz ]
+    require gnu [ suffix=tar.gz ]
 fi
 require alternatives
 

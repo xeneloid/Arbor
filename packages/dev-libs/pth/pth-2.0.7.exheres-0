@@ -2,7 +2,7 @@
 # Based in part upon previous work copyrighted to Gentoo Foundation.
 # Distributed under the terms of the GNU General Public License v2
 
-require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ] gnu [ suffix=gz ]
+require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ none ] ] gnu [ suffix=tar.gz ]
 
 SUMMARY="GNU Portable Threads"
 

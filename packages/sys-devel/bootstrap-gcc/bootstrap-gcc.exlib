@@ -6,7 +6,7 @@
 
 MY_PN=${PN#bootstrap-}
 
-require alternatives gnu [ pn=${MY_PN} suffix=bz2 ]
+require alternatives gnu [ pn=${MY_PN} suffix=tar.bz2 ]
 require flag-o-matic
 
 export_exlib_phases pkg_setup src_unpack src_configure src_install

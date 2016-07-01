@@ -1,7 +1,7 @@
 # Copyright 2007, 2009 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=xz ] elisp-optional toolchain-funcs
+require gnu [ suffix=tar.xz ] elisp-optional toolchain-funcs
 
 SUMMARY="GNU localization utilties"
 

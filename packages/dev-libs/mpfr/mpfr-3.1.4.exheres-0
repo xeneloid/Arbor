@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 MY_PNV=${PN}-$(ever range 1-3)
-require gnu [ suffix=xz ]
+require gnu [ suffix=tar.xz ]
 
 SUMMARY="Multi-precision floating point library"
 HOMEPAGE="http://www.${PN}.org"
