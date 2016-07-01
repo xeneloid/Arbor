@@ -17,7 +17,7 @@ else
 fi
 DOWNLOADS+="$(exparam pn)/"
 [[ -z $(exparam subdir) ]] || DOWNLOADS+=$(exparam subdir)/
-DOWNLOADS+="$(exparam pnv).tar.$(exparam suffix)"
+DOWNLOADS+="$(exparam pnv).$(exparam suffix)"
 WORK="${WORKBASE}/$(exparam pnv)"
 
 UPSTREAM_DOCUMENTATION="
