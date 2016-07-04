@@ -7,8 +7,8 @@ require alternatives
 require gnu [ suffix=tar.xz ]
 
 SUMMARY="GNU Multiple Precision arithmetic library"
-HOMEPAGE="http://${PN}lib.org"
-DOWNLOADS+=" ftp://ftp.gmplib.org/pub/${PN}/${PNV}.tar.xz"
+HOMEPAGE="https://${PN}lib.org"
+DOWNLOADS+=" ${HOMEPAGE}/download/${PN}/${PNV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
