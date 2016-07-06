@@ -92,9 +92,11 @@ gem_install_abi() {
         myconf+=( --no-ri --no-rdoc )
     fi
 
+    [[ -n "${GEM_SRC_INSTALL_PARAMS[*]}" ]] && myconf+=( -- )
+
     local gem=${GEM_SOURCE_DIR:-${FETCHEDDIR}}/${GEM_FILENAME:-${RUBY_PNV}.gem}
 
-    edo ${GEM} install -V "${gem}" --local "${myconf[@]}"
+    edo ${GEM} install -V "${gem}" --local "${myconf[@]}" "${GEM_SRC_INSTALL_PARAMS[@]}"
 
     if [[ -d ${IMAGE}/${vendor_gem_dir}/bin ]]; then
         local alternatives=( _$(exhost --target)_${PN} ${abi} ${abi} ) path exe
