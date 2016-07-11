@@ -30,9 +30,7 @@ DEPENDENCIES=""
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     # Don\'t run tests under valgrind if present, takes ages
     VALGRIND=
-    --enable-backend-brass
     --enable-backend-chert
-    --enable-backend-flint
     --enable-backend-inmemory
     --enable-backend-remote
     --disable-documentation
@@ -41,6 +39,19 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
 # This regenerates the documentation
 # 'doc documentation'
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( 'debug assertions' )
+
+if ever at_least 1.4.0; then
+    DEFAULT_SRC_CONFIGURE_PARAMS+=(
+        --disable-64bit-docid
+        --disable-64bit-termcount
+        --enable-backend-glass
+    )
+else
+    DEFAULT_SRC_CONFIGURE_PARAMS+=(
+        --enable-backend-brass
+        --enable-backend-flint
+    )
+fi
 
 xapian-core_src_test_expensive() {
     emake check
