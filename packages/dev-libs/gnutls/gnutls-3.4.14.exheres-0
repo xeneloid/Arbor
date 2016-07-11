@@ -10,7 +10,3 @@ DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 WORK=${WORKBASE}/${PN}-$(ever range 1-4)
 
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PNV}-tests-use-datefudge-in-name-constraints-test.patch
-)
-
