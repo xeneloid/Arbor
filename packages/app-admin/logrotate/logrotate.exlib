@@ -55,6 +55,22 @@ logrotate_src_install() {
     insinto /etc
     doins "${FILES}"/logrotate.conf
 
+    # NOTE(somasis) logrotate errors trying to rotate /var/log/wtmp on musl
+    #               because musl does not support utmp/wtmp.
+    if [[ $(exhost --target) != *-musl* ]];then
+        cat >> "${IMAGE}"/etc/logrotate.conf <<EOF
+# no packages own lastlog or wtmp -- we'll rotate them here
+/var/log/wtmp {
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+EOF
+    fi
+
+    echo '# system-specific logs may be also be configured here.' >> "${IMAGE}"/etc/logrotate.conf
+
+
     keepdir /etc/logrotate.d
 }
 
