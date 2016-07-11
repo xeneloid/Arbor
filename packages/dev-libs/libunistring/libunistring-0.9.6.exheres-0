@@ -4,7 +4,7 @@
 require gnu [ suffix=tar.xz ]
 
 SUMMARY="Provides functions for manipulating Unicode strings and for manipulating C strings
-according to the Unicode standard."
+according to the Unicode standard"
 
 LICENCES="GPL-3 LGPL-3"
 SLOT="0"
