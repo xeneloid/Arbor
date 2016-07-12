@@ -6,7 +6,3 @@ require git-build
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-gnome-keyring-Don-t-hard-code-pkg-config-executable.patch
-)
-
