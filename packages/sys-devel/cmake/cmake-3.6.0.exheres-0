@@ -7,8 +7,3 @@ require cmake-build
 
 PLATFORMS="~amd64 ~arm ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-Allow-to-set-CMAKE_SHARE_DIR.patch
-    "${FILES}"/${PN}-FindBoost-Add-support-for-Boost-1.60.patch
-)
-
