@@ -1,7 +1,7 @@
 # Copyright 2009 Maxime Coste <frrrwww@gmail.com>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=lib${PN} pn=lib${PN} release=${PN}_$(ever replace_all _) pnv=${PNV} suffix=tar.gz ]
+require github [ user=lib${PN} project=lib${PN} release=${PNV} suffix=tar.gz ]
 
 SUMMARY="Filesystems in Userspace"
 DESCRIPTION="
@@ -21,6 +21,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=( -p2 "${FILES}"/${PN}-2.8.6-gold.patch )
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     MOUNT_FUSE_PATH=/usr/$(exhost --target)/bin
     --disable-example
