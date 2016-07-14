@@ -3,6 +3,7 @@
 # Copyright 2012 Saleem Abdulrasool <compnerd@compnerd.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require kernel.org [ repo=linux/kernel/git/stable/linux-stable ]
 require kernel
 
 export_exlib_phases pkg_pretend src_prepare src_compile src_install
