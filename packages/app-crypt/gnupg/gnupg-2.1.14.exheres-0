@@ -19,21 +19,17 @@ MYOPTIONS="
     tofu [[ description = [ Support for the Trust on First Use trust model  ] ]]
 "
 
-# fail with (newer) sydbox (last checked: 2.1.4)
-# t-dns-cert wants to access a dns server
-RESTRICT="test"
-
 DEPENDENCIES="
     build:
         sys-devel/gettext[>=0.17]
         doc? ( sys-apps/texinfo )
     build+run:
         app-arch/bzip2
-        dev-libs/libassuan[>=2.4.1]
-        dev-libs/libgcrypt[>=1.6.2]
-        dev-libs/libgpg-error[>=1.21]
-        dev-libs/libksba[>=1.2.0]
-        dev-libs/npth
+        dev-libs/libassuan[>=2.4.3]
+        dev-libs/libgcrypt[>=1.7.0]
+        dev-libs/libgpg-error[>=1.24]
+        dev-libs/libksba[>=1.3.4]
+        dev-libs/npth[>=1.2]
         net-misc/curl[>=7.10]
         sys-libs/readline
         hkps? ( dev-libs/gnutls[>=3.0] )
@@ -96,7 +92,11 @@ src_test() {
     # Allow the tests to run its own instance of gpg-agent
     esandbox allow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
     esandbox allow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
+    esandbox allow_net "unix:/tmp/gpgscm-*/S.gpg-agent"
+    esandbox allow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent"
     default
+    esandbox disallow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent"
+    esandbox disallow_net "unix:/tmp/gpgscm-*/S.gpg-agent"
     esandbox disallow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
     esandbox disallow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
 }
