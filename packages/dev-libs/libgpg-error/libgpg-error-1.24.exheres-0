@@ -24,6 +24,9 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     # Do not install common lisp files (they need cffi anyway)
     --disable-languages
 )
+DEFAULT_SRC_CONFIGURE_TESTS=(
+    "--enable-tests --disable-tests"
+)
 
 src_prepare() {
     # All this espam is supposed to only be triggered for one user per target, so it shouldn't be
