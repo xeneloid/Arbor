@@ -4,7 +4,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 SUMMARY="Collection of programs for inspecting and manipulating configuration of PCI devices"
-HOMEPAGE="https://mj.ucw.cz/sw/${PN}"
+HOMEPAGE="http://mj.ucw.cz/sw/${PN}"
 DOWNLOADS="ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/${PNV}.tar.gz"
 
 BUGS_TO="philantrop@exherbo.org"
