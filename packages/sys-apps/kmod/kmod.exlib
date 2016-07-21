@@ -6,6 +6,7 @@
 # zlin did some work on this. Status unknown.
 #NOTE(moben): on cross this should not pose a problem and we can re-enable the python bindings
 require alternatives
+require kernel.org [ repo=utils/kernel/kmod/kmod ]
 
 export_exlib_phases src_test src_install
 
@@ -15,13 +16,11 @@ kmod is a set of tools to handle common tasks with Linux kernel modules like
 insert, remove, list, check properties, resolve dependencies, and aliases.
 It replaces module-init-tools with which it is backwards-compatible.
 "
-HOMEPAGE="http://git.kernel.org/?p=utils/kernel/${PN}/${PN}.git"
-DOWNLOADS="ftp://ftp.kernel.org/pub/linux/utils/kernel/${PN}/${PNV}.tar.xz"
+DOWNLOADS="mirror://kernel/linux/utils/kernel/${PN}/${PNV}.tar.xz"
 
 BUGS_TO="philantrop@exherbo.org"
-REMOTE_IDS="freecode:${PN}"
 
-UPSTREAM_RELEASE_NOTES="http://git.kernel.org/?p=utils/kernel/kmod/kmod.git;a=blob_plain;f=NEWS"
+UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/plain/NEWS?h=v${PV}"
 
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"

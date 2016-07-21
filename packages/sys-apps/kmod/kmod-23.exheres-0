@@ -5,5 +5,3 @@ require kmod
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-insmod-fix-wron-fallthrough-of-f.patch )
-
