@@ -22,6 +22,9 @@ MYOPTIONS="
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
+# https://github.com/libgd/libgd/issues/217
+RESTRICT="test"
+
 DEPENDENCIES="
     build:
         virtual/pkg-config
@@ -41,6 +44,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
+    --disable-werror
     --with-jpeg
     --with-png
     --with-zlib
