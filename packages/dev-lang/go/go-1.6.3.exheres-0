@@ -65,7 +65,7 @@ src_prepare() {
     # go's build system in a way that doesn't require extensive patching...
     edo mkdir shims
     for tool in ar;do
-        edo ln -s /usr/$(exhost --target)/bin/$(exhost --tool-prefix)$tool shims/$tool
+        edo ln -s /usr/$(exhost --target)/bin/$(exhost --tool-prefix)${tool} shims/${tool}
     done
 
     edo sed -e "s/pkg-config/${PKG_CONFIG}/g" -i src/cmd/go/build.go
@@ -74,7 +74,7 @@ src_prepare() {
         # go's official bootstrap binaries don't expect the linker location we have
         edo mkdir "${WORKBASE}"/${PN}-bootstrap/bin
         for tool in "${WORKBASE}"/${PN}-bootstrap/realbin/*;do
-            printf '#!/bin/sh\nexec %s %s $@' "${go_linker}" "$tool" > "${WORKBASE}"/${PN}-bootstrap/bin/${tool##*/}
+            printf '#!/bin/sh\nexec %s %s $@' "${go_linker}" "${tool}" > "${WORKBASE}"/${PN}-bootstrap/bin/${tool##*/}
             chmod +x "${WORKBASE}"/${PN}-bootstrap/bin/${tool##*/}
         done
     fi
@@ -82,7 +82,7 @@ src_prepare() {
 }
 
 src_compile() {
-    export PATH="$PWD/shims/:${PATH}"
+    export PATH="${PWD}/shims:${PATH}"
     export GOROOT_FINAL=/usr/$(exhost --target)/lib/go
 
     if option bootstrap;then
