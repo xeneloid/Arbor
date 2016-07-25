@@ -13,6 +13,8 @@ retaining UID 0 simply by calling 'execve'.
 HOMEPAGE="https://people.redhat.com/sgrubb/${PN}"
 DOWNLOADS="${HOMEPAGE}/${PNV}.tar.gz"
 
+REMOTE_IDS="freecode:${PN}"
+
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
@@ -30,12 +32,13 @@ DEPENDENCIES="
         python? ( dev-lang/python:2.7 )
 "
 
-REMOTE_IDS="freecode:${PN}"
-
 # TODO: python3 support, see swig exheres
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-static
     --without-python3
 )
-DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( debug python )
+DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    debug
+    python
+)
 
