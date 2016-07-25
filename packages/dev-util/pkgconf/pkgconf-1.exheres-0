@@ -15,7 +15,7 @@ pkgconf is a program which helps to configure compiler and linker flags for deve
 It is similar to pkg-config, but was written from scratch in the summer of 2011 to replace
 pkg-config.
 "
-DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.bz2"
+DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.xz"
 
 CROSS_COMPILE_TARGETS="
     arm-exherbo-linux-gnueabi
@@ -48,10 +48,6 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    -l "${FILES}"/${PNV}-tests.patch
-)
-
 ECONF_SOURCE=${WORK}
 
 src_configure() {
@@ -69,10 +65,10 @@ src_configure() {
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
 
-        econf                                                       \
-                --with-pkg-config-dir="${pc_path}"                  \
-                --with-system-libdir="/usr/${target}/lib"           \
-                --with-system-includedir="/usr/${target}/include"
+        econf \
+            --with-pkg-config-dir="${pc_path}"                  \
+            --with-system-libdir="/usr/${target}/lib"           \
+            --with-system-includedir="/usr/${target}/include"
     done
 }
 
@@ -104,7 +100,7 @@ src_test() {
         echo "     Cross-Compile Target: ${target}"
 
         edo cd "${WORKBASE}/build/${target}"
-        edo cp -vr "${WORKBASE}"/${PNV}/tests/* ./tests/
+        edo cp -r "${WORKBASE}"/${PNV}/tests/* ./tests/
         default
     done
 }
@@ -122,26 +118,26 @@ src_install() {
 
         edo cd "${WORKBASE}/build/${target}"
         emake -j1 DESTDIR="${IMAGE}" install
-        edo mv "${IMAGE}/usr/$(exhost --target)/bin/${PN}" "${IMAGE}/usr/$(exhost --target)/bin/${target}-pkg-config"
-        edo mv "${IMAGE}/usr/share/man/man1/${PN}.1"       "${IMAGE}/usr/share/man/man1/${target}-pkg-config.1"
+        edo mv "${IMAGE}"/usr/$(exhost --target)/bin/${PN}  "${IMAGE}"/usr/$(exhost --target)/bin/${target}-pkgconf
+        edo mv "${IMAGE}"/usr/share/man/man1/${PN}.1        "${IMAGE}"/usr/share/man/man1/${target}-pkgconf.1
 
         alternatives+=(
-            /usr/$(exhost --target)/bin/${target}-pkg-config    ${target}-pkg-config.${PN}
-            /usr/share/man/man1/${target}-pkg-config.1          ${target}-pkg-config.${PN}.1
+            /usr/$(exhost --target)/bin/${target}-pkg-config    ${target}-pkgconf
+            /usr/share/man/man1/${target}-pkg-config.1          ${target}-pkgconf.1
         )
     done
 
-    dosym $(exhost --target)-pkg-config.${PN}   /usr/$(exhost --target)/bin/pkg-config.${PN}
-    dosym $(exhost --target)-pkg-config.${PN}.1 /usr/share/man/man1/pkg-config.${PN}.1
-    dobanned pkg-config.${PN}
+    dosym $(exhost --target)-pkgconf    /usr/$(exhost --target)/bin/pkgconf
+    dosym $(exhost --target)-pkgconf.1  /usr/share/man/man1/pkgconf.1
+    dobanned pkgconf
 
     alternatives+=(
         /usr/share/aclocal/pkg.m4               pkg_${PN}.m4
-        /usr/share/man/man1/pkg-config.1        pkg-config.${PN}.1
+        /usr/share/man/man1/pkg-config.1        pkgconf.1
 
         # install the unprefixed tool for the native target
-        /usr/$(exhost --target)/bin/pkg-config  pkg-config.${PN}
-        "${BANNEDDIR}"/pkg-config               pkg-config.${PN}
+        /usr/$(exhost --target)/bin/pkg-config  pkgconf
+        "${BANNEDDIR}"/pkg-config               pkgconf
     )
 
     alternatives_for "${alternatives[@]}"
