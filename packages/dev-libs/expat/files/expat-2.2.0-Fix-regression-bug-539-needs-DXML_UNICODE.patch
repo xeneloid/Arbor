@@ -1,0 +1,32 @@
+Upstream: yes
+Reason: Notified by upstream via mail: "...the regression fix itself does not
+have known security implications. /However/, as fixing CVE-2016-0718 reduced
+stability with regard to that regression, I would personally consider this
+patch something to push to security update channels."
+
+From af507cef2c93cb8d40062a0abe43a4f4e9158fb2 Mon Sep 17 00:00:00 2001
+From: Sebastian Pipping <sebastian@pipping.org>
+Date: Sun, 17 Jul 2016 20:22:29 +0200
+Subject: [PATCH] Fix regression bug #539 (needs -DXML_UNICODE)
+
+Thanks to Andy Wang and Karl Waclawek!
+---
+ expat/lib/xmlparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/expat/lib/xmlparse.c b/expat/lib/xmlparse.c
+index b308e67..0d5dd7b 100644
+--- a/expat/lib/xmlparse.c
++++ b/expat/lib/xmlparse.c
+@@ -2468,7 +2468,7 @@ doContent(XML_Parser parser,
+                        &fromPtr, rawNameEnd,
+                        (ICHAR **)&toPtr, (ICHAR *)tag->bufEnd - 1);
+             convLen = (int)(toPtr - (XML_Char *)tag->buf);
+-            if ((convert_res == XML_CONVERT_COMPLETED) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE)) {
++            if ((fromPtr >= rawNameEnd) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE)) {
+               tag->name.strLen = convLen;
+               break;
+             }
+-- 
+2.9.2
+
