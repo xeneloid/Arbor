@@ -25,15 +25,12 @@ DEPENDENCIES="
         virtual/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/ded5b4c62c37084d216154e02e4d5e6efbd3ccfa.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
     --with-readline
     --with-ui
+    --without-experimental
     gt_cv_func_gnugettext{1,2}_libc=yes
 )
 
