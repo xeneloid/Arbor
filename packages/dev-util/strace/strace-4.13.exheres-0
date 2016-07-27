@@ -32,15 +32,6 @@ DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD=$(exhost --tool-prefix)cc )
 
 DEFAULT_SRC_COMPILE_PARAMS=( AR=${AR} )
 
-src_prepare() {
-    default
-
-    # /usr/bin/time might not exist but busybox does and is needed for the tests.
-    edo sed -e 's:/usr/bin/\(time\):"/bin/busybox \1":' \
-            -e '/check_prog $time/d'                    \
-            -i tests/strace-f.test
-}
-
 src_test() {
     esandbox disable
     esandbox disable_exec
