@@ -3,8 +3,7 @@
 
 require gnu [ suffix=tar.gz ]
 
-SUMMARY="ASN.1 parser for GNUTLS"
-HOMEPAGE="https://www.gnutls.org"
+SUMMARY="Library for ASN.1 parsing and structures management and DER encoding and decoding"
 
 LICENCES="
     LGPL-2.1    [[ description = [ libtasn1.* ] ]]
