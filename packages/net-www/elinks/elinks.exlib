@@ -5,7 +5,14 @@ require python [ with_opt=true multibuild=false blacklist='3' ]
 require lua [ with_opt=true multibuild=false ]
 
 HOMEPAGE="http://www.${PN}.cz"
-DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
+if ever is_scm;then
+    SCM_REPOSITORY="http://repo.or.cz/${PN}.git"
+    require scm-git
+
+    require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+else
+    DOWNLOADS="${HOMEPAGE}/download/${PNV}.tar.bz2"
+fi
 
 SUMMARY="A feature-rich text mode browser forked from Links and more actively developed"
 SLOT="0"
@@ -49,11 +56,6 @@ DEPENDENCIES="
 # fsp? ( net-libs/fsplib )
 
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-libressl.patch
-    "${FILES}"/${PNV}-musl.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-{bookmarks,xbel}
     --enable-{cgi,finger,exmode,html-highlight}
@@ -87,6 +89,11 @@ DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
     python
     ruby
 )
+
+src_prepare() {
+    edo ./autogen.sh
+    default
+}
 
 src_test() {
     emake test
