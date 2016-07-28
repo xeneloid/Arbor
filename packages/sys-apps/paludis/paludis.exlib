@@ -2,10 +2,10 @@
 # Copyright 2011-2012 Bo Ørsted Andresen
 # Distributed under the terms of the GNU General Public License v2
 
-require python [ multibuild=false blacklist="3" with_opt=true ]
+require cmake [ api=2 ] python [ multibuild=false blacklist="3" with_opt=true ]
 require bash-completion flag-o-matic zsh-completion
 
-export_exlib_phases pkg_setup src_configure src_compile src_test src_install pkg_preinst
+export_exlib_phases pkg_setup src_configure src_install pkg_preinst
 
 SUMMARY="Paludis, the one true package mangler"
 HOMEPAGE="http://paludis.exherbo.org"
@@ -77,34 +77,33 @@ paludis_pkg_setup() {
 }
 
 paludis_src_configure() {
-    local repositories=$(echo default accounts $(optionv gemcutter) repository | tr -s \  ,)
+    local repositories=$(echo default accounts $(optionv gemcutter) repository | tr -s \  \;)
+    local cmakeparams=()
 
-    econf \
-        $(expecting_tests && echo --enable-gtest || echo --disable-gtest) \
-        $(option_enable doc doxygen) \
-        $(option doc && option python && echo '--enable-python-doc') \
-        $(option doc && option ruby && echo '--enable-ruby-doc') \
-        $(option_enable pbin pbins) \
-        $(option_enable pink) \
-        $(option_enable python) \
-        $(option_enable ruby) \
-        $(option ruby --with-ruby-version=${RUBY_ABIS}) \
-        $(option_enable search-index) \
-        $(option_enable vim-syntax vim ) \
-        $(option_enable xml) \
-        --with-vim-install-dir=/usr/share/vim/vimfiles \
-        --with-clients=default,cave \
-        --with-environments=default \
-        --with-repositories=${repositories} \
-        --with-default-distribution=exherbo \
-        --with-config-framework=eclectic \
-        --hates=disable-silent-rules
-}
+    cmakeparams+=(
+        -DENABLE_GTEST:BOOL=$(expecting_tests && echo TRUE || echo FALSE)
+        $(cmake_enable doc DOXYGEN)
+        $(cmake_enable pbin PBINS)
+        $(cmake_option pink PALUDIS_COLOUR_PINK)
+        $(cmake_enable PYTHON)
+        -DENABLE_PYTHON_DOCS:BOOL=$(option doc && option python && echo TRUE || echo FALSE)
+        $(cmake_enable RUBY)
+        -DENABLE_RUBY_DOCS:BOOL=$(option doc && option ruby && echo TRUE || echo FALSE)
+        $(option ruby &&  echo -DRUBY_VERSION=${RUBY_ABIS})
+        $(cmake_enable search-index SEARCH_INDEX)
+        $(cmake_enable vim-syntax VIM)
+        $(cmake_enable XML)
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc
+        -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/${PNVR}
+        -DPALUDIS_VIM_INSTALL_DIR=/usr/share/vim/vimfiles
+        -DPALUDIS_CLIENTS="cave"
+        -DPALUDIS_ENVIRONMENTS="default;test"
+        -DPALUDIS_REPOSITORIES="${repositories}"
+        -DPALUDIS_DEFAULT_DISTRIBUTION=exherbo
+        -DCONFIG_FRAMEWORK=eclectic
+    )
 
-paludis_src_compile() {
-    # zsh and libtool hate each other
-    unset path
-    default
+    ecmake "${cmakeparams[@]}"
 }
 
 paludis_src_test() {
@@ -123,12 +122,12 @@ paludis_src_test() {
 }
 
 paludis_src_install() {
-    default
+    cmake_src_install
 
     option python && python_bytecompile
 
-    dobashcompletion bash-completion/cave cave
-    dozshcompletion zsh-completion/_cave
+    dobashcompletion "${CMAKE_SOURCE}"/bash-completion/cave cave
+    dozshcompletion "${CMAKE_SOURCE}"/zsh-completion/_cave
     keepdir /var/lib/exherbo/news
     edo rm -rf "${IMAGE}"/var/lib/gentoo
 }
