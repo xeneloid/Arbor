@@ -7,7 +7,7 @@ SLOT="1.8"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
-    build+run:
-        dev-lang/openjdk8:${SLOT}
+    run:
+        dev-lang/icedtea8:${SLOT}
 "
 
