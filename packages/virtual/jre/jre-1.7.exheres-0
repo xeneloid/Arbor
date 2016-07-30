@@ -7,7 +7,7 @@ SLOT="1.7"
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES="
-    build+run:
+    run:
         virtual/jdk:1.7
 "
 
