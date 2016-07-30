@@ -1,4 +1,4 @@
-# Copyright 2013-2014 Wulf C. Krueger <philantrop@exherbo.org>
+# Copyright 2013-2016 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 export_exlib_phases src_prepare src_compile src_test src_install
@@ -84,10 +84,14 @@ git-remote-helpers_src_prepare() {
     default
 
     if option bzr; then
-        edo mv git-remote-bzr-${PV} git-remote-bzr
+        if ! ever is_scm ; then
+            edo mv git-remote-bzr-${PV} git-remote-bzr
+        fi
     fi
     if option mercurial; then
-        edo mv git-remote-hg-${PV} git-remote-hg
+        if ! ever is_scm ; then
+            edo mv git-remote-hg-${PV} git-remote-hg
+        fi
     fi
 }
 
