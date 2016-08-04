@@ -15,7 +15,7 @@ REMOTE_IDS="freecode:${PN}"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="doc static systemd"
+MYOPTIONS="doc static"
 
 DEPENDENCIES="
     build:
@@ -23,7 +23,6 @@ DEPENDENCIES="
     test:
         app-arch/zip
     run:
-        systemd? ( sys-apps/systemd )
         !app-arch/gzip[<1.6-r2] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
@@ -39,11 +38,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/4d76d9b69503b1ad61cf857d83cb8c4d5d92465b.patch
-    "${FILES}"/db700330d8951d96ea70102797041730c925eeeb.patch
-    "${FILES}"/3a76bb5136d05f94ee62e377aa723e63444912c7.patch
-    "${FILES}"/3c4de6e36c4d387a648622e7b828a05f2b1b47e6.patch
-    "${FILES}"/4194c2875310c13ee3ca2bb0e1aea6a2ae67c55a.patch
+    "${FILES}"/150dc7a2b483b8338a3e185c478b4b23ee884e71.patch
 )
 
 
@@ -99,11 +94,6 @@ src_prepare() {
         -i testsuite/strings/strings-works-like-GNU
 
     edo cp "${FILES}"/config .config
-
-    if ! option systemd;then
-        edo sed -e 's/^CONFIG_FEATURE_SYSTEMD.*/# CONFIG_FEATURE_SYSTEMD is not set/'   \
-                -i .config
-    fi
 }
 
 src_configure() {
