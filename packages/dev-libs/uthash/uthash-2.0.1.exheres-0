@@ -10,6 +10,8 @@ Any structure having a unique, arbitrarily-typed key member can be hashed by add
 member to the structure and calling these macros.
 "
 
+BUGS_TO="virkony@gmail.com"
+
 LICENCES="BSD"
 SLOT="0"
 PLATFORMS="~amd64"
@@ -19,8 +21,6 @@ DEPENDENCIES="
     test:
         dev-lang/perl:*[>=5.10&<6]
 "
-
-BUGS_TO="virkony@gmail.com"
 
 src_install() {
     insinto /usr/$(exhost --target)/include
