@@ -10,7 +10,11 @@ SUMMARY="Tidy the layout and correct errors in HTML and XML documents"
 LICENCES="ZLIB"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS=""
+MYOPTIONS="
+    compat-headers [[ description = [
+        Install two renamed headers for compatibility with older projects
+    ] ]]
+"
 
 DEPENDENCIES="
     build:
@@ -22,6 +26,11 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-Add-compatibility-headers.patch
+)
+
+CMAKE_SRC_CONFIGURE_OPTIONS=( 'compat-headers TIDY_COMPAT_HEADERS' )
 CMAKE_SRC_CONFIGURE_PARAMS=(
     -DMAN_INSTALL_DIR:STRING=/usr/share/man/man1
 )

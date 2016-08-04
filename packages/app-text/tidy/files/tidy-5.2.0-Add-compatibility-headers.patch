@@ -1,0 +1,65 @@
+Upstream: yes
+
+From 30cc376f7b14c891b7e7a5cd49c170cf07dba610 Mon Sep 17 00:00:00 2001
+From: Adam Majer <amajer@suse.com>
+Date: Mon, 13 Jun 2016 11:10:16 +0200
+Subject: [PATCH] Add compatibility headers
+
+In older versions of tidy, these headers were defined. Now, they are
+renamed to tidybuffio.h and tidyplatform.h. This may be more of a
+consistent naming scheme, but it breaks current software.
+
+Re-add these headers and add compile time warning when such a header
+is used.
+---
+ CMakeLists.txt     | 6 ++++++
+ include/buffio.h   | 6 ++++++
+ include/platform.h | 6 ++++++
+ 3 files changed, 18 insertions(+)
+ create mode 100644 include/buffio.h
+ create mode 100644 include/platform.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d8d18dc..e76dd2a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -140,6 +140,12 @@ set ( CFILES
+ set ( HFILES
+         ${INCDIR}/tidyplatform.h ${INCDIR}/tidy.h         ${INCDIR}/tidyenum.h
+         ${INCDIR}/tidybuffio.h )
++
++option (TIDY_COMPAT_HEADERS "If set to ON, compatability headers are included" OFF)
++if (TIDY_COMPAT_HEADERS)
++    set ( HFILES ${HFILES}      ${INCDIR}/buffio.h        ${INCDIR}/platform.h )
++endif ()
++
+ set ( LIBHFILES
+         ${SRCDIR}/access.h       ${SRCDIR}/attrs.h        ${SRCDIR}/attrdict.h ${SRCDIR}/charsets.h
+         ${SRCDIR}/clean.h        ${SRCDIR}/config.h       ${SRCDIR}/entities.h
+diff --git a/include/buffio.h b/include/buffio.h
+new file mode 100644
+index 0000000..cfdbf75
+--- /dev/null
++++ b/include/buffio.h
+@@ -0,0 +1,6 @@
++#ifdef __GNUC__
++#warning "FIXME: Using compatibility tidy header (buffio.h) that will go away!"
++#endif
++
++#include "tidybuffio.h"
++
+diff --git a/include/platform.h b/include/platform.h
+new file mode 100644
+index 0000000..15c60a7
+--- /dev/null
++++ b/include/platform.h
+@@ -0,0 +1,6 @@
++#ifdef __GNUC__
++#warning "FIXME: Using compatibility tidy header (platform.h) that will go away!"
++#endif
++
++#include "tidyplatform.h"
++
+-- 
+2.9.2
+
