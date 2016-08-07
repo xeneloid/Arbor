@@ -8,5 +8,5 @@ require openssh
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-7.2_p1-GSSAPI-dns.patch )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PN}-7.3_p1-GSSAPI-dns.patch )
 
