@@ -65,7 +65,10 @@ src_configure() {
         edo mkdir -p "${WORKBASE}/build/${target}"
         edo cd "${WORKBASE}/build/${target}"
 
+        # NOTE(mixi): --with-pkg-config-dir only affects the library, so we need
+        #             to install one for every target.
         econf \
+            --libdir=/usr/$(exhost --target)/${target}/lib      \
             --with-pkg-config-dir="${pc_path}"                  \
             --with-system-libdir="/usr/${target}/lib"           \
             --with-system-includedir="/usr/${target}/include"
@@ -127,8 +130,13 @@ src_install() {
         )
     done
 
-    dosym $(exhost --target)-pkgconf    /usr/$(exhost --target)/bin/pkgconf
-    dosym $(exhost --target)-pkgconf.1  /usr/share/man/man1/pkgconf.1
+    dodir /usr/$(exhost --target)/lib
+    dosym ../$(exhost --target)/lib/libpkgconf.a        /usr/$(exhost --target)/lib/libpkgconf.a
+    dosym ../$(exhost --target)/lib/libpkgconf.la       /usr/$(exhost --target)/lib/libpkgconf.la
+    dosym ../$(exhost --target)/lib/libpkgconf.so.1.0.0 /usr/$(exhost --target)/lib/libpkgconf.so.1.0.0
+    dosym libpkgconf.so.1.0.0                           /usr/$(exhost --target)/lib/libpkgconf.so
+    dosym $(exhost --target)-pkgconf                    /usr/$(exhost --target)/bin/pkgconf
+    dosym $(exhost --target)-pkgconf.1                  /usr/share/man/man1/pkgconf.1
     dobanned pkgconf
 
     alternatives+=(
