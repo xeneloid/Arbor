@@ -12,6 +12,11 @@ MYOPTIONS+="
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-2.23-allow-additional-tests-to-xfail.patch
+    "${FILES}"/${PNV}-resolv-Always-set-resplen2-out-parameter-in-send_dg-.patch
+    "${FILES}"/${PNV}-CVE-2016-3075-Stack-overflow-in-_nss_dns_getnetbynam.patch
+    "${FILES}"/${PNV}-glob-Simplify-the-interface-for-the-GLOB_ALTDIRFUNC-.patch
+    "${FILES}"/${PNV}-CVE-2016-1234-glob-Do-not-copy-d_name-field-of-struc.patch
+    "${FILES}"/${PNV}-CVE-2016-3706-getaddrinfo-stack-overflow-in-hostent-.patch
 )
 
 src_prepare() {
