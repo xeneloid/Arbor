@@ -1,7 +1,7 @@
 # Copyright 2011 Elias Pipping <pipping@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=martine tag=v${PV} ]
+require github [ user=ninja-build tag=v${PV} ]
 require elisp-optional [ source_directory=misc ]
 require bash-completion zsh-completion
 
@@ -16,12 +16,15 @@ MYOPTIONS="bash-completion vim-syntax zsh-completion"
 DEPENDENCIES="
     build:
         app-doc/asciidoc
+        app-text/docbook-xsl-stylesheets
         dev-lang/python:*
         dev-libs/libxslt
     test:
         dev-cpp/gtest
         dev-lang/python:*
 "
+# NOTE: There's an automagic build dep on dev-util/re2 to regenerate two files
+#       which are shipped with the tarball anyway.
 
 ninja_src_compile() {
     edo ./configure.py --bootstrap --verbose
@@ -31,8 +34,7 @@ ninja_src_compile() {
 
 ninja_src_test() {
     edo ./ninja ninja_test
-    # SetWithLots just fails telling the user to set rlimit higher
-    edo ./ninja_test --gtest_filter=-SubprocessTest.SetWithLots
+    edo ./ninja_test
 }
 
 ninja_src_install() {
