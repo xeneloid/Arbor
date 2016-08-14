@@ -96,12 +96,7 @@ postfix_src_configure() {
 
     if option cyrus; then
         ccargs+=( -DUSE_CYRUS_SASL -I/usr/$(exhost --target)/include/sasl )
-
-        if ever at_least 3; then
-            makeopts+=( AUXLIBS_CYRUS=-lsasl2 )
-        else
-            auxlibs+=( -lsasl2 )
-        fi
+        auxlibs+=( -lsasl2 )
     fi
 
     if option ldap; then
