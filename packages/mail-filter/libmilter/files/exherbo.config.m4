@@ -1,4 +1,5 @@
 define(`confAR', ``@@AR@@'')
+define(`confRANLIB', ``@@RANLIB@@'')
 define(`confCC', ``@@CC@@'')
 define(`confLD', ``@@LD@@'')
 define(`confINCLUDEDIR', ``@@INCLUDEDIR@@'')

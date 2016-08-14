@@ -44,7 +44,14 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 WORK=${WORKBASE}/${SENDMAIL_PNV}
 
 src_compile() {
+    # don't overwrite our toolchain settings
+    edo sed -i \
+            -e '/confRANLIB/d' \
+            devtools/bin/configure.sh
+
+    # our toolchain settings
     edo sed -e "s:@@AR@@:$(exhost --target)-ar:" \
+            -e "s:@@RANLIB@@:$(exhost --target)-ranlib:" \
             -e "s:@@CFLAGS@@:${CFLAGS}:" \
             -e "s:@@LDFLAGS@@:${LDFLAGS}:" \
             -e "s:@@CC@@:${CC}:" \
