@@ -25,6 +25,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 pkg_setup() {
     option qt5 && append-flags -fPIC
+    export CXXFLAGS="${CXXFLAGS} -std=c++11"
 }
 
 src_configure() {
