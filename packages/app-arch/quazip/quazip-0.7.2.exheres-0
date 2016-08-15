@@ -19,10 +19,6 @@ DEPENDENCIES="
         qt5? ( x11-libs/qtbase:5 )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-r258.patch
-)
-
 pkg_setup() {
     option qt5 && append-flags -fPIC
     export CXXFLAGS="${CXXFLAGS} -std=c++11"
