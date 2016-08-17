@@ -3,10 +3,10 @@
 # Distributed under the terms of the GNU General Public License v2
 
 if ever is_scm ; then
-    SCM_REPOSITORY="git://anongit.freedesktop.org/git/dbus/dbus"
+    SCM_REPOSITORY="https://anongit.freedesktop.org/git/dbus/dbus.git"
     require scm-git
 else
-    DOWNLOADS="http://dbus.freedesktop.org/releases/${PN}/${PNV}.tar.gz"
+    DOWNLOADS="https://dbus.freedesktop.org/releases/${PN}/${PNV}.tar.gz"
 fi
 
 require flag-o-matic openrc-service systemd-service
@@ -23,7 +23,7 @@ D-Bus supplies both a system daemon (for events such as 'new hardware device add
 or 'printer queue changed') and a per-user-login-session daemon (for general IPC
 needs among user applications).
 "
-HOMEPAGE="http://${PN}.freedesktop.org"
+HOMEPAGE="https://${PN}.freedesktop.org"
 
 BUGS_TO="philantrop@exherbo.org"
 
@@ -60,6 +60,13 @@ DEPENDENCIES="
             ]]
         )
 "
+
+if ever is_scm ; then
+    DEPENDENCIES+="
+        build:
+            sys-devel/autoconf-archive
+    "
+fi
 
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=(
     dcop-howto.txt
