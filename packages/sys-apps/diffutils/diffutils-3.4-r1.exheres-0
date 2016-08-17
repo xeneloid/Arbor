@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=tar.xz ]
+require gnu [ suffix=tar.xz ] autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="Utilities for showing file differences in various ways"
 REMOTE_IDS="freecode:${PN}"
@@ -15,6 +15,12 @@ DEPENDENCIES="
     build:
         sys-devel/gettext
 "
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/697c1f4fa93ac971c487725e9e53fc211cd3c670.patch
+    "${FILES}"/1a0df4396ebe3b9a58b882bb976cfce3f50d3cac.patch
+    "${FILES}"/edd942ca27d570a33d612b12eecaa33a76640e46.patch
+)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
@@ -31,3 +37,4 @@ src_test() {
     esandbox disallow_net --connect "inet:127.0.0.1@80"
     esandbox disallow_net --bind "inet:127.0.0.1@80"
 }
+
