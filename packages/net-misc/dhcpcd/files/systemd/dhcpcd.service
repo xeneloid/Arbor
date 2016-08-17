@@ -1,14 +1,10 @@
-# Copyright 2010-2011 Wulf C. Krueger <philantrop@exherbo.org>
-# Distributed under the terms of the GNU General Public License v2
-
 [Unit]
-Description=DHCP client (dhcpcd)
+Description=A minimalistic network configuration daemon with DHCPv4, rdisc and DHCPv6 support
 Wants=network.target
 Before=network.target
-After=local-fs.target
 
 [Service]
-ExecStart=/usr/bin/dhcpcd -q -B
+ExecStart=/usr/bin/dhcpcd -q --nobackground
 
 [Install]
 WantedBy=multi-user.target
