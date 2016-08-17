@@ -90,8 +90,6 @@ DEFAULT_SRC_INSTALL_EXTRA_DOCS=( HISTORY VERSION )
 
 util-linux_src_prepare() {
     # disable failing tests
-    edo rm tests/ts/cal/bigyear
-    edo rm tests/ts/fdisk/{gpt,mbr-{non,}dos-mode,sunlabel}
     edo rm tests/ts/paths/built-in
     edo rm tests/ts/uuid/uuidd
 
