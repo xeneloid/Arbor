@@ -3,7 +3,7 @@
 
 require sourceforge [ project=nfs ] systemd-service autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
-export_exlib_phases src_install pkg_postinst
+export_exlib_phases src_prepare src_install pkg_postinst
 
 SUMMARY="NFS client and server daemons"
 DESCRIPTION="
@@ -19,25 +19,29 @@ LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS="
     caps
-    gss [[ description = [ Enable the Generic Security Services Application Program Interface  ] ]]
+    kerberos
     nfsv4 [[ description = [ Enable support for NFSv4, including 4.1 ] ]]
     tcpd
+
+    kerberos? ( ( providers: heimdal krb5 ) [[ number-selected = exactly-one ]] )
 "
 
-# FIXME: kerberos
 DEPENDENCIES="
     build+run:
-        net-libs/libtirpc
+        net-libs/libtirpc[kerberos?]
         sys-apps/keyutils
         sys-apps/util-linux[>=2.20]
         sys-fs/e2fsprogs[>=1.40.9]
         caps? ( sys-libs/libcap )
-        gss? ( net-libs/libgssglue )
+        kerberos? (
+            providers:heimdal? ( app-crypt/heimdal )
+            providers:krb5? ( app-crypt/krb5 )
+        )
         nfsv4? (
-                dev-db/sqlite:3
-                dev-libs/libevent[>=1.0b]
-                net-libs/libnfsidmap[>=0.16]
-                sys-fs/lvm2
+            dev-db/sqlite:3
+            dev-libs/libevent[>=1.0b]
+            net-libs/libnfsidmap[>=0.16]
+            sys-fs/lvm2
         )
         tcpd? ( sys-apps/tcp-wrappers[>=7.6] )
     run:
@@ -57,16 +61,18 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-statduser=nobody
     --with-statedir=/var/lib/nfs
     --with-systemd=${SYSTEMDSYSTEMUNITDIR}
+    --without-gssglue
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=(
+    "kerberos krb5 /usr/$(exhost --target)"
     "tcpd tcp-wrappers"
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
     caps
-    gss
-    "gss svcgss"
+    "kerberos gss"
+    "kerberos svcgss"
     nfsv4
     "nfsv4 nfsv41"
     "nfsv4 nfsdcltrack"
@@ -78,8 +84,39 @@ DEFAULT_SRC_INSTALL_PARAMS=( sbindir=/usr/$(exhost --target)/bin )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( KNOWNBUGS NEW )
 DEFAULT_SRC_INSTALL_EXTRA_SUBDIRS=( linux-nfs )
 
+nfs-utils_src_prepare() {
+    edo sed \
+        -e 's:/var/run:/run:g' \
+        -i utils/statd/{sm-notify.c,start-statd,statd.c,statd.man} \
+        -i utils/blkmapd/device-discovery.c \
+        -i tests/test-lib.sh \
+        -i systemd/nfs-blkmap.service \
+        -i systemd/rpc-statd.service
+
+    edo sed \
+        -e 's:/usr/sbin:/usr/bin:g' \
+        -i systemd/nfs-{blkmap,idmapd,mountd,server}.service \
+        -i systemd/rpc-{gssd,statd-notify,statd,svcgssd}.service
+
+    # nfs-config fails because we don't ship a nfs-utils_env.sh like Fedora does
+    edo sed \
+        -e '/^After=nfs-config.service$/d' \
+        -e '/^Wants=nfs-config.service$/d' \
+        -i systemd/nfs-{idmapd,mountd,server}.service \
+        -i systemd/rpc-{gssd,statd-notify,statd,svcgssd}.service
+
+    autotools_src_prepare
+
+    # From application of cpp_path patch, file permissions not preserved?
+    edo chmod +x "${WORK}"/tools/rpcgen/cpp
+}
+
+
 nfs-utils_src_install() {
     default
+
+    # nfs-config fails because we don't ship a nfs-utils_env.sh like Fedora does
+    edo rm systemd/nfs-config.service
 
     # Don't overwrite existing xtab/etab, install the original
     # versions somewhere safe. cf. pkg_postinst.
