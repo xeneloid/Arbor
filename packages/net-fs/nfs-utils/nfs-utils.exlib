@@ -98,13 +98,6 @@ nfs-utils_src_prepare() {
         -i systemd/nfs-{blkmap,idmapd,mountd,server}.service \
         -i systemd/rpc-{gssd,statd-notify,statd,svcgssd}.service
 
-    # nfs-config fails because we don't ship a nfs-utils_env.sh like Fedora does
-    edo sed \
-        -e '/^After=nfs-config.service$/d' \
-        -e '/^Wants=nfs-config.service$/d' \
-        -i systemd/nfs-{idmapd,mountd,server}.service \
-        -i systemd/rpc-{gssd,statd-notify,statd,svcgssd}.service
-
     autotools_src_prepare
 
     # From application of cpp_path patch, file permissions not preserved?
@@ -115,15 +108,18 @@ nfs-utils_src_prepare() {
 nfs-utils_src_install() {
     default
 
-    # nfs-config fails because we don't ship a nfs-utils_env.sh like Fedora does
-    edo rm systemd/nfs-config.service
-
     # Don't overwrite existing xtab/etab, install the original
     # versions somewhere safe. cf. pkg_postinst.
     dodir /usr/$(exhost --target)/lib/nfs
     keepdir /var/lib/nfs/{sm,sm.bak}
     edo mv "${IMAGE}"/var/lib/nfs/* "${IMAGE}"/usr/$(exhost --target)/lib/nfs
     keepdir /var/lib/nfs
+
+    # ship Fedora nfs-utils_env.sh and config so we can use the upstream service files
+    exeinto /usr/$(exhost --target)/libexec/nfs-utils
+    doexe "${FILES}"/systemd/nfs-utils_env.sh
+    insinto /etc/conf.d
+    doins "${FILES}"/systemd/nfs.conf
 }
 
 nfs-utils_pkg_postinst() {
