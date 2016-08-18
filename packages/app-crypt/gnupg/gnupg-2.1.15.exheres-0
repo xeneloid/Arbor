@@ -90,15 +90,15 @@ src_compile() {
 
 src_test() {
     # Allow the tests to run its own instance of gpg-agent
-    esandbox allow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
-    esandbox allow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
-    esandbox allow_net "unix:/tmp/gpgscm-*/S.gpg-agent"
-    esandbox allow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent"
+    esandbox allow_net "unix:${WORK}/tests/openpgp/S.gpg-agent*"
+    esandbox allow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent*"
+    esandbox allow_net "unix:/tmp/gpgscm-*/S.gpg-agent*"
+    esandbox allow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent*"
     default
-    esandbox disallow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent"
-    esandbox disallow_net "unix:/tmp/gpgscm-*/S.gpg-agent"
-    esandbox disallow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent"
-    esandbox disallow_net "unix:${WORK}/tests/openpgp/S.gpg-agent"
+    esandbox disallow_net --connect "unix:/tmp/gpgscm-*/S.gpg-agent*"
+    esandbox disallow_net "unix:/tmp/gpgscm-*/S.gpg-agent*"
+    esandbox disallow_net --connect "unix:${WORK}/tests/openpgp/S.gpg-agent*"
+    esandbox disallow_net "unix:${WORK}/tests/openpgp/S.gpg-agent*"
 }
 
 src_install() {
