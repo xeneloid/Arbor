@@ -11,7 +11,7 @@ Apple Inc. In addition it contains additional filters developed
 independently of Apple, especially filters for the PDF-centric printing
 workflow introduced by OpenPrinting.
 "
-HOMEPAGE="http://www.linuxfoundation.org/collaborate/workgroups/openprinting/${PN}"
+HOMEPAGE="https://wiki.linuxfoundation.org/openprinting/${PN}"
 DOWNLOADS="https://openprinting.org/download/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2 GPL-3 MIT"
@@ -70,7 +70,9 @@ src_configure() {
         --enable-ghostscript
         --enable-ijs
         --enable-imagefilters
+        --enable-poppler
         --disable-braille
+        --disable-mutool
         --disable-static
         --with-browseremoteprotocols="$(option avahi && echo 'dnssd ')$(option ldap && echo 'ldap ')cups"
         --with-cups-config=/usr/$(exhost --target)/bin/cups-config
