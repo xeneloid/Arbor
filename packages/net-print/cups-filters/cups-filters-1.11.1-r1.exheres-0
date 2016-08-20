@@ -21,6 +21,7 @@ MYOPTIONS="
     avahi
     dbus
     ldap
+    tiff
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
 "
 
@@ -36,7 +37,6 @@ DEPENDENCIES="
         media-libs/freetype:2
         media-libs/lcms2
         media-libs/libpng:=
-        media-libs/tiff
         net-print/cups[>=1.7.3]
         avahi? (
             net-dns/avahi
@@ -46,6 +46,7 @@ DEPENDENCIES="
         ldap? ( net-directory/openldap )
         providers:ijg-jpeg? ( media-libs/jpeg:= )
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
+        tiff? ( media-libs/tiff )
         !app-text/ghostscript[<9.09] [[
             description = [ cups-filters now provides gstopxl and gstoraster ]
             resolution = upgrade-blocked-before
@@ -84,12 +85,12 @@ src_configure() {
         --with-png
         --with-shell=/usr/$(exhost --target)/bin/bash
         --with-test-font-path=/usr/share/fonts/X11/dejavu/DejaVuSans.ttf
-        --with-tiff
         --without-php
         --without-rcdir
         $(option_enable avahi)
         $(option_enable dbus)
         $(option_enable ldap)
+        $(option_with tiff)
     )
 
     econf "${myconf[@]}"
