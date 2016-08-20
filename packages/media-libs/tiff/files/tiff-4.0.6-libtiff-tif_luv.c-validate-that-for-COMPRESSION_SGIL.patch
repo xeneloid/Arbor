@@ -1,0 +1,59 @@
+Upstream: yes
+
+From ed60aac2c63e71b807667bcd46a25fc0e7229728 Mon Sep 17 00:00:00 2001
+From: erouault <erouault>
+Date: Fri, 1 Jul 2016 11:06:04 +0000
+Subject: [PATCH] * libtiff/tif_luv.c: validate that for COMPRESSION_SGILOG and
+ PHOTOMETRIC_LOGL, there is only one sample per pixel. Avoid potential invalid
+ memory write on corrupted/unexpected images when using the
+ TIFFRGBAImageBegin() interface (reported by Clay Wood)
+
+(CVE-2016-587)
+---
+ ChangeLog         | 9 +++++++++
+ libtiff/tif_luv.c | 8 ++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/ChangeLog b/ChangeLog
+index dee1881..c4fd0ec 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -1,7 +1,16 @@
++2016-07-01  Even Rouault <even.rouault at spatialys.com>
++
++	* libtiff/tif_luv.c: validate that for COMPRESSION_SGILOG and
++	PHOTOMETRIC_LOGL, there is only one sample per pixel. Avoid
++	potential invalid memory write on corrupted/unexpected images when
++	using the TIFFRGBAImageBegin() interface (reported by
++	Clay Wood)
++
+ 2016-06-28  Even Rouault <even.rouault at spatialys.com>
+ 
+ 	* libtiff/tif_pixarlog.c: fix potential buffer write overrun in
+ 	PixarLogDecode() on corrupted/unexpected images (reported by Mathias Svensson)
++	(CVE-2016-587)
+ 
+ 2016-06-15  Bob Friesenhahn  <bfriesen@simple.dallas.tx.us>
+ 
+diff --git a/libtiff/tif_luv.c b/libtiff/tif_luv.c
+index b66ff64..00241e9 100644
+--- a/libtiff/tif_luv.c
++++ b/libtiff/tif_luv.c
+@@ -1276,6 +1276,14 @@ LogL16InitState(TIFF* tif)
+ 	assert(sp != NULL);
+ 	assert(td->td_photometric == PHOTOMETRIC_LOGL);
+ 
++	if( td->td_samplesperpixel != 1 )
++	{
++		TIFFErrorExt(tif->tif_clientdata, module,
++		             "Sorry, can not handle LogL image with %s=%d",
++			     "Samples/pixel", td->td_samplesperpixel);
++		return 0;
++	}
++
+ 	/* for some reason, we can't do this in TIFFInitLogL16 */
+ 	if (sp->user_datafmt == SGILOGDATAFMT_UNKNOWN)
+ 		sp->user_datafmt = LogL16GuessDataFmt(td);
+-- 
+2.9.3
+
