@@ -50,6 +50,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-docdir=/usr/share/doc/${PNV}
     --with-homespool=.maildir
     --with-regex
+    --enable-sidebar
 
     --enable-flock
     --disable-fcntl
