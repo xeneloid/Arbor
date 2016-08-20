@@ -26,6 +26,7 @@ SLOT="0"
 MYOPTIONS="
     graph [[ description = [ Support for graphs using boost ] ]]
     lua   [[ description = [ Support Lua plan files for imposition ] ]]
+    tiff
 
     ( providers: ijg-jpeg jpeg-turbo ) [[ number-selected = exactly-one ]]
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
@@ -36,7 +37,6 @@ DEPENDENCIES="
         media-libs/fontconfig[>=2.6.0]
         media-libs/freetype:2[>=2.3.9]
         media-libs/libpng:=[>=1.2]
-        media-libs/tiff[>=3.8.2-r1]
         net-dns/libidn
         graph? ( dev-libs/boost[>=1.38.0] )
         lua? ( dev-lang/lua:5.1[>=5.1.4] ) [[ note = [ The :5.1 is probably only cmake's fault ] ]]
@@ -44,6 +44,7 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
+        tiff? ( media-libs/tiff[>=3.8.2-r1] )
 "
 #    test:
 #        dev-cpp/cppunit[>=1.12.1]
@@ -61,7 +62,10 @@ CMAKE_SRC_CONFIGURE_PARAMS=(
 CMAKE_SRC_CONFIGURE_OPTION_WANTS=(
     "graph BOOST"
 )
-CMAKE_SRC_CONFIGURE_OPTION_DISABLE_FINDS=( LUA )
+CMAKE_SRC_CONFIGURE_OPTION_DISABLE_FINDS=(
+    LUA
+    TIFF
+)
 
 podofo_src_prepare() {
     edo cd "${CMAKE_SOURCE}"
