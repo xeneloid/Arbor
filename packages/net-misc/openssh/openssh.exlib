@@ -5,6 +5,7 @@
 #     Copyright 1999-2008 Gentoo Foundation
 
 require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ] pam systemd-service
+require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 export_exlib_phases pkg_pretend src_prepare src_compile src_test src_install pkg_postinst
 
@@ -180,6 +181,7 @@ openssh_src_install() {
     fi
 
     install_systemd_files
+    install_openrc_files
     dobin "${FILES}"/sshd-keygen.sh
 
     # fix installed service files to use correct host
