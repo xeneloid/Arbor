@@ -34,10 +34,13 @@ DEPENDENCIES="
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PNV}-libtiff-tif_getimage.c-fix-out-of-bound-reads-in-TIF.patch
-    "${FILES}"/${PNV}-libtiff-tif_luv.c-validate-that-for-COMPRESSION_SGIL.patch
+    "${FILES}"/${PNV}-libtiff-tif_luv.c-fix-potential-out-of-bound-writes-.patch
+    "${FILES}"/${PNV}-libtiff-tif_next.c-fix-potential-out-of-bound-write-.patch
     "${FILES}"/${PNV}-libtiff-tif_pixarlog.c-fix-potential-buffer-write-ov.patch
+    "${FILES}"/${PNV}-libtiff-tif_luv.c-validate-that-for-COMPRESSION_SGIL.patch
     "${FILES}"/${PNV}-libtiff-tif_pixarlog.c-Fix-write-buffer-overflow-in-.patch
     "${FILES}"/${PNV}-tools-tiffcrop.c-Avoid-access-outside-of-stack-alloc.patch
+    "${FILES}"/${PNV}-libtiff-tif_read.c-Fix-out-of-bounds-read-on.patch
     "${FILES}"/${PNV}-CVE-2016-5321-CVE-2016-5323-bugzilla-2558-2559.patch
     "${FILES}"/${PNV}-tools-tiffcrop.c-Fix-out-of-bounds-write-in-loadImag.patch
     "${FILES}"/${PNV}-tools-tiff2rgba.c-Fix-integer-overflow-in-size-of-al.patch

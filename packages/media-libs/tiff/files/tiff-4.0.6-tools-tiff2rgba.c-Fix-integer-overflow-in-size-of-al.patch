@@ -10,26 +10,9 @@ Subject: [PATCH] * tools/tiff2rgba.c: Fix integer overflow in size of
  tests that rejected valid files.
 
 ---
- ChangeLog         |  8 ++++++++
  tools/tiff2rgba.c | 34 ++++++++++++++++++++++++++++++----
- 2 files changed, 38 insertions(+), 4 deletions(-)
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
-diff --git a/ChangeLog b/ChangeLog
-index 62dc1b5..9c0ab29 100644
---- a/ChangeLog
-+++ b/ChangeLog
-@@ -1,3 +1,11 @@
-+2016-08-15 Even Rouault <even.rouault at spatialys.com>
-+
-+	* tools/tiff2rgba.c: Fix integer overflow in size of allocated
-+	buffer, when -b mode is enabled, that could result in out-of-bounds
-+	write. Based initially on patch tiff-CVE-2016-3945.patch from
-+	libtiff-4.0.3-25.el7_2.src.rpm by Nikola Forro, with correction for
-+	invalid tests that rejected valid files.
-+
- 2016-07-11 Even Rouault <even.rouault at spatialys.com>
- 
- 	* tools/tiffcrop.c: Avoid access outside of stack allocated array
 diff --git a/tools/tiff2rgba.c b/tools/tiff2rgba.c
 index b7a81eb..16e3dc4 100644
 --- a/tools/tiff2rgba.c
