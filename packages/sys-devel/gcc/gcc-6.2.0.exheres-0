@@ -10,6 +10,5 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}/${PN}-${SLOT}-exherbo-gold-sysroot-support.patch"
     "${FILES}/${PN}-${SLOT}-fortify-headers.patch"
     "${FILES}/${PN}-${SLOT}-objdump-name.patch"
-    "${FILES}"/${PN}-${SLOT}-PR-c-70869.patch
 )
 
