@@ -1,0 +1,117 @@
+From 44bf15b868619638e689effa1f533abf4c101e53 Mon Sep 17 00:00:00 2001
+From: Thorsten Kukuk <kukuk@thkukuk.de>
+Date: Sat, 20 Feb 2016 07:04:09 -0500
+Subject: [PATCH] rpcbind: don't use obsolete svc_fdset interface of libtirpc
+
+rpcbind and libtirpc are both using poll in svc_run(),
+but rpcbind used the old svc_fdset interface for this.
+This limits the possible connections to 1024, while both
+could handle much more. rpcbind is now accessing directly
+the svc_pollfd data of libtirpc.
+
+Signed-off-by: Thorsten Kukuk <kukuk@thkukuk.de>
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ src/rpcb_svc_com.c | 48 ++++++++++++++++--------------------------------
+ 1 file changed, 16 insertions(+), 32 deletions(-)
+
+diff --git a/src/rpcb_svc_com.c b/src/rpcb_svc_com.c
+index 22d6c84..148fe42 100644
+--- a/src/rpcb_svc_com.c
++++ b/src/rpcb_svc_com.c
+@@ -536,10 +536,6 @@ create_rmtcall_fd(struct netconfig *nconf)
+ 		rmttail->next = rmt;
+ 		rmttail = rmt;
+ 	}
+-	/* XXX not threadsafe */
+-	if (fd > svc_maxfd)
+-		svc_maxfd = fd;
+-	FD_SET(fd, &svc_fdset);
+ 	return (fd);
+ }
+ 
+@@ -1056,9 +1052,6 @@ free_slot_by_index(int index)
+ 	fi = &FINFO[index];
+ 	if (fi->flag & FINFO_ACTIVE) {
+ 		netbuffree(fi->caller_addr);
+-		/* XXX may be too big, but can't access xprt array here */
+-		if (fi->forward_fd >= svc_maxfd)
+-			svc_maxfd--;
+ 		free(fi->uaddr);
+ 		fi->flag &= ~FINFO_ACTIVE;
+ 		rpcb_rmtcalls--;
+@@ -1097,35 +1090,28 @@ netbuffree(struct netbuf *ap)
+ }
+ 
+ 
+-#define	MASKVAL	(POLLIN | POLLPRI | POLLRDNORM | POLLRDBAND)
+-extern bool_t __svc_clean_idle(fd_set *, int, bool_t);
+-
+ void
+ my_svc_run()
+ {
+-	size_t nfds;
+-	struct pollfd pollfds[FD_SETSIZE];
+ 	int poll_ret, check_ret;
+ 	int n;
+-#ifdef SVC_RUN_DEBUG
+-	int i;
+-#endif
+-	register struct pollfd	*p;
+-	fd_set cleanfds;
+ 
+ 	for (;;) {
+-		p = pollfds;
+-		for (n = 0; n <= svc_maxfd; n++) {
+-			if (FD_ISSET(n, &svc_fdset)) {
+-				p->fd = n;
+-				p->events = MASKVAL;
+-				p++;
+-			}
+-		}
+-		nfds = p - pollfds;
+-		poll_ret = 0;
++	        struct pollfd my_pollfd[svc_max_pollfd];
++		int i;
++
++		if (svc_max_pollfd == 0 && svc_pollfd == NULL)
++		  return;
++
++
++		for (i = 0; i < svc_max_pollfd; ++i)
++		  {
++		    my_pollfd[i].fd = svc_pollfd[i].fd;
++		    my_pollfd[i].events = svc_pollfd[i].events;
++		    my_pollfd[i].revents = 0;
++		  }
+ 
+-		switch (poll_ret = poll(pollfds, nfds, 30 * 1000)) {
++		switch (poll_ret = poll(my_pollfd, svc_max_pollfd, 30 * 1000)) {
+ 		case -1:
+ 			/*
+ 			 * We ignore all errors, continuing with the assumption
+@@ -1133,8 +1119,6 @@ my_svc_run()
+ 			 * other outside event) and not caused by poll().
+ 			 */
+ 		case 0:
+-			cleanfds = svc_fdset;
+-			__svc_clean_idle(&cleanfds, 30, FALSE);
+ 			continue;
+ 		default:
+ 			/*
+@@ -1144,10 +1128,10 @@ my_svc_run()
+ 			 * don't call svc_getreq_poll.  Otherwise, there
+ 			 * must be another so we must call svc_getreq_poll.
+ 			 */
+-			if ((check_ret = check_rmtcalls(pollfds, nfds)) ==
++			if ((check_ret = check_rmtcalls(my_pollfd, svc_max_pollfd)) ==
+ 			    poll_ret)
+ 				continue;
+-			svc_getreq_poll(pollfds, poll_ret-check_ret);
++			svc_getreq_poll(my_pollfd, poll_ret-check_ret);
+ 		}
+ 	}
+ }
+-- 
+1.8.3.1
+

@@ -1,4 +1,4 @@
-# Copyright 2010-2015 Timo Gurr <tgurr@gentoo.org>
+# Copyright 2010-2016 Timo Gurr <tgurr@gentoo.org>
 # Distributed under the terms of the GNU General Public License v2
 # Based in part upon 'rpcbind-0.2.0.ebuild' from Gentoo, which is:
 #     Copyright 1999-2009 Gentoo Foundation
@@ -15,13 +15,14 @@ HOMEPAGE+=" http://git.linux-nfs.org/?p=steved/${PN}.git"
 LICENCES="BSD-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~x86"
-MYOPTIONS=""
+MYOPTIONS="tcpd"
 
 DEPENDENCIES="
     build:
         virtual/pkg-config[>=0.20]
     build+run:
         net-libs/libtirpc
+        tcpd? ( sys-apps/tcp-wrappers )
         !net-nds/portmap [[
             description = [ rpcbind replaces portmap ]
             resolution = uninstall-blocked-after
@@ -35,6 +36,8 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PN}-0.2.1-move-lock-file-to-run-fs.patch
     "${FILES}"/d5dace219953c45d26ae42db238052b68540649a.patch
     "${FILES}"/9194122389f2a56b1cd1f935e64307e2e963c2da.patch
+    "${FILES}"/3a664b1b5a310df39bd0f325b0edb1deb31c2249.patch
+    "${FILES}"/44bf15b868619638e689effa1f533abf4c101e53.patch
 )
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
@@ -45,9 +48,15 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR}
     --with-rpcuser=rpc
 )
+DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
+    "tcpd libwrap"
+)
 
 src_install() {
     default
+
+    insinto /etc/conf.d
+    doins "${FILES}"/systemd/rpcbind.conf
 
     install_systemd_files
 
@@ -56,3 +65,4 @@ src_install() {
 d /run/rpcbind 0700 rpc rpc
 EOF
 }
+
