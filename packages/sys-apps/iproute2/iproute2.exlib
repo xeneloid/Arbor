@@ -51,6 +51,13 @@ if ever at_least 4.1.0 ; then
     "
 fi
 
+if ever at_least 4.7.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            dev-util/elfutils
+    "
+fi
+
 DEFAULT_SRC_COMPILE_PARAMS+=(
     CC="${CC}"
     HOSTCC="$(exhost --build)-cc"
@@ -59,6 +66,10 @@ DEFAULT_SRC_COMPILE_PARAMS+=(
     LIBDIR=/usr/$(exhost --target)/lib
     IPT_LIB_DIR=/usr/$(exhost --target)/lib
 )
+
+if ever at_least 4.7.0 ; then
+    DEFAULT_SRC_COMPILE_PARAMS+=( V=1 )
+fi
 
 DEFAULT_SRC_INSTALL_PARAMS+=(
     SBINDIR=/usr/$(exhost --target)/bin
