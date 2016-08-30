@@ -29,6 +29,10 @@ DEPENDENCIES="
         ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/0001-Fix-BPF-check-for-kernels-3.20.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --program-prefix=eu-
     --enable-nls

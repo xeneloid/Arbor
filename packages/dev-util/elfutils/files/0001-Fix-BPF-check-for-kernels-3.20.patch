@@ -1,0 +1,41 @@
+From 25b9976a9ff559f15af757a782b86656c5685587 Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@posteo.de>
+Date: Tue, 30 Aug 2016 23:12:10 +0200
+Subject: [PATCH] Fix BPF check for kernels < 3.20
+Upstream: submitted, https://lists.fedorahosted.org/archives/list/elfutils-devel@lists.fedorahosted.org/thread/CTRXTC7YZJ33NSAI5LGGFUD2RKYQNDZK/#CTRXTC7YZJ33NSAI5LGGFUD2RKYQNDZK
+
+---
+ configure.ac | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e5503f1..a69e2dd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -331,9 +331,20 @@ else
+ fi
+ AC_SUBST([argp_LDADD])
+ 
+-dnl Check if we have <linux/bpf.h> for EM_BPF disassembly.
+-AC_CHECK_HEADERS(linux/bpf.h)
+-AM_CONDITIONAL(HAVE_LINUX_BPF_H, [test "x$ac_cv_header_linux_bpf_h" = "xyes"])
++dnl Check if we have <linux/bpf.h> for EM_BPF disassembly and it has the required defines
++AC_COMPILE_IFELSE(
++	[AC_LANG_PROGRAM(
++		[#include <linux/bpf.h>],
++		[int foo=BPF_PSEUDO_MAP_FD; return 0;]
++		)],
++	[have_bpf="true"],
++	[have_bpf="false"]
++)
++
++if test "$have_bpf" = "true" ; then
++	AC_DEFINE([HAVE_LINUX_BPF_H], [1], [if we have <linux/bpf.h> for EM_BPF disassembly])
++fi
++AM_CONDITIONAL(HAVE_LINUX_BPF_H, [test "$have_bpf" = "true"])
+ 
+ dnl The directories with content.
+ 
+-- 
+2.9.3
+
