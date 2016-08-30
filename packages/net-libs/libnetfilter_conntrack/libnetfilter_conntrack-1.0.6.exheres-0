@@ -4,6 +4,7 @@
 require libnetfilter
 
 SUMMARY="Userspace library providing a programming interface (API) to the in-kernel connection tracking state table"
+
 PLATFORMS="~amd64 ~x86"
 
 DEPENDENCIES+="
