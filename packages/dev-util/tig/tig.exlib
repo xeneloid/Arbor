@@ -3,7 +3,7 @@
 # Based in part upon 'tig-0.9.1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
-require bash-completion
+require bash-completion zsh-completion
 
 export_exlib_phases src_install
 
@@ -14,6 +14,9 @@ DOWNLOADS="${HOMEPAGE}/releases/${PNV}.tar.gz"
 LICENCES="GPL-2"
 SLOT="0"
 MYOPTIONS=""
+
+# requires access to /dev/tty
+RESTRICT="test"
 
 DEPENDENCIES="
     build:
@@ -34,5 +37,6 @@ tig_src_install() {
     default
 
     dobashcompletion contrib/${PN}-completion.bash
+    dozshcompletion contrib/${PN}-completion.zsh
 }
 
