@@ -1,7 +1,7 @@
 # Copyright 2009 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-require guile autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
+require guile
 
 LICENCES="
   LGPL-3
@@ -16,12 +16,8 @@ DEPENDENCIES+="
     build+run:
         dev-libs/boehm-gc[>=7.2alpha6-r1]
         dev-libs/libffi
-        dev-libs/libunistring
+        dev-libs/libunistring[>=0.9.3]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PNV}-build-Honor-program-name-transformation-in-guild.patch
-    "${FILES}"/${PNV}-build-Clean-up-rules-for-meta-guild-guile-config.patch
-)
 DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
