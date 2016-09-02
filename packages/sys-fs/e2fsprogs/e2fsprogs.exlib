@@ -11,7 +11,7 @@ require autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 export_exlib_phases src_configure src_test src_install
 
 SUMMARY="Utilities for managing ext2/ext3/ext4 filesystems"
-DOWNLOADS="mirror://kernel/linux/kernel/people/tytso/${PN}/v${PV}/${PNV}.tar.xz"
+DOWNLOADS+=" mirror://kernel/linux/kernel/people/tytso/${PN}/v${PV}/${PNV}.tar.gz"
 
 LICENCES="
     GPL-2
