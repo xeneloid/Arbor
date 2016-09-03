@@ -47,7 +47,7 @@ llvm_src_prepare() {
     expatch "${FILES}"/0001-Allow-CMAKE_BUILD_TYPE-None.patch
     expatch "${FILES}"/${PN}-fix-llvm-config.patch
 
-    if ! ever is_scm; then
+    if ! ever at_least 3.9.0; then
         expatch "${FILES}"/${PNV}-Install-cmake-files-to-lib-cmake-llvm.patch
     fi
 
