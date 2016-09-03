@@ -79,7 +79,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/clang-3.5.0-lit.cfg-use-PATH.patch
 )
 
-if ! ever is_scm ; then
+if ! ever at_least 3.9.0 ; then
     DEFAULT_SRC_PREPARE_PATCHES+=(
          "${FILES}"/${PNV}-Install-cmake-files-to-lib-cmake-clang.patch
          "${FILES}"/${PNV}-exherbo-multi-arch-paths.patch
