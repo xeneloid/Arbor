@@ -25,12 +25,18 @@ DEPENDENCIES="
     build:
         doc? ( app-doc/doxygen[>=1.2.6] )
     build+run:
-        python? ( dev-lang/python:= )
+        python? ( dev-lang/python:2.7 )
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( --enable-thread-safety )
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( python )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( MEMORY-LEAK )
+
+src_configure() {
+    econf \
+        --enable-thread-safety \
+        $(option_enable python) \
+        --with-pythonlibs="$(/usr/$(exhost --target)/bin/python2.7-config --libs)" \
+        --with-pythonincludes="$(/usr/$(exhost --target)/bin/python2.7-config --includes)"
+}
 
 src_compile() {
     default
