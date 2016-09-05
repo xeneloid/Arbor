@@ -19,6 +19,14 @@ DOWNLOADS="http://rabbit.dereferenced.org/~nenolod/distfiles/${PNV}.tar.xz"
 
 CROSS_COMPILE_TARGETS="
     arm-exherbo-linux-gnueabi
+    armv4-unknown-linux-gnueabi
+    armv4-unknown-linux-gnueabihf
+    armv4-unknown-linux-musleabi
+    armv4-unknown-linux-musleabihf
+    armv5-unknown-linux-gnueabi
+    armv5-unknown-linux-gnueabihf
+    armv5-unknown-linux-musleabi
+    armv5-unknown-linux-musleabihf
     armv6-unknown-linux-gnueabi
     armv6-unknown-linux-gnueabihf
     armv6-unknown-linux-musleabi

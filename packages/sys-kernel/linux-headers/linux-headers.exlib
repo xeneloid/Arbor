@@ -64,6 +64,14 @@ linux-headers_src_compile() {
 linux-headers_src_install() {
     local _host_architectures=(
         aarch64-unknown-linux-gnueabi:arm64
+        armv4-unknown-linux-gnueabi:arm
+        armv4-unknown-linux-gnueabihf:arm
+        armv4-unknown-linux-musleabi:arm
+        armv4-unknown-linux-musleabihf:arm
+        armv5-unknown-linux-gnueabi:arm
+        armv5-unknown-linux-gnueabihf:arm
+        armv5-unknown-linux-musleabi:arm
+        armv5-unknown-linux-musleabihf:arm
         armv6-unknown-linux-gnueabi:arm
         armv6-unknown-linux-gnueabihf:arm
         armv6-unknown-linux-musleabi:arm
