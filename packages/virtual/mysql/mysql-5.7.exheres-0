@@ -10,6 +10,7 @@ MYOPTIONS="
     embedded-server [[ description = [ A full-featured server library that can be run inside a client application ] ]]
     ( providers:
         mysql
+        percona
     ) [[
         *description = [ mysql database provider ]
         number-selected = exactly-one
@@ -18,5 +19,6 @@ MYOPTIONS="
 
 DEPENDENCIES="
     providers:mysql? ( dev-db/mysql[~>${PV}][embedded-server?] )
+    providers:percona? ( dev-db/Percona-Server[~>${PV}][embedded-server?] )
 "
 
