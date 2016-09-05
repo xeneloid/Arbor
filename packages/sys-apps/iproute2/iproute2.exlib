@@ -54,7 +54,11 @@ fi
 if ever at_least 4.7.0 ; then
     DEPENDENCIES+="
         build+run:
-            dev-util/elfutils
+            providers:elfutils? ( dev-util/elfutils )
+            providers:libelf? ( dev-libs/libelf )
+    "
+    MYOPTIONS+="
+        ( providers: elfutils libelf ) [[ number-selected = exactly-one ]]
     "
 fi
 
