@@ -14,7 +14,7 @@ main features and design principles are:
 HOMEPAGE="http://www.digip.org/${PN}"
 DOWNLOADS="${HOMEPAGE}/releases/${PNV}.tar.bz2"
 
-UPSTREAM_CHANGELOG="http://${PN}.readthedocs.org/en/${PV}/changes.html#version-$(ever replace_all -)"
+UPSTREAM_CHANGELOG="https://${PN}.readthedocs.org/en/${PV}/changes.html#version-$(ever replace_all -)"
 
 LICENCES="MIT"
 SLOT="0"
@@ -22,10 +22,6 @@ PLATFORMS="~amd64 ~x86"
 MYOPTIONS=""
 
 DEPENDENCIES=""
-
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-CVE-2016-4425.patch
-)
 
 DEFAULT_SRC_CONFIGURE_PARAMS=( --disable-static )
 
