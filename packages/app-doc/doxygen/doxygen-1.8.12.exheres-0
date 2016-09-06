@@ -8,13 +8,13 @@
 require cmake [ api=2 ]
 
 SUMMARY="Documentation system for C++, C, Java, Objective-C, Python, IDL, and other languages"
-HOMEPAGE="http://www.doxygen.org/"
-DOWNLOADS="http://ftp.stack.nl/pub/users/dimitri/${PNV}.src.tar.gz
-    doc? ( http://ftp.stack.nl/pub/users/dimitri/${PN}_manual-${PV}.pdf.zip )"
+HOMEPAGE="http://www.doxygen.org"
+DOWNLOADS="https://ftp.stack.nl/pub/users/dimitri/${PNV}.src.tar.gz
+    doc? ( https://ftp.stack.nl/pub/users/dimitri/${PN}_manual-${PV}.pdf.zip )"
 
 REMOTE_IDS="freecode:${PN}"
 
-DOXYGEN_DOCUMENTATION_HOME="http://www.stack.nl/~dimitri/${PN}"
+DOXYGEN_DOCUMENTATION_HOME="https://www.stack.nl/~dimitri/${PN}"
 UPSTREAM_DOCUMENTATION="
 ${DOXYGEN_DOCUMENTATION_HOME}/faq.html    [[ description = [ Doxygen FAQ ] lang = en ]]
 ${DOXYGEN_DOCUMENTATION_HOME}/manual.html [[ description = [ Doxygen Manual ] lang = en ]]
