@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard <kloeri@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-commit=bb8fb4029563dcd564ece143ce558ea44c720a15
+commit=f41aabd179e2a0677f6fc8dfd2e51303b5c18989
 WORK=${WORKBASE}/config-${commit:0:7}
 
 SUMMARY="GNU config.guess and config.sub scripts"
@@ -15,7 +15,7 @@ MYOPTIONS="parts: data documentation"
 
 DEPENDENCIES=""
 
-DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/0001-config.sub-recognise-LLVM-canonicalised-windows-trip.patch" )
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/0001-config.sub-recognise-LLVM-canonicalised-windows-trip.patch )
 
 src_install() {
     dodir /usr/share/${PN}
