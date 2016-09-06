@@ -11,6 +11,8 @@ DEPENDENCIES="
         dev-libs/gmp:=
 "
 
+DEFAULT_SRC_PREPARE_PATCHES+=( "${FILES}"/random.patch )
+
 src_prepare() {
     # Causes eautoreconf to do only half its job
     edo rm aclocal.m4
