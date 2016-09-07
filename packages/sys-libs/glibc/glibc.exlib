@@ -54,9 +54,16 @@ DEPENDENCIES="
 "
 
 if ever at_least 2.23 ; then
-    DEPENDENCIES="
+    DEPENDENCIES+="
         build:
             sys-devel/gcc:*[>=4.7]
+    "
+fi
+
+if ever at_least 2.24 ; then
+    DEPENDENCIES+="
+        build:
+            sys-kernel/linux-headers[>=3.2]
     "
 fi
 
