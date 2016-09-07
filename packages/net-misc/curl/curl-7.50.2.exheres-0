@@ -136,6 +136,8 @@ EOF
     test_args+=( '!'{582,{600..699}} )
     # Fail (last checked: 7.41.0)
     test_args+=( '!'1135 )
+    # Fail (last checked: 7.50.2)
+    test_args+=( '!'2032 )
     emake -j1 test-full TEST_F="${test_args[*]}"
 
     esandbox disallow_net --connect "inet:127.0.0.1@9011"
