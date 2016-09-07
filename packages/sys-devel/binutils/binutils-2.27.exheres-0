@@ -6,7 +6,6 @@ require binutils
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-2.25-disable-failing-gold-test.patch
-    "${FILES}"/${PN}-2.25-Fix-dynamic-list-so-that-symbols-not-in-the-list-are.patch
+    "${FILES}/0001-support-canonical-windows-targets.patch"
 )
 
