@@ -170,21 +170,31 @@ case ${PYTHON_EXLIB_API} in
         # Byte-compiles all .py files in ${IMAGE}$(python_get_libdir). Changing the mtime of a .py file
         # invalidates the byte-compiled versions. python_bytecompile() should thus be run at the end of
         # src_install(). Both .pyc & .pyo (optimized & byte-compiled) files are generated.
+        # Optionally takes directory arguments, specifying where to look for compilable files.
         python_bytecompile() {
             illegal_in_global_scope
 
             [[ ${EXHERES_PHASE} != install ]] && die "${FUNCNAME} should only be run in src_install()"
 
-            [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
-
-            edo find "${IMAGE}$(python_get_libdir)" -type f -name '*.py' -exec touch {} +
+            local optimize_dirs
+            if [[ -n ${@} ]] ; then
+                optimize_dirs=( "$@" )
+            else
+                optimize_dirs=( "$(python_get_libdir)" )
+            fi
 
             local excludes=()
-            [[ -n "${PYTHON_BYTECOMPILE_EXCLUDES[@]}" ]] && \
+            [[ -n "${PYTHON_BYTECOMPILE_EXCLUDES[@]}" ]] &&
                 excludes=( -x "$(IFS='|' ; echo "${PYTHON_BYTECOMPILE_EXCLUDES[*]}")" )
 
-            edo python$(python_get_abi)    -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
-            edo python$(python_get_abi) -O -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
+            for dir in ${optimize_dirs[@]} ; do
+                dir=${IMAGE}${dir#${IMAGE}}
+
+                edo find "${dir}" -type f -name '*.py' -exec touch {} +
+
+                edo python$(python_get_abi)    -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${dir}"
+                edo python$(python_get_abi) -O -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${dir}"
+            done
         }
 
         if exparam -b 2to3; then
@@ -378,21 +388,32 @@ case ${PYTHON_EXLIB_API} in
         # Byte-compiles all .py files in ${IMAGE}$(python_get_libdir). Changing the mtime of a .py file
         # invalidates the byte-compiled versions. python_bytecompile() should thus be run at the end of
         # src_install(). Both .pyc & .pyo (optimized & byte-compiled) files are generated.
+        # Optionally takes directory arguments, specifying where to look for compilable files.
         python_bytecompile() {
             illegal_in_global_scope
 
             [[ ${EXHERES_PHASE} != install ]] && die "${FUNCNAME} should only be run in src_install()"
 
-            [[ -n ${@} ]] && die "${FUNCNAME} takes no arguments"
-
-            edo find "${IMAGE}$(python_get_libdir)" -type f -name '*.py' -exec touch {} +
+            local optimize_dirs
+            if [[ -n ${@} ]] ; then
+                optimize_dirs=( "$@" )
+            else
+                optimize_dirs=( "$(python_get_libdir)" )
+            fi
 
             local excludes=()
-            [[ -n "${PYTHON_BYTECOMPILE_EXCLUDES[@]}" ]] && \
+            [[ -n "${PYTHON_BYTECOMPILE_EXCLUDES[@]}" ]] &&
                 excludes=( -x "$(IFS='|' ; echo "${PYTHON_BYTECOMPILE_EXCLUDES[*]}")" )
 
-            edo python$(python_get_abi)    -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
-            edo python$(python_get_abi) -O -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${IMAGE}$(python_get_libdir)"
+            for dir in ${optimize_dirs[@]} ; do
+                dir=${IMAGE}${dir#${IMAGE}}
+                einfo $dir
+
+                edo find "${dir}" -type f -name '*.py' -exec touch {} +
+
+                edo python$(python_get_abi)    -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${dir}"
+                edo python$(python_get_abi) -O -mcompileall -f -q -d $(python_get_libdir) "${excludes[@]}" "${dir}"
+            done
         }
         ;;
     *)
