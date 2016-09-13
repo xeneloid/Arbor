@@ -24,6 +24,8 @@ MYOPTIONS=""
 RESTRICT="test"
 
 DEPENDENCIES="
+    build+run:
+        dev-libs/libunwind
     test:
         sys-apps/busybox
 "
