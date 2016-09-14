@@ -44,7 +44,7 @@ DEPENDENCIES="
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
-        !sys-devel/gcc:5.2[<5.2.0-r2] [[
+        !sys-devel/gcc:5.1[<5.2.0-r2] [[
             description = [ Alternatives conflict ]
             resolution = upgrade-blocked-before
         ]]
