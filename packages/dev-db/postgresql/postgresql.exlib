@@ -19,7 +19,7 @@ It also supports storage of binary large objects, including pictures, sounds, or
 It has native programming interfaces for C/C++, Java, .Net, Perl, Python, Ruby, Tcl, ODBC, among others,
 and exceptional documentation.
 "
-HOMEPAGE="http://www.postgresql.org"
+HOMEPAGE="https://www.postgresql.org"
 
 BUGS_TO="ingmar@exherbo.org"
 REMOTE_IDS="freecode:pgsql"
@@ -30,7 +30,7 @@ ${HOMEPAGE}/docs/faq/               [[ lang = en description = [ FAQ ] ]]
 ${HOMEPAGE}/support/security.html   [[ lang = en description = [ Security Information ] ]]
 "
 UPSTREAM_RELEASE_NOTES="
-http://wiki.postgresql.org/wiki/WhatsNew${PSQL_MAJOR_VERSION//.}
+https://wiki.postgresql.org/wiki/WhatsNew${PSQL_MAJOR_VERSION//.}
 ${HOMEPAGE}/docs/${PSQL_MAJOR_VERSION}/static/release-${PSQL_MAJOR_VERSION//./-}.html
 "
 DOWNLOADS="mirror://${PN}/source/v${PV}/${PNV}.tar.bz2"
