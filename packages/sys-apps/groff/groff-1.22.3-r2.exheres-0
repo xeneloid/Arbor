@@ -9,7 +9,10 @@ SUMMARY="Groff produces formatted output from plain text"
 LICENCES="GPL-2"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="X"
+MYOPTIONS="
+    X
+    parts: binaries configuration data development documentation libraries
+"
 
 DEPENDENCIES="
     build:
@@ -77,5 +80,11 @@ src_install() {
     # TODO(compnerd) determine why these symlinks are required
     dosym tbl /usr/$(exhost --target)/bin/gtbl
     dosym eqn /usr/$(exhost --target)/bin/geqn
+
+    expart binaries /usr/$(exhost --target)/bin
+    expart configuration /etc
+    expart data /usr/share/{groff,X11}
+    expart documentation /usr/share/{doc,info,man}
+    expart libraries /usr/$(exhost --target)/lib
 }
 
