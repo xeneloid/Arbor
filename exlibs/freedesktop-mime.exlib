@@ -7,13 +7,20 @@
 #
 # See also 'man 1 update-mime-database'
 
+myexparam -b with_opt=false
+exparam -b with_opt && myexparam option_name='gui'
+
 export_exlib_phases pkg_postinst pkg_postrm
 
-[[ "${CATEGORY}/${PN}" == 'x11-misc/shared-mime-info' ]] || DEPENDENCIES="build: x11-misc/shared-mime-info"
+if [[ "${CATEGORY}/${PN}" != 'x11-misc/shared-mime-info' ]];then
+    exparam -b with_opt && opt="$(exparam option_name)? ( "
+    DEPENDENCIES="build: ${opt}x11-misc/shared-mime-info${opt:+ )}"
+fi
 
 freedesktop-mime_update_mime_database() {
     illegal_in_global_scope
 
+    exparam -b with_opt && ! optionq "$(exparam option_name)" && return 0
     if [[ "${ROOT}" == / ]] ; then
         nonfatal edo /usr/$(exhost --build)/bin/update-mime-database -n /usr/share/mime ||
             eerror "update-mime-database failed"
