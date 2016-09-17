@@ -2,33 +2,24 @@ Title: Perl 5.24 update
 Author: Kylie McClain <somasis@exherbo.org>
 Content-Type: text/plain
 Posted: 2016-09-16
-Revision: 1
+Revision: 2
 News-Item-Format: 1.0
 Display-If-Installed: dev-lang/perl[<5.24.0]
 
 Perl has been bumped to version 5.24.
 
-So, here's the upgrade procedure, same as it has always been... well, except
-that perl:5.22 is masked due to a CVE.
+Perl 5.22 was masked with a CVE, so the steps are shorter to allow for
+avoiding cave's complaints about it.
 
-1. Install dev-lang/perl:5.24.
+Simply install dev-lang/perl:5.24, while uninstalling perl:5.22 and
+rebuilding packages depending on perl:5.22:
 
-    # cave resolve -1x perl:5.24 -W perl:5.22
-
-2. Set 5.24 as the Perl provider.
-
-    # eclectic perl set 5.24
-
-3. Rebuild everything that installs a Perl module, replacing CHOST with the
-   triplet matching your host.
-
-    # cave resolve -1x -W perl:5.22 $(cave print-owners -f '%c/%p:%s ' /usr/${CHOST}/lib/perl5/vendor_perl/5.22-arch)
-    # cave resolve -1x -W perl:5.22 $(cave print-owners -f '%c/%p:%s ' /usr/${CHOST}/lib/perl5/vendor_perl/5.22-pure)
+    # cave resolve -1x perl:5.24 \!perl:5.22 -D perl:5.22
 
 If you have any cross targets with Perl modules installed, you'll need to
-repeat step 3 for them, using `--make cross-compile` and the triplet of the
+repeat this for them, using `--make cross-compile` and the triplet of the
 cross target for ${CHOST}.
 
-Additionally, if you installed anything manually (via `cpan`, for example),
+Additionally, if you installed anything manually (via `cpan`, for example)
 you will have to reinstall those as well so that they use the new version.
 
