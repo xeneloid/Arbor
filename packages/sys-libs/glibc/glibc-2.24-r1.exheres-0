@@ -13,6 +13,8 @@ MYOPTIONS+="
 DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PN}-2.22-allow-additional-tests-to-xfail.patch
     "${FILES}"/${PNV}-malloc-Preserve-arena-free-list-thread-count-invaria.patch
+    "${FILES}"/${PN}-argp-Do-not-override-GCC-keywords-with-macros-BZ-169.patch
+    "${FILES}"/${PN}-arm-mark-__startcontext-as-.cantunwind-bug-20435.patch
 )
 
 src_prepare() {

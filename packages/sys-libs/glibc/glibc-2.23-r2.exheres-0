@@ -17,6 +17,8 @@ DEFAULT_SRC_PREPARE_PATCHES+=(
     "${FILES}"/${PNV}-glob-Simplify-the-interface-for-the-GLOB_ALTDIRFUNC-.patch
     "${FILES}"/${PNV}-CVE-2016-1234-glob-Do-not-copy-d_name-field-of-struc.patch
     "${FILES}"/${PNV}-CVE-2016-3706-getaddrinfo-stack-overflow-in-hostent-.patch
+    "${FILES}"/${PN}-argp-Do-not-override-GCC-keywords-with-macros-BZ-169.patch
+    "${FILES}"/${PN}-arm-mark-__startcontext-as-.cantunwind-bug-20435.patch
 )
 
 src_prepare() {
