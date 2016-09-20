@@ -11,7 +11,8 @@ MYOPTIONS+="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES+=(
-    "${FILES}"/${PN}-2.23-allow-additional-tests-to-xfail.patch
+    "${FILES}"/${PN}-2.22-allow-additional-tests-to-xfail.patch
+    "${FILES}"/${PNV}-malloc-Preserve-arena-free-list-thread-count-invaria.patch
 )
 
 src_prepare() {
