@@ -4,7 +4,7 @@
 # Based in part upon 'openssh-5.0_p1-r1.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require openssh
+require openssh [ X509_version=9.2 ]
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
