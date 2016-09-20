@@ -11,7 +11,7 @@ myexparam -b vala_dep=$(ever is_scm && echo true || echo false)
 myexparam -b with_opt=false
 
 # If the package doesn't support all slots you have to list them yourself
-myexparam vala_slots=[ 0.30 0.32 ]
+myexparam vala_slots=[ 0.32 0.34 ]
 
 exparam -b with_opt && myexparam option_name=vapi
 
