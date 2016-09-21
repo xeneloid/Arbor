@@ -21,8 +21,8 @@ DEPENDENCIES="
     build:
         virtual/pkg-config
     build+run:
-        app-cdr/libburn[>=1.4.4][cdio(-)?]
-        app-cdr/libisofs[>=1.4.4][acl(+)?][xattr(+)?]
+        app-cdr/libburn[>=1.4.6][cdio(-)?]
+        app-cdr/libisofs[>=1.4.6][acl(+)?][xattr(+)?]
         sys-libs/readline
         sys-libs/zlib
         acl? ( sys-apps/acl )
