@@ -5,7 +5,7 @@
 
 MY_PNV=${PNV}-source
 
-require github [ user=apple release=release-${PV} suffix=tar.gz ] \
+require github [ user=apple release=v${PV} suffix=tar.gz ] \
     pam systemd-service freedesktop-desktop gtk-icon-cache \
     autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
@@ -148,7 +148,7 @@ cups_src_install() {
     keepdir /usr/$(exhost --target)/libexec/cups/driver /usr/share/cups/{model,profiles} \
             /var/cache/cups/rss /var/log/cups /var/spool/cups/tmp
 
-    keepdir /etc/cups/{interfaces,ppd,ssl}
+    keepdir /etc/cups/{ppd,ssl}
 
     # provide our own pam script
     if option pam ; then
