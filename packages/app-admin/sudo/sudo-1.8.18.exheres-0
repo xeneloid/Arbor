@@ -13,7 +13,7 @@ Allows a system administrator to delegate authority to give certain users (or
 groups of users) the ability to run some (or all) commands as root or another
 user while providing an audit trail of the commands and their arguments.
 "
-HOMEPAGE="http://www.${PN}.ws"
+HOMEPAGE="https://www.${PN}.ws"
 DOWNLOADS="${HOMEPAGE}/${PN}/dist/${MY_PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
@@ -26,8 +26,8 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     pam
-    ( linguas: ca cs da de eo es eu fi fr gl hr it ja nb nl pl pt_BR ru sk sl sr sv tr uk vi
-               zh_CN
+    ( linguas: ca cs da de eo es eu fi fr gl hr hu it ja ko nb nl nn pl pt_BR ru sk sl sr sv
+               tr uk vi zh_CN
     )
 "
 
