@@ -23,8 +23,6 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
-    # additional available language bindings: python, python2, python3, qt
-    --enable-languages=cl,cpp
     --with-libassuan-prefix=/usr/$(exhost --target)
     --with-libgpg-error-prefix=/usr/$(exhost --target)
 )

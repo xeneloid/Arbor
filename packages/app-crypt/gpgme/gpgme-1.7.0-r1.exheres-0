@@ -1,0 +1,72 @@
+# Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Distributed under the terms of the GNU General Public License v2
+
+SUMMARY="A library for making GPG easier to use"
+HOMEPAGE="https://www.gnupg.org/related_software/${PN}"
+DOWNLOADS="mirror://gnupg/${PN}/${PNV}.tar.bz2"
+
+REMOTE_IDS="freecode:${PN}"
+
+LICENCES="
+    || ( GPL-2 LGPL-2.1 )
+    qt5? ( GPL-2 )
+"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS="
+    doc [[ description = [ Build API docs for the Qt bindings ] ]]
+    qt5
+
+    doc [[ requires = qt5 ]]
+"
+
+# interactive
+RESTRICT="test"
+
+DEPENDENCIES="
+    build:
+        doc? (
+            app-doc/doxygen
+            media-gfx/graphviz
+        )
+        virtual/pkg-config
+    build+run:
+        app-crypt/gnupg[>=2.0.4]
+        dev-libs/libassuan[>=2.0.2]
+        dev-libs/libgpg-error[>=1.11]
+        qt5? (
+            x11-libs/qtbase:5
+            !kde/kdepimlibs:4 [[
+                description = [ libqgpgme from kde/kdepimlibs has been merged into gpgme ]
+                resolution = uninstall-blocked-after
+            ]]
+        )
+"
+
+# Needed for cross-compiling, fails to build on 32bit platforms though
+# https://lists.gnupg.org/pipermail/gnupg-devel/2016-September/031660.html
+DEFAULT_SRC_COMPILE_PARAMS=(
+    CC_FOR_BUILD=$(exhost --build)-cc
+)
+
+src_configure() {
+    # additional available language bindings: python, python2, python3, qt
+    local languages="cl,cpp"
+    option qt5 && languages+=",qt"
+    econf \
+        --enable-languages="${languages}" \
+        --with-libassuan-prefix=/usr/$(exhost --target) \
+        --with-libgpg-error-prefix=/usr/$(exhost --target) \
+        $(option doc ac_cv_prog_DOXYGEN=doxygen ac_cv_prog_DOXYGEN=)
+}
+
+src_install() {
+    default
+
+    if option doc ; then
+        edo pushd lang/qt/doc/generated
+        dodoc -r html
+        edo popd
+    fi
+}
+
