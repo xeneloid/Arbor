@@ -4,8 +4,9 @@
 # Based in part upon 'acpid-1.0.6-r1.ebuild', which is:
 #     Copyright 1999-2008 Gentoo Foundation
 
-require sourceforge [ project=${PN}2 suffix=tar.xz ] systemd-service
-require openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
+require sourceforge [ project=${PN}2 suffix=tar.xz ] \
+    systemd-service \
+    openrc-service [ openrc_confd_files=[ "${FILES}"/openrc/confd ] ]
 
 SUMMARY="A configurable ACPI policy daemon for Linux"
 DESCRIPTION="
@@ -15,6 +16,7 @@ netlink. When an ACPI event is received from one of these sources, acpid
 will examine a list of rules, and execute the rules that match the event.
 "
 
+BUGS_TO="pioto@exherbo.org"
 REMOTE_IDS+=" freecode:{PN}"
 
 LICENCES="GPL-2"
@@ -26,8 +28,6 @@ DEPENDENCIES="
     build:
         sys-kernel/linux-headers[>=3.1] [[ note = [ for KEY_MICMUTE in input.h ] ]]
 "
-
-BUGS_TO="pioto@exherbo.org"
 
 DEFAULT_SRC_INSTALL_PARAMS=( DOCDIR="/usr/share/doc/${PNVR}" )
 
