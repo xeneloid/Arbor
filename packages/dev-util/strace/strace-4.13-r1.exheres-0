@@ -30,7 +30,7 @@ DEPENDENCIES="
         sys-apps/busybox
 "
 
-DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD=$(exhost --tool-prefix)cc )
+DEFAULT_SRC_CONFIGURE_PARAMS=( CC_FOR_BUILD=$(exhost --build)-cc )
 
 DEFAULT_SRC_COMPILE_PARAMS=( AR=${AR} )
 
