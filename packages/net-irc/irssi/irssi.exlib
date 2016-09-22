@@ -47,3 +47,4 @@ src_install() {
         edo rmdir "${perllocal[0]%/*/*}"
     fi
 }
+
