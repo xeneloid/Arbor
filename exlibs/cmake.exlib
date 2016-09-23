@@ -183,6 +183,8 @@ ecmake() {
     # All default CMAKE_BUILD_TYPEs come with default CFLAGS, CXXFLAGS, which are *appended* to
     # CMAKE_C_FLAGS, CMAKE_CXX_FLAGS if a given build type is used. Thus they override users' settings,
     # and mustn't be used.
+    # -DCMAKE_C{,XX}_IMPLICIT_INCLUDE_DIRECTORIES can be dropped again if
+    # https://gitlab.kitware.com/cmake/cmake/issues/16291 is resolved.
     for arg in ${CMAKE_NO_COLOR:--DCMAKE_COLOR_MAKEFILE:BOOL=TRUE}                   \
                -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE                                    \
                ${CMAKE_SILENT:+-DCMAKE_VERBOSE_MAKEFILE:BOOL=FALSE}                  \
@@ -194,6 +196,8 @@ ecmake() {
                -DCMAKE_NM:PATH="${NM}"                                               \
                -DCMAKE_C_COMPILER:PATH="${CC}"                                       \
                -DCMAKE_CXX_COMPILER:PATH="${CXX}"                                    \
+               -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES:PATH=/usr/$(exhost --target)/include \
+               -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH=/usr/$(exhost --target)/include \
                -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX:=/usr/$(exhost --target)}"      \
                $(exhost --is-native -q || echo "-DCMAKE_FIND_ROOT_PATH=${PREFIX:=/usr/$(exhost --target)}" ) \
                -DCMAKE_SYSTEM_PREFIX_PATH:PATH="${PREFIX:=/usr/$(exhost --target)}"  \
