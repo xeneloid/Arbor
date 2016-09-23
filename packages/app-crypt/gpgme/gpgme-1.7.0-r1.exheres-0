@@ -1,4 +1,5 @@
 # Copyright 2008 Saleem Abdulrasool <compnerd@compnerd.org>
+# Copyright 2016 Heiko Becker <heirecka@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
 SUMMARY="A library for making GPG easier to use"
@@ -19,9 +20,6 @@ MYOPTIONS="
 
     doc [[ requires = qt5 ]]
 "
-
-# interactive
-RESTRICT="test"
 
 DEPENDENCIES="
     build:
@@ -58,6 +56,35 @@ src_configure() {
         --with-libassuan-prefix=/usr/$(exhost --target) \
         --with-libgpg-error-prefix=/usr/$(exhost --target) \
         $(option doc ac_cv_prog_DOXYGEN=doxygen ac_cv_prog_DOXYGEN=)
+}
+
+src_test() {
+    # Allow the tests to run its own instance of gpg-agent
+    esandbox allow_net "unix:${WORK}/tests/gpg/S.gpg-agent"
+    esandbox allow_net --connect "unix:${WORK}/tests/gpg/S.gpg-agent"
+    esandbox allow_net "unix:${WORK}/tests/gpgsm/S.gpg-agent"
+    esandbox allow_net --connect "unix:${WORK}/tests/gpgsm/S.gpg-agent"
+
+    if option qt5 ; then
+        esandbox allow_net "unix:${WORK}/lang/qt/tests/S.gpg-agent"
+        esandbox allow_net --connect "unix:${WORK}/lang/qt/tests/S.gpg-agent"
+        esandbox allow_net "unix:${WORK}/temp/t-tofuinfo-*/S.gpg-agent"
+        esandbox allow_net --connect "unix:${WORK}/temp/t-tofuinfo-*/S.gpg-agent"
+    fi
+
+    default
+
+    if option qt5 ; then
+        esandbox disallow_net --connect "unix:${WORK}/lang/qt/tests/S.gpg-agent"
+        esandbox disallow_net "unix:${WORK}/lang/qt/tests/S.gpg-agent"
+        esandbox disallow_net --connect "unix:${WORK}/temp/t-tofuinfo-*/S.gpg-agent"
+        esandbox disallow_net "unix:${WORK}/temp/t-tofuinfo-*/S.gpg-agent"
+    fi
+
+    esandbox disallow_net --connect "unix:${WORK}/tests/gpgsm/S.gpg-agent"
+    esandbox disallow_net "unix:${WORK}/tests/gpgsm/S.gpg-agent"
+    esandbox disallow_net --connect "unix:${WORK}/tests/gpg/S.gpg-agent"
+    esandbox disallow_net "unix:${WORK}/tests/gpg/S.gpg-agent"
 }
 
 src_install() {
