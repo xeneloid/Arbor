@@ -41,8 +41,10 @@ DEPENDENCIES="
         )
 "
 
-# Needed for cross-compiling, fails to build on 32bit platforms though
-# https://lists.gnupg.org/pipermail/gnupg-devel/2016-September/031660.html
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PNV}-cpp-qt-Include-config.h.patch
+)
+
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC_FOR_BUILD=$(exhost --build)-cc
 )
