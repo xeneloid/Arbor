@@ -29,6 +29,8 @@ DEPENDENCIES="
         dev-lang/python:*[>=2.6]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-pkgconfig.patch )
+
 CMAKE_SRC_CONFIGURE_PARAMS+=(
     # Avoid conflicts with dev-libs/json-c
     -DINCLUDE_INSTALL_DIR=/usr/$(exhost --target)/include/${PN}
