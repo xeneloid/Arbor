@@ -30,6 +30,8 @@ BUGS_TO="alip@exherbo.org"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/${PNV}-lzma.patch
+    "${FILES}"/0001-tests-Use-correctly-prefixed-nm-binary.patch
+    "${FILES}"/0002-tests-Remove-coredump-tests.patch
 )
 
 src_prepare() {
