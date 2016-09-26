@@ -28,6 +28,10 @@ DEPENDENCIES="
 
 BUGS_TO="alip@exherbo.org"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PNV}-lzma.patch
+)
+
 src_prepare() {
     # TODO: These tests fail!
     echo 'int main(void){return 0;}' > tests/Gtest-dyn1.c
@@ -36,7 +40,6 @@ src_prepare() {
     edo sed -i \
             -e '/LIBLZMA/s:-lzma:-llzma:' configure{.ac,}
 
-    expatch -p1 "${FILES}"/${PNV}-lzma.patch
     autotools_src_prepare
 }
 
