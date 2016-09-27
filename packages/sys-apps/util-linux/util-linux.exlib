@@ -72,7 +72,7 @@ DEPENDENCIES="
             note = [ this is required as most of the tools have been converted to use ncurses ]
         ]]
         sys-libs/pam
-        sys-libs/readline
+        sys-libs/readline:=
         sys-libs/zlib
         session-management? ( x11-libs/libutempter )
         systemd? ( sys-apps/systemd )

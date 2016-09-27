@@ -32,7 +32,7 @@ MYOPTIONS="
 DEPENDENCIES="
     build+run:
         app-arch/xz
-        sys-libs/readline
+        sys-libs/readline:=
         sys-libs/zlib[>=1.2.5-r1]
 "
 

@@ -23,7 +23,7 @@ DEPENDENCIES="
         app-doc/asciidoc[>=8.4]
     build+run:
         sys-libs/ncurses
-        sys-libs/readline[>=6.2]
+        sys-libs/readline:=[>=6.2]
     run:
         dev-scm/git[>=1.5.4]
 "

@@ -63,7 +63,7 @@ DEPENDENCIES="
         )
     build+run:
         sys-libs/ncurses
-        sys-libs/readline
+        sys-libs/readline:=
         dbus? ( sys-apps/dbus )
         nl80211? ( net-libs/libnl:3.0 )
         pcap? (

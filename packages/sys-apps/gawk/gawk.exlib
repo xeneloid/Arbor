@@ -18,7 +18,7 @@ DEPENDENCIES="
     build+run:
         dev-libs/gmp:=
         dev-libs/mpfr:=
-        sys-libs/readline
+        sys-libs/readline:=
     test:
         sys-apps/coreutils[>=8.24-r3]
 "

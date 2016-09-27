@@ -19,7 +19,7 @@ DEPENDENCIES="
         sys-devel/flex
     build+run:
         sys-libs/ncurses
-        sys-libs/readline
+        sys-libs/readline:=
 "
 
 DEFAULT_SRC_PREPARE_PATCHES+=(

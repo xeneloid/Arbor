@@ -46,7 +46,7 @@ DEPENDENCIES="
         ncurses? ( sys-libs/ncurses )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
-        readline? ( sys-libs/readline )
+        readline? ( sys-libs/readline:= )
         tk? ( dev-lang/tk )
 "
 

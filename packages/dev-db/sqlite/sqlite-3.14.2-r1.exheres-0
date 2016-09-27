@@ -35,7 +35,7 @@ DEPENDENCIES="
     build:
         virtual/unzip
     build+run:
-        readline? ( sys-libs/readline )
+        readline? ( sys-libs/readline:= )
     test:
         dev-lang/tcl[>=8.5]
 "

@@ -45,7 +45,7 @@ DEPENDENCIES="
         virtual/pkg-config
     build+run:
         sys-apps/util-linux[>=2.24]
-        sys-libs/readline
+        sys-libs/readline:=
         providers:eudev? ( sys-apps/eudev )
         providers:systemd? ( sys-apps/systemd[>=221] )
 "

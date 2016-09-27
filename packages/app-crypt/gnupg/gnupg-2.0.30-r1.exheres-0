@@ -27,7 +27,7 @@ DEPENDENCIES="
         dev-libs/libksba[>=1.0.7]
         dev-libs/pth
         net-misc/curl[>=7.10]
-        sys-libs/readline
+        sys-libs/readline:=
         smartcard? ( dev-libs/libusb:0.1 )
     recommendation:
         app-crypt/pinentry [[ description = [

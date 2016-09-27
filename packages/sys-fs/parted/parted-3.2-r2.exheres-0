@@ -17,7 +17,7 @@ DEPENDENCIES="
     build+run:
         sys-apps/util-linux
         sys-libs/ncurses
-        sys-libs/readline[>=5.2]
+        sys-libs/readline:=[>=5.2]
         device-mapper? ( sys-fs/lvm2 )
     test:
         dev-libs/check[>=0.9.3]
