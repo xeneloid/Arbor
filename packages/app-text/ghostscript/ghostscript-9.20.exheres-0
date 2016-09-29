@@ -3,7 +3,7 @@
 # Based in part upon 'ghostscript-8.62.ebuild' from Gentoo, which is:
 #     Copyright 1999-2008 Gentoo Foundation.
 
-require github [ user=ArtifexSoftware project=ghostpdl-downloads release=gs$(ever delete_all) suffix=tar.bz2 ] \
+require github [ user=ArtifexSoftware project=ghostpdl-downloads release=gs$(ever delete_all) suffix=tar.xz ] \
     autotools [ supported_autoconf=[ 2.5 ] supported_automake=[ 1.15 ] ]
 
 SUMMARY="An interpreter for the PostScript language and for PDF"
@@ -32,7 +32,7 @@ DEPENDENCIES="
         dev-libs/libpaper
         media-libs/fontconfig
         media-libs/freetype:2[>=2.4.2]
-        media-libs/jbig2dec
+        media-libs/jbig2dec[>=0.13]
         media-libs/lcms2[>=2.6]
         media-libs/libpng:=[>=1.5.7]
         sys-libs/zlib
@@ -50,7 +50,7 @@ DEPENDENCIES="
         )
     run:
         app-text/poppler-data[>=0.4.4] [[ note = [ CMap encoding data ] ]]
-        fonts/urw-fonts[>=20150629] [[ note = [ PostScript standard fonts ] ]]
+        fonts/urw-fonts[>=20160926] [[ note = [ PostScript standard fonts ] ]]
 "
 
 src_prepare() {
