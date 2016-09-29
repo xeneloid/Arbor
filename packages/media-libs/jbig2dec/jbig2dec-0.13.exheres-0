@@ -3,7 +3,7 @@
 
 require jbig2dec
 
-DOWNLOADS+=" http://ghostscript.com/~giles/jbig2/${PN}/${PNV}.tar.gz"
+DOWNLOADS+=" http://downloads.ghostscript.com/public/${PN}/${PNV}.tar.gz"
 
 PLATFORMS="~amd64 ~x86"
 

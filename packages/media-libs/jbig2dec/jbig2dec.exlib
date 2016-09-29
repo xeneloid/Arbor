@@ -10,12 +10,12 @@ lossy or lossless encoding of 'bilevel' (1-bit monochrome) images at moderately 
 in particular scanned paper documents. In this domain it is very efficient, offering compression
 ratios on the order of 100:1.
 "
-HOMEPAGE="http://jbig2dec.sourceforge.net/"
+HOMEPAGE="http://www.ghostscript.com/jbig2dec.html"
 DOWNLOADS="
     http://jbig2dec.sourceforge.net/ubc/jb2streams.zip
 "
 
-LICENCES="GPL-3"
+LICENCES="AGPL-3"
 SLOT="0"
 MYOPTIONS=""
 
@@ -26,6 +26,7 @@ DEPENDENCIES="
 
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-shared
+    --disable-static
 )
 
 jbig2dec_src_prepare() {
