@@ -7,8 +7,3 @@ require bash-completion
 
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-man.patch
-    "${FILES}"/${PNV}-tar.patch
-)
-

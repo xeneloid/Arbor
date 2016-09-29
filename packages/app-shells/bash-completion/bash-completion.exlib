@@ -44,9 +44,6 @@ bash-completion_src_install() {
     # provided by util-linux[>=2.28]
     edo rm "${IMAGE}"/usr/share/bash-completion/completions/{mount,umount,mount.linux,umount.linux}
 
-    # removed from git master
-    ! ever is_scm && edo rm "${IMAGE}"/usr/share/bash-completion/completions/mpv
-
     edo rm "${IMAGE}"/usr/share/bash-completion/completions/xxd
 }
 
