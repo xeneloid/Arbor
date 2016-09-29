@@ -1,0 +1,28 @@
+# Copyright 2011-2016 Timo Gurr <tgurr@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+MY_PN=${PN/fonts/base35}
+
+SUMMARY="Free versions of the 35 standard PostScript fonts"
+HOMEPAGE="http://git.ghostscript.com/?p=urw-core35-fonts.git"
+DOWNLOADS="http://downloads.ghostscript.com/public/fonts/${MY_PN}-${PV}.zip"
+
+LICENCES="AGPL-3"
+SLOT="0"
+PLATFORMS="~amd64 ~x86"
+MYOPTIONS=""
+
+DEPENDENCIES="
+    build:
+        app-arch/unzip
+"
+
+WORK=${WORKBASE}
+
+src_install() {
+    default
+
+    insinto /usr/share/fonts/X11/${PN}
+    doins *.{afm,t1}
+}
+
