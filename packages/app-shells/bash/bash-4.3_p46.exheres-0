@@ -1,0 +1,11 @@
+# Copyright 2009 Bo Ørsted Andresen <zlin@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require bash
+
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
+
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/bash-4.3-old-memleak.patch
+)
+
