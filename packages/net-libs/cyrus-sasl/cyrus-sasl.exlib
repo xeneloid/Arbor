@@ -86,7 +86,7 @@ cyrus-sasl_src_configure() {
         "--with-dblib=gdbm"
         "--with-des"
         "--with-openssl"
-        "--with-saslauthd=/var/lib/sasl2"
+        "--with-saslauthd=/run/saslauthd"
         "--with-pwcheck=/var/lib/sasl2"
         "--with-configdir=/etc/sasl2"
         "--with-plugindir=/usr/$(exhost --target)/lib/sasl2"

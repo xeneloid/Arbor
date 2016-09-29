@@ -4,8 +4,9 @@ Description=Cyrus SASL authentication daemon
 [Service]
 Type=forking
 EnvironmentFile=/etc/conf.d/saslauthd.conf
-ExecStart=/usr/sbin/saslauthd -a $BACKEND $OPTS
-PidFile=/run/saslauthd/saslauthd.pid
+ExecStart=/usr/sbin/saslauthd -m $SOCKETDIR -a $BACKEND $OPTS
+PIDFile=/run/saslauthd/saslauthd.pid
+RuntimeDirectory=saslauthd
 
 [Install]
 WantedBy=multi-user.target
