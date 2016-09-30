@@ -53,6 +53,8 @@ DEPENDENCIES="
         fonts/urw-fonts[>=20160926] [[ note = [ PostScript standard fonts ] ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}/fix_openjp2_dynamic_linking.patch" )
+
 src_prepare() {
     edo rm -r ./{cups/libs,freetype,jbig2dec,jpeg,lcms2,libpng,openjpeg,tiff,zlib}
 
