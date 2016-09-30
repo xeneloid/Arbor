@@ -1,14 +1,16 @@
 # Copyright 2009 Ingmar Vanhassel
 # Distributed under the terms of the GNU General Public License v2
 
-TMUX_BASH_COMPLETION_VERSION=v0.0.1
-TMUX_VIM_SYNTAX_VERSION=7e99535c4c0167afd38603e0981fc06540cd9051
+TMUX_BASH_COMPLETION_VERSION=ef56d3e4962ceac244d4a344f88eefbdf2f59490
+TMUX_VIM_SYNTAX_VERSION=3abf80104623bd4733138f8860ef1922ba3f914a
 
-require bash-completion
-require github [ release=${PV} suffix=tar.gz ]
+require github [ release=${PV} suffix=tar.gz ] bash-completion
 
 DOWNLOADS+="
-    bash-completion? ( https://github.com/przepompownia/tmux-bash-completion/archive/${TMUX_BASH_COMPLETION_VERSION}.tar.gz -> tmux-bash-completion-${TMUX_BASH_COMPLETION_VERSION}.tar.gz )
+    bash-completion? (
+        https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/${TMUX_BASH_COMPLETION_VERSION}/completions/tmux
+            -> tmux-${TMUX_BASH_COMPLETION_VERSION}.bash
+    )
     vim-syntax? (
         https://raw.githubusercontent.com/keith/tmux.vim/${TMUX_VIM_SYNTAX_VERSION}/syntax/tmux.vim
             -> tmux-${TMUX_VIM_SYNTAX_VERSION}.vim
@@ -24,7 +26,7 @@ UPSTREAM_CHANGELOG="${HOMEPAGE}/blob/${PV}/CHANGES"
 LICENCES="BSD-3 ISC public-domain"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
-MYOPTIONS="bash-completion vim-syntax"
+MYOPTIONS="vim-syntax"
 
 DEPENDENCIES="
     build:
@@ -36,11 +38,16 @@ DEPENDENCIES="
         vim-syntax? ( app-editors/vim )
 "
 
+DEFAULT_SRC_CONFIGURE_PARAMS=(
+    --disable-utf8proc
+)
 DEFAULT_SRC_COMPILE_PARAMS=( PREFIX=/usr/$(exhost --target) )
 DEFAULT_SRC_INSTALL_PARAMS=( PREFIX=/usr/$(exhost --target) )
 
 src_unpack() {
     default
+
+    option bash-completion && edo cp "${FETCHEDDIR}"/tmux-${TMUX_BASH_COMPLETION_VERSION}.bash tmux.bash
     option vim-syntax && edo cp "${FETCHEDDIR}"/tmux-${TMUX_VIM_SYNTAX_VERSION}.vim tmux.vim
 }
 
@@ -49,7 +56,7 @@ src_install() {
 
     dodoc example_tmux.conf
 
-    dobashcompletion "${WORKBASE}"/tmux-bash-completion-${TMUX_BASH_COMPLETION_VERSION/v}/completions/tmux
+    dobashcompletion "${WORKBASE}"/tmux.bash
 
     if option vim-syntax; then
         insinto /usr/share/vim/vimfiles/syntax
