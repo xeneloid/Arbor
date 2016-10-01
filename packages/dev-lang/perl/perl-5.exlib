@@ -12,17 +12,12 @@ require alternatives flag-o-matic
 
 export_exlib_phases src_unpack src_prepare src_configure src_compile src_test src_install
 
-ever at_least 5.22.0 || myexparam Module_Build_pv=
 myexparam perl_cross_ver=
 myexparam perl_cross_base=${PV}
 
 SUMMARY="Perl is a general-purpose programming language originally developed for text manipulation"
 HOMEPAGE="http://www.perl.org"
-if ever at_least 5.22.0; then
-    DOWNLOADS="mirror://cpan/src/5.0/${PNV}.tar.xz"
-else
-    DOWNLOADS="mirror://cpan/src/5.0/${PNV}.tar.bz2"
-fi
+DOWNLOADS="mirror://cpan/src/5.0/${PNV}.tar.xz"
 DOWNLOADS+="
     https://github.com/arsv/${PN}-cross/releases/download/$(exparam perl_cross_ver)/${PN}-$(exparam perl_cross_base)-cross-$(exparam perl_cross_ver).tar.gz
 "
@@ -214,22 +209,6 @@ perl-5_src_install() {
 
     # Discard man3 manpages (use perldoc)
     edo rm -r usr/share/man/man3
-
-    if ! ever at_least 5.22.0; then
-        # Add alternative for Module-Build's config_data
-        local Module_Build_pv Module_Build_alternatives=()
-        exparam -v Module_Build_pv Module_Build_pv
-        [[ -z ${Module_Build_pv} ]] && die "Module_Build_pv exparam is not set"
-
-        Module_Build_alternatives+=(
-            /${perlbindir}/config_data        config_data-perl-${SLOT}
-            /usr/share/man/man1/config_data.1 config_data-perl-${SLOT}.1
-        )
-        alternatives_for config_data        \
-            ${Module_Build_pv}_perl-${SLOT} \
-            ${Module_Build_pv}              \
-            "${Module_Build_alternatives[@]}"
-    fi
 
     # Add alternative for perl tools and manpages
     # perl${SLOT} doesn't have a dash, handle that here
