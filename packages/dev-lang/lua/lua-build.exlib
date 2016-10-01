@@ -19,6 +19,7 @@ MYOPTIONS=""
 
 DEPENDENCIES="
     build+run:
+        sys-libs/readline:=
         !dev-lang/lua:0 [[
             description = [ Uninstall dev-lang/lua:0 after switching to the slotted version ]
             resolution = uninstall-blocked-after ]]
