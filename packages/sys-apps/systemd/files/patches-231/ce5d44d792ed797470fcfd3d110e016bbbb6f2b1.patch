@@ -1,0 +1,26 @@
+Upstream: yes
+From ce5d44d792ed797470fcfd3d110e016bbbb6f2b1 Mon Sep 17 00:00:00 2001
+From: Evgeny Vereshchagin <evvers@ya.ru>
+Date: Tue, 9 Aug 2016 15:49:32 +0300
+Subject: [PATCH] sd-journal: watch logs below container's
+ /{var,run}/log/journal (instead of the /) (#3934)
+
+Fixes #3927.
+(cherry picked from commit e73529f9dd878cc449f5271f749929ebd9e93d88)
+---
+ src/journal/sd-journal.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/journal/sd-journal.c b/src/journal/sd-journal.c
+index 75a0ffb..2a3824d 100644
+--- a/src/journal/sd-journal.c
++++ b/src/journal/sd-journal.c
+@@ -2290,6 +2290,8 @@ _public_ int sd_journal_get_fd(sd_journal *j) {
+          * inotify */
+         if (j->no_new_files)
+                 r = add_current_paths(j);
++        else if (j->flags & SD_JOURNAL_OS_ROOT)
++                r = add_search_paths(j);
+         else if (j->toplevel_fd >= 0)
+                 r = add_root_directory(j, NULL, false);
+         else if (j->path)

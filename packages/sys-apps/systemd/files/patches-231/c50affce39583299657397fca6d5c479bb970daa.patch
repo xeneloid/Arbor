@@ -1,0 +1,33 @@
+Upstream: yes
+From c50affce39583299657397fca6d5c479bb970daa Mon Sep 17 00:00:00 2001
+From: Matej Habrnal <mhabrnal@redhat.com>
+Date: Mon, 26 Sep 2016 17:28:58 +0200
+Subject: [PATCH] coredump: initialize coredump_size in submit_coredump()
+ (#4219)
+
+If ulimit is smaller than page_size(), function save_external_coredump()
+returns -EBADSLT and this causes skipping whole core dumping part in
+submit_coredump(). Initializing coredump_size to UINT64_MAX prevents
+evaluating a condition with uninitialized varialbe which leads to
+calling allocate_journal_field() with coredump_fd = -1 which causes
+aborting.
+
+Signed-off-by: Matej Habrnal <mhabrnal@redhat.com>
+(cherry picked from commit a5ca3649d34c5649ca04fc81000a80e476a81a64)
+---
+ src/coredump/coredump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/coredump/coredump.c b/src/coredump/coredump.c
+index dcc09fc..a7ea560 100644
+--- a/src/coredump/coredump.c
++++ b/src/coredump/coredump.c
+@@ -593,7 +593,7 @@ static int submit_coredump(
+ 
+         _cleanup_close_ int coredump_fd = -1, coredump_node_fd = -1;
+         _cleanup_free_ char *core_message = NULL, *filename = NULL, *coredump_data = NULL;
+-        uint64_t coredump_size;
++        uint64_t coredump_size = UINT64_MAX;
+         int r;
+ 
+         assert(context);

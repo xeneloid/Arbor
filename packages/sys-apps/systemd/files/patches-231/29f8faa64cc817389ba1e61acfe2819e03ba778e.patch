@@ -1,0 +1,26 @@
+Upstream: yes
+From 29f8faa64cc817389ba1e61acfe2819e03ba778e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+Date: Sat, 13 Aug 2016 11:15:19 -0400
+Subject: [PATCH] units: do not start load-random-seed in containers (#3941)
+
+Random numbers are provided by the host kernel, we don't need to do anything.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=1329124
+(cherry picked from commit 04d0f7e9f9e2d68502f322b8f494c652cbeb5146)
+---
+ units/systemd-random-seed.service.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/units/systemd-random-seed.service.in b/units/systemd-random-seed.service.in
+index 1152332..b244a8c 100644
+--- a/units/systemd-random-seed.service.in
++++ b/units/systemd-random-seed.service.in
+@@ -13,6 +13,7 @@ RequiresMountsFor=@RANDOM_SEED@
+ Conflicts=shutdown.target
+ After=systemd-remount-fs.service
+ Before=sysinit.target shutdown.target
++ConditionVirtualization=!container
+ 
+ [Service]
+ Type=oneshot

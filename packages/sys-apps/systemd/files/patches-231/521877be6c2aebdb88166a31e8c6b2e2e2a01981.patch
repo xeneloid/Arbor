@@ -1,0 +1,32 @@
+Upstream: yes
+From 521877be6c2aebdb88166a31e8c6b2e2e2a01981 Mon Sep 17 00:00:00 2001
+From: Yi EungJun <semtlenori@gmail.com>
+Date: Sun, 7 Aug 2016 05:39:13 +0900
+Subject: [PATCH] journal-gatewayd: fix segfault with certain request (#3893)
+
+When client requests to get logs with `follow` and `KEY=match` that
+doesn't match any log entry, journal-gatewayd segfaulted.
+
+Make request_reader_entries to return zero in such case to wait for
+matching entries.
+
+This fixes https://github.com/systemd/systemd/issues/3873.
+(cherry picked from commit 3475fc5899db8c8c9198573912429b85213e4862)
+---
+ src/journal-remote/journal-gatewayd.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/journal-remote/journal-gatewayd.c b/src/journal-remote/journal-gatewayd.c
+index 4ad9184..e4a8287 100644
+--- a/src/journal-remote/journal-gatewayd.c
++++ b/src/journal-remote/journal-gatewayd.c
+@@ -239,6 +239,9 @@ static ssize_t request_reader_entries(
+                 m->size = (uint64_t) sz;
+         }
+ 
++        if (m->tmp == NULL && m->follow)
++                return 0;
++
+         if (fseeko(m->tmp, pos, SEEK_SET) < 0) {
+                 log_error_errno(errno, "Failed to seek to position: %m");
+                 return MHD_CONTENT_READER_END_WITH_ERROR;
