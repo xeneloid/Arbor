@@ -63,13 +63,6 @@ MYOPTIONS="
     ( linguas: ${LANGUAGES[@]} )
 "
 
-if ! ever at_least 230; then
-    MYOPTIONS+="
-        bootchart [[ description = [ Enable integrated bootchart by Auke Kok ] ]]
-        compat-libs [[ description = [ Install legacy compat libs (libsystemd-{daemon,id128,journal,login}) ] ]]
-    "
-fi
-
 DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.5 [[ note = [ for creating the man pages (used in {less-variables,standard-options}.xml) ] ]]
@@ -269,16 +262,20 @@ systemd_src_configure() {
         --enable-timesyncd
         --enable-utmp
         --enable-vconsole
+        --enable-wheel-group
         --enable-xz
         --enable-zlib
+        --disable-adm-group
         --disable-audit
         --disable-apparmor
         --disable-ima
         --disable-kdbus
         --disable-selinux
         --disable-smack
+        --disable-tpm
         --with-certificate-root=/etc/ssl
         --with-debug-tty=/dev/tty9
+        --with-default-dnssec=allow-downgrade
         --with-efi-includedir=/usr/$(exhost --target)/include
         --with-efi-libdir=/usr/$(exhost --target)/lib
         --with-kbd-loadkeys=/bin/loadkeys
@@ -314,20 +311,6 @@ systemd_src_configure() {
         $(option_with man-index python)
         $(option_with zsh-completion zshcompletiondir /usr/share/zsh/site-functions)
     )
-
-    if ever at_least 230; then
-        myconfig+=(
-            --enable-wheel-group
-            --disable-adm-group
-            --disable-tpm
-            --with-default-dnssec=allow-downgrade
-        )
-    else
-        myconfig+=(
-            $(option_enable bootchart)
-            $(option_enable compat-libs)
-        )
-    fi
 
     # Let systemd's configure get the gcc provided ones for slim lto objects
     unset AR NM RANLIB
