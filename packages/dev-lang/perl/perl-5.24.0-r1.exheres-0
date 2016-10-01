@@ -5,7 +5,7 @@
 # Based in part upon 'perl-5.8.8-r4.ebuild' from Gentoo, which is:
 #     Copyright 1999-2007 Gentoo Foundation
 
-require perl-5 [ perl_cross_ver=1.0.3 ]
+require perl-5 [ perl_cross_ver=1.1.0 ]
 
 DEPENDENCIES+="
     run:
@@ -18,17 +18,10 @@ DEPENDENCIES+="
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
+    -p1 "${FILES}"/ca9dc1457ddc7910033cc4795019633f59ae4dae.patch
+    -p1 "${FILES}"/sitedirs.patch
     -p1 "${FILES}"/${PN}-5.11.3-Remove-Syslog-tests.patch
     -p2 "${FILES}"/IO-skip-test.patch
     -p2 "${FILES}"/IO-Socket-IP-skip-tests.patch
 )
-
-src_prepare() {
-    perl-5_src_prepare
-
-    # TODO: find out why exactly these fail
-    edo sed -e '/setpayload + issignaling/d' \
-            -e '/issignaling NaN/d' \
-            -i ext/POSIX/t/math.t
-}
 

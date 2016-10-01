@@ -1,0 +1,1365 @@
+Upstream: yes
+Source: upstream
+Reason: multiple fixes were made since the big perl-cross 1.1.0 release, so I grabbed the whole diff
+
+From c1eeca089b1257761bdb91f6154c3dc98b1d845e Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Sat, 17 Sep 2016 22:22:30 +0300
+Subject: [PATCH 01/18] restore known_extensions
+
+Tests depend on this.
+---
+ cnf/configure_mods.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/cnf/configure_mods.sh b/cnf/configure_mods.sh
+index 45040ee..ed989ee 100644
+--- a/cnf/configure_mods.sh
++++ b/cnf/configure_mods.sh
+@@ -130,6 +130,7 @@ msg "Dynamic modules: $dynamic_ext"
+ definetrimspaces 'static_ext' "$static_ext"
+ definetrimspaces 'nonxs_ext' "$nonxs_ext"
+ definetrimspaces 'dynamic_ext' "$dynamic_ext"
++definetrimspaces 'known_extensions' "$known_extensions"
+ 
+ # Unless the user explictily asks us not to do it,
+ # allow building disabled mods with "make cpan/Some-Module"
+-- 
+2.10.0
+
+
+From 535307f42f0d75bc448be275760d18bfc3c1a68b Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Sat, 17 Sep 2016 23:38:13 +0300
+Subject: [PATCH 02/18] restore *_uselargefiles values
+
+Not used during build but lib/Config.t checks them.
+---
+ cnf/configure_misc.sh | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/cnf/configure_misc.sh b/cnf/configure_misc.sh
+index 4a28af1..a0ca606 100644
+--- a/cnf/configure_misc.sh
++++ b/cnf/configure_misc.sh
+@@ -33,6 +33,14 @@ define usemmldlt 'define'
+ define dlext 'so'
+ define dlsrc 'dl_dlopen.xs'
+ 
++# Required by lib/Config.t, and configpm may use these.
++# Empty values pass tests but essentially disable the code
++# in configpm, which is probably for good.
++define ccflags_uselargefiles ''
++define ldflags_uselargefiles ''
++define libs_uselargefiles ''
++define libswanted_uselargefiles ''
++
+ # These are sometimes used in perl-cross, and sometimes also affect modules
+ # Some *must* be "false" instead of "undef"! See configure_args.sh
+ define use64bitall 'undef'
+-- 
+2.10.0
+
+
+From ec8afe881d1ca5e064d3cfbdff400d366a8bed44 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Sun, 18 Sep 2016 00:36:30 +0300
+Subject: [PATCH 03/18] fix shasums for test-checked files
+
+---
+ cnf/diffs/perl5-5.24.0/customized.patch | 27 +++++++++++++++++++++++++++
+ cnf/diffs/perl5-5.24.0/liblist.patch    | 11 -----------
+ 2 files changed, 27 insertions(+), 11 deletions(-)
+ create mode 100644 cnf/diffs/perl5-5.24.0/customized.patch
+
+diff --git a/cnf/diffs/perl5-5.24.0/customized.patch b/cnf/diffs/perl5-5.24.0/customized.patch
+new file mode 100644
+index 0000000..db21c96
+--- /dev/null
++++ b/cnf/diffs/perl5-5.24.0/customized.patch
+@@ -0,0 +1,27 @@
++Not really necessary to build perl, but porting/customized.t will check
++the sums. Doing this defeats the purpose of customized.dat, but it's not
++like there's much choice.
++
++Separated from Kid.pm and MM_Unix.pm patches to avoid dependence
++on patch ordering.
++
++--- a/t/porting/customized.dat
+++++ b/t/porting/customized.dat
++@@ -3,7 +3,7 @@
++ ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm 9be9ac3fee6fd6df702469904e02c8b4c6f2502e
++-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm bb2443c2314c50f09f7eab4aacc03ade8b9907dd
+++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 8b04197b7a32fa4171c5cae1910d7c2d08998133
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 830acdc810e2974d7fd4ec408ea1bfa825c75b69
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Config.pm 5c41b40e33464c6635258061dff4ece018b46bd9
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/FAQ.pod 062e5d14a803fbbec8d61803086a3d7997e8a473
++@@ -23,7 +23,7 @@
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_NW5.pm 8185a7db6c4d7e0fdc5001aeaa8c2b612a884a5e
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_OS2.pm 2fe66ca8a894d6a2ae340b8bf6f8d69c5e1f7fbe
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_QNX.pm e8a4dbba69a1d551bd581ea6a3f2415bacbc0ae5
++-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm d666ac424618c3e11b8549755c9646d942bd2d57
+++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 4a0a9dcf92aef503b7ef4f3b669ee518b9088aec
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm f6581a0e75e45bfc26f343f173d3366c43fb1221
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm 1997912b5018970cdeb3dae8fd7e0c24f6e5d567
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm 210a4eda8b081d9986477e3a9762fce6ebea8474
+diff --git a/cnf/diffs/perl5-5.24.0/liblist.patch b/cnf/diffs/perl5-5.24.0/liblist.patch
+index 9f14ecd..f2567d6 100644
+--- a/cnf/diffs/perl5-5.24.0/liblist.patch
++++ b/cnf/diffs/perl5-5.24.0/liblist.patch
+@@ -78,14 +78,3 @@ Note this is a part of MakeMaker, and only applies to module Makefiles.
+ +}
+ +
+  1;
+---- a/t/porting/customized.dat
+-+++ b/t/porting/customized.dat
+-@@ -3,7 +3,7 @@
+- ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
+- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm 9be9ac3fee6fd6df702469904e02c8b4c6f2502e
+--ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm bb2443c2314c50f09f7eab4aacc03ade8b9907dd
+-+ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm 33181f9314e26f3d9385e030572fd9438f883c99
+- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm 830acdc810e2974d7fd4ec408ea1bfa825c75b69
+- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/Config.pm 5c41b40e33464c6635258061dff4ece018b46bd9
+- ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker/FAQ.pod 062e5d14a803fbbec8d61803086a3d7997e8a473
+-- 
+2.10.0
+
+
+From bfa72c5d548d7c2895df71c27d7a9af7ebefd912 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Sun, 18 Sep 2016 02:55:24 +0300
+Subject: [PATCH 04/18] two new symbols for 5.25.4
+
+---
+ cnf/configure_func.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/cnf/configure_func.sh b/cnf/configure_func.sh
+index dca4fd9..fe85867 100644
+--- a/cnf/configure_func.sh
++++ b/cnf/configure_func.sh
+@@ -80,6 +80,7 @@ checkfunc d_fstatvfs 'fstatvfs'
+ checkfunc d_fsync 'fsync'
+ checkfunc d_ftello 'ftello'
+ checkfunc d_futimes 'futimes'
++checkfunc d_gai_strerror 'gai_strerror' '0' 'sys/types.h sys/socket.h netdb.h'
+ checkfunc d_getaddrinfo 'getaddrinfo'
+ checkfunc d_getcwd 'getcwd' 'NULL,0'
+ checkfunc d_getespwnam 'getespwnam'
+@@ -240,6 +241,7 @@ checkfunc d_statvfs 'statvfs'
+ checkfunc d_strchr 'strchr' "NULL,0" 'string.h strings.h'
+ checkfunc d_strcoll 'strcoll' "NULL,NULL" 'string.h'
+ checkfunc d_strerror 'strerror' "0" 'string.h stdlib.h'
++checkfunc d_strerror_l 'strerror_l'
+ checkfunc d_strftime 'strftime' "NULL,0,NULL,NULL" 'time.h'
+ checkfunc d_strlcat 'strlcat'
+ checkfunc d_strlcpy 'strlcpy'
+-- 
+2.10.0
+
+
+From 15bc8bbb2e2f68921d506fbedba872e0dd56e79f Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Sun, 18 Sep 2016 23:44:03 +0300
+Subject: [PATCH 05/18] customized.dat patches for cperl
+
+---
+ cnf/diffs/cperl-5.24.0/customized.patch | 17 +++++++++++++++++
+ cnf/diffs/cperl-5.25.0/customized.patch | 17 +++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 cnf/diffs/cperl-5.24.0/customized.patch
+ create mode 100644 cnf/diffs/cperl-5.25.0/customized.patch
+
+diff --git a/cnf/diffs/cperl-5.24.0/customized.patch b/cnf/diffs/cperl-5.24.0/customized.patch
+new file mode 100644
+index 0000000..2998bb1
+--- /dev/null
++++ b/cnf/diffs/cperl-5.24.0/customized.patch
+@@ -0,0 +1,17 @@
++Not really necessary to build perl, but porting/customized.t will check
++the sums. Doing this defeats the purpose of customized.dat, but it's not
++like there's much choice.
++
++Separated from other patches to avoid dependence on patch ordering.
++
++--- a/t/porting/customized.dat
+++++ b/t/porting/customized.dat
++@@ -34,7 +34,7 @@
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm d88649ead5abb549df286334a035af924cc2befa
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mkbootstrap.pm d79b98465a632dc3bde76a0210d01014d2257dc6
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 62b0abc38e8c8734fade49c5e63477fe9fc0ea05
++-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 9b0e03ff7966e8dfc3daeaf67e7b83c427ab1ba9
+++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 47208f01aced7f872ce0f027850d49c87d568cde
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/basic.t 6cdc7701b50e586bc9c4cfb1616de8eb0b1baf34
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/Liblist.t 9a3baf8a2c2281037f803b909d26e77a1bb099af
+diff --git a/cnf/diffs/cperl-5.25.0/customized.patch b/cnf/diffs/cperl-5.25.0/customized.patch
+new file mode 100644
+index 0000000..2998bb1
+--- /dev/null
++++ b/cnf/diffs/cperl-5.25.0/customized.patch
+@@ -0,0 +1,17 @@
++Not really necessary to build perl, but porting/customized.t will check
++the sums. Doing this defeats the purpose of customized.dat, but it's not
++like there's much choice.
++
++Separated from other patches to avoid dependence on patch ordering.
++
++--- a/t/porting/customized.dat
+++++ b/t/porting/customized.dat
++@@ -34,7 +34,7 @@
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MakeMaker.pm d88649ead5abb549df286334a035af924cc2befa
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Mkbootstrap.pm d79b98465a632dc3bde76a0210d01014d2257dc6
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Any.pm 62b0abc38e8c8734fade49c5e63477fe9fc0ea05
++-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 9b0e03ff7966e8dfc3daeaf67e7b83c427ab1ba9
+++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_Unix.pm 47208f01aced7f872ce0f027850d49c87d568cde
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/basic.t 6cdc7701b50e586bc9c4cfb1616de8eb0b1baf34
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/Liblist.t 9a3baf8a2c2281037f803b909d26e77a1bb099af
+-- 
+2.10.0
+
+
+From 2fb4d3f17f657b1b0bf1200bcf2e8f9864d1ffc5 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 19 Sep 2016 01:29:35 +0300
+Subject: [PATCH 06/18] rework vendorprefix code to match Configure
+
+---
+ cnf/configure_path.sh | 110 +++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 72 insertions(+), 38 deletions(-)
+
+diff --git a/cnf/configure_path.sh b/cnf/configure_path.sh
+index 2ce8d1d..4750ab6 100644
+--- a/cnf/configure_path.sh
++++ b/cnf/configure_path.sh
+@@ -1,6 +1,9 @@
+ # Path may only be set once we know version *and* archname.
+ # So this must be called after _version and _tool.
+ 
++# $(something)exp were meant to be "expanded" values, but we don't
++# expand anything and just set them to $(something).
++
+ log
+ msg "Deciding installation paths"
+ 
+@@ -43,32 +46,6 @@ define d_inc_version_list 'undef'
+ define otherlibdirs ''
+ define d_perl_otherlibdirs 'undef'
+ 
+-define usevendorprefix undef
+-
+-define d_vendorarch $usevendorprefix
+-define d_vendorbin $usevendorprefix
+-define d_vendorlib $usevendorprefix
+-define d_vendorscript $usevendorprefix
+-
+-if [ "$usevendorprefix" = 'define' ]; then
+-	define vendorprefix "$prefix"
+-	define vendorbin "$vendorprefix/bin"
+-	define vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
+-	define vendorlib "$vendorlib_stem/$version"
+-	define vendorarch "$vendorlib_stem/$version/$archname"
+-	define vendorscript "$vendorprefix/bin"
+-fi
+-
+-define vendorbinexp "$vendorbin"
+-define vendorlibexp "$vendorlib"
+-define vendorarchexp "$vendorarch"
+-define vendorprefixexp "$vendorprefix"
+-define vendorscriptexp "$vendorscript"
+-
+-define vendorman1dir "$man1dir"
+-define vendorman3dir "$man3dir"
+-define vendorhtml1dir "$html1dir"
+-define vendorhtml3dir "$html3dir"
+ define siteman1dir "$man1dir"
+ define siteman3dir "$man3dir"
+ define sitehtml1dir "$html1dir"
+@@ -92,14 +69,6 @@ define installsitelib  "$installpath$sitelib "
+ define installsiteman1dir "$installpath$siteman1dir"
+ define installsiteman3dir "$installpath$siteman3dir"
+ define installsitescript "$installpath$sitescript"
+-define installvendorarch "$installpath$vendorarch"
+-define installvendorbin "$installpath$vendorbin"
+-define installvendorhtml1dir "$installpath$vendorhtml1dir"
+-define installvendorhtml3dir "$installpath$vendorhtml3dir"
+-define installvendorlib "$installpath$vendorlib"
+-define installvendorman1dir "$installpath$vendorman1dir"
+-define installvendorman3dir "$installpath$vendorman3dir"
+-define installvendorscript "$installpath$vendorscript"
+ define installstyle lib/perl5
+ define installusrbinperl define
+ 
+@@ -107,10 +76,6 @@ define prefixexp "$prefix"
+ define installprefixexp "$installprefix"
+ define html1direxp "$html1dir"
+ define html3direxp "$html3dir"
+-define vendorman1direxp "$vendorman1dir"
+-define vendorman3direxp "$vendorman3dir"
+-define vendorhtml1direxp "$vendorhtml1dir"
+-define vendorhtml3direxp "$vendorhtml3dir"
+ define siteman1direxp "$siteman1dir"
+ define siteman3direxp "$siteman3dir"
+ define sitehtml1direxp "$sitehtml1dir"
+@@ -126,4 +91,73 @@ define libpth "/lib /usr/lib /usr/local/lib"
+ define glibpth "$libpth"
+ define plibpth
+ 
++# Vendor prefix logic from Configure.
++# -Dusevendorprefix => set $vendorprefix to default value: not supported
++# -Dvendorprefix=/path => define $usevendorprefix, set $vendor*
++# no -Dvendorprefix => undef $usevendorprefix, set $vendor* = ''
++
++mstart "Deciding whether to use \$vendorprefix"
++define vendorprefix ''
++test -n "$vendorprefix"
++resdef usevendorprefix 'yes' 'no'
++
++if [ "$usevendorprefix" = 'define' -a -z "$vendorprefix" ]; then
++	die "must specify -Dvendorprefix with -Dusevendorprefix"
++elif [ "$usevendorprefix" != 'define' -a -n "$vendorprefix" ]; then
++	die "non-empty vendorprefix without -Dusevendorprefix"
++fi
++
++vendorpath() {
++	if [ -n "$vendorprefix" ]; then
++		define "$1" "$2"
++	else
++		define "$1" ''
++	fi
++}
++
++vendortest() {
++	if [ -n "$2" ]; then
++		define "$1" 'define'
++	else
++		define "$1" 'undef'
++	fi
++}
++
++vendorpath vendorbin "$vendorprefix/bin"
++vendorpath vendorlib_stem "$vendorprefix/lib/$package/vendor_perl"
++vendorpath vendorlib "$vendorlib_stem/$version"
++vendorpath vendorarch "$vendorlib_stem/$version/$archname"
++vendorpath vendorscript "$vendorprefix/bin"
++
++# These are used to control #ifdefs around vendorpath-specific code
++vendortest d_vendorarch "$vendorarch"
++vendortest d_vendorbin "$vendorbin"
++vendortest d_vendorlib "$vendorlib"
++vendortest d_vendorscript "$vendorscript"
++
++vendorpath vendorbinexp "$vendorbin"
++vendorpath vendorlibexp "$vendorlib"
++vendorpath vendorarchexp "$vendorarch"
++vendorpath vendorprefixexp "$vendorprefix"
++vendorpath vendorscriptexp "$vendorscript"
++
++vendorpath vendorman1dir "$man1dir"
++vendorpath vendorman3dir "$man3dir"
++vendorpath vendorhtml1dir "$html1dir"
++vendorpath vendorhtml3dir "$html3dir"
++
++vendorpath vendorman1direxp "$vendorman1dir"
++vendorpath vendorman3direxp "$vendorman3dir"
++vendorpath vendorhtml1direxp "$vendorhtml1dir"
++vendorpath vendorhtml3direxp "$vendorhtml3dir"
++
++vendorpath installvendorarch "$installpath$vendorarch"
++vendorpath installvendorbin "$installpath$vendorbin"
++vendorpath installvendorhtml1dir "$installpath$vendorhtml1dir"
++vendorpath installvendorhtml3dir "$installpath$vendorhtml3dir"
++vendorpath installvendorlib "$installpath$vendorlib"
++vendorpath installvendorman1dir "$installpath$vendorman1dir"
++vendorpath installvendorman3dir "$installpath$vendorman3dir"
++vendorpath installvendorscript "$installpath$vendorscript"
++
+ log
+-- 
+2.10.0
+
+
+From 13be7cf9d129ded93d4cb0fd927772b1823fa92f Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 19 Sep 2016 01:50:43 +0300
+Subject: [PATCH 07/18] missing symbols for XSConfig.t
+
+---
+ cnf/configure             | 1 +
+ cnf/configure_hdrs.sh     | 4 ----
+ cnf/configure_misc.sh     | 9 +++++++++
+ cnf/configure_type_sel.sh | 1 +
+ 4 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/cnf/configure b/cnf/configure
+index 14c48cc..0cc8fca 100755
+--- a/cnf/configure
++++ b/cnf/configure
+@@ -102,6 +102,7 @@ fi
+ 
+ if [ "$mode" = 'native' -o "$mode" = 'buildmini' -o "$mode" = "target" ]; then
+ 	test "$mode" = "target" && define 'usecrosscompile' 'define'
++	define targetarch "$targetarch"
+ 
+ 	. $base/configure_version.sh
+ 	. $base/configure_tool.sh
+diff --git a/cnf/configure_hdrs.sh b/cnf/configure_hdrs.sh
+index 99adb5d..e227349 100644
+--- a/cnf/configure_hdrs.sh
++++ b/cnf/configure_hdrs.sh
+@@ -12,10 +12,6 @@ checkhdr() {
+ 	fi
+ }
+ 
+-checkhdr i_stdio 'stdio.h'
+-test "$i_stdio" = 'define' ||\
+-	die "Can't include <stdio.h>, check compiler configuration"
+-
+ checkhdr i_arpainet 'arpa/inet.h'
+ checkhdr i_assert 'assert.h'
+ checkhdr i_bfd 'bfd.h'
+diff --git a/cnf/configure_misc.sh b/cnf/configure_misc.sh
+index a0ca606..2b1b883 100644
+--- a/cnf/configure_misc.sh
++++ b/cnf/configure_misc.sh
+@@ -79,6 +79,15 @@ define usevfork 'false'
+ define d_libname_unique 'undef'
+ define d_vms_case_sensitive_symbols 'undef'
+ define dl_so_eq_ext 'define'
++# not used but tested for in ext/Config/t/XSConfig.t!
++define hash_func ''
++define c ''
++define d_bsd 'undef'
++define d_eunice 'undef'
++define d_xenix 'undef'
++define d_ftime 'undef'
++define d_oldsock 'undef'
++define extras ''
+ 
+ # These are important but we don't test them
+ define startsh '#!/bin/sh'
+diff --git a/cnf/configure_type_sel.sh b/cnf/configure_type_sel.sh
+index f666ffd..bf6c785 100644
+--- a/cnf/configure_type_sel.sh
++++ b/cnf/configure_type_sel.sh
+@@ -149,3 +149,4 @@ setmantbits() {
+ 
+ setmantbits nvmantbits "$nvsize" "$nvtype"
+ setmantbits doublemantbits "$doublesize" 'double'
++setmantbits longdblmantbits "$longdblsize" 'long double'
+-- 
+2.10.0
+
+
+From 85893019dd63ce1a22521f7412e8a812bb2dccec Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 19 Sep 2016 04:43:46 +0300
+Subject: [PATCH 08/18] disable ExtUtils-Constant test for cross builds
+
+---
+ cnf/diffs/perl5-5.24.0/constant.patch   | 40 +++++++++++++++++++++++++++++++++
+ cnf/diffs/perl5-5.24.0/customized.patch |  7 ++++--
+ cnf/diffs/perl5-5.25.4/constant.patch   | 40 +++++++++++++++++++++++++++++++++
+ cnf/diffs/perl5-5.25.4/customized.patch | 17 ++++++++++++++
+ 4 files changed, 102 insertions(+), 2 deletions(-)
+ create mode 100644 cnf/diffs/perl5-5.24.0/constant.patch
+ create mode 100644 cnf/diffs/perl5-5.25.4/constant.patch
+ create mode 100644 cnf/diffs/perl5-5.25.4/customized.patch
+
+diff --git a/cnf/diffs/perl5-5.24.0/constant.patch b/cnf/diffs/perl5-5.24.0/constant.patch
+new file mode 100644
+index 0000000..4a9be20
+--- /dev/null
++++ b/cnf/diffs/perl5-5.24.0/constant.patch
+@@ -0,0 +1,40 @@
++The toolchain is not installed on the target when cross-compiling.
++There are no sense to install this module on target, but EUC is
++a part of Perl distribution.
++
++https://rt.cpan.org/Public/Bug/Display.html?id=88645
++
++--- a/cpan/ExtUtils-Constant/t/Constant.t
+++++ b/cpan/ExtUtils-Constant/t/Constant.t
++@@ -1,8 +1,19 @@
++ #!/usr/bin/perl -w
++ 
++ use Config;
+++use IPC::Cmd qw(can_run);
+++
++ unless ($Config{usedl}) {
++-    print "1..0 # no usedl, skipping\n";
+++    print "1..0 # SKIP no usedl\n";
+++    exit 0;
+++}
+++
+++my $make = $Config{make};
+++$make = $ENV{MAKE} if exists $ENV{MAKE};
+++if ($^O eq 'MSWin32' && $make eq 'nmake') { $make .= " -nologo"; }
+++
+++unless ( can_run($make) ) {
+++    print "1..0 # SKIP make not available\n";
++     exit 0;
++ }
++ 
++@@ -34,10 +45,6 @@
++ # module from blib
++ @INC = map {File::Spec->rel2abs($_)} @INC if $] < 5.007 && $] >= 5.006;
++ 
++-my $make = $Config{make};
++-$make = $ENV{MAKE} if exists $ENV{MAKE};
++-if ($^O eq 'MSWin32' && $make eq 'nmake') { $make .= " -nologo"; }
++-
++ # VMS may be using something other than MMS/MMK
++ my $mms_or_mmk = ($make =~ m/^MM(S|K)/i) ? 1 : 0;
++ 
+diff --git a/cnf/diffs/perl5-5.24.0/customized.patch b/cnf/diffs/perl5-5.24.0/customized.patch
+index db21c96..d2b1054 100644
+--- a/cnf/diffs/perl5-5.24.0/customized.patch
++++ b/cnf/diffs/perl5-5.24.0/customized.patch
+@@ -7,8 +7,11 @@ on patch ordering.
+ 
+ --- a/t/porting/customized.dat
+ +++ b/t/porting/customized.dat
+-@@ -3,7 +3,7 @@
+- ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
++@@ -1,9 +1,9 @@
++ CPAN cpan/CPAN/lib/CPAN.pm ce62c43d72f101c011184dbbc59e21c2790826f0
++ Encode cpan/Encode/encoding.pm 51c19efc9bfe8467d6ae12a4654f6e7f980715bf
++-ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+++ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t 5cddb9664c43e53a4ce7a213601d6cff53e09d2d
+  ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Command/MM.pm 8d772fbc6a57637ab24d12a02794073ee71b489c
+  ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist.pm 9be9ac3fee6fd6df702469904e02c8b4c6f2502e
+ -ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/Liblist/Kid.pm bb2443c2314c50f09f7eab4aacc03ade8b9907dd
+diff --git a/cnf/diffs/perl5-5.25.4/constant.patch b/cnf/diffs/perl5-5.25.4/constant.patch
+new file mode 100644
+index 0000000..4a9be20
+--- /dev/null
++++ b/cnf/diffs/perl5-5.25.4/constant.patch
+@@ -0,0 +1,40 @@
++The toolchain is not installed on the target when cross-compiling.
++There are no sense to install this module on target, but EUC is
++a part of Perl distribution.
++
++https://rt.cpan.org/Public/Bug/Display.html?id=88645
++
++--- a/cpan/ExtUtils-Constant/t/Constant.t
+++++ b/cpan/ExtUtils-Constant/t/Constant.t
++@@ -1,8 +1,19 @@
++ #!/usr/bin/perl -w
++ 
++ use Config;
+++use IPC::Cmd qw(can_run);
+++
++ unless ($Config{usedl}) {
++-    print "1..0 # no usedl, skipping\n";
+++    print "1..0 # SKIP no usedl\n";
+++    exit 0;
+++}
+++
+++my $make = $Config{make};
+++$make = $ENV{MAKE} if exists $ENV{MAKE};
+++if ($^O eq 'MSWin32' && $make eq 'nmake') { $make .= " -nologo"; }
+++
+++unless ( can_run($make) ) {
+++    print "1..0 # SKIP make not available\n";
++     exit 0;
++ }
++ 
++@@ -34,10 +45,6 @@
++ # module from blib
++ @INC = map {File::Spec->rel2abs($_)} @INC if $] < 5.007 && $] >= 5.006;
++ 
++-my $make = $Config{make};
++-$make = $ENV{MAKE} if exists $ENV{MAKE};
++-if ($^O eq 'MSWin32' && $make eq 'nmake') { $make .= " -nologo"; }
++-
++ # VMS may be using something other than MMS/MMK
++ my $mms_or_mmk = ($make =~ m/^MM(S|K)/i) ? 1 : 0;
++ 
+diff --git a/cnf/diffs/perl5-5.25.4/customized.patch b/cnf/diffs/perl5-5.25.4/customized.patch
+new file mode 100644
+index 0000000..659b75b
+--- /dev/null
++++ b/cnf/diffs/perl5-5.25.4/customized.patch
+@@ -0,0 +1,17 @@
++Not really necessary to build perl, but porting/customized.t will check
++the sums. Doing this defeats the purpose of customized.dat, but it's not
++like there's much choice.
++
++Separated from other patches to avoid dependence on patch ordering.
++
++--- a/t/porting/customized.dat
+++++ b/t/porting/customized.dat
++@@ -2,7 +2,7 @@
++ CPAN cpan/CPAN/lib/CPAN.pm 4616a44963045f7bd07bb7f8e5f99bbd789af4e5
++ CPAN cpan/CPAN/scripts/cpan 22610ed0301d48a269d1739afd2f7f84359d956f
++ Digest cpan/Digest/Digest.pm 43f7f544cb11842b2f55c73e28930da50774e081
++-ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t a0369c919e216fb02767a637666bb4577ad79b02
+++ExtUtils::Constant cpan/ExtUtils-Constant/t/Constant.t 5cddb9664c43e53a4ce7a213601d6cff53e09d2d
++ File::Path cpan/File-Path/lib/File/Path.pm fd8ce4420a0c113d3f47dd3223859743655c1da8
++ File::Path cpan/File-Path/t/Path_win32.t 94b9276557ce7f80b91f6fd9bfa7a0cd9bf9683e
++ IO-Compress cpan/IO-Compress/bin/zipdetails 381ba2a6ae5bd21c8d2e994316e3e13f2f0a4f41
+-- 
+2.10.0
+
+
+From fd9762c336f5b4e685db65f3b8164e0c4db09450 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 19 Sep 2016 04:47:49 +0300
+Subject: [PATCH 09/18] relax XSConfig.t to allow extra keys
+
+There's probably no good way to make the unchanged test pass
+on perl-cross builds while also maintaining multi-versions.
+---
+ cnf/diffs/cperl-5.24.0/xsconfig.patch | 45 +++++++++++++++++++++++++++++++++++
+ cnf/diffs/cperl-5.25.0/xsconfig.patch | 45 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 cnf/diffs/cperl-5.24.0/xsconfig.patch
+ create mode 100644 cnf/diffs/cperl-5.25.0/xsconfig.patch
+
+diff --git a/cnf/diffs/cperl-5.24.0/xsconfig.patch b/cnf/diffs/cperl-5.24.0/xsconfig.patch
+new file mode 100644
+index 0000000..e9309ba
+--- /dev/null
++++ b/cnf/diffs/cperl-5.24.0/xsconfig.patch
+@@ -0,0 +1,45 @@
++XSConfig.t checks for XS and non-XS Config.pm to match exactly.
++However, the script that makes the XS version (ext/Config/Config_xs.PL)
++is not meant to do exactly translation. It only writes keys expected
++for this particular perl version.
++
++Multi-version support in perl-cross does sometimes generate keys
++not meant for the perl version being compiled. This is probably
++harmless, and definitely much easier to support, so we relax the
++test to allow extra keys in non-XS module.
++
++XS module in never used at build time with perl-cross.
++
++--- a/ext/Config/t/XSConfig.t
+++++ b/ext/Config/t/XSConfig.t
++@@ -50,7 +50,7 @@
++ Config->import();
++ require 'Config_heavy.pl';
++ require Test::More;
++-Test::More->import (tests => 4);
+++Test::More->import (tests => 3);
++ 
++ ok(isXSUB($cv), 'XS Config:: is XS');
++ 
++@@ -146,12 +146,17 @@
++   for my $k (@cannedkeys) {
++     $Config_copy{$k} = '' unless exists $Config{$k};
++   }
++-  is (scalar keys %Config_copy, $klenXS, 'same adjusted key count');
++-} else {
++-  is (scalar(keys %Config), $klenXS, 'same key count');
++ }
++ 
++-is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
+++$Config = $copy ? \%Config_copy : \%Config;
+++
+++# Non-XS config *may* contain additional keys in perl-cross.
+++# Remove them to avoid false positives with is_deeply.
+++foreach(keys %$Config) {
+++	delete $Config->{$_} unless exists $XSConfig{$_};
+++}
+++
+++is_deeply ($Config, \%XSConfig, "cmp PP to XS hashes");
++ 
++ # old Test::Builders dont have is_passing
++ if ( Test::More->builder->can('is_passing')
+diff --git a/cnf/diffs/cperl-5.25.0/xsconfig.patch b/cnf/diffs/cperl-5.25.0/xsconfig.patch
+new file mode 100644
+index 0000000..e9309ba
+--- /dev/null
++++ b/cnf/diffs/cperl-5.25.0/xsconfig.patch
+@@ -0,0 +1,45 @@
++XSConfig.t checks for XS and non-XS Config.pm to match exactly.
++However, the script that makes the XS version (ext/Config/Config_xs.PL)
++is not meant to do exactly translation. It only writes keys expected
++for this particular perl version.
++
++Multi-version support in perl-cross does sometimes generate keys
++not meant for the perl version being compiled. This is probably
++harmless, and definitely much easier to support, so we relax the
++test to allow extra keys in non-XS module.
++
++XS module in never used at build time with perl-cross.
++
++--- a/ext/Config/t/XSConfig.t
+++++ b/ext/Config/t/XSConfig.t
++@@ -50,7 +50,7 @@
++ Config->import();
++ require 'Config_heavy.pl';
++ require Test::More;
++-Test::More->import (tests => 4);
+++Test::More->import (tests => 3);
++ 
++ ok(isXSUB($cv), 'XS Config:: is XS');
++ 
++@@ -146,12 +146,17 @@
++   for my $k (@cannedkeys) {
++     $Config_copy{$k} = '' unless exists $Config{$k};
++   }
++-  is (scalar keys %Config_copy, $klenXS, 'same adjusted key count');
++-} else {
++-  is (scalar(keys %Config), $klenXS, 'same key count');
++ }
++ 
++-is_deeply ($copy ? \%Config_copy : \%Config, \%XSConfig, "cmp PP to XS hashes");
+++$Config = $copy ? \%Config_copy : \%Config;
+++
+++# Non-XS config *may* contain additional keys in perl-cross.
+++# Remove them to avoid false positives with is_deeply.
+++foreach(keys %$Config) {
+++	delete $Config->{$_} unless exists $XSConfig{$_};
+++}
+++
+++is_deeply ($Config, \%XSConfig, "cmp PP to XS hashes");
++ 
++ # old Test::Builders dont have is_passing
++ if ( Test::More->builder->can('is_passing')
+-- 
+2.10.0
+
+
+From 194fd8ea18429d6186aa888d89b30b2e5ecaec56 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 19 Sep 2016 17:35:34 +0300
+Subject: [PATCH 10/18] MakeMaker tests patch for 5.24.0
+
+---
+ cnf/diffs/perl5-5.24.0/makemaker-test.patch        | 159 +++++++++++++++++++++
+ .../{makemaker.patch => makemaker-unix.patch}      |   0
+ 2 files changed, 159 insertions(+)
+ create mode 100644 cnf/diffs/perl5-5.24.0/makemaker-test.patch
+ rename cnf/diffs/perl5-5.24.0/{makemaker.patch => makemaker-unix.patch} (100%)
+
+diff --git a/cnf/diffs/perl5-5.24.0/makemaker-test.patch b/cnf/diffs/perl5-5.24.0/makemaker-test.patch
+new file mode 100644
+index 0000000..b71cc59
+--- /dev/null
++++ b/cnf/diffs/perl5-5.24.0/makemaker-test.patch
+@@ -0,0 +1,159 @@
++fix EUMM 7.04 & 7.10_01
++
++see https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/pull/178
++and https://github.com/Perl-Toolchain-Gang/ExtUtils-MakeMaker/pull/181
++both PR already merged.
++
++Signed-off-by: Francois Perrad <francois.perrad@gadz.org>
++
++diff --git a/cpan/ExtUtils-MakeMaker/t/INSTALL_BASE.t b/cpan/ExtUtils-MakeMaker/t/INSTALL_BASE.t
++--- a/cpan/ExtUtils-MakeMaker/t/INSTALL_BASE.t
+++++ b/cpan/ExtUtils-MakeMaker/t/INSTALL_BASE.t
++@@ -15,12 +15,13 @@
++ 
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::BFD;
++-use Test::More;
++ use Config;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++-    : (tests => 3 + $CLEANUP + @INSTDIRS * (15 + $CLEANUP));
+++    : ();
+++plan tests => 3 + $CLEANUP + @INSTDIRS * (15 + $CLEANUP);
++ 
++ my $Is_VMS = $^O eq 'VMS';
++ 
++diff --git a/cpan/ExtUtils-MakeMaker/t/PL_FILES.t b/cpan/ExtUtils-MakeMaker/t/PL_FILES.t
++--- a/cpan/ExtUtils-MakeMaker/t/PL_FILES.t
+++++ b/cpan/ExtUtils-MakeMaker/t/PL_FILES.t
++@@ -11,9 +11,9 @@
++ use MakeMaker::Test::Setup::PL_FILES;
++ use MakeMaker::Test::Utils;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : (tests => 9);
++ 
++diff --git a/cpan/ExtUtils-MakeMaker/t/basic.t b/cpan/ExtUtils-MakeMaker/t/basic.t
++--- a/cpan/ExtUtils-MakeMaker/t/basic.t
+++++ b/cpan/ExtUtils-MakeMaker/t/basic.t
++@@ -20,9 +20,9 @@
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::BFD;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : (tests => 171);
++ use File::Find;
++diff --git a/cpan/ExtUtils-MakeMaker/t/echo.t b/cpan/ExtUtils-MakeMaker/t/echo.t
++--- a/cpan/ExtUtils-MakeMaker/t/echo.t
+++++ b/cpan/ExtUtils-MakeMaker/t/echo.t
++@@ -14,9 +14,9 @@
++ use File::Temp;
++ use Cwd 'abs_path';
++ 
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : ();
++ 
++diff --git a/cpan/ExtUtils-MakeMaker/t/min_perl_version.t b/cpan/ExtUtils-MakeMaker/t/min_perl_version.t
++--- a/cpan/ExtUtils-MakeMaker/t/min_perl_version.t
+++++ b/cpan/ExtUtils-MakeMaker/t/min_perl_version.t
++@@ -13,9 +13,9 @@
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::MPV;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : (tests => 36);
++ use File::Path;
++diff --git a/cpan/ExtUtils-MakeMaker/t/pm_to_blib.t b/cpan/ExtUtils-MakeMaker/t/pm_to_blib.t
++--- a/cpan/ExtUtils-MakeMaker/t/pm_to_blib.t
+++++ b/cpan/ExtUtils-MakeMaker/t/pm_to_blib.t
++@@ -12,9 +12,9 @@
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::BFD;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : 'no_plan';
++ 
++diff --git a/cpan/ExtUtils-MakeMaker/t/recurs.t b/cpan/ExtUtils-MakeMaker/t/recurs.t
++--- a/cpan/ExtUtils-MakeMaker/t/recurs.t
+++++ b/cpan/ExtUtils-MakeMaker/t/recurs.t
++@@ -14,9 +14,9 @@
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::Recurs;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : (tests => 26);
++ 
++diff --git a/cpan/ExtUtils-MakeMaker/t/several_authors.t b/cpan/ExtUtils-MakeMaker/t/several_authors.t
++--- a/cpan/ExtUtils-MakeMaker/t/several_authors.t
+++++ b/cpan/ExtUtils-MakeMaker/t/several_authors.t
++@@ -13,9 +13,9 @@
++ use MakeMaker::Test::Utils;
++ use MakeMaker::Test::Setup::SAS;
++ use Config;
++-use Test::More;
++ use ExtUtils::MM;
++-plan !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
+++use Test::More
+++    !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'}
++     ? (skip_all => "cross-compiling and make not available")
++     : (tests => 20);
++ use File::Path;
++diff --git a/cpan/ExtUtils-MakeMaker/t/unicode.t b/cpan/ExtUtils-MakeMaker/t/unicode.t
++--- a/cpan/ExtUtils-MakeMaker/t/unicode.t
+++++ b/cpan/ExtUtils-MakeMaker/t/unicode.t
++@@ -6,16 +6,19 @@
++ chdir 't';
++ 
++ use strict;
+++use ExtUtils::MM;
+++use MakeMaker::Test::Utils qw(makefile_name make make_run run);
++ use Test::More;
++ use Config;
++ BEGIN {
++   plan skip_all => 'Need perlio and perl 5.8+.'
++     if $] < 5.008 or !$Config{useperlio};
+++  plan skip_all => 'cross-compiling and make not available'
+++    if !MM->can_run(make()) && $ENV{PERL_CORE} && $Config{'usecrosscompile'};
+++
++   plan tests => 9;
++ }
++-use ExtUtils::MM;
++ use MakeMaker::Test::Setup::Unicode;
++-use MakeMaker::Test::Utils qw(makefile_name make_run run);
++ use TieOut;
++ 
++ my $MM = bless { DIR => ['.'] }, 'MM';
++
+diff --git a/cnf/diffs/perl5-5.24.0/makemaker.patch b/cnf/diffs/perl5-5.24.0/makemaker-unix.patch
+similarity index 100%
+rename from cnf/diffs/perl5-5.24.0/makemaker.patch
+rename to cnf/diffs/perl5-5.24.0/makemaker-unix.patch
+-- 
+2.10.0
+
+
+From 224e7ebbc9e30a0b28ae394dc20e60de6310dd88 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Tue, 20 Sep 2016 01:05:39 +0300
+Subject: [PATCH 11/18] do not pass $mode to config.sh
+
+---
+ cnf/configure_args.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/cnf/configure_args.sh b/cnf/configure_args.sh
+index a9dcf61..fbe5324 100644
+--- a/cnf/configure_args.sh
++++ b/cnf/configure_args.sh
+@@ -151,9 +151,9 @@ while [ $i -le $# -o -n "$n" ]; do
+ 
+ 	# process the options
+ 	case "$a" in
+-		mode) defuser $a "$v" ;;
+-		help) defuser "mode" "help" ;;
+-		regen|regenerate) defuser "mode" "regen" ;;
++		mode) mode="$v" ;;
++		help) mode="help" ;;
++		regen|regenerate) mode="regen" ;;
+ 		keeplog) defuser "$a" 1 ;;
+ 		prefix|html[13]dir|libsdir)	defuser $a "$v" ;;
+ 		man[13]dir|otherlibsdir)	defuser $a "$v" ;;
+@@ -222,7 +222,7 @@ while [ $i -le $# -o -n "$n" ]; do
+ 		no) defno "d_$k" "$v" ;;
+ 		include) defyes "i_$k" "$v" ;;
+ 		dont-include) defno "i_$k" "$v" ;;
+-		mode|host|target|build) ;;
++		host|target|build) ;;
+ 		# original Configure options
+ 		D)
+ 			setordefine "$k" "$x" "$v" 'define' 'true'
+-- 
+2.10.0
+
+
+From 2936e7f5914a0fa9b8e37824b147ee97224f4637 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Tue, 20 Sep 2016 01:36:33 +0300
+Subject: [PATCH 12/18] doubles match endianess but not length of longs
+
+---
+ cnf/configure_type_dbl.sh | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/cnf/configure_type_dbl.sh b/cnf/configure_type_dbl.sh
+index a517e90..eb9791c 100644
+--- a/cnf/configure_type_dbl.sh
++++ b/cnf/configure_type_dbl.sh
+@@ -3,10 +3,8 @@
+ # Assumption: floating-point endianess matches integer endianess
+ predef 'doublekind' '-1'
+ case "$byteorder" in
+-	1234) doublekind=1 ;;
+-	4321) doublekind=2 ;;
+-	12345678) doublekind=3 ;;
+-	87654321) doublekind=4 ;;
++	1234*) doublekind=3 ;;
++	*4321) doublekind=4 ;;
+ esac
+ case "$doublekind" in
+ 1) msg "Assuming IEEE 754 32-bit little endian doubles." ;;
+-- 
+2.10.0
+
+
+From 0dfbfc2601e4354ab7b70ff04f44b3d7424919c6 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Tue, 20 Sep 2016 01:37:12 +0300
+Subject: [PATCH 13/18] handle long double = double case properly
+
+---
+ cnf/configure_type_dbl.sh | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/cnf/configure_type_dbl.sh b/cnf/configure_type_dbl.sh
+index eb9791c..bf5c5a9 100644
+--- a/cnf/configure_type_dbl.sh
++++ b/cnf/configure_type_dbl.sh
+@@ -20,7 +20,11 @@ esac
+ enddef doublekind
+ 
+ # We will not guess longdblkind; those vary, and must be hinted.
+-predef longdblkind '-1'
++if [ "$d_longdbl" = 'define' ]; then
++	predef longdblkind '0'
++else
++	predef longdblkind '-1'
++fi
+ case "$longdblkind" in
+ 0) msg "Assuming long doubles are doubles." ;;
+ 1) msg "Assuming IEEE 754 128-bit little endian long doubles." ;;
+@@ -75,9 +79,14 @@ esac
+ enddef doubleinfbytes
+ enddef doublenanbytes
+ 
+-predef longdblinfbytes 'undef'
+-predef longdblnanbytes 'undef'
++# The default longdblkind=0 means long double *is*double*!
++predef longdblinfbytes "undef"
++predef longdblnanbytes "undef"
+ case "$longdblkind" in
++0) # long doubles are doubles
++   longdblinfbytes="$doubleinfbytes"
++   longdblnanbytes="$doublenanbytes"
++   ;;
+ 1) # IEEE 754 128-bit LE
+    longdblinfbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0x7f'
+    longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xff, 0x7f'
+@@ -97,8 +106,8 @@ case "$longdblkind" in
+        longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0xff, 0x7f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+        ;;
+    *)  # No idea.
+-       longdblinfbytes=$undef
+-       longdblnanbytes=$undef
++       longdblinfbytes='undef'
++       longdblnanbytes='undef'
+    ;;
+    esac
+    ;;
+@@ -113,8 +122,8 @@ case "$longdblkind" in
+        longdblnanbytes='0x7f, 0xff, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+        ;;
+    *)  # No idea.
+-       longdblinfbytes=$undef
+-       longdblnanbytes=$undef
++       longdblinfbytes='undef'
++       longdblnanbytes='undef'
+    ;;
+    esac
+    ;;
+@@ -135,8 +144,8 @@ case "$longdblkind" in
+    longdblnanbytes='0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00'
+    ;;
+ *) # No idea.
+-   longdblinfbytes=$undef
+-   longdblnanbytes=$undef
++   longdblinfbytes='undef'
++   longdblnanbytes='undef'
+    ;;
+ esac
+ enddef longdblinfbytes
+-- 
+2.10.0
+
+
+From e446378ccd4b141447920936dfa905caf5d82d06 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Tue, 20 Sep 2016 01:49:25 +0300
+Subject: [PATCH 14/18] customized.dat: shasum for patched echo.t
+
+---
+ cnf/diffs/perl5-5.24.0/customized.patch | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/cnf/diffs/perl5-5.24.0/customized.patch b/cnf/diffs/perl5-5.24.0/customized.patch
+index d2b1054..06ed672 100644
+--- a/cnf/diffs/perl5-5.24.0/customized.patch
++++ b/cnf/diffs/perl5-5.24.0/customized.patch
+@@ -28,3 +28,12 @@ on patch ordering.
+  ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_UWIN.pm f6581a0e75e45bfc26f343f173d3366c43fb1221
+  ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VMS.pm 1997912b5018970cdeb3dae8fd7e0c24f6e5d567
+  ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MM_VOS.pm 210a4eda8b081d9986477e3a9762fce6ebea8474
++@@ -32,7 +32,7 @@
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/MY.pm 6059d9bb7c4f0c154a61f115aa6b24ba08622b81
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/lib/ExtUtils/testlib.pm 6347934cbe40da977790cea6c81987816b2fe26b
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/cd.t 0a71fbd646a7be8358b07b6f64f838243cc0aef4
++-ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t 37aec8f794c52e037540757eb5b2556f79419ff7
+++ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/echo.t fcc4755df34f696ab515607382910a1dc96ec0b9
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/lib/MakeMaker/Test/NoXS.pm 371cdff1b2375017907cfbc9c8f4a31f5ad10582
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/prereq.t 53bda2c549fd13a6b6c13a070ca6bc79883081c0
++ ExtUtils::MakeMaker cpan/ExtUtils-MakeMaker/t/vstrings.t 90035a2bdbf45f15b9c3196d072d7cba7e662871
+-- 
+2.10.0
+
+
+From 909e1afb1537faa0624292a07a26636d4f75baa5 Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Wed, 21 Sep 2016 22:07:57 +0300
+Subject: [PATCH 15/18] disable Devel-NYTProf if zlib is missing
+
+The module tries to include zlib.h without checking anything,
+breaking the build.
+
+cperl only.
+---
+ cnf/configure_hdrs.sh | 1 +
+ cnf/configure_mods.sh | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/cnf/configure_hdrs.sh b/cnf/configure_hdrs.sh
+index e227349..d1618db 100644
+--- a/cnf/configure_hdrs.sh
++++ b/cnf/configure_hdrs.sh
+@@ -107,6 +107,7 @@ checkhdr i_values 'values.h'
+ # i_varhdr is checked below
+ checkhdr i_vfork 'vfork.h'
+ checkhdr i_xlocale 'xlocale.h'
++checkhdr i_zlib 'zlib.h' # cperl, only to disable modules
+ 
+ # These two are mutually exclusive
+ test "$i_varargs" != 'define' && checkhdr i_stdarg 'stdarg.h'
+diff --git a/cnf/configure_mods.sh b/cnf/configure_mods.sh
+index ed989ee..57cdbed 100644
+--- a/cnf/configure_mods.sh
++++ b/cnf/configure_mods.sh
+@@ -88,6 +88,7 @@ msg "Looking which extensions should be disabled"
+ define 'useposix' 'true'
+ define 'useopcode' 'true'
+ 
++extonlyif Devel-NYTProf "$i_zlib" = 'define'
+ extonlyif DB_File "$i_db" = 'define'
+ extonlyif GDBM_File "$i_gdbm" = 'define'
+ extonlyif NDBM_File "$i_ndbm" = 'define'
+-- 
+2.10.0
+
+
+From 2ca53931ba20d7533e65b09a864ffe76694d4c8b Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Mon, 26 Sep 2016 23:54:13 +0300
+Subject: [PATCH 16/18] set ccflags/ldflags from environment
+
+---
+ cnf/configure_tool.sh | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/cnf/configure_tool.sh b/cnf/configure_tool.sh
+index f1d4f5b..fedc9fb 100644
+--- a/cnf/configure_tool.sh
++++ b/cnf/configure_tool.sh
+@@ -155,13 +155,21 @@ define _exe ''
+ define cccdlflags '-fPIC -Wno-unused-function'
+ define ccdlflags '-Wl,-E'
+ 
+-# Linker flags setup
+-predef lddlflags "-shared"
+-predef ccflags ''
+-predef ldflags ''
+-predef cppflags ''
++# Misc flags setup
++predef lddlflags "-shared"	# modules
++predef ccflags ''		# perl and modules
++predef ldflags ''		# perl only?
++predef cppflags ''		# unused?
++
++# setfromvar what SHELLVAR
++setfromenv() {
++	getenv v "$2"
++	test -n "$v" && append "$1" "$v"
++}
+ 
+ if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
++	setfromenv ccflags CFLAGS
++	setfromenv ldflags LDFLAGS
+ 	if [ -n "$sysroot" ]; then
+ 		msg "Adding --sysroot to {cc,ld}flags"
+ 		prepend ccflags "--sysroot=$sysroot"
+@@ -172,6 +180,9 @@ if [ "$mode" = 'target' -o "$mode" = 'native' ]; then
+ 		# Same for cpp
+ 		prepend cppflags "--sysroot=$sysroot"
+ 	fi
++elif [ "$mode" = 'buildmini' ]; then
++	setfromenv ccflags HOSTCFLAGS
++	setfromenv ldflags HOSTLDFLAGS
+ fi
+ 
+ # Use $ldflags as default value for $lddlflags, together with whatever
+-- 
+2.10.0
+
+
+From 3249f9ad30e4148e7ee8f73e81683964c05fca5e Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Tue, 27 Sep 2016 03:30:25 +0300
+Subject: [PATCH 17/18] cperl: patch ext/Config for cross builds
+
+---
+ cnf/diffs/cperl-5.24.0/extconfigxs.patch | 41 ++++++++++++++++++++++++++++++++
+ cnf/diffs/cperl-5.25.0/extconfigxs.patch | 41 ++++++++++++++++++++++++++++++++
+ 2 files changed, 82 insertions(+)
+ create mode 100644 cnf/diffs/cperl-5.24.0/extconfigxs.patch
+ create mode 100644 cnf/diffs/cperl-5.25.0/extconfigxs.patch
+
+diff --git a/cnf/diffs/cperl-5.24.0/extconfigxs.patch b/cnf/diffs/cperl-5.24.0/extconfigxs.patch
+new file mode 100644
+index 0000000..e47fe0b
+--- /dev/null
++++ b/cnf/diffs/cperl-5.24.0/extconfigxs.patch
+@@ -0,0 +1,41 @@
++XS Config uses pack to check ptrsize and ivsize, which yields host values
++when running under miniperl.
++
++--- a/ext/Config/Config_xs.PL
+++++ b/ext/Config/Config_xs.PL
++@@ -30,16 +30,6 @@
++         unshift @INC, '../../lib', '../../lib/auto';
++         $in_core = 1;
++     }
++-    my $ptrsize = length(pack('P',""));
++-    my $ivsize =  length(pack('j',0));
++-    die "unknown pointer size" if $ptrsize != 4 && $ptrsize != 8; #POSIX.pm not available
++-    eval 'sub SPTR_MIN () { '.($ptrsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
++-    'sub SPTR_MAX () { '.($ptrsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
++-    'sub IV_MIN () { '.($ivsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
++-    'sub IV_MAX () { '.($ivsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
++-    'sub PTRSIZE () { '.$ptrsize.' } '.
++-    'sub INLSIZE () { '.($ptrsize == 8 ? 13 : 5).' } '.
++-    'sub BE () { '.((pack('N', 1) eq pack('L', 1))+0).'}';
++ }
++ use strict ;
++ use Config ;
++@@ -49,6 +39,18 @@
++     require 'regen/regen_lib.pl';
++ }
++ 
+++my $ivsize = $Config{'ivsize'};
+++my $ptrsize = $Config{'ptrsize'};
+++my $byteorder = $Config{'byteorder'};
+++die "unknown pointer size" if $ptrsize != 4 && $ptrsize != 8; #POSIX.pm not available
+++sub SPTR_MIN () { ($ptrsize == 8 ? -9223372036854775808 : -2147483648) };
+++sub SPTR_MAX () { ($ptrsize == 8 ? 0x7FFFFFFFFFFFFFFF : 0x7FFFFFFF) };
+++sub IV_MIN () { ($ivsize == 8 ? -9223372036854775808 : -2147483648) };
+++sub IV_MAX () { ($ivsize == 8 ? 0x7FFFFFFFFFFFFFFF : 0x7FFFFFFF) };
+++sub PTRSIZE () { $ptrsize };
+++sub INLSIZE () { ($ptrsize == 8 ? 13 : 5) };
+++sub BE () { ($byteorder == 0x4321 or $byteorder == 0x87654321) };
+++
++ ###########################################################################
++ 
++ my $force = @ARGV ? $ARGV[0] eq '--force' : 0;
+diff --git a/cnf/diffs/cperl-5.25.0/extconfigxs.patch b/cnf/diffs/cperl-5.25.0/extconfigxs.patch
+new file mode 100644
+index 0000000..e47fe0b
+--- /dev/null
++++ b/cnf/diffs/cperl-5.25.0/extconfigxs.patch
+@@ -0,0 +1,41 @@
++XS Config uses pack to check ptrsize and ivsize, which yields host values
++when running under miniperl.
++
++--- a/ext/Config/Config_xs.PL
+++++ b/ext/Config/Config_xs.PL
++@@ -30,16 +30,6 @@
++         unshift @INC, '../../lib', '../../lib/auto';
++         $in_core = 1;
++     }
++-    my $ptrsize = length(pack('P',""));
++-    my $ivsize =  length(pack('j',0));
++-    die "unknown pointer size" if $ptrsize != 4 && $ptrsize != 8; #POSIX.pm not available
++-    eval 'sub SPTR_MIN () { '.($ptrsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
++-    'sub SPTR_MAX () { '.($ptrsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
++-    'sub IV_MIN () { '.($ivsize == 8 ? '-9223372036854775808' : '-2147483648').' } '.
++-    'sub IV_MAX () { '.($ivsize == 8 ? '0x7FFFFFFFFFFFFFFF' : '0x7FFFFFFF').' } '.
++-    'sub PTRSIZE () { '.$ptrsize.' } '.
++-    'sub INLSIZE () { '.($ptrsize == 8 ? 13 : 5).' } '.
++-    'sub BE () { '.((pack('N', 1) eq pack('L', 1))+0).'}';
++ }
++ use strict ;
++ use Config ;
++@@ -49,6 +39,18 @@
++     require 'regen/regen_lib.pl';
++ }
++ 
+++my $ivsize = $Config{'ivsize'};
+++my $ptrsize = $Config{'ptrsize'};
+++my $byteorder = $Config{'byteorder'};
+++die "unknown pointer size" if $ptrsize != 4 && $ptrsize != 8; #POSIX.pm not available
+++sub SPTR_MIN () { ($ptrsize == 8 ? -9223372036854775808 : -2147483648) };
+++sub SPTR_MAX () { ($ptrsize == 8 ? 0x7FFFFFFFFFFFFFFF : 0x7FFFFFFF) };
+++sub IV_MIN () { ($ivsize == 8 ? -9223372036854775808 : -2147483648) };
+++sub IV_MAX () { ($ivsize == 8 ? 0x7FFFFFFFFFFFFFFF : 0x7FFFFFFF) };
+++sub PTRSIZE () { $ptrsize };
+++sub INLSIZE () { ($ptrsize == 8 ? 13 : 5) };
+++sub BE () { ($byteorder == 0x4321 or $byteorder == 0x87654321) };
+++
++ ###########################################################################
++ 
++ my $force = @ARGV ? $ARGV[0] eq '--force' : 0;
+-- 
+2.10.0
+
+
+From ca9dc1457ddc7910033cc4795019633f59ae4dae Mon Sep 17 00:00:00 2001
+From: Alex Suykov <alex.suykov@gmail.com>
+Date: Thu, 29 Sep 2016 01:28:36 +0300
+Subject: [PATCH 18/18] perl -> cperl symlink
+
+When installing cperl, do create "perl" symlink poiting to
+the newly-installed cperl executable.
+---
+ Makefile           | 11 +++++++++--
+ Makefile.config.SH |  3 ++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index fa73d25..52d69e9 100644
+--- a/Makefile
++++ b/Makefile
+@@ -392,12 +392,12 @@ test:
+ 	cd t/ && ln -sf ../perl . && LD_LIBRARY_PATH=$(PWD) ./perl harness
+ 
+ # ---[ install ]----------------------------------------------------------------
+-.PHONY: install install.perl install.pod
++.PHONY: install install.perl install.sym install.pod
+ 
+ META.yml: Porting/makemeta Porting/Maintainers.pl Porting/Maintainers.pm miniperl$X
+ 	./miniperl_top $<
+ 
+-install: install.perl install.man
++install: install.perl install.sym install.man
+ 
+ install.perl: installperl | miniperl$X
+ 	./miniperl_top installperl --destdir=$(DESTDIR) $(INSTALLFLAGS) $(STRIPFLAGS)
+@@ -406,6 +406,13 @@ install.perl: installperl | miniperl$X
+ install.man: installman pod/perltoc.pod | miniperl$X
+ 	./miniperl_top installman --destdir=$(DESTDIR) $(INSTALLFLAGS)
+ 
++ifneq ($(perlname),perl)
++install.sym:
++	ln -sf $(perlname)$(version) $(DESTDIR)$(installbin)/perl
++else
++install.sym:
++endif
++
+ # ---[ testpack ]---------------------------------------------------------------
+ .PHONY: testpack
+ testpack: TESTPACK.tar.gz
+diff --git a/Makefile.config.SH b/Makefile.config.SH
+index 3c9a19a..550be04 100755
+--- a/Makefile.config.SH
++++ b/Makefile.config.SH
+@@ -123,11 +123,12 @@ fi
+ cat >> Makefile.config <<END
+ package = $package
+ perlname = $perlname
+-perlversion = $perlversion
++version = $version
+ dynaloader = $dynaloader
+ useshrplib = $useshrplib
+ soname = $soname
+ patchset = $package-$version
++installbin = $installbin
+ 
+ LIBPERL = $libperl
+ 
+-- 
+2.10.0
+

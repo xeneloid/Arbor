@@ -13,13 +13,18 @@ require alternatives flag-o-matic
 export_exlib_phases src_unpack src_prepare src_configure src_compile src_test src_install
 
 myexparam perl_cross_ver=
-myexparam perl_cross_base=${PV}
+if ever at_least 1.1.0 $(exparam perl_cross_ver); then
+    perl_cross_pnv=${PN}-cross-$(exparam perl_cross_ver)
+else
+    myexparam perl_cross_base=${PV}
+    perl_cross_pnv=${PN}-$(exparam perl_cross_base)-cross-$(exparam perl_cross_ver).tar.gz
+fi
 
 SUMMARY="Perl is a general-purpose programming language originally developed for text manipulation"
 HOMEPAGE="http://www.perl.org"
 DOWNLOADS="mirror://cpan/src/5.0/${PNV}.tar.xz"
 DOWNLOADS+="
-    https://github.com/arsv/${PN}-cross/releases/download/$(exparam perl_cross_ver)/${PN}-$(exparam perl_cross_base)-cross-$(exparam perl_cross_ver).tar.gz
+    https://github.com/arsv/${PN}-cross/releases/download/$(exparam perl_cross_ver)/${perl_cross_pnv}.tar.gz
 "
 
 REMOTE_IDS="cpan:${PN} freecode:${PN}"
@@ -56,12 +61,18 @@ option_define() {
 perl-5_src_unpack() {
     default
 
-    local perl_base
-    exparam -v perl_base perl_cross_base
+    local perl_cross_ver
+    exparam -v perl_cross_ver perl_cross_ver
+    if ever at_least 1.1.0 ${perl_cross_ver}; then
+        edo cp -a "${WORKBASE}"/${perl_cross_pnv}/* "${WORK}"
+    else
+        local perl_base
+        exparam -v perl_base perl_cross_base
 
-    if [[ ${perl_base} != ${PV} ]]; then
-        # perlcross and perl versions don't match exactly
-        edo cp -a "${WORKBASE}"/${PN}-${perl_base}/* "${WORK}"
+        if [[ ${perl_base} != ${PV} ]]; then
+            # perlcross and perl versions don't match exactly
+            edo cp -a "${WORKBASE}"/${PN}-${perl_base}/* "${WORK}"
+        fi
     fi
 }
 
@@ -126,6 +137,7 @@ perl-5_src_configure() {
         --target=$(exhost --target)
         --target-tools-prefix=$(exhost --tool-prefix)
         --prefix=${perlprefix}
+        --vendorprefix=${perlprefix}
         --html1dir=/usr/share/doc/${PNVR}/html
         --html3dir=/usr/share/doc/${PNVR}/html
         $(define cf_by Exherbo)
@@ -141,7 +153,6 @@ perl-5_src_configure() {
         $(define vendorarch "${perllibdir}/vendor_perl/${SLOT}-arch")
         $(define perlpath "${perlbindir}/${PN}${SLOT}")
         $(define sharedir /usr/share)
-        -Dusevendorprefix
         -Duselargefiles
         -Uinstallusrbinperl
         -Dusesoname
@@ -150,6 +161,8 @@ perl-5_src_configure() {
         $(option_define gdbm)i_gdbm
         $(option_define ithreads)usethreads
         $(option_define multiplicity)usemultiplicity
+
+        $(ever at_least 5.24 || echo '-Dusevendorprefix')
     )
 
     edo ./configure "${myconf[@]}" "${PERL5_CONFIGURE_PARAMS[@]}"

@@ -1,0 +1,31 @@
+Upstream: submitted: https://github.com/arsv/perl-cross/pull/39
+Reason: those dirs were created with trailing spaces
+
+From 20e19886ff801c8f16e8975db7e836b5eb5d840b Mon Sep 17 00:00:00 2001
+From: Benedikt Morbach <benedikt.morbach@googlemail.com>
+Date: Sat, 1 Oct 2016 15:13:21 +0200
+Subject: [PATCH] remove extra space in site paths
+
+---
+ cnf/configure_path.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cnf/configure_path.sh b/cnf/configure_path.sh
+index 4750ab6..94190db 100644
+--- a/cnf/configure_path.sh
++++ b/cnf/configure_path.sh
+@@ -63,9 +63,9 @@ define installprivlib "$installpath$privlib"
+ define installscript "$installpath$scriptdir"
+ define installsitearch "$installpath$sitearch"
+ define installsitebin "$installpath$sitebin"
+-define installsitehtml1dir  "$installpath$sitehtml1dir "
++define installsitehtml1dir  "$installpath$sitehtml1dir"
+ define installsitehtml3dir "$installpath$sitehtml3dir"
+-define installsitelib  "$installpath$sitelib "
++define installsitelib  "$installpath$sitelib"
+ define installsiteman1dir "$installpath$siteman1dir"
+ define installsiteman3dir "$installpath$siteman3dir"
+ define installsitescript "$installpath$sitescript"
+-- 
+2.10.0
+
