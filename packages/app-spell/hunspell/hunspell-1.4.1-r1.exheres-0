@@ -21,6 +21,7 @@ DEPENDENCIES="
         sys-devel/gettext[>=0.17]
     build+run:
         sys-libs/ncurses
+        sys-libs/readline:=
     suggestion:
         virtual/unzip [[ description = [ OpenDocument (ODF and Flat ODF) support ] ]]
 "
