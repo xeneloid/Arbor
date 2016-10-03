@@ -11,7 +11,7 @@ PYTHONDONTWRITEBYTECODE=1
 MULTIBUILD_CLASSES="LUA_ABIS PHP_ABIS PYTHON_ABIS"
 
 CROSS_COMPILE_TOOLS="AR:ar AS:as CC:cc CPP:cpp CXX:c++ FORTRAN:gfortran LD:ld NM:nm OBJCOPY:objcopy OBJDUMP:objdump PKG_CONFIG:pkg-config RANLIB:ranlib READELF:readelf"
-CROSS_COMPILE_FLAGS="CFLAGS CPPFLAGS:CFLAGS CXXFLAGS CXXCPPFLAGS:CXXFLAGS LDFLAGS FCFLAGS"
+CROSS_COMPILE_FLAGS="CFLAGS CPPFLAGS:CFLAGS CXXFLAGS CXXCPPFLAGS:CXXFLAGS LDFLAGS FCFLAGS GO_LDFLAGS"
 
 # MULTIBUILD_LUA_ABIS_TARGETS below need to be in sync with
 # LUA_AVAILABLE_ABIS in exlibs/lua.exlib.
@@ -42,13 +42,19 @@ XDG_RUNTIME_DIR=${TEMP}
 # Don't use generic flags, use -march=native and such whenever possible
 armv7_unknown_linux_gnueabi_CFLAGS="-march=native -O2 -pipe"
 armv7_unknown_linux_gnueabi_CXXFLAGS="-march=native -O2 -pipe"
+armv7_unknown_linux_gnueabi_GO_LDFLAGS="-linkmode external"
 armv7_unknown_linux_gnueabihf_CFLAGS="-march=native -mfloat-abi=hard -O2 -pipe"
 armv7_unknown_linux_gnueabihf_CXXFLAGS="-march=native -mfloat-abi=hard -O2 -pipe"
+armv7_unknown_linux_gnueabihf_GO_LDFLAGS="-linkmode external"
 i686_pc_linux_gnu_CFLAGS="-march=native -O2 -pipe"
 i686_pc_linux_gnu_CXXFLAGS="-march=native -O2 -pipe"
+i686_pc_linux_gnu_GO_LDFLAGS="-linkmode external"
 i686_pc_linux_musl_CFLAGS="-march=native -O2 -pipe"
 i686_pc_linux_musl_CXXFLAGS="-march=native -O2 -pipe"
+i686_pc_linux_musl_GO_LDFLAGS="-linkmode external"
 x86_64_pc_linux_gnu_CFLAGS="-march=native -O2 -pipe"
 x86_64_pc_linux_gnu_CXXFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_gnu_GO_LDFLAGS="-linkmode external"
 x86_64_pc_linux_musl_CFLAGS="-march=native -O2 -pipe"
 x86_64_pc_linux_musl_CXXFLAGS="-march=native -O2 -pipe"
+x86_64_pc_linux_musl_GO_LDFLAGS="-linkmode external"
