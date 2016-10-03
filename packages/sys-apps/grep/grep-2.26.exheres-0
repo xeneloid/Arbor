@@ -5,8 +5,6 @@ require gnu [ suffix=tar.xz ] alternatives
 
 SUMMARY="Grep searches input files for matches to specified patterns"
 
-REMOTE_IDS="freecode:${PN}"
-
 LICENCES="GPL-3"
 SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
