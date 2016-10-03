@@ -10,7 +10,7 @@ MYOPTIONS=""
 DEPENDENCIES=""
 
 src_prepare() {
-    sed -i \
+    edo sed -i \
         -e "s,^PREFIX = /usr/local,PREFIX = /usr/$(exhost --target)," \
         -e '/^MAN_BASE_DIR = /s,=.*$,= /usr/share/man,' \
         -e "/^CC = /s,gcc,${CC}," \
@@ -18,6 +18,6 @@ src_prepare() {
         -e 's,\$(MAN_DIR),$(DESTDIR)$(MAN_DIR),g' \
         -e 's,-\$(MKDIR),install -d,g' \
         -e "s!COMPILER_OPTIONS = .*!COMPILER_OPTIONS = ${CFLAGS}!" \
-        Makefile || die oops
+        Makefile
 }
 
