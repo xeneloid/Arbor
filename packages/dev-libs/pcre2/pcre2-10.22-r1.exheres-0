@@ -34,7 +34,7 @@ MYOPTIONS="parts: binaries development documentation libraries"
 DEPENDENCIES="
     build+run:
         sys-libs/ncurses
-        sys-libs/readline
+        sys-libs/readline:=
         sys-libs/zlib
 "
 
