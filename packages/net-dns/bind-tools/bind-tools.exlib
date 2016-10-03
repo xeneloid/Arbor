@@ -32,7 +32,7 @@ DEPENDENCIES="
     build+run:
         dev-libs/json-c
         dev-libs/libxml2:2.0
-        sys-libs/readline
+        sys-libs/readline:=
         geoip? ( net-libs/GeoIP )
         idn? ( net-dns/idnkit )
         kerberos? ( virtual/kerberos )
