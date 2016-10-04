@@ -407,7 +407,6 @@ case ${PYTHON_EXLIB_API} in
 
             for dir in ${optimize_dirs[@]} ; do
                 dir=${IMAGE}${dir#${IMAGE}}
-                einfo $dir
 
                 edo find "${dir}" -type f -name '*.py' -exec touch {} +
 
