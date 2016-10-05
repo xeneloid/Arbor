@@ -21,7 +21,7 @@ if ever at_least 7.0; then
 else
     HOMEPAGE="http://legacy.imagemagick.org"
 fi
-DOWNLOADS="ftp://ftp.imagemagick.org/pub/${PN}/${PN}-${MY_PV}.tar.xz"
+DOWNLOADS="ftp://ftp.imagemagick.org/pub/${PN}/releases/${PN}-${MY_PV}.tar.xz"
 
 REMOTE_IDS="freecode:${PN}"
 
