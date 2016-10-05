@@ -1,9 +1,10 @@
 # Copyright 2010 Maxime Coste
 # Distributed under the terms of the GNU General Public License v2
 
-require fedorahosted
-
 SUMMARY="Programming library for color text mode, widget based user interfaces"
+
+HOMEPAGE="https://pagure.io/${PN}/"
+DOWNLOADS="https://pagure.io/releases/${PN}/${PNV}.tar.gz"
 
 BUGS_TO="frrrwww@gmail.com"
 
