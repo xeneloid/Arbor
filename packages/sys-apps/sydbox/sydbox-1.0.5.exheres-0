@@ -3,8 +3,6 @@
 
 require sydbox
 
-DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
-
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEPENDENCIES="
