@@ -24,8 +24,8 @@ DEPENDENCIES="
         dev-lang/perl:*
         sys-apps/file
     run:
-        app-arch/gzip
-        app-arch/tar
+        virtual/gzip
+        virtual/tar
         sys-apps/less
         sys-devel/binutils [[ note = [ For ar, nm, strings; strings used without checking it exists ] ]]
 
@@ -40,7 +40,7 @@ DEPENDENCIES="
         app-arch/lzip            [[ description = [ Support for lzipped files and tarballs ] ]]
         app-arch/xz              [[ description = [ Support for lzma-compressed files and tarballs ] ]]
         app-arch/p7zip           [[ description = [ Support for the contents of 7-zip archives ] ]]
-        app-arch/cpio            [[ description = [ Support for RPM packages, together with app-arch/rpm ] ]]
+        virtual/cpio             [[ description = [ Support for RPM packages, together with app-arch/rpm ] ]]
 
         ( app-text/html2text net-www/elinks net-www/links net-www/lynx net-www/w3m ) [[
             *description = [ Support for HTML documents ]
