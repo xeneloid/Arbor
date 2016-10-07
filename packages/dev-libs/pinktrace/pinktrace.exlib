@@ -11,7 +11,7 @@ Note this is a work in progress and the API is *not* stable.
 "
 HOMEPAGE="https://dev.exherbo.org/~alip/${PN}"
 if ! ever is_scm ; then
-    DOWNLOADS="https://dev.exherbo.org/~alip/pinktrace/release/${PNV}.tar.bz2"
+    DOWNLOADS="https://dev.exherbo.org/distfiles/${PN}/${PNV}.tar.bz2"
 fi
 
 BUGS_TO="alip@exherbo.org"
