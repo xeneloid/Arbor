@@ -244,8 +244,10 @@ wpa_supplicant_src_configure() {
     # seconds.
     #config_enable DELAYED_MIC_ERROR_REPORT
 
-    # ACS (Automatic Channel Selection)
-    config_enable ACS
+    if ever at_least 2.6 ; then
+        # ACS (Automatic Channel Selection)
+        config_enable ACS
+    fi
 
     # Background scanning
     config_enable BGSCAN_LEARN
@@ -255,11 +257,13 @@ wpa_supplicant_src_configure() {
     config_enable HS20
     config_enable INTERWORKING
 
-    # MBO (Multi Band Operation)
-    config_enable MBO
+    if ever at_least 2.6 ; then
+        # MBO (Multi Band Operation)
+        config_enable MBO
 
-    # WNM (Wireless Network Management)
-    config_enable WNM
+        # WNM (Wireless Network Management)
+        config_enable WNM
+    fi
 
     # WPS (Wi-Fi Protected Setup)
     config_enable WPS
