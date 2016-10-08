@@ -6,6 +6,8 @@ require wpa_supplicant
 PLATFORMS="~amd64 ~armv7 ~x86"
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/0001-Fix-LibreSSL-compatibility.patch
+    "${FILES}"/0d42179e1246f996d334c8bd18deca469fdb1add.patch
+    "${FILES}"/df426738fb212d62b132d9bb447f0128194e00ab.patch
+    "${FILES}"/b70d508c50e8e2d2b8fb96ae44ae10f84cf0c1ae.patch
 )
 

@@ -1,0 +1,30 @@
+From b70d508c50e8e2d2b8fb96ae44ae10f84cf0c1ae Mon Sep 17 00:00:00 2001
+From: Julian Ospald <hasufell@hasufell.de>
+Date: Fri, 7 Oct 2016 17:51:05 +0200
+Subject: [PATCH 3/5] LibreSSL: Fix compatibility for EAP-FAST
+
+This basically just follows commit
+587b0457e0238b7b1800d46f5cdd5e1d2b06732f ('LibreSSL: Fix build with
+LibreSSL') with the same pattern, which was missed here.
+
+Signed-off-by: Julian Ospald <hasufell@hasufell.de>
+---
+ src/crypto/tls_openssl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/crypto/tls_openssl.c b/src/crypto/tls_openssl.c
+index b07931e..a7d4880 100644
+--- a/src/crypto/tls_openssl.c
++++ b/src/crypto/tls_openssl.c
+@@ -3976,7 +3976,7 @@ int tls_connection_set_params(void *tls_ctx, struct tls_connection *conn,
+ 		engine_id = "pkcs11";
+ 
+ #if defined(EAP_FAST) || defined(EAP_FAST_DYNAMIC) || defined(EAP_SERVER_FAST)
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+ 	if (params->flags & TLS_CONN_EAP_FAST) {
+ 		wpa_printf(MSG_DEBUG,
+ 			   "OpenSSL: Use TLSv1_method() for EAP-FAST");
+-- 
+2.10.1
+

@@ -1,0 +1,47 @@
+From df426738fb212d62b132d9bb447f0128194e00ab Mon Sep 17 00:00:00 2001
+From: Christian Neukirchen <chneukirchen@gmail.com>
+Date: Wed, 5 Oct 2016 16:37:40 +0200
+Subject: [PATCH 2/5] LibreSSL: Fix TLS initialization/deinitialization
+
+Due to a missing guard for old OpenSSL code, SSL_library_init() was not
+called, which is required for LibreSSL. Likewise for cleanup.
+
+Signed-off-by: Christian Neukirchen <chneukirchen@gmail.com>
+---
+ src/crypto/tls_openssl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/crypto/tls_openssl.c b/src/crypto/tls_openssl.c
+index 23ac64b..b07931e 100644
+--- a/src/crypto/tls_openssl.c
++++ b/src/crypto/tls_openssl.c
+@@ -919,7 +919,7 @@ void * tls_init(const struct tls_config *conf)
+ 		}
+ #endif /* OPENSSL_FIPS */
+ #endif /* CONFIG_FIPS */
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+ 		SSL_load_error_strings();
+ 		SSL_library_init();
+ #ifndef OPENSSL_NO_SHA256
+@@ -1043,7 +1043,7 @@ void tls_deinit(void *ssl_ctx)
+ 
+ 	tls_openssl_ref_count--;
+ 	if (tls_openssl_ref_count == 0) {
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L
++#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+ #ifndef OPENSSL_NO_ENGINE
+ 		ENGINE_cleanup();
+ #endif /* OPENSSL_NO_ENGINE */
+@@ -2334,7 +2334,7 @@ static int tls_connection_client_cert(struct tls_connection *conn,
+ 		return 0;
+ 
+ #ifdef PKCS12_FUNCS
+-#if OPENSSL_VERSION_NUMBER < 0x10002000L
++#if OPENSSL_VERSION_NUMBER < 0x10002000L || defined(LIBRESSL_VERSION_NUMBER)
+ 	/*
+ 	 * Clear previously set extra chain certificates, if any, from PKCS#12
+ 	 * processing in tls_parse_pkcs12() to allow OpenSSL to build a new
+-- 
+2.10.1
+
