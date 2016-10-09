@@ -13,7 +13,7 @@ DEPENDENCIES="
     build:
         app-text/docbook-xml-dtd:4.4
         app-text/docbook-xsl-stylesheets
-        dev-libs/libxml2:*
+        dev-libs/libxml2:2.0
         dev-libs/libxslt
     build+run:
         dev-lang/perl:=
@@ -27,6 +27,8 @@ DEFAULT_SRC_COMPILE_PARAMS=(
 )
 
 DEFAULT_SRC_INSTALL_PARAMS=( INSTALL_BIN="install" ) # prevent `install -s`
+
+WORK="${WORK}.orig"
 
 src_prepare() {
     edo sed \
