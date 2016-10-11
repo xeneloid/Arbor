@@ -66,6 +66,8 @@ postfix_src_prepare() {
         -e 's/AR=ar/AR=${AR:-ar}/' \
         -e 's/RANLIB=ranlib/RANLIB=${RANLIB:-ranlib}/' \
         -i makedefs
+
+    default
 }
 
 postfix_src_configure() {
