@@ -84,7 +84,6 @@ src_prepare() {
 src_compile() {
     export PATH="${PWD}/shims:${PATH}"
     export GOROOT_FINAL=/usr/$(exhost --target)/lib/go
-    export CGO_ENABLED=0
 
     if option bootstrap;then
         edo cd "${WORKBASE}"/${PNV}/src
