@@ -12,10 +12,9 @@ PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 
 DEPENDENCIES+="
     build+run:
-        !app-editors/vim-runtime:0
-    [[
-        description = [ Slot move ]
-        resolution = uninstall-blocked-after
-    ]]
+        !app-editors/vim-runtime:0 [[
+            description = [ Slot move ]
+            resolution = uninstall-blocked-after
+        ]]
 "
 
