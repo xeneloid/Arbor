@@ -342,7 +342,7 @@ vim_src_test() {
     edo sed -i -e 's,: \$(VIMPROG),: ,' Makefile
 
     # Don't try to do the additional GUI test
-    emake -j1 VIMPROG=${testprog} TERM=dumb nongui
+    emake -j1 VIMPROG=${testprog} nongui
 }
 
 vim_src_install() {
