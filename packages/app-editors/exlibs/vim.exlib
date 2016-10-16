@@ -320,10 +320,10 @@ vim_src_test() {
     unset DISPLAY
 
     if [[ "${PN}" == "gvim" ]] ; then
-       # Make gvim not try to connect to X. See :help gui-x11-start
-       # in vim for how this evil trickery works.
-       edo ln -s "${WORK}"/src/{gvim,testvim}
-       testprog="${WORK}/src/testvim"
+        # Make gvim not try to connect to X. See :help gui-x11-start
+        # in vim for how this evil trickery works.
+        edo ln -s "${WORK}"/src/{gvim,testvim}
+        testprog="${WORK}/src/testvim"
     else
         testprog="${WORK}/src/vim"
     fi
