@@ -324,6 +324,10 @@ vim_src_test() {
         # in vim for how this evil trickery works.
         edo ln -s "${WORK}"/src/{gvim,testvim}
         testprog="${WORK}/src/testvim"
+
+        # Make sure test49 uses testvim
+        edo sed -e 's@\.\./vim@../testvim@' \
+                -i src/testdir/test49.vim
     else
         testprog="${WORK}/src/vim"
     fi
@@ -331,12 +335,6 @@ vim_src_test() {
     # We've got to call make test from within testdir, since the Makefiles
     # don't pass through our VIMPROG argument
     edo cd "${WORK}"/src/testdir
-
-    # Test 49 still doesn't work right for gvim. Not sure why.
-    if [[ "${PN}" == "gvim" ]] ; then
-        echo "Test 49 isn't gvim-friendly, so it will be skipped."
-        edo sed -i -e 's~test49.out~~g' Makefile
-    fi
 
     # We don't want to rebuild vim before running the tests
     edo sed -i -e 's,: \$(VIMPROG),: ,' Makefile
