@@ -43,6 +43,7 @@ DEPENDENCIES="
 DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/respect-cflags.patch
     "${FILES}"/${PNV}-abort-on-errors-in-subdir-builds.patch
+    "${FILES}"/${PN}-fix-building-with-linux-4.8.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
