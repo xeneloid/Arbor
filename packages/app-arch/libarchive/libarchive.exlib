@@ -44,7 +44,7 @@ MYOPTIONS="acl lz4 xattr
 DEPENDENCIES="
     build+run:
         app-arch/bzip2
-        app-arch/xz
+        app-arch/xz[>=5.2.0] [[ note = [ 5.2.0 for multithread support ] ]]
         virtual/gzip
         acl? ( sys-apps/acl )
         lz4? ( app-arch/lz4 )
