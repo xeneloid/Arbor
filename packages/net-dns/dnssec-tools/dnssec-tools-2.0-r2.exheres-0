@@ -26,6 +26,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --with-perl-build-args="INSTALLMAN3DIR=none INSTALLDIRS=vendor"
     --with-threads
     --with-validator
+    ac_cv_path_AR="${AR}"
 )
 
 src_prepare() {
