@@ -116,6 +116,10 @@ clang_src_prepare() {
                 -i lib/Driver/Tools.cpp
     fi
 
+    edo pushd tools/extra
+    expatch "${FILES}"/0001-Don-t-depend-on-llvm-targets-when-doing-a-standalone.patch
+    edo popd
+
     edo popd
 }
 

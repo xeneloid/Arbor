@@ -1,0 +1,39 @@
+From 8c2ae5067b399da172367ec7a36ba4657832c3ca Mon Sep 17 00:00:00 2001
+From: Marvin Schmidt <marv@exherbo.org>
+Date: Wed, 26 Oct 2016 21:10:40 +0200
+Subject: [PATCH] Don't depend on llvm targets when doing a standalone build
+
+---
+ test/CMakeLists.txt | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index a9d7b7c..c85e0b1 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -30,10 +30,7 @@ if(CLANG_TOOLS_TEST_USE_VG)
+   set(CLANG_TOOLS_TEST_EXTRA_ARGS ${CLANG_TEST_EXTRA_ARGS} "--vg")
+ endif()
+ 
+-set(CLANG_TOOLS_TEST_DEPS
+-  # Base line deps.
+-  FileCheck count not
+-
++list(APPEND CLANG_TOOLS_TEST_DEPS
+   # clang-tidy tests require it.
+   clang-headers
+ 
+@@ -57,6 +54,10 @@ set(CLANG_TOOLS_TEST_DEPS
+   ExtraToolsUnitTests
+   )
+ 
++if(NOT CLANG_BUILT_STANDALONE)
++  list(APPEND CLANG_TOOLS_TEST_DEPS FileCheck count not)
++endif()
++
+ add_lit_testsuite(check-clang-tools "Running the Clang extra tools' regression tests"
+   ${CMAKE_CURRENT_BINARY_DIR}
+   DEPENDS ${CLANG_TOOLS_TEST_DEPS}
+-- 
+2.10.1
+
