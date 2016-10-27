@@ -100,7 +100,10 @@ clang_src_prepare() {
     edo pushd "${CMAKE_SOURCE}"
 
     # ld tests will fail because of Exherbo's non-standard path for ld
-    edo rm test/Driver/{dyld-prefix.c,linux-ld.c}
+    edo rm test/Driver/{dyld-prefix.c,linux-ld.c,mips-cs.cpp}
+
+    # The build system doesn't pick up that LLVM has zlib support when doing a standalone build
+    edo rm test/Driver/nozlibcompress.c
 
     # Fix the use of dot
     edo sed -e 's/@DOT@//g' -i docs/doxygen.cfg.in
