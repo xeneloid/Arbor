@@ -1,10 +1,11 @@
 # Copyright 2013-2015 Wulf C. Krueger <philantrop@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require sourceforge
+require github [ release=v${PV} suffix=tar.bz2 ]
 
 SUMMARY="library that provides generic access to USB devices"
-HOMEPAGE="http://${PN}.info"
+HOMEPAGE+=" http://${PN}.info"
+
 BUGS_TO="philantrop@exherbo.org"
 REMOTE_IDS="freecode:${PN}"
 
@@ -31,6 +32,7 @@ DEPENDENCIES="
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-udev
     --disable-static
+    --disable-usbdk
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
