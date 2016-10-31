@@ -1,12 +1,11 @@
 # Copyright 2008 Daniel Mierswa <impulze@impulze.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require gnu [ suffix=tar.bz2 ]
+require gnu [ suffix=tar.gz ]
 
 SUMMARY="libcdio is a library for CD access"
 DESCRIPTION="
-The GNU Compact Disc Input and Control library contains a library for CD-ROM and CD
-image access.
+The GNU Compact Disc Input and Control library contains a library for CD-ROM and CD image access.
 "
 
 LICENCES="GPL-3"
