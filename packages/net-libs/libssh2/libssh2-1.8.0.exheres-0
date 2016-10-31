@@ -36,6 +36,7 @@ DEFAULT_SRC_CONFIGURE_PARAMS=(
     --disable-clear-memory
     --disable-static
     --with-libz
+    --without-mbedtls
 )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( '!gcrypt openssl' 'gcrypt libgcrypt' )
 
