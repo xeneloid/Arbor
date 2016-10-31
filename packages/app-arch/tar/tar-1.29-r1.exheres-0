@@ -21,6 +21,10 @@ DEPENDENCIES="
         )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/7340f67b9860ea0531c1450e5aa261c50f67165d.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=( gt_cv_func_gnugettext{1,2}_libc=yes )
 DEFAULT_SRC_CONFIGURE_OPTION_WITHS=( 'acl posix-acls' )
 
