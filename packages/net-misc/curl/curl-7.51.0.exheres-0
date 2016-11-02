@@ -27,7 +27,7 @@ DEPENDENCIES="
         sys-libs/zlib
         ares? ( net-dns/c-ares[>=1.6.0] )
         http2? ( net-libs/nghttp2 )
-        idn? ( net-dns/libidn )
+        idn? ( net-dns/libidn2 )
         kerberos? ( virtual/kerberos )
         ldap? ( net-directory/openldap )
         rtmp? ( media-video/rtmpdump )
@@ -74,7 +74,7 @@ src_configure() {
 
     econf_option_withs=(
         'http2 nghttp2'
-        'idn libidn'
+        'idn libidn2'
         'kerberos gssapi'
         'rtmp librtmp'
         'zsh-completion zsh-functions-dir /usr/share/zsh/site-functions'
@@ -138,6 +138,8 @@ EOF
     test_args+=( '!'1135 )
     # Fail (last checked: 7.50.2)
     test_args+=( '!'2032 )
+    # Fail (last checked: 7.51.0)
+    test_args+=( '!'{165,1034,1035,2046,2047} )
     emake -j1 test-full TEST_F="${test_args[*]}"
 
     esandbox disallow_net --connect "inet:127.0.0.1@9011"
