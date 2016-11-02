@@ -5,8 +5,3 @@ require slang
 
 PLATFORMS="~amd64 ~x86"
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-musl.patch
-    "${FILES}"/${PNV}-parallel.patch
-)
-
