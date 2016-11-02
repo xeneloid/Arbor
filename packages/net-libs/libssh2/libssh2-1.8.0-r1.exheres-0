@@ -30,6 +30,10 @@ DEPENDENCIES="
         gcrypt? ( dev-libs/libgcrypt )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-acinclude.m4-fix-.-configure-with-libgcrypt.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-hidden-symbols
     --disable-examples-build
