@@ -17,3 +17,12 @@ DEPENDENCIES="
         x11-libs/libXft
         x11-libs/libXt"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/PR-1193.patch
+)
+
+src_prepare() {
+    vim_src_prepare
+    default
+}
+
