@@ -1,7 +1,7 @@
 # Copyright 2007 Bryan Østergaard
 # Distributed under the terms of the GNU General Public License v2
 
-require github [ user=westes release=v${PV} suffix="tar.gz" ]
+require github [ user=westes release=v${PV} suffix="tar.xz" ]
 
 SUMMARY="Tool for generating lexical scanners"
 
