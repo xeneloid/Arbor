@@ -14,7 +14,7 @@ to read and write. It is easy for machines to parse and generate.
 
 LICENCES="|| ( public-domain MIT )"
 SLOT=$(ever major)
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="doc"
 
 DEPENDENCIES="

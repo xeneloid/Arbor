@@ -25,7 +25,7 @@ UPSTREAM_RELEASE_NOTES="${HOMEPAGE}/releaselog/$(ever replace_all _).html [[ lan
 
 LICENCES="public-domain"
 SLOT="3"
-PLATFORMS="~amd64 ~arm ~x86"
+PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS="
     doc
     readline

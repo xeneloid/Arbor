@@ -12,7 +12,7 @@ known as libnftables. This library is currently used by nftables.
 "
 
 LICENCES="GPL-2"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 
 DEPENDENCIES="
     build+run:

@@ -12,7 +12,7 @@ DOWNLOADS="https://people.freedesktop.org/~hadess/${PNV}.tar.xz"
 
 LICENCES="GPL-2"
 SLOT="0"
-PLATFORMS="~amd64 ~x86"
+PLATFORMS="~amd64 ~armv7 ~x86"
 MYOPTIONS="
     ( linguas: ar as az be@latin bg bg_BG bn_IN ca ca@valencia cs cy da de el en_GB eo es et eu
                fa fa_IR fi fo fr ga gl gu he hi hr hu ia id it ja ka kk kn ko lt lv ml mr ms nb
