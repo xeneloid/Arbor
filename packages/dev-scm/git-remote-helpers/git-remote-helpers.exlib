@@ -91,6 +91,9 @@ git-remote-helpers_src_prepare() {
     if option mercurial; then
         if ! ever is_scm ; then
             edo mv git-remote-hg-${PV} git-remote-hg
+            edo pushd git-remote-hg
+            expatch "${FILES}"/${PN}-Avoid-deprecated-bookmarks.write.patch
+            edo popd
         fi
     fi
 }
