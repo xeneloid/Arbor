@@ -17,7 +17,11 @@ DOWNLOADS="${HOMEPAGE}/files/v$(ever range 1-2)/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
-LICENCES="BSD-3"
+LICENCES="
+    BSD-3
+    qt4? ( LGPL-2.1 )
+    qt5? ( LGPL-3 )
+"
 SLOT="0"
 MYOPTIONS="
     doc
@@ -48,6 +52,13 @@ DEPENDENCIES="
 # handled a bit differently than other bundled dependencies and, most
 # importantly, there's no released tarball. So for now we stick with the
 # bundled version.
+
+if ever at_least 3.7.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            dev-libs/libuv[>=1.0.0]
+    "
+fi
 
 BASH_COMPLETIONS=(
     Auxiliary/bash-completion/cmake
@@ -99,6 +110,7 @@ cmake-build_src_configure() {
     ./bootstrap                                                                 \
         --parallel=${EXJOBS:-1}                                                 \
         --$(option qt5 || option qt4 || echo "no-")qt-gui                       \
+        $(ever at_least 3.7.0 && echo "--server")                               \
         --system-bzip2                                                          \
         --system-curl                                                           \
         --system-expat                                                          \
@@ -108,7 +120,7 @@ cmake-build_src_configure() {
         --docdir=/../share/doc/${PNVR}                                          \
         --datadir=/../share/${PN}                                               \
         --mandir=/../share/man                                                  \
-        --xdgdatadir=/../share                                                    \
+        --xdgdatadir=/../share                                                  \
         --verbose                                                               \
         $(option doc && echo "--sphinx-man")                                    \
         $(option bootstrap --no-system-jsoncpp --system-jsoncpp)                \
@@ -121,7 +133,12 @@ cmake-build_src_configure() {
         -DCMAKE_RANLIB:PATH="${RANLIB}"                                         \
         -DCMAKE_LIBRARY_PATH:STRING=/usr/${host}/lib                            \
         -DCMAKE_INCLUDE_PATH:STRING=/usr/${host}/include                        \
-        $(option qt4 && echo "-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Core:BOOL=TRUE")
+        -DCMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES:PATH=/usr/$(exhost --target)/include \
+        -DCMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES:PATH=/usr/$(exhost --target)/include \
+        $(ever at_least 3.7.0 && echo "-DCMAKE_USE_SYSTEM_LIBUV:BOOL=TRUE")     \
+        $(option qt4 && echo "-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Core:BOOL=TRUE")  \
+        $(ever at_least 3.7.0 && option qt4 && echo "-DCMake_GUI_DISTRIBUTE_WITH_Qt_LGPL=2.1") \
+        $(ever at_least 3.7.0 && option qt5 && echo "-DCMake_GUI_DISTRIBUTE_WITH_Qt_LGPL=3")
 }
 
 cmake-build_src_compile() {
@@ -141,13 +158,21 @@ cmake-build_src_install() {
 
     if option vim-syntax; then
         insinto /usr/share/vim/vimfiles/syntax
-        doins "${WORK}"/Auxiliary/cmake-syntax.vim
+        if ever at_least 3.7.0 ; then
+            doins "${WORK}"/Auxiliary/vim/syntax/cmake.vim
+        else
+            doins "${WORK}"/Auxiliary/cmake-syntax.vim
+        fi
 
         insinto /usr/share/vim/vimfiles/indent
-        doins "${WORK}"/Auxiliary/cmake-indent.vim
+        if ever at_least 3.7.0 ; then
+            doins "${WORK}"/Auxiliary/vim/indent/cmake.vim
+        else
+            doins "${WORK}"/Auxiliary/cmake-indent.vim
 
-        insinto /usr/share/vim/vimfiles/ftdetect
-        doins "${FILES}/${VIMFILE}"
+            insinto /usr/share/vim/vimfiles/ftdetect
+            doins "${FILES}/${VIMFILE}"
+        fi
     fi
 }
 
