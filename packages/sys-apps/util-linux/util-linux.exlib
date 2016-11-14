@@ -117,12 +117,13 @@ util-linux_src_configure() {
     local conflicts=( chfn-chsh kill login newgrp reset su vipw )
 
     # Deprecated Tools:
+    # pg command is marked deprecated in POSIX since 1997
     # line is deprecated in favor of head
-    local deprecated=( line )
+    local deprecated=( pg line )
 
     local enabled_tools=(
         agetty bfs cal cramfs eject fallocate fdformat fsck hwclock ipcrm ipcs last logger losetup
-        lslogins mesg minix more mount mountpoint nsenter nologin partx pg pivot_root raw rename
+        lslogins mesg minix more mount mountpoint nsenter nologin partx pivot_root raw rename
         schedutils setpriv setterm sulogin switch_root ul unshare uuidd wall wdctl zramctl
     )
 
@@ -135,19 +136,22 @@ util-linux_src_configure() {
         --enable-libblkid \
         --enable-libfdisk \
         --enable-libmount \
-        --enable-libmount-force-mountinfo \
         --enable-libuuid \
         --enable-nls \
+        --enable-plymouth_support \
         --enable-usrdir-path \
+        --enable-widechar \
+        --disable-libmount-support-mtab \
         --disable-static \
         --with-btrfs \
         --with-cap-ng \
         --with-libz \
-        --with-ncurses \
+        --with-ncursesw \
         --with-readline \
         --with-tinfo \
         --with-util \
         --without-audit \
+        --without-ncurses \
         --without-python \
         --without-selinux \
         --without-slang \
