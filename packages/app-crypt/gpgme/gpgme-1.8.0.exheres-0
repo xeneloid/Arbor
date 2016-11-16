@@ -31,7 +31,7 @@ DEPENDENCIES="
     build+run:
         app-crypt/gnupg[>=2.0.4]
         dev-libs/libassuan[>=2.0.2]
-        dev-libs/libgpg-error[>=1.11]
+        dev-libs/libgpg-error[>=1.17]
         qt5? (
             x11-libs/qtbase:5
             !kde/kdepimlibs:4 [[
@@ -40,6 +40,10 @@ DEPENDENCIES="
             ]]
         )
 "
+
+DEFAULT_SRC_PREPARE_PATCHES+=(
+    "${FILES}"/${PN}-Remove-a-forgotten-instance-of-libsuffix.patch
+)
 
 DEFAULT_SRC_COMPILE_PARAMS=(
     CC_FOR_BUILD=$(exhost --build)-cc
