@@ -10,6 +10,9 @@ LICENCES="
 SLOT="2.0"
 PLATFORMS="~amd64 ~x86"
 
+# some tests run on 127.0.0.1@80
+RESTRICT="test"
+
 DEPENDENCIES+="
     build:
         virtual/pkg-config
