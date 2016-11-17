@@ -22,6 +22,9 @@ SLOT="0"
 PLATFORMS="~amd64 ~arm ~armv7 ~x86"
 MYOPTIONS=""
 
+# TODO: Fix !!! Exheres bug: 'cc' banned by distribution
+RESTRICT="test"
+
 DEPENDENCIES=""
 
 WORK="${WORKBASE}"
