@@ -37,11 +37,6 @@ DEPENDENCIES="
         ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/150dc7a2b483b8338a3e185c478b4b23ee884e71.patch
-)
-
-
 bb_make() {
     local make_options=(
         CROSS_COMPILE=$(exhost --tool-prefix)
