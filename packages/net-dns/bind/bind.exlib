@@ -26,7 +26,7 @@ DOWNLOADS="
 UPSTREAM_DOCUMENTATION="https://www.isc.org/faq/bind [[ note = [ FAQ ] ]]"
 UPSTREAM_RELEASE_NOTES="http://ftp.isc.org/isc/${PN}${PV%%.*}/${MY_PV}/RELEASE-NOTES-${MY_PV}.html"
 
-LICENCES="ISC"
+LICENCES="MPL-2.0"
 SLOT="0"
 MYOPTIONS="
     berkdb
@@ -35,9 +35,13 @@ MYOPTIONS="
     ldap
     mysql [[ requires = [ -threads ] ]]
     postgres [[ description = [ Adds support for the PostgreSQL backend. ] ]]
+    seccomp [[ description = [ System call filtering support via libseccomp ] ]]
     threads [[ requires = [ -mysql ] ]]
     ( providers: libressl openssl ) [[ number-selected = exactly-one ]]
 "
+
+# Tons of sandbox violations.
+RESTRICT="test"
 
 DEPENDENCIES="
     build+run:
@@ -51,15 +55,13 @@ DEPENDENCIES="
         postgres? ( dev-db/postgresql )
         providers:libressl? ( dev-libs/libressl:= )
         providers:openssl? ( dev-libs/openssl )
+        seccomp? ( sys-libs/libseccomp )
         threads? ( sys-libs/libcap[>=2.1.0] )
         group/named
         user/named
     run:
         net-dns/bind-tools[~${PV}][geoip=][idn=][kerberos=][providers:*=]
 "
-
-# Tons of sandbox violations.
-RESTRICT="test"
 
 WORK=${WORKBASE}/${MY_PNV}
 
@@ -68,10 +70,9 @@ DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( KNOWN-DEFECTS )
 
 bind_src_prepare() {
+    # TODO: Report upstream
     edo sed -i "/AC_PATH_PROG(AR/d" configure.in
     edo sed -i 's/"nm"/"'$(exhost --tool-prefix)'nm"/' util/mksymtbl.pl
-
-    expatch "${FILES}"/${PN}-fixMakefile.patch
 
     eautoconf
 }
@@ -93,16 +94,23 @@ bind_src_configure() {
         --enable-ipv6 \
         --enable-isc-spnego=no \
         --enable-largefile=yes \
+        --disable-dnstap \
+        --disable-static \
         --with-dlz-filesystem=yes \
         --with-dlz-odbc=no \
         --with-dlz-stub=yes \
         --with-docbook-xsl=no \
         --with-gssapi=no \
+        --with-libjson \
         --with-libtool=yes \
         --with-libxml2=yes \
         --with-openssl=/usr/$(exhost --target) \
         --with-pkcs11=no \
         --with-randomdev=/dev/urandom \
+        --with-zlib \
+        --without-lmdb \
+        --without-python \
+        $(option_enable seccomp) \
         $(myoption enable threads) \
         $(myoption enable threads linux-caps) \
         $(myoption with berkdb dlz-bdb) \
