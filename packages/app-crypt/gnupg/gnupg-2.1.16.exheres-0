@@ -47,11 +47,6 @@ DEPENDENCIES="
         ] ]]
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/scd1.patch
-    "${FILES}"/scd2.patch
-)
-
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     CC_FOR_BUILD=$(exhost --build)-cc
     --enable-bzip2
