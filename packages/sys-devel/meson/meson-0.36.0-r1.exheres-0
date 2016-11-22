@@ -25,5 +25,12 @@ DEPENDENCIES="
 
 BUGS_TO="eternaleye@gmail.com"
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/pkg-config.patch
+    "${FILES}"/readelf.patch
+    "${FILES}"/nm.patch
+    "${FILES}"/g-i.patch
+)
+
 # TODO: Install Meson cross-compile spec files for Exherbo
 
