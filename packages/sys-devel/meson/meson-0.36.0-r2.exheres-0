@@ -34,3 +34,11 @@ DEFAULT_SRC_PREPARE_PATCHES=(
 
 # TODO: Install Meson cross-compile spec files for Exherbo
 
+src_install() {
+    setup-py_src_install
+
+    edo sed -i \
+        -e "s|^#!/usr/bin/env python3$|#!/usr/bin/env python$(python_get_abi)|"\
+        "${IMAGE}"/usr/$(exhost --target)/bin/meson
+}
+
