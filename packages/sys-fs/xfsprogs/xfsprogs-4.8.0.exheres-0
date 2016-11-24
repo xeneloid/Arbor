@@ -4,7 +4,7 @@
 SUMMARY="XFS userspace tools"
 DESCRIPTION="Userspace utilities for the XFS filesystem including fsck and mkfs."
 HOMEPAGE="http://xfs.org"
-DOWNLOADS="https://www.kernel.org/pub/linux/utils/fs/xfs/${PN}/${PNV}.tar.gz"
+DOWNLOADS="https://www.kernel.org/pub/linux/utils/fs/xfs/${PN}/${PNV}.tar.xz"
 
 LICENCES="GPL-2 LGPL-2.1"
 SLOT="0"
