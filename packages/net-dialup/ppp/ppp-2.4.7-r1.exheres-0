@@ -13,16 +13,17 @@ DESCRIPTION="
 ppp (Paul's PPP Package) is an open source package which implements the
 Point-to-Point Protocol (PPP) on Linux and Solaris systems.
 "
-REMOTE_IDS="freecode:pppd"
-UPSTREAM_CHANGELOG="http://www.samba.org/ppp/README.html"
-UPSTREAM_DOCUMENTATION="http://www.samba.org/ppp/documentation.html"
-BUGS_TO="philantrop@exherbo.org"
-
-HOMEPAGE="http://www.samba.org/ppp"
+HOMEPAGE="https://ppp.samba.org"
 DOWNLOADS="
-    ftp://ftp.samba.org/pub/ppp/${PNV}.tar.gz
+    https://download.samba.org/pub/${PN}/${PNV}.tar.gz
     https://dev.exherbo.org/~philantrop/distfiles/${PN}-2.4.4-scripts-${SCRIPT_VER}.tar.bz2
 "
+
+BUGS_TO="philantrop@exherbo.org"
+REMOTE_IDS="freecode:pppd"
+
+UPSTREAM_CHANGELOG="https://ppp.samba.org/README.html"
+UPSTREAM_DOCUMENTATION="https://ppp.samba.org/documentation.html"
 
 LICENCES="BSD-3 GPL-2"
 SLOT="0"
@@ -44,6 +45,7 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/respect-cflags.patch
     "${FILES}"/${PNV}-abort-on-errors-in-subdir-builds.patch
     "${FILES}"/${PN}-fix-building-with-linux-4.8.patch
+    "${FILES}"/${PN}-2.4.7-rc_mksid-no-buffer-overflow.patch
 )
 
 DEFAULT_SRC_COMPILE_PARAMS=(
