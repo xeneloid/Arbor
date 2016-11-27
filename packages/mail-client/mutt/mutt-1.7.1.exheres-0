@@ -43,6 +43,10 @@ DEPENDENCIES="
         net-www/elinks [[ description = [ Provides a text based browser for viewing HTML-formatted mail ] ]]
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-Fix-build-failure-with-GPGME-1.8-do-not-steal-the-gp.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --with-ssl
