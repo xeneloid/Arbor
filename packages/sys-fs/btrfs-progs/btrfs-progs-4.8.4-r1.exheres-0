@@ -15,5 +15,6 @@ DEFAULT_SRC_PREPARE_PATCHES=(
     "${FILES}"/0001-configure.ac-Consistently-use-PKG_CONFIG.patch
     "${FILES}"/${PN}-musl.patch
     "${FILES}"/${PN}-receive-fix-clone.patch
+    "${FILES}"/${PNV}-revert-send-check-bytes-read-from-stream.patch
 )
 
