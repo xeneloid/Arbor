@@ -1,6 +1,8 @@
 # Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
+require cmake [ api=2 ]
+
 SUMMARY="Software-based implementation of the codec specified in the JPEG-2000 Part-1 standard"
 HOMEPAGE="https://www.ece.uvic.ca/~frodo/${PN}"
 DOWNLOADS="${HOMEPAGE}/software/${PNV}.tar.gz"
@@ -25,10 +27,19 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
-DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=( opengl )
-DEFAULT_SRC_CONFIGURE_PARAMS=(
-    --enable-libjpeg
-    --enable-shared
-    --disable-static
+DEFAULT_SRC_PREPARE_PATCHES=(
+    "${FILES}"/${PN}-2.0.0-fix-build-system.patch
+)
+
+CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DJAS_ENABLE_LIBJPEG:BOOL=TRUE
+    -DJAS_ENABLE_SHARED:BOOL=TRUE
+)
+CMAKE_SRC_CONFIGURE_OPTIONS=(
+    'opengl JAS_ENABLE_OPENGL'
+)
+
+CMAKE_SRC_CONFIGURE_TESTS+=(
+    '-DBUILD_TESTING:BOOL=TRUE -DBUILD_TESTING:BOOL=FALSE'
 )
 
