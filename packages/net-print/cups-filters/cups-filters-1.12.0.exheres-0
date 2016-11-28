@@ -67,6 +67,7 @@ DEFAULT_SRC_COMPILE_PARAMS=( -j1 )
 
 src_configure() {
     local myconf=(
+        --enable-driverless
         --enable-foomatic
         --enable-ghostscript
         --enable-gs-ps2write
@@ -81,6 +82,7 @@ src_configure() {
         --with-cups-domainsocket=/run/cups/cups.sock
         --with-cups-rundir=/run/cups
         --with-fontdir=fonts/conf.avail
+        --with-ippfind-path=system
         --with-jpeg
         --with-pdftops=hybrid
         --with-png
