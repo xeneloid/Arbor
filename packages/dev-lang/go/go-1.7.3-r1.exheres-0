@@ -30,6 +30,7 @@ DEPENDENCIES="
 # test  - causes sydbox to hit invalid pointer errors
 RESTRICT="strip test"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/45f759500ec80a1362deecd3693cbe44a354bf98.patch )
 DEFAULT_SRC_INSTALL_EXTRA_DOCS=( PATENTS )
 
 pkg_setup() {
