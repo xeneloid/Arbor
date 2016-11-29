@@ -99,6 +99,7 @@ dbus_src_configure() {
         --with-systemdsystemunitdir=${SYSTEMDSYSTEMUNITDIR}
         --with-systemduserunitdir=${SYSTEMDUSERUNITDIR}
         $(option_enable debug asserts)
+        $(option_enable debug developer)
         $(option_enable debug verbose-mode)
         $(option_enable doc doxygen-docs)
         $(option_enable systemd)
