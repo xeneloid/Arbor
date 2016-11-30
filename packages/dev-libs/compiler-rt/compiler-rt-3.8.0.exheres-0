@@ -5,3 +5,5 @@ require compiler-rt
 
 PLATFORMS="~amd64 ~x86"
 
+DEFAULT_SRC_PREPARE_PATCHES=( "${FILES}"/${PNV}-cmake-path.patch )
+
