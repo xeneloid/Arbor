@@ -42,6 +42,10 @@ MYOPTIONS="
 "
 exparam -b htmldocs && MYOPTIONS+=" doc"
 
+if ever at_least 2.11.0 ; then
+    MYOPTIONS+=" libsecret [[ description = [ Install libsecret credential helper ] ]]"
+fi
+
 DEPENDENCIES="
     build+run:
         dev-lang/perl:=[>=5.7.3]
@@ -84,6 +88,16 @@ DEPENDENCIES="
 
         curl? ( net-misc/curl[ssl(+)]  [[ description = [ Enables support for https:// URIs ] ]] )
 "
+
+if ever at_least 2.11.0 ; then
+    DEPENDENCIES+="
+        build+run:
+            libsecret? (
+                dev-libs/glib:2
+                dev-libs/libsecret:1
+            )
+    "
+fi
 
 WORK=${WORKBASE}/${PNV/_/.}
 
@@ -159,6 +173,9 @@ git-build_src_compile() {
     myemake V=1 all
     elisp-optional_src_compile
     option keyring && myemake -C contrib/credential/gnome-keyring
+    if ever at_least 2.11.0 ; then
+        option libsecret && myemake -C contrib/credential/libsecret
+    fi
 }
 
 git-build_src_test() {
@@ -200,6 +217,9 @@ git-build_src_install() {
     exeinto /usr/$(exhost --target)/libexec/${PN}
     newexe contrib/fast-import/import-tars.perl git-import-tars
     option keyring && doexe contrib/credential/gnome-keyring/git-credential-gnome-keyring
+    if ever at_least 2.11.0 ; then
+        option libsecret && doexe contrib/credential/libsecret/git-credential-libsecret
+    fi
 
     docinto /gitweb/
     dodoc gitweb/{INSTALL,README}
