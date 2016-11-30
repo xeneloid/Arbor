@@ -1,0 +1,37 @@
+Upstream: yes, master
+Reason: don't print the path to the profiling file to stdout, breaks everything that ever checks the output of anything built with profiling.
+
+From 3687fff19a73fc96c19fc19587a80b283af49664 Mon Sep 17 00:00:00 2001
+From: Xinliang David Li <davidxl@google.com>
+Date: Thu, 22 Sep 2016 21:00:29 +0000
+Subject: [PATCH] [Profile] suppress verbose rt message by default
+
+git-svn-id: https://llvm.org/svn/llvm-project/compiler-rt/trunk@282193 91177308-0d34-0410-b5e6-96231b3b80d8
+---
+ lib/profile/InstrProfilingFile.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/lib/profile/InstrProfilingFile.c b/lib/profile/InstrProfilingFile.c
+index 2c1ca95..e264f63 100644
+--- a/lib/profile/InstrProfilingFile.c
++++ b/lib/profile/InstrProfilingFile.c
+@@ -358,12 +358,14 @@ static void parseAndSetFilename(const char *FilenamePat,
+   lprofCurFilename.PNS = PNS;
+ 
+   if (!OldFilenamePat) {
+-    PROF_NOTE("Set profile file path to \"%s\" via %s.\n",
+-              lprofCurFilename.FilenamePat, getPNSStr(PNS));
++    if (getenv("LLVM_PROFILE_VERBOSE"))
++      PROF_NOTE("Set profile file path to \"%s\" via %s.\n",
++                lprofCurFilename.FilenamePat, getPNSStr(PNS));
+   } else {
+-    PROF_NOTE("Override old profile path \"%s\" via %s to \"%s\" via %s.\n",
+-              OldFilenamePat, getPNSStr(OldPNS), lprofCurFilename.FilenamePat,
+-              getPNSStr(PNS));
++    if (getenv("LLVM_PROFILE_VERBOSE"))
++      PROF_NOTE("Override old profile path \"%s\" via %s to \"%s\" via %s.\n",
++                OldFilenamePat, getPNSStr(OldPNS), lprofCurFilename.FilenamePat,
++                getPNSStr(PNS));
+   }
+ 
+   truncateCurrentFile();
