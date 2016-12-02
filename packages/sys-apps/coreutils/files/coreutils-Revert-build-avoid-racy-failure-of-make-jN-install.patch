@@ -1,0 +1,25 @@
+Upstream: no, quick fix for cross compilation
+
+From f3036710bc202baa7003ce386ec19abcec58709c Mon Sep 17 00:00:00 2001
+From: Heiko Becker <heirecka@exherbo.org>
+Date: Fri, 2 Dec 2016 22:57:14 +0100
+Subject: [PATCH] Revert "build: avoid racy failure of "make -jN install""
+
+This reverts commit 477a1e8ed493132e3741c5830c4bd30e19820951.
+---
+ src/local.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/local.mk b/src/local.mk
+index 36dfa4e30..c5898cca1 100644
+--- a/src/local.mk
++++ b/src/local.mk
+@@ -649,4 +649,4 @@ cu_install_program = @INSTALL_PROGRAM@
+ else
+ cu_install_program = src/ginstall
+ endif
+-INSTALL = $(cu_install_program) -c
++INSTALL_PROGRAM = $(cu_install_program)
+-- 
+2.11.0
+

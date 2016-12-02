@@ -72,6 +72,9 @@ AT_M4DIR=( m4 )
 coreutils_src_prepare() {
     default
 
+    exhost --is-native -q || \
+        expatch "${FILES}"/${PN}-Revert-build-avoid-racy-failure-of-make-jN-install.patch
+
     # The help2man step loves to fail if done during cross-compiles and for chroots.
     # Don't try rebuilding the man pages which we pre-generate and put into a
     # separate tarball. Preparing the man pages tarball works like this:
