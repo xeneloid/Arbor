@@ -47,7 +47,7 @@ DEPENDENCIES="
 "
 
 DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PNV}-remove-man-page-generation.patch
+    "${FILES}"/${PNV}-Remove-man-page-generation.patch
 )
 
 DEFAULT_SRC_CONFIGURE_OPTION_ENABLES=(
