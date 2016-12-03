@@ -1,0 +1,27 @@
+# Copyright 2008, 2009, 2010 Ingmar Vanhassel <ingmar@exherbo.org>
+# Distributed under the terms of the GNU General Public License v2
+
+require gtest
+require cmake [ api=2 ]
+
+LICENCES="BSD-3"
+SLOT="0"
+PLATFORMS="~amd64 ~armv7 ~x86"
+MYOPTIONS="examples vim-syntax"
+
+DEPENDENCIES="
+    build:
+        dev-lang/python:*
+    suggestion:
+        vim-syntax? ( app-vim/googletest-syntax )
+"
+
+
+src_configure() {
+    CMAKE_SOURCE=${WORKBASE}/googletest-release-${PV}/googletest  \
+    ecmake -Dgtest_build_tests=$(expecting_tests TRUE FALSE)      \
+           -Dgtest_build_samples=$(option examples TRUE FALSE)    \
+           -Dgtest_disable_pthreads=FALSE                         \
+           -Dgtest_hide_internal_symbols=TRUE
+}
+
