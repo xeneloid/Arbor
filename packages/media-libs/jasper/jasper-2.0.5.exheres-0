@@ -1,11 +1,10 @@
 # Copyright 2008 Ingmar Vanhassel <ingmar@exherbo.org>
 # Distributed under the terms of the GNU General Public License v2
 
-require cmake [ api=2 ]
+require github [ user=mdadams tag=version-${PV} ] cmake [ api=2 ]
 
 SUMMARY="Software-based implementation of the codec specified in the JPEG-2000 Part-1 standard"
 HOMEPAGE="https://www.ece.uvic.ca/~frodo/${PN}"
-DOWNLOADS="${HOMEPAGE}/software/${PNV}.tar.gz"
 
 REMOTE_IDS="freecode:${PN}"
 
@@ -27,11 +26,8 @@ DEPENDENCIES="
         providers:jpeg-turbo? ( media-libs/libjpeg-turbo )
 "
 
-DEFAULT_SRC_PREPARE_PATCHES=(
-    "${FILES}"/${PN}-2.0.0-fix-build-system.patch
-)
-
 CMAKE_SRC_CONFIGURE_PARAMS=(
+    -DCMAKE_INSTALL_DOCDIR=/usr/share/doc/${PNVR}
     -DJAS_ENABLE_LIBJPEG:BOOL=TRUE
     -DJAS_ENABLE_SHARED:BOOL=TRUE
 )
