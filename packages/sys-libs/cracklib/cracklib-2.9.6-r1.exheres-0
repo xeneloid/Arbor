@@ -18,6 +18,11 @@ DEPENDENCIES="
         python? ( dev-lang/python:= )
 "
 
+DEFAULT_SRC_PREPARE_PATCHES=(
+    -p2 "${FILES}"/${PNV}-Apply-patch-to-fix-CVE-2016-6318.patch
+        "${FILES}"/${PNV}-Fix-a-buffer-overflow-processing-long-words.patch
+)
+
 DEFAULT_SRC_CONFIGURE_PARAMS=(
     --enable-nls
     --disable-static
